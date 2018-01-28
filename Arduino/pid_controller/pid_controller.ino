@@ -98,6 +98,11 @@ const char STOP = 's';
 volatile long countR = 0;
 volatile long countL = 0;
 
+float strToFloat(String str) {
+  char buffer[10];
+  str.toCharArray(buffer, 10);
+  return atof(buffer);
+}
 
 /***********************************************************
  * MOTOR HELPER FUNCTIONS                                  *
@@ -224,7 +229,7 @@ void parseNewSetpoints(String setpointsIn) {
       // second alpha = B direction. Set A speed
       else {
         BDir = c;
-        aSpeed = temp.toFloat();
+        aSpeed = strToFloat(temp);
         temp = "";
         if (aSpeed < 0.0001) {
           aSpeed = 0;
@@ -238,7 +243,7 @@ void parseNewSetpoints(String setpointsIn) {
     }
   }
   // set B Speed
-  bSpeed = temp.toFloat();
+  bSpeed = strToFloat(temp);
   if (bSpeed < 0.0001) {
     bSpeed = 0;
     BDir = STOP;
@@ -265,8 +270,8 @@ void initMotors(){
 void initEncoders(){
   pinMode(ENCA, INPUT);
   pinMode(ENCB, INPUT);
-  attachInterrupt(/*digitalPinToInterrupt(*/ENCA/*)*/, isr_A, CHANGE);
-  attachInterrupt(/*digitalPinToInterrupt(*/ENCB/*)*/, isr_B, CHANGE);
+  attachInterrupt(ENCA, isr_A, CHANGE);
+  attachInterrupt(ENCB, isr_B, CHANGE);
 }
 
 void initPWM(){
