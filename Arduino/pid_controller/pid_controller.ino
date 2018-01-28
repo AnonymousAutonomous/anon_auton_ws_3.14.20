@@ -16,11 +16,10 @@
 
 // ROS connection to pi
 #include <ros.h>
-#include <std_msgs/String.h>
 #include <std_msgs/Int32.h>
 #include <eyes/Generic.h>
 
-ros::NodeHandle nh;
+ros::NodeHandle_<ArduinoHardware, 2, 2, 256, 256> nh;
 
 // init to zero and update with each encoder tick
 std_msgs::Int32 int32_msg_R;
@@ -313,7 +312,7 @@ ros::Subscriber<eyes::Generic> generic_sub("generic_feed", &generic_callback);
 
 void setup(){
   // Set up ROS
-  nh.getHardware()->setBaud(115200);
+  nh.getHardware()->setBaud(57600);
   nh.initNode();
   nh.advertise(pubR);
   nh.advertise(pubL);
@@ -365,7 +364,7 @@ void loop(){
 
   // // TODO: check if this will cause issues
   nh.spinOnce();
-  delay(10);
+  // delay(10);
 
 
   if (storeB != outputB){
