@@ -15,17 +15,17 @@
  #include <PID_v1.h>
 
 // ROS connection to pi
-#include <ros.h>
-#include <std_msgs/Int32.h>
-#include <eyes/Generic.h>
-
-ros::NodeHandle nh;
-
-// init to zero and update with each encoder tick
-std_msgs::Int32 int32_msg_R;
-std_msgs::Int32 int32_msg_L;
-ros::Publisher pubR("encoder_value_R", &int32_msg_R);
-ros::Publisher pubL("encoder_value_L", &int32_msg_L);
+//#include <ros.h>
+//#include <std_msgs/Int32.h>
+//#include <eyes/Generic.h>
+//
+//ros::NodeHandle nh;
+//
+//// init to zero and update with each encoder tick
+//std_msgs::Int32 int32_msg_R;
+//std_msgs::Int32 int32_msg_L;
+//ros::Publisher pubR("encoder_value_R", &int32_msg_R);
+//ros::Publisher pubL("encoder_value_L", &int32_msg_L);
 
  
 // Output pins used to control motors
@@ -34,13 +34,13 @@ ros::Publisher pubL("encoder_value_L", &int32_msg_L);
 const uint8_t PWMA = 11;         // Motor A PWM control     BLUE 
 const uint8_t AIN1 = 9;         // Motor A input 1         YELLOW
 const uint8_t AIN2 = 8;         // Motor A input 2         GREEN
-const uint8_t STBYA = 4;        // Standby                 
+const uint8_t STBYA = 6;        // Standby                 
 
 // B is right motor
 const uint8_t BIN1 = 12;        // Motor B input 1         ORANGE
-const uint8_t BIN2 = 13;        // Motor B input 2         RED
+const uint8_t BIN2 = 7;        // Motor B input 2         RED
 const uint8_t PWMB = 10;        // Motor B PWM control     BROWN
-const uint8_t STBYB = 7;        // Standby                 
+const uint8_t STBYB = 5;        // Standby                 
 
 // Motor encoder external interrupt pins
 const uint8_t ENCA = 3;        // Encoder A input         
@@ -123,13 +123,13 @@ String info = "";
  void process_data (const char* data) {
   char changeVar = data[0];
   if (changeVar == 'p') {
-    KpA = KpB = strToFloat(String(data).substring(1));
+    KpA = KpB = String(data).substring(1).toFloat();
   }
   else if (changeVar == 'i') {
-    KiA = KiB = strToFloat(String(data).substring(1));
+    KiA = KiB = String(data).substring(1).toFloat();
   }
   else if (changeVar == 'd') {
-    KdA = KdB = strToFloat(String(data).substring(1));
+    KdA = KdB = String(data).substring(1).toFloat();
   }
   else if (changeVar == 'b') {
         standbyMotors(true);
@@ -272,6 +272,50 @@ void setNewSetpointMotorB(float setpoint, char dir) {
     }  
 }
 
+void parseNewSetpoints(String setpointsIn) {
+  char ADir = '\0';
+  char BDir = '\0';
+  float aSpeed = -1;
+  float bSpeed = -1;
+
+  String temp = "";
+  
+  // Go through string
+  for (char c : setpointsIn) {
+    if (isalpha(c)) {
+      // first alpha = A direction
+      if (ADir == '\0') {
+        ADir = c;
+      }
+      // second alpha = B direction. Set A speed
+      else {
+        BDir = c;
+        aSpeed = temp.toFloat();
+        temp = "";
+        if (aSpeed < 0.0001) {
+          aSpeed = 0;
+          ADir = STOP;
+        }
+      }
+    }
+    // add to temp 
+    else {
+      temp += c;
+    }
+  }
+  // set B Speed
+  bSpeed = temp.toFloat();
+  if (bSpeed < 0.0001) {
+    bSpeed = 0;
+    BDir = STOP;
+  }
+
+  // update setpoints
+  setNewSetpointMotorA(aSpeed, ADir);
+  setNewSetpointMotorB(bSpeed, BDir);
+}
+
+
 
 void initMotors(){
   pinMode(AIN1, OUTPUT);
@@ -409,13 +453,13 @@ void loop(){
     inputA = 0;
     startTimeA = nowTime;
     countIntA = 0;
-    nh.loginfo("L is stuck");
+//    nh.loginfo("L is stuck");
   }
   if (nowTime - startTimeB >= 250) {
     inputB = 0;
     startTimeB = nowTime;
     countIntB = 0;
-    nh.loginfo("R is stuck");
+//    nh.logi/nfo("R is stuck");
   }
 
 
@@ -445,7 +489,7 @@ void isr_A(){
   // count sufficient interrupts to get accurate timing
   countIntA++;
   info = 'A' + ' ' + String(countIntA) + ' ' + String(countIntB);
-  nh.loginfo(info.c_str());
+//  nh.loginfo(info/.c_str());
   if (countIntA == INT_COUNT){
     inputA = (float) encoderConversion * (1.0 / (float)(nowTime - startTimeA));
     startTimeA = nowTime;
@@ -470,7 +514,7 @@ void isr_A(){
 void isr_B(){
   // count sufficient interrupts to get accurate timing
   info = 'B' + ' ' + String(countIntA) + ' ' + String(countIntB);
-  nh.loginfo(info.c_str());
+//  nh.loginfo(info.c/_str());
   if (countIntB == INT_COUNT){
     inputB = (float) encoderConversion * (1.0 / (float)(nowTime - startTimeB));
     startTimeB = nowTime;

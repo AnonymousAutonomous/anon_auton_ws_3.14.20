@@ -1,0 +1,6 @@
+numid=3,iface=MIXER,name='PCM Playback Route'
+  ; type=INTEGER,access=rw------,values=1,min=0,max=2,step=0
+  : values=1
+Set the following values:
+
+{'device_path': '/dev/video0', 'port': '/dev/ttyACM0', 'serial_port': '/dev/ttyUSB0'}

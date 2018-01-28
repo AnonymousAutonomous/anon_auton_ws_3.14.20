@@ -32,20 +32,20 @@
 // Output pins used to control motors
 
 // A is left motor
-const uint16_t PWMA = 11;         // Motor A PWM control     BLUE 
-const uint16_t AIN1 = 9;         // Motor A input 1         YELLOW
-const uint16_t AIN2 = 8;         // Motor A input 2         GREEN
-const uint16_t STBYA = 4;        // Standby                 
+const uint8_t PWMA = 11;         // Motor A PWM control     BLUE 
+const uint8_t AIN1 = 9;         // Motor A input 1         YELLOW
+const uint8_t AIN2 = 8;         // Motor A input 2         GREEN
+const uint8_t STBYA = 6;        // Standby                 
 
 // B is right motor
-const uint16_t BIN1 = 12;        // Motor B input 1         ORANGE
-const uint16_t BIN2 = 13;        // Motor B input 2         RED
-const uint16_t PWMB = 10;        // Motor B PWM control     BROWN
-const uint16_t STBYB = 7;        // Standby                 
+const uint8_t BIN1 = 12;        // Motor B input 1         ORANGE
+const uint8_t BIN2 = 7;        // Motor B input 2         RED
+const uint8_t PWMB = 10;        // Motor B PWM control     BROWN
+const uint8_t STBYB = 5;        // Standby                 
 
 // Motor encoder external interrupt pins
-const uint16_t ENCA = 3;        // Encoder A input         
-const uint16_t ENCB = 2;        // Encoder B input         
+const uint8_t ENCA = 3;        // Encoder A input         
+const uint8_t ENCB = 2;        // Encoder B input    
 
 // PWM
 const uint16_t ANALOG_WRITE_BITS = 8;
