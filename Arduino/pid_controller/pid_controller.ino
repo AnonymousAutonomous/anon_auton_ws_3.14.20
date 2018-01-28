@@ -265,8 +265,8 @@ void initMotors(){
 void initEncoders(){
   pinMode(ENCA, INPUT);
   pinMode(ENCB, INPUT);
-  attachInterrupt(digitalPinToInterrupt(ENCA), isr_A, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(ENCB), isr_B, CHANGE);
+  attachInterrupt(/*digitalPinToInterrupt(*/ENCA/*)*/, isr_A, CHANGE);
+  attachInterrupt(/*digitalPinToInterrupt(*/ENCB/*)*/, isr_B, CHANGE);
 }
 
 void initPWM(){
@@ -308,6 +308,7 @@ ros::Subscriber<eyes::Generic> generic_sub("generic_feed", &generic_callback);
 
 void setup(){
   // Set up ROS
+  nh.getHardware()->setBaud(115200);
   nh.initNode();
   nh.advertise(pubR);
   nh.advertise(pubL);
