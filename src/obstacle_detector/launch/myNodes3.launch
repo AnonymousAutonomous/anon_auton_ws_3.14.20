@@ -29,7 +29,5 @@
     <param name="frame_id"             value="map"/>
   </node>
 
-  <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/my_rplidar.rviz"/>
-
 </launch>
 <!-- -->

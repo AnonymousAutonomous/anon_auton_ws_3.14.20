@@ -68,6 +68,16 @@ install/strip/fast: preinstall/fast
 	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
 .PHONY : install/strip/fast
 
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
+
 # Special rule for the target install/local
 install/local: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
@@ -91,6 +101,18 @@ test/fast: test
 
 .PHONY : test/fast
 
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -112,28 +134,6 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
-
-# Special rule for the target list_install_components
-list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
-.PHONY : list_install_components
-
-# Special rule for the target list_install_components
-list_install_components/fast: list_install_components
-
-.PHONY : list_install_components/fast
-
-# Special rule for the target install
-install: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/usr/bin/cmake -P cmake_install.cmake
-.PHONY : install
-
-# Special rule for the target install
-install/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/usr/bin/cmake -P cmake_install.cmake
-.PHONY : install/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -168,6 +168,21 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+ping_arduino/CMakeFiles/ping.dir/rule:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 ping_arduino/CMakeFiles/ping.dir/rule
+.PHONY : ping_arduino/CMakeFiles/ping.dir/rule
+
+# Convenience name for target.
+ping: ping_arduino/CMakeFiles/ping.dir/rule
+
+.PHONY : ping
+
+# fast build rule for target.
+ping/fast:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f ping_arduino/CMakeFiles/ping.dir/build.make ping_arduino/CMakeFiles/ping.dir/build
+.PHONY : ping/fast
+
+# Convenience name for target.
 ping_arduino/CMakeFiles/blinker.dir/rule:
 	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 ping_arduino/CMakeFiles/blinker.dir/rule
 .PHONY : ping_arduino/CMakeFiles/blinker.dir/rule
@@ -181,6 +196,21 @@ blinker: ping_arduino/CMakeFiles/blinker.dir/rule
 blinker/fast:
 	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f ping_arduino/CMakeFiles/blinker.dir/build.make ping_arduino/CMakeFiles/blinker.dir/build
 .PHONY : blinker/fast
+
+# Convenience name for target.
+ping_arduino/CMakeFiles/ping_pong.dir/rule:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 ping_arduino/CMakeFiles/ping_pong.dir/rule
+.PHONY : ping_arduino/CMakeFiles/ping_pong.dir/rule
+
+# Convenience name for target.
+ping_pong: ping_arduino/CMakeFiles/ping_pong.dir/rule
+
+.PHONY : ping_pong
+
+# fast build rule for target.
+ping_pong/fast:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f ping_arduino/CMakeFiles/ping_pong.dir/build.make ping_arduino/CMakeFiles/ping_pong.dir/build
+.PHONY : ping_pong/fast
 
 src/blinker.o: src/blinker.cpp.o
 
@@ -209,6 +239,60 @@ src/blinker.cpp.s:
 	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f ping_arduino/CMakeFiles/blinker.dir/build.make ping_arduino/CMakeFiles/blinker.dir/src/blinker.cpp.s
 .PHONY : src/blinker.cpp.s
 
+src/ping.o: src/ping.cpp.o
+
+.PHONY : src/ping.o
+
+# target to build an object file
+src/ping.cpp.o:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f ping_arduino/CMakeFiles/ping.dir/build.make ping_arduino/CMakeFiles/ping.dir/src/ping.cpp.o
+.PHONY : src/ping.cpp.o
+
+src/ping.i: src/ping.cpp.i
+
+.PHONY : src/ping.i
+
+# target to preprocess a source file
+src/ping.cpp.i:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f ping_arduino/CMakeFiles/ping.dir/build.make ping_arduino/CMakeFiles/ping.dir/src/ping.cpp.i
+.PHONY : src/ping.cpp.i
+
+src/ping.s: src/ping.cpp.s
+
+.PHONY : src/ping.s
+
+# target to generate assembly for a file
+src/ping.cpp.s:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f ping_arduino/CMakeFiles/ping.dir/build.make ping_arduino/CMakeFiles/ping.dir/src/ping.cpp.s
+.PHONY : src/ping.cpp.s
+
+src/ping_pong.o: src/ping_pong.cpp.o
+
+.PHONY : src/ping_pong.o
+
+# target to build an object file
+src/ping_pong.cpp.o:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f ping_arduino/CMakeFiles/ping_pong.dir/build.make ping_arduino/CMakeFiles/ping_pong.dir/src/ping_pong.cpp.o
+.PHONY : src/ping_pong.cpp.o
+
+src/ping_pong.i: src/ping_pong.cpp.i
+
+.PHONY : src/ping_pong.i
+
+# target to preprocess a source file
+src/ping_pong.cpp.i:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f ping_arduino/CMakeFiles/ping_pong.dir/build.make ping_arduino/CMakeFiles/ping_pong.dir/src/ping_pong.cpp.i
+.PHONY : src/ping_pong.cpp.i
+
+src/ping_pong.s: src/ping_pong.cpp.s
+
+.PHONY : src/ping_pong.s
+
+# target to generate assembly for a file
+src/ping_pong.cpp.s:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f ping_arduino/CMakeFiles/ping_pong.dir/build.make ping_arduino/CMakeFiles/ping_pong.dir/src/ping_pong.cpp.s
+.PHONY : src/ping_pong.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -216,16 +300,24 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... install/strip"
+	@echo "... list_install_components"
+	@echo "... ping"
+	@echo "... blinker"
 	@echo "... install/local"
 	@echo "... test"
-	@echo "... blinker"
+	@echo "... install"
+	@echo "... ping_pong"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... list_install_components"
-	@echo "... install"
 	@echo "... src/blinker.o"
 	@echo "... src/blinker.i"
 	@echo "... src/blinker.s"
+	@echo "... src/ping.o"
+	@echo "... src/ping.i"
+	@echo "... src/ping.s"
+	@echo "... src/ping_pong.o"
+	@echo "... src/ping_pong.i"
+	@echo "... src/ping_pong.s"
 .PHONY : help
 
 

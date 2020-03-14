@@ -56,6 +56,39 @@ CMAKE_BINARY_DIR = /home/anonymous3/anon_auton_ws/build
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
 # Special rule for the target install/strip
 install/strip: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
@@ -80,38 +113,6 @@ install/local/fast: preinstall/fast
 	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
 .PHONY : install/local/fast
 
-# Special rule for the target list_install_components
-list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
-.PHONY : list_install_components
-
-# Special rule for the target list_install_components
-list_install_components/fast: list_install_components
-
-.PHONY : list_install_components/fast
-
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target test
 test:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
@@ -123,17 +124,16 @@ test/fast: test
 
 .PHONY : test/fast
 
-# Special rule for the target install
-install: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/usr/bin/cmake -P cmake_install.cmake
-.PHONY : install
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
 
-# Special rule for the target install
-install/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/usr/bin/cmake -P cmake_install.cmake
-.PHONY : install/fast
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -168,19 +168,19 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-mylidar/CMakeFiles/test_receiver.dir/rule:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/test_receiver.dir/rule
-.PHONY : mylidar/CMakeFiles/test_receiver.dir/rule
+mylidar/CMakeFiles/processor.dir/rule:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/processor.dir/rule
+.PHONY : mylidar/CMakeFiles/processor.dir/rule
 
 # Convenience name for target.
-test_receiver: mylidar/CMakeFiles/test_receiver.dir/rule
+processor: mylidar/CMakeFiles/processor.dir/rule
 
-.PHONY : test_receiver
+.PHONY : processor
 
 # fast build rule for target.
-test_receiver/fast:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/test_receiver.dir/build.make mylidar/CMakeFiles/test_receiver.dir/build
-.PHONY : test_receiver/fast
+processor/fast:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/processor.dir/build.make mylidar/CMakeFiles/processor.dir/build
+.PHONY : processor/fast
 
 # Convenience name for target.
 mylidar/CMakeFiles/test_runner.dir/rule:
@@ -198,244 +198,19 @@ test_runner/fast:
 .PHONY : test_runner/fast
 
 # Convenience name for target.
-mylidar/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule
-.PHONY : mylidar/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule
+mylidar/CMakeFiles/test_receiver.dir/rule:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/test_receiver.dir/rule
+.PHONY : mylidar/CMakeFiles/test_receiver.dir/rule
 
 # Convenience name for target.
-rosgraph_msgs_generate_messages_cpp: mylidar/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule
+test_receiver: mylidar/CMakeFiles/test_receiver.dir/rule
 
-.PHONY : rosgraph_msgs_generate_messages_cpp
+.PHONY : test_receiver
 
 # fast build rule for target.
-rosgraph_msgs_generate_messages_cpp/fast:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/build.make mylidar/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/build
-.PHONY : rosgraph_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-mylidar/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/rule:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/rule
-.PHONY : mylidar/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-rosgraph_msgs_generate_messages_lisp: mylidar/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/rule
-
-.PHONY : rosgraph_msgs_generate_messages_lisp
-
-# fast build rule for target.
-rosgraph_msgs_generate_messages_lisp/fast:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/build.make mylidar/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/build
-.PHONY : rosgraph_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-mylidar/CMakeFiles/roscpp_generate_messages_py.dir/rule:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/roscpp_generate_messages_py.dir/rule
-.PHONY : mylidar/CMakeFiles/roscpp_generate_messages_py.dir/rule
-
-# Convenience name for target.
-roscpp_generate_messages_py: mylidar/CMakeFiles/roscpp_generate_messages_py.dir/rule
-
-.PHONY : roscpp_generate_messages_py
-
-# fast build rule for target.
-roscpp_generate_messages_py/fast:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/roscpp_generate_messages_py.dir/build.make mylidar/CMakeFiles/roscpp_generate_messages_py.dir/build
-.PHONY : roscpp_generate_messages_py/fast
-
-# Convenience name for target.
-mylidar/CMakeFiles/processor.dir/rule:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/processor.dir/rule
-.PHONY : mylidar/CMakeFiles/processor.dir/rule
-
-# Convenience name for target.
-processor: mylidar/CMakeFiles/processor.dir/rule
-
-.PHONY : processor
-
-# fast build rule for target.
-processor/fast:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/processor.dir/build.make mylidar/CMakeFiles/processor.dir/build
-.PHONY : processor/fast
-
-# Convenience name for target.
-mylidar/CMakeFiles/roscpp_generate_messages_lisp.dir/rule:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/roscpp_generate_messages_lisp.dir/rule
-.PHONY : mylidar/CMakeFiles/roscpp_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-roscpp_generate_messages_lisp: mylidar/CMakeFiles/roscpp_generate_messages_lisp.dir/rule
-
-.PHONY : roscpp_generate_messages_lisp
-
-# fast build rule for target.
-roscpp_generate_messages_lisp/fast:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/roscpp_generate_messages_lisp.dir/build.make mylidar/CMakeFiles/roscpp_generate_messages_lisp.dir/build
-.PHONY : roscpp_generate_messages_lisp/fast
-
-# Convenience name for target.
-mylidar/CMakeFiles/roscpp_generate_messages_cpp.dir/rule:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
-.PHONY : mylidar/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-roscpp_generate_messages_cpp: mylidar/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
-
-.PHONY : roscpp_generate_messages_cpp
-
-# fast build rule for target.
-roscpp_generate_messages_cpp/fast:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/roscpp_generate_messages_cpp.dir/build.make mylidar/CMakeFiles/roscpp_generate_messages_cpp.dir/build
-.PHONY : roscpp_generate_messages_cpp/fast
-
-# Convenience name for target.
-mylidar/CMakeFiles/roscpp_generate_messages_eus.dir/rule:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/roscpp_generate_messages_eus.dir/rule
-.PHONY : mylidar/CMakeFiles/roscpp_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-roscpp_generate_messages_eus: mylidar/CMakeFiles/roscpp_generate_messages_eus.dir/rule
-
-.PHONY : roscpp_generate_messages_eus
-
-# fast build rule for target.
-roscpp_generate_messages_eus/fast:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/roscpp_generate_messages_eus.dir/build.make mylidar/CMakeFiles/roscpp_generate_messages_eus.dir/build
-.PHONY : roscpp_generate_messages_eus/fast
-
-# Convenience name for target.
-mylidar/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/rule:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/rule
-.PHONY : mylidar/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-rosgraph_msgs_generate_messages_eus: mylidar/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/rule
-
-.PHONY : rosgraph_msgs_generate_messages_eus
-
-# fast build rule for target.
-rosgraph_msgs_generate_messages_eus/fast:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/build.make mylidar/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/build
-.PHONY : rosgraph_msgs_generate_messages_eus/fast
-
-# Convenience name for target.
-mylidar/CMakeFiles/roscpp_generate_messages_nodejs.dir/rule:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/roscpp_generate_messages_nodejs.dir/rule
-.PHONY : mylidar/CMakeFiles/roscpp_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-roscpp_generate_messages_nodejs: mylidar/CMakeFiles/roscpp_generate_messages_nodejs.dir/rule
-
-.PHONY : roscpp_generate_messages_nodejs
-
-# fast build rule for target.
-roscpp_generate_messages_nodejs/fast:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/roscpp_generate_messages_nodejs.dir/build.make mylidar/CMakeFiles/roscpp_generate_messages_nodejs.dir/build
-.PHONY : roscpp_generate_messages_nodejs/fast
-
-# Convenience name for target.
-mylidar/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
-.PHONY : mylidar/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_lisp: mylidar/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
-
-.PHONY : std_msgs_generate_messages_lisp
-
-# fast build rule for target.
-std_msgs_generate_messages_lisp/fast:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/std_msgs_generate_messages_lisp.dir/build.make mylidar/CMakeFiles/std_msgs_generate_messages_lisp.dir/build
-.PHONY : std_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-mylidar/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
-.PHONY : mylidar/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_cpp: mylidar/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
-
-.PHONY : std_msgs_generate_messages_cpp
-
-# fast build rule for target.
-std_msgs_generate_messages_cpp/fast:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/std_msgs_generate_messages_cpp.dir/build.make mylidar/CMakeFiles/std_msgs_generate_messages_cpp.dir/build
-.PHONY : std_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-mylidar/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
-.PHONY : mylidar/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_nodejs: mylidar/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
-
-.PHONY : std_msgs_generate_messages_nodejs
-
-# fast build rule for target.
-std_msgs_generate_messages_nodejs/fast:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/std_msgs_generate_messages_nodejs.dir/build.make mylidar/CMakeFiles/std_msgs_generate_messages_nodejs.dir/build
-.PHONY : std_msgs_generate_messages_nodejs/fast
-
-# Convenience name for target.
-mylidar/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/rule:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/rule
-.PHONY : mylidar/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-rosgraph_msgs_generate_messages_py: mylidar/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/rule
-
-.PHONY : rosgraph_msgs_generate_messages_py
-
-# fast build rule for target.
-rosgraph_msgs_generate_messages_py/fast:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/build.make mylidar/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/build
-.PHONY : rosgraph_msgs_generate_messages_py/fast
-
-# Convenience name for target.
-mylidar/CMakeFiles/std_msgs_generate_messages_py.dir/rule:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/std_msgs_generate_messages_py.dir/rule
-.PHONY : mylidar/CMakeFiles/std_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_py: mylidar/CMakeFiles/std_msgs_generate_messages_py.dir/rule
-
-.PHONY : std_msgs_generate_messages_py
-
-# fast build rule for target.
-std_msgs_generate_messages_py/fast:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/std_msgs_generate_messages_py.dir/build.make mylidar/CMakeFiles/std_msgs_generate_messages_py.dir/build
-.PHONY : std_msgs_generate_messages_py/fast
-
-# Convenience name for target.
-mylidar/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/rule:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/rule
-.PHONY : mylidar/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-rosgraph_msgs_generate_messages_nodejs: mylidar/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/rule
-
-.PHONY : rosgraph_msgs_generate_messages_nodejs
-
-# fast build rule for target.
-rosgraph_msgs_generate_messages_nodejs/fast:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/build.make mylidar/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/build
-.PHONY : rosgraph_msgs_generate_messages_nodejs/fast
-
-# Convenience name for target.
-mylidar/CMakeFiles/std_msgs_generate_messages_eus.dir/rule:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mylidar/CMakeFiles/std_msgs_generate_messages_eus.dir/rule
-.PHONY : mylidar/CMakeFiles/std_msgs_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_eus: mylidar/CMakeFiles/std_msgs_generate_messages_eus.dir/rule
-
-.PHONY : std_msgs_generate_messages_eus
-
-# fast build rule for target.
-std_msgs_generate_messages_eus/fast:
-	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/std_msgs_generate_messages_eus.dir/build.make mylidar/CMakeFiles/std_msgs_generate_messages_eus.dir/build
-.PHONY : std_msgs_generate_messages_eus/fast
+test_receiver/fast:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f mylidar/CMakeFiles/test_receiver.dir/build.make mylidar/CMakeFiles/test_receiver.dir/build
+.PHONY : test_receiver/fast
 
 # Convenience name for target.
 mylidar/CMakeFiles/test_sender.dir/rule:
@@ -566,32 +341,17 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... install/strip"
-	@echo "... install/local"
+	@echo "... install"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
-	@echo "... edit_cache"
-	@echo "... test"
-	@echo "... test_receiver"
-	@echo "... test_runner"
-	@echo "... rosgraph_msgs_generate_messages_cpp"
-	@echo "... rosgraph_msgs_generate_messages_lisp"
-	@echo "... roscpp_generate_messages_py"
+	@echo "... install/strip"
 	@echo "... processor"
-	@echo "... roscpp_generate_messages_lisp"
-	@echo "... roscpp_generate_messages_cpp"
-	@echo "... roscpp_generate_messages_eus"
-	@echo "... rosgraph_msgs_generate_messages_eus"
-	@echo "... roscpp_generate_messages_nodejs"
-	@echo "... std_msgs_generate_messages_lisp"
-	@echo "... install"
-	@echo "... std_msgs_generate_messages_cpp"
-	@echo "... std_msgs_generate_messages_nodejs"
-	@echo "... rosgraph_msgs_generate_messages_py"
-	@echo "... std_msgs_generate_messages_py"
-	@echo "... rosgraph_msgs_generate_messages_nodejs"
-	@echo "... std_msgs_generate_messages_eus"
+	@echo "... install/local"
+	@echo "... test_runner"
+	@echo "... test_receiver"
+	@echo "... test"
 	@echo "... test_sender"
+	@echo "... edit_cache"
 	@echo "... src/processor.o"
 	@echo "... src/processor.i"
 	@echo "... src/processor.s"

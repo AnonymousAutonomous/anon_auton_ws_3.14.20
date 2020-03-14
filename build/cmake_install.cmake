@@ -131,6 +131,7 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/anonymous3/anon_auton_ws/build/gtest/cmake_install.cmake")
+  include("/home/anonymous3/anon_auton_ws/build/error_server/cmake_install.cmake")
   include("/home/anonymous3/anon_auton_ws/build/mylidar/cmake_install.cmake")
   include("/home/anonymous3/anon_auton_ws/build/ping_arduino/cmake_install.cmake")
   include("/home/anonymous3/anon_auton_ws/build/simple_motors/cmake_install.cmake")

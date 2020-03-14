@@ -58,6 +58,20 @@ target_link_libraries(director ${catkin_LIBRARIES})
 add_executable(bystander src/nodes/bystander.cpp)
 target_link_libraries(bystander ${catkin_LIBRARIES})
 
+add_executable(antisocial src/nodes/antisocial.cpp)
+target_link_libraries(antisocial ${catkin_LIBRARIES})
+
+add_executable(social src/nodes/social.cpp)
+target_link_libraries(social ${catkin_LIBRARIES})
+
+add_executable(frechet src/nodes/frechet.cpp)
+target_link_libraries(frechet ${catkin_LIBRARIES})
+
+add_executable(stale src/nodes/stale.cpp)
+target_link_libraries(stale ${catkin_LIBRARIES})
+
+#Clock skew is annoying lol
+
 #
 # Build nodelets
 #

@@ -208,3 +208,11 @@ include_directories(
 add_executable(blinker src/blinker.cpp)
 target_link_libraries(blinker ${catkin_LIBRARIES})
 add_dependencies(blinker ping_arduino_generate_messages_cpp)
+
+add_executable(ping src/ping.cpp)
+target_link_libraries(ping ${catkin_LIBRARIES})
+
+add_executable(ping_pong src/ping_pong.cpp)
+target_link_libraries(ping_pong ${catkin_LIBRARIES})
+
+# Clock skew lol

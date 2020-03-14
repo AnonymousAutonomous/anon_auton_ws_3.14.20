@@ -168,6 +168,66 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+obstacle_detector/CMakeFiles/stale.dir/rule:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 obstacle_detector/CMakeFiles/stale.dir/rule
+.PHONY : obstacle_detector/CMakeFiles/stale.dir/rule
+
+# Convenience name for target.
+stale: obstacle_detector/CMakeFiles/stale.dir/rule
+
+.PHONY : stale
+
+# fast build rule for target.
+stale/fast:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/stale.dir/build.make obstacle_detector/CMakeFiles/stale.dir/build
+.PHONY : stale/fast
+
+# Convenience name for target.
+obstacle_detector/CMakeFiles/frechet.dir/rule:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 obstacle_detector/CMakeFiles/frechet.dir/rule
+.PHONY : obstacle_detector/CMakeFiles/frechet.dir/rule
+
+# Convenience name for target.
+frechet: obstacle_detector/CMakeFiles/frechet.dir/rule
+
+.PHONY : frechet
+
+# fast build rule for target.
+frechet/fast:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/frechet.dir/build.make obstacle_detector/CMakeFiles/frechet.dir/build
+.PHONY : frechet/fast
+
+# Convenience name for target.
+obstacle_detector/CMakeFiles/social.dir/rule:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 obstacle_detector/CMakeFiles/social.dir/rule
+.PHONY : obstacle_detector/CMakeFiles/social.dir/rule
+
+# Convenience name for target.
+social: obstacle_detector/CMakeFiles/social.dir/rule
+
+.PHONY : social
+
+# fast build rule for target.
+social/fast:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/social.dir/build.make obstacle_detector/CMakeFiles/social.dir/build
+.PHONY : social/fast
+
+# Convenience name for target.
+obstacle_detector/CMakeFiles/antisocial.dir/rule:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 obstacle_detector/CMakeFiles/antisocial.dir/rule
+.PHONY : obstacle_detector/CMakeFiles/antisocial.dir/rule
+
+# Convenience name for target.
+antisocial: obstacle_detector/CMakeFiles/antisocial.dir/rule
+
+.PHONY : antisocial
+
+# fast build rule for target.
+antisocial/fast:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/antisocial.dir/build.make obstacle_detector/CMakeFiles/antisocial.dir/build
+.PHONY : antisocial/fast
+
+# Convenience name for target.
 obstacle_detector/CMakeFiles/bystander.dir/rule:
 	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 obstacle_detector/CMakeFiles/bystander.dir/rule
 .PHONY : obstacle_detector/CMakeFiles/bystander.dir/rule
@@ -1088,6 +1148,33 @@ src/nodelets/scans_merger_nodelet.cpp.s:
 	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/obstacle_detector_nodelets.dir/build.make obstacle_detector/CMakeFiles/obstacle_detector_nodelets.dir/src/nodelets/scans_merger_nodelet.cpp.s
 .PHONY : src/nodelets/scans_merger_nodelet.cpp.s
 
+src/nodes/antisocial.o: src/nodes/antisocial.cpp.o
+
+.PHONY : src/nodes/antisocial.o
+
+# target to build an object file
+src/nodes/antisocial.cpp.o:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/antisocial.dir/build.make obstacle_detector/CMakeFiles/antisocial.dir/src/nodes/antisocial.cpp.o
+.PHONY : src/nodes/antisocial.cpp.o
+
+src/nodes/antisocial.i: src/nodes/antisocial.cpp.i
+
+.PHONY : src/nodes/antisocial.i
+
+# target to preprocess a source file
+src/nodes/antisocial.cpp.i:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/antisocial.dir/build.make obstacle_detector/CMakeFiles/antisocial.dir/src/nodes/antisocial.cpp.i
+.PHONY : src/nodes/antisocial.cpp.i
+
+src/nodes/antisocial.s: src/nodes/antisocial.cpp.s
+
+.PHONY : src/nodes/antisocial.s
+
+# target to generate assembly for a file
+src/nodes/antisocial.cpp.s:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/antisocial.dir/build.make obstacle_detector/CMakeFiles/antisocial.dir/src/nodes/antisocial.cpp.s
+.PHONY : src/nodes/antisocial.cpp.s
+
 src/nodes/bystander.o: src/nodes/bystander.cpp.o
 
 .PHONY : src/nodes/bystander.o
@@ -1141,6 +1228,33 @@ src/nodes/director.s: src/nodes/director.cpp.s
 src/nodes/director.cpp.s:
 	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/director.dir/build.make obstacle_detector/CMakeFiles/director.dir/src/nodes/director.cpp.s
 .PHONY : src/nodes/director.cpp.s
+
+src/nodes/frechet.o: src/nodes/frechet.cpp.o
+
+.PHONY : src/nodes/frechet.o
+
+# target to build an object file
+src/nodes/frechet.cpp.o:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/frechet.dir/build.make obstacle_detector/CMakeFiles/frechet.dir/src/nodes/frechet.cpp.o
+.PHONY : src/nodes/frechet.cpp.o
+
+src/nodes/frechet.i: src/nodes/frechet.cpp.i
+
+.PHONY : src/nodes/frechet.i
+
+# target to preprocess a source file
+src/nodes/frechet.cpp.i:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/frechet.dir/build.make obstacle_detector/CMakeFiles/frechet.dir/src/nodes/frechet.cpp.i
+.PHONY : src/nodes/frechet.cpp.i
+
+src/nodes/frechet.s: src/nodes/frechet.cpp.s
+
+.PHONY : src/nodes/frechet.s
+
+# target to generate assembly for a file
+src/nodes/frechet.cpp.s:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/frechet.dir/build.make obstacle_detector/CMakeFiles/frechet.dir/src/nodes/frechet.cpp.s
+.PHONY : src/nodes/frechet.cpp.s
 
 src/nodes/obstacle_extractor_node.o: src/nodes/obstacle_extractor_node.cpp.o
 
@@ -1249,6 +1363,60 @@ src/nodes/scans_merger_node.s: src/nodes/scans_merger_node.cpp.s
 src/nodes/scans_merger_node.cpp.s:
 	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/scans_merger_node.dir/build.make obstacle_detector/CMakeFiles/scans_merger_node.dir/src/nodes/scans_merger_node.cpp.s
 .PHONY : src/nodes/scans_merger_node.cpp.s
+
+src/nodes/social.o: src/nodes/social.cpp.o
+
+.PHONY : src/nodes/social.o
+
+# target to build an object file
+src/nodes/social.cpp.o:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/social.dir/build.make obstacle_detector/CMakeFiles/social.dir/src/nodes/social.cpp.o
+.PHONY : src/nodes/social.cpp.o
+
+src/nodes/social.i: src/nodes/social.cpp.i
+
+.PHONY : src/nodes/social.i
+
+# target to preprocess a source file
+src/nodes/social.cpp.i:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/social.dir/build.make obstacle_detector/CMakeFiles/social.dir/src/nodes/social.cpp.i
+.PHONY : src/nodes/social.cpp.i
+
+src/nodes/social.s: src/nodes/social.cpp.s
+
+.PHONY : src/nodes/social.s
+
+# target to generate assembly for a file
+src/nodes/social.cpp.s:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/social.dir/build.make obstacle_detector/CMakeFiles/social.dir/src/nodes/social.cpp.s
+.PHONY : src/nodes/social.cpp.s
+
+src/nodes/stale.o: src/nodes/stale.cpp.o
+
+.PHONY : src/nodes/stale.o
+
+# target to build an object file
+src/nodes/stale.cpp.o:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/stale.dir/build.make obstacle_detector/CMakeFiles/stale.dir/src/nodes/stale.cpp.o
+.PHONY : src/nodes/stale.cpp.o
+
+src/nodes/stale.i: src/nodes/stale.cpp.i
+
+.PHONY : src/nodes/stale.i
+
+# target to preprocess a source file
+src/nodes/stale.cpp.i:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/stale.dir/build.make obstacle_detector/CMakeFiles/stale.dir/src/nodes/stale.cpp.i
+.PHONY : src/nodes/stale.cpp.i
+
+src/nodes/stale.s: src/nodes/stale.cpp.s
+
+.PHONY : src/nodes/stale.s
+
+# target to generate assembly for a file
+src/nodes/stale.cpp.s:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/stale.dir/build.make obstacle_detector/CMakeFiles/stale.dir/src/nodes/stale.cpp.s
+.PHONY : src/nodes/stale.cpp.s
 
 src/obstacle_extractor.o: src/obstacle_extractor.cpp.o
 
@@ -1475,6 +1643,10 @@ help:
 	@echo "... install/strip"
 	@echo "... install"
 	@echo "... edit_cache"
+	@echo "... stale"
+	@echo "... frechet"
+	@echo "... social"
+	@echo "... antisocial"
 	@echo "... bystander"
 	@echo "... director"
 	@echo "... test"
@@ -1550,12 +1722,18 @@ help:
 	@echo "... src/nodelets/scans_merger_nodelet.o"
 	@echo "... src/nodelets/scans_merger_nodelet.i"
 	@echo "... src/nodelets/scans_merger_nodelet.s"
+	@echo "... src/nodes/antisocial.o"
+	@echo "... src/nodes/antisocial.i"
+	@echo "... src/nodes/antisocial.s"
 	@echo "... src/nodes/bystander.o"
 	@echo "... src/nodes/bystander.i"
 	@echo "... src/nodes/bystander.s"
 	@echo "... src/nodes/director.o"
 	@echo "... src/nodes/director.i"
 	@echo "... src/nodes/director.s"
+	@echo "... src/nodes/frechet.o"
+	@echo "... src/nodes/frechet.i"
+	@echo "... src/nodes/frechet.s"
 	@echo "... src/nodes/obstacle_extractor_node.o"
 	@echo "... src/nodes/obstacle_extractor_node.i"
 	@echo "... src/nodes/obstacle_extractor_node.s"
@@ -1568,6 +1746,12 @@ help:
 	@echo "... src/nodes/scans_merger_node.o"
 	@echo "... src/nodes/scans_merger_node.i"
 	@echo "... src/nodes/scans_merger_node.s"
+	@echo "... src/nodes/social.o"
+	@echo "... src/nodes/social.i"
+	@echo "... src/nodes/social.s"
+	@echo "... src/nodes/stale.o"
+	@echo "... src/nodes/stale.i"
+	@echo "... src/nodes/stale.s"
 	@echo "... src/obstacle_extractor.o"
 	@echo "... src/obstacle_extractor.i"
 	@echo "... src/obstacle_extractor.s"

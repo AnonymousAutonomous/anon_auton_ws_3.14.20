@@ -93,7 +93,7 @@ Visualization Manager:
       Segments color: 170; 170; 0
       Segments thickness: 0.029999999329447746
       Topic: raw_obstacles
-      Unreliable: true
+      Unreliable: false
       Value: true
   Enabled: true
   Global Options:

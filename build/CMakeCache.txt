@@ -414,6 +414,12 @@ diagnostic_updater_DIR:PATH=/opt/ros/melodic/share/diagnostic_updater/cmake
 dynamic_reconfigure_DIR:PATH=/opt/ros/melodic/share/dynamic_reconfigure/cmake
 
 //Value Computed by CMake
+error_server_BINARY_DIR:STATIC=/home/anonymous3/anon_auton_ws/build/error_server
+
+//Value Computed by CMake
+error_server_SOURCE_DIR:STATIC=/home/anonymous3/anon_auton_ws/src/error_server
+
+//Value Computed by CMake
 eyes_BINARY_DIR:STATIC=/home/anonymous3/anon_auton_ws/build/eyes
 
 //Value Computed by CMake
@@ -835,7 +841,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=12
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=13
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
