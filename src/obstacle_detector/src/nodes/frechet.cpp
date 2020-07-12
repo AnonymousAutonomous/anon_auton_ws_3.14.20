@@ -6,7 +6,9 @@
 
 ros::Publisher George;
 std::pair<double, double> prev_line = { 0, 0 };
-double r = 1000;
+double r = 12;
+
+double multiplier = 10;
 
 void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
   std_msgs::Float64 msg;
@@ -22,6 +24,13 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
     p1.second = seg.first_point.y;
     p2.first = seg.last_point.x;
     p2.second = seg.last_point.y;
+
+    if (p1.first < -1 * abs(p1.second)) {
+      continue;
+    }
+    if (p2.first < -1 * abs(p2.second)) {
+      continue;
+    }
 
     std::pair<double, double> line1;
     line1.first = (p2.second - p1.second) / (p2.first - p1.first);
@@ -84,6 +93,8 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
   double frechet;
   if (fresh_a < fresh_b) frechet = fresh_b;
   else frechet = fresh_a;
+
+  frechet *= multiplier;
 
   prev_line = closest_line;
 

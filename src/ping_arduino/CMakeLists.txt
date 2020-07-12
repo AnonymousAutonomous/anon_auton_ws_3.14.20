@@ -215,4 +215,10 @@ target_link_libraries(ping ${catkin_LIBRARIES})
 add_executable(ping_pong src/ping_pong.cpp)
 target_link_libraries(ping_pong ${catkin_LIBRARIES})
 
+add_executable(encoder_stopper src/encoder_stopper.cpp)
+target_link_libraries(encoder_stopper ${catkin_LIBRARIES})
+
+add_executable(source src/source.cpp)
+target_link_libraries(source ${catkin_LIBRARIES})
+
 # Clock skew lol

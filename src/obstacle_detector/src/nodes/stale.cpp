@@ -9,10 +9,21 @@ int limit = 10;
 
 int ncount = 0;
 int nsmalls = 0;
-double small = 2;
+double small = 3;
 
-ros::NodeHandle oi;
-ros::Publisher pub = oi.advertise<std_msgs::String>("emove", 1000);
+ros::Publisher pub;
+
+void callback(const std_msgs::Float64::ConstPtr& msg);
+
+int main(int argc, char** argv) {
+	ros::init(argc, argv, "stale");
+	ros::NodeHandle nh;
+	pub = nh.advertise<std_msgs::String>("emove", 1000);
+	ros::Subscriber sub = nh.subscribe("fresh", 1000, callback);
+
+	ros::spin();
+	return 0;
+}
 
 void callback(const std_msgs::Float64::ConstPtr& msg) {
 	double num = msg->data;
@@ -50,11 +61,4 @@ void callback(const std_msgs::Float64::ConstPtr& msg) {
 	}
 }
 
-int main(int argc, char** argv) {
-	ros::init(argc, argv, "stale");
-	ros::NodeHandle nh;
-	ros::Subscriber sub = nh.subscribe("fresh", 1000, callback);
-
-	ros::spin();
-	return 0;
-}
+// time skew sanity check

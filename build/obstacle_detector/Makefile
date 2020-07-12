@@ -168,6 +168,21 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+obstacle_detector/CMakeFiles/blind.dir/rule:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 obstacle_detector/CMakeFiles/blind.dir/rule
+.PHONY : obstacle_detector/CMakeFiles/blind.dir/rule
+
+# Convenience name for target.
+blind: obstacle_detector/CMakeFiles/blind.dir/rule
+
+.PHONY : blind
+
+# fast build rule for target.
+blind/fast:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/blind.dir/build.make obstacle_detector/CMakeFiles/blind.dir/build
+.PHONY : blind/fast
+
+# Convenience name for target.
 obstacle_detector/CMakeFiles/stale.dir/rule:
 	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 obstacle_detector/CMakeFiles/stale.dir/rule
 .PHONY : obstacle_detector/CMakeFiles/stale.dir/rule
@@ -693,6 +708,21 @@ _obstacle_detector_generate_messages_check_deps_SegmentObstacle/fast:
 .PHONY : _obstacle_detector_generate_messages_check_deps_SegmentObstacle/fast
 
 # Convenience name for target.
+obstacle_detector/CMakeFiles/analyzer.dir/rule:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 obstacle_detector/CMakeFiles/analyzer.dir/rule
+.PHONY : obstacle_detector/CMakeFiles/analyzer.dir/rule
+
+# Convenience name for target.
+analyzer: obstacle_detector/CMakeFiles/analyzer.dir/rule
+
+.PHONY : analyzer
+
+# fast build rule for target.
+analyzer/fast:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/analyzer.dir/build.make obstacle_detector/CMakeFiles/analyzer.dir/build
+.PHONY : analyzer/fast
+
+# Convenience name for target.
 obstacle_detector/CMakeFiles/obstacle_detector_generate_messages_py.dir/rule:
 	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 obstacle_detector/CMakeFiles/obstacle_detector_generate_messages_py.dir/rule
 .PHONY : obstacle_detector/CMakeFiles/obstacle_detector_generate_messages_py.dir/rule
@@ -1148,6 +1178,33 @@ src/nodelets/scans_merger_nodelet.cpp.s:
 	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/obstacle_detector_nodelets.dir/build.make obstacle_detector/CMakeFiles/obstacle_detector_nodelets.dir/src/nodelets/scans_merger_nodelet.cpp.s
 .PHONY : src/nodelets/scans_merger_nodelet.cpp.s
 
+src/nodes/analyzer.o: src/nodes/analyzer.cpp.o
+
+.PHONY : src/nodes/analyzer.o
+
+# target to build an object file
+src/nodes/analyzer.cpp.o:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/analyzer.dir/build.make obstacle_detector/CMakeFiles/analyzer.dir/src/nodes/analyzer.cpp.o
+.PHONY : src/nodes/analyzer.cpp.o
+
+src/nodes/analyzer.i: src/nodes/analyzer.cpp.i
+
+.PHONY : src/nodes/analyzer.i
+
+# target to preprocess a source file
+src/nodes/analyzer.cpp.i:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/analyzer.dir/build.make obstacle_detector/CMakeFiles/analyzer.dir/src/nodes/analyzer.cpp.i
+.PHONY : src/nodes/analyzer.cpp.i
+
+src/nodes/analyzer.s: src/nodes/analyzer.cpp.s
+
+.PHONY : src/nodes/analyzer.s
+
+# target to generate assembly for a file
+src/nodes/analyzer.cpp.s:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/analyzer.dir/build.make obstacle_detector/CMakeFiles/analyzer.dir/src/nodes/analyzer.cpp.s
+.PHONY : src/nodes/analyzer.cpp.s
+
 src/nodes/antisocial.o: src/nodes/antisocial.cpp.o
 
 .PHONY : src/nodes/antisocial.o
@@ -1174,6 +1231,33 @@ src/nodes/antisocial.s: src/nodes/antisocial.cpp.s
 src/nodes/antisocial.cpp.s:
 	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/antisocial.dir/build.make obstacle_detector/CMakeFiles/antisocial.dir/src/nodes/antisocial.cpp.s
 .PHONY : src/nodes/antisocial.cpp.s
+
+src/nodes/blind.o: src/nodes/blind.cpp.o
+
+.PHONY : src/nodes/blind.o
+
+# target to build an object file
+src/nodes/blind.cpp.o:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/blind.dir/build.make obstacle_detector/CMakeFiles/blind.dir/src/nodes/blind.cpp.o
+.PHONY : src/nodes/blind.cpp.o
+
+src/nodes/blind.i: src/nodes/blind.cpp.i
+
+.PHONY : src/nodes/blind.i
+
+# target to preprocess a source file
+src/nodes/blind.cpp.i:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/blind.dir/build.make obstacle_detector/CMakeFiles/blind.dir/src/nodes/blind.cpp.i
+.PHONY : src/nodes/blind.cpp.i
+
+src/nodes/blind.s: src/nodes/blind.cpp.s
+
+.PHONY : src/nodes/blind.s
+
+# target to generate assembly for a file
+src/nodes/blind.cpp.s:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f obstacle_detector/CMakeFiles/blind.dir/build.make obstacle_detector/CMakeFiles/blind.dir/src/nodes/blind.cpp.s
+.PHONY : src/nodes/blind.cpp.s
 
 src/nodes/bystander.o: src/nodes/bystander.cpp.o
 
@@ -1643,6 +1727,7 @@ help:
 	@echo "... install/strip"
 	@echo "... install"
 	@echo "... edit_cache"
+	@echo "... blind"
 	@echo "... stale"
 	@echo "... frechet"
 	@echo "... social"
@@ -1682,6 +1767,7 @@ help:
 	@echo "... _obstacle_detector_generate_messages_check_deps_CircleObstacle"
 	@echo "... obstacle_detector_nodelets"
 	@echo "... _obstacle_detector_generate_messages_check_deps_SegmentObstacle"
+	@echo "... analyzer"
 	@echo "... obstacle_detector_generate_messages_py"
 	@echo "... map_msgs_generate_messages_py"
 	@echo "... obstacle_detector_generate_messages_eus"
@@ -1722,9 +1808,15 @@ help:
 	@echo "... src/nodelets/scans_merger_nodelet.o"
 	@echo "... src/nodelets/scans_merger_nodelet.i"
 	@echo "... src/nodelets/scans_merger_nodelet.s"
+	@echo "... src/nodes/analyzer.o"
+	@echo "... src/nodes/analyzer.i"
+	@echo "... src/nodes/analyzer.s"
 	@echo "... src/nodes/antisocial.o"
 	@echo "... src/nodes/antisocial.i"
 	@echo "... src/nodes/antisocial.s"
+	@echo "... src/nodes/blind.o"
+	@echo "... src/nodes/blind.i"
+	@echo "... src/nodes/blind.s"
 	@echo "... src/nodes/bystander.o"
 	@echo "... src/nodes/bystander.i"
 	@echo "... src/nodes/bystander.s"

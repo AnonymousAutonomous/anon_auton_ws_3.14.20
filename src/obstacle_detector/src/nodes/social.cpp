@@ -6,16 +6,16 @@
 
 ros::Publisher George;
 
-const std::string FWD =           "cXstomf055f055";
-const std::string FAST_FWD =      "cXstomf070f070";
-const std::string BWD =           "cXstomr055r055";
-const std::string FAST_BWD =      "cXstomr070r070";
-const std::string PIVOTR =        "cXstomf060r060";
-const std::string PIVOTL =        "cXstomr060f060";
-const std::string FAST_PIVOTR   = "cXstomf100r100";
-const std::string FAST_PIVOTL   = "cXstomr100f100";
-const std::string VEER_R        = "cXstomf070f055";
-const std::string VEER_L        = "cXstomf055f070";
+const std::string FWD =           "cXstomf065f065";
+const std::string FAST_FWD =      "cXstomf080f080";
+const std::string BWD =           "cXstomr065r065";
+const std::string FAST_BWD =      "cXstomr080r080";
+const std::string PIVOTR =        "cXstomf070r070";
+const std::string PIVOTL =        "cXstomr070f070";
+const std::string FAST_PIVOTR   = "cXstomf110r110";
+const std::string FAST_PIVOTL   = "cXstomr110f110";
+const std::string VEER_R        = "cXstomf160f065";
+const std::string VEER_L        = "cXstomf065f160";
 
 void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
   std_msgs::String msg;
@@ -24,17 +24,18 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
   //bool speed = false;
   
   bool by_agent = false;
-  std::pair<double, double> closest_agent = { 999, 999 };
+  std::pair<double, double> closest_agent = { -999, 0 };
 
   std::stringstream ss;
   for (const auto& circ : obs->circles) {
     double x = circ.center.x;
     double y = circ.center.y;
-    if (pow(x,2) + pow(y,2) < 2.25) {
+    if (pow(x,2) + pow(y,2) < 1 && x < abs(y)) { // changed from 2.25 to 1
+      ROS_INFO("%f,%f",x,y);	    
       by_agent = true;
     }
     else {
-      if (sqrt(x * x + y * y) < sqrt(closest_agent.first * closest_agent.first + closest_agent.second * closest_agent.second)) {
+      if (sqrt(x * x + y * y) < sqrt(closest_agent.first * closest_agent.first + closest_agent.second * closest_agent.second) && x < abs(y)) {
         closest_agent.first = x;
 	closest_agent.second = y;
       }
@@ -90,7 +91,7 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
       }
     }
 
-    if (-1 * x > abs(y) && pow(x,2) + pow(y,2) < 2.25) {
+    if (-1 * x > abs(y) && pow(x,2) + pow(y,2) < 1) { // changed from 2.25 to 1
       stop = true;
     }
     /*
@@ -100,21 +101,29 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
     */
   }
 
-  if (stop) ss << "cAstomf000f000"; //stop
+  if (stop) {
+    ss << "cAstomf000f000"; //stop
+    ROS_INFO("STOPPED");
+  }
   //else if (speed) ss << "cCstomf150f150"; //ffwd --> Fee is changing the spook speed to a higher speed
   
   else if (by_agent) {
-    ss << PIVOTL; //dance
+    ss << "cAstomf000f000"; //dance
+    ROS_INFO("BY AGENT");
   }
   else {
-    if (closest_agent.first > 4 * abs(closest_agent.second)) {
+    ROS_INFO("%f,%f", closest_agent.first, closest_agent.second);
+    if (closest_agent.first < -4 * abs(closest_agent.second)) {
       ss << FWD;
+      ROS_INFO("APPROACHING AGENT");
     }
     else if (closest_agent.second > 0) {
-      ss << PIVOTL; //CCW
+      ss << PIVOTR; //CW
+      ROS_INFO("TURNING CLOCKWISE TOWARD AGENT");
     }
     else {
-      ss << PIVOTR; //CW
+      ss << PIVOTL; //CCW
+      ROS_INFO("TURNING COUNTER CLOCKWISE TOWARD AGENT");
     }
   }
 

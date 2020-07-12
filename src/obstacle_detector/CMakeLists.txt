@@ -70,7 +70,13 @@ target_link_libraries(frechet ${catkin_LIBRARIES})
 add_executable(stale src/nodes/stale.cpp)
 target_link_libraries(stale ${catkin_LIBRARIES})
 
-#Clock skew is annoying lol
+add_executable(analyzer src/nodes/analyzer.cpp)
+target_link_libraries(analyzer ${catkin_LIBRARIES})
+
+add_executable(blind src/nodes/blind.cpp)
+target_link_libraries(blind ${catkin_LIBRARIES})
+
+# We did it! Clock skew is no more
 
 #
 # Build nodelets

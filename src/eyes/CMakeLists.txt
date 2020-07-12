@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   sensor_msgs
   std_msgs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -48,11 +49,12 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+  FILES
+  Autonomous.msg
+  Choreo.msg
+  Custom.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -69,10 +71,11 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   sensor_msgs#   std_msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  sensor_msgs
+  std_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -106,7 +109,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES eyes
-#  CATKIN_DEPENDS roscpp rospy sensor_msgs std_msgs
+#  CATKIN_DEPENDS roscpp rospy sensor_msgs std_msgs message_runtime
 #  DEPENDS system_lib
 )
 
@@ -136,8 +139,14 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(camera_process src/camera_process.cpp)
 add_executable(baby_driver src/baby_driver.cpp)
+add_executable(baby_bypass src/baby_bypass.cpp)
+add_executable(baby_sequel src/baby_sequel.cpp)
+add_executable(queue_up src/queue_up.cpp)
 target_link_libraries(camera_process ${catkin_LIBRARIES})
 target_link_libraries(baby_driver ${catkin_LIBRARIES})
+target_link_libraries(baby_bypass ${catkin_LIBRARIES})
+target_link_libraries(baby_sequel ${catkin_LIBRARIES})
+target_link_libraries(queue_up ${catkin_LIBRARIES})
 #add_dependencies(camera_process beginner_tutorials_generate_messages_cpp) 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
