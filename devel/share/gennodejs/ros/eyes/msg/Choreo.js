@@ -18,7 +18,7 @@ class Choreo {
   constructor(initObj={}) {
     if (initObj === null) {
       // initObj === null is a special case for deserialization where we don't initialize fields
-      this.time = null;
+      this.timed = null;
       this.duration = null;
       this.left_forward = null;
       this.right_forward = null;
@@ -26,11 +26,11 @@ class Choreo {
       this.right_speed = null;
     }
     else {
-      if (initObj.hasOwnProperty('time')) {
-        this.time = initObj.time
+      if (initObj.hasOwnProperty('timed')) {
+        this.timed = initObj.timed
       }
       else {
-        this.time = false;
+        this.timed = false;
       }
       if (initObj.hasOwnProperty('duration')) {
         this.duration = initObj.duration
@@ -67,8 +67,8 @@ class Choreo {
 
   static serialize(obj, buffer, bufferOffset) {
     // Serializes a message object of type Choreo
-    // Serialize message field [time]
-    bufferOffset = _serializer.bool(obj.time, buffer, bufferOffset);
+    // Serialize message field [timed]
+    bufferOffset = _serializer.bool(obj.timed, buffer, bufferOffset);
     // Serialize message field [duration]
     bufferOffset = _serializer.int32(obj.duration, buffer, bufferOffset);
     // Serialize message field [left_forward]
@@ -86,8 +86,8 @@ class Choreo {
     //deserializes a message object of type Choreo
     let len;
     let data = new Choreo(null);
-    // Deserialize message field [time]
-    data.time = _deserializer.bool(buffer, bufferOffset);
+    // Deserialize message field [timed]
+    data.timed = _deserializer.bool(buffer, bufferOffset);
     // Deserialize message field [duration]
     data.duration = _deserializer.int32(buffer, bufferOffset);
     // Deserialize message field [left_forward]
@@ -112,13 +112,13 @@ class Choreo {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '1c9b477594bac2435715c7e4261d26c8';
+    return 'cc893b48a04f4c0dd26849bbdbb03ffa';
   }
 
   static messageDefinition() {
     // Returns full string definition for message
     return `
-    bool time
+    bool timed
     int32 duration
     bool left_forward
     bool right_forward
@@ -134,11 +134,11 @@ class Choreo {
       msg = {};
     }
     const resolved = new Choreo(null);
-    if (msg.time !== undefined) {
-      resolved.time = msg.time;
+    if (msg.timed !== undefined) {
+      resolved.timed = msg.timed;
     }
     else {
-      resolved.time = false
+      resolved.timed = false
     }
 
     if (msg.duration !== undefined) {

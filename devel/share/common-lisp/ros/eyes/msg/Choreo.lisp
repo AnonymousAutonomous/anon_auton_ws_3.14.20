@@ -7,9 +7,9 @@
 ;//! \htmlinclude Choreo.msg.html
 
 (cl:defclass <Choreo> (roslisp-msg-protocol:ros-message)
-  ((time
-    :reader time
-    :initarg :time
+  ((timed
+    :reader timed
+    :initarg :timed
     :type cl:boolean
     :initform cl:nil)
    (duration
@@ -47,10 +47,10 @@
   (cl:unless (cl:typep m 'Choreo)
     (roslisp-msg-protocol:msg-deprecation-warning "using old message class name eyes-msg:<Choreo> is deprecated: use eyes-msg:Choreo instead.")))
 
-(cl:ensure-generic-function 'time-val :lambda-list '(m))
-(cl:defmethod time-val ((m <Choreo>))
-  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader eyes-msg:time-val is deprecated.  Use eyes-msg:time instead.")
-  (time m))
+(cl:ensure-generic-function 'timed-val :lambda-list '(m))
+(cl:defmethod timed-val ((m <Choreo>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader eyes-msg:timed-val is deprecated.  Use eyes-msg:timed instead.")
+  (timed m))
 
 (cl:ensure-generic-function 'duration-val :lambda-list '(m))
 (cl:defmethod duration-val ((m <Choreo>))
@@ -78,7 +78,7 @@
   (right_speed m))
 (cl:defmethod roslisp-msg-protocol:serialize ((msg <Choreo>) ostream)
   "Serializes a message object of type '<Choreo>"
-  (cl:write-byte (cl:ldb (cl:byte 8 0) (cl:if (cl:slot-value msg 'time) 1 0)) ostream)
+  (cl:write-byte (cl:ldb (cl:byte 8 0) (cl:if (cl:slot-value msg 'timed) 1 0)) ostream)
   (cl:let* ((signed (cl:slot-value msg 'duration)) (unsigned (cl:if (cl:< signed 0) (cl:+ signed 4294967296) signed)))
     (cl:write-byte (cl:ldb (cl:byte 8 0) unsigned) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 8) unsigned) ostream)
@@ -98,7 +98,7 @@
 )
 (cl:defmethod roslisp-msg-protocol:deserialize ((msg <Choreo>) istream)
   "Deserializes a message object of type '<Choreo>"
-    (cl:setf (cl:slot-value msg 'time) (cl:not (cl:zerop (cl:read-byte istream))))
+    (cl:setf (cl:slot-value msg 'timed) (cl:not (cl:zerop (cl:read-byte istream))))
     (cl:let ((unsigned 0))
       (cl:setf (cl:ldb (cl:byte 8 0) unsigned) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 8) unsigned) (cl:read-byte istream))
@@ -125,16 +125,16 @@
   "eyes/Choreo")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<Choreo>)))
   "Returns md5sum for a message object of type '<Choreo>"
-  "1c9b477594bac2435715c7e4261d26c8")
+  "cc893b48a04f4c0dd26849bbdbb03ffa")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'Choreo)))
   "Returns md5sum for a message object of type 'Choreo"
-  "1c9b477594bac2435715c7e4261d26c8")
+  "cc893b48a04f4c0dd26849bbdbb03ffa")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<Choreo>)))
   "Returns full string definition for message of type '<Choreo>"
-  (cl:format cl:nil "bool time~%int32 duration~%bool left_forward~%bool right_forward~%int16 left_speed~%int16 right_speed~%~%~%"))
+  (cl:format cl:nil "bool timed~%int32 duration~%bool left_forward~%bool right_forward~%int16 left_speed~%int16 right_speed~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'Choreo)))
   "Returns full string definition for message of type 'Choreo"
-  (cl:format cl:nil "bool time~%int32 duration~%bool left_forward~%bool right_forward~%int16 left_speed~%int16 right_speed~%~%~%"))
+  (cl:format cl:nil "bool timed~%int32 duration~%bool left_forward~%bool right_forward~%int16 left_speed~%int16 right_speed~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <Choreo>))
   (cl:+ 0
      1
@@ -147,7 +147,7 @@
 (cl:defmethod roslisp-msg-protocol:ros-message-to-list ((msg <Choreo>))
   "Converts a ROS message object to a list"
   (cl:list 'Choreo
-    (cl:cons ':time (time msg))
+    (cl:cons ':timed (timed msg))
     (cl:cons ':duration (duration msg))
     (cl:cons ':left_forward (left_forward msg))
     (cl:cons ':right_forward (right_forward msg))

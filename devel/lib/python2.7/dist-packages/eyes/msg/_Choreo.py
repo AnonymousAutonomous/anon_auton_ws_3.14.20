@@ -7,17 +7,17 @@ import struct
 
 
 class Choreo(genpy.Message):
-  _md5sum = "1c9b477594bac2435715c7e4261d26c8"
+  _md5sum = "cc893b48a04f4c0dd26849bbdbb03ffa"
   _type = "eyes/Choreo"
   _has_header = False #flag to mark the presence of a Header object
-  _full_text = """bool time
+  _full_text = """bool timed
 int32 duration
 bool left_forward
 bool right_forward
 int16 left_speed
 int16 right_speed
 """
-  __slots__ = ['time','duration','left_forward','right_forward','left_speed','right_speed']
+  __slots__ = ['timed','duration','left_forward','right_forward','left_speed','right_speed']
   _slot_types = ['bool','int32','bool','bool','int16','int16']
 
   def __init__(self, *args, **kwds):
@@ -28,7 +28,7 @@ int16 right_speed
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       time,duration,left_forward,right_forward,left_speed,right_speed
+       timed,duration,left_forward,right_forward,left_speed,right_speed
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -37,8 +37,8 @@ int16 right_speed
     if args or kwds:
       super(Choreo, self).__init__(*args, **kwds)
       #message fields cannot be None, assign default values for those that are
-      if self.time is None:
-        self.time = False
+      if self.timed is None:
+        self.timed = False
       if self.duration is None:
         self.duration = 0
       if self.left_forward is None:
@@ -50,7 +50,7 @@ int16 right_speed
       if self.right_speed is None:
         self.right_speed = 0
     else:
-      self.time = False
+      self.timed = False
       self.duration = 0
       self.left_forward = False
       self.right_forward = False
@@ -70,7 +70,7 @@ int16 right_speed
     """
     try:
       _x = self
-      buff.write(_get_struct_Bi2B2h().pack(_x.time, _x.duration, _x.left_forward, _x.right_forward, _x.left_speed, _x.right_speed))
+      buff.write(_get_struct_Bi2B2h().pack(_x.timed, _x.duration, _x.left_forward, _x.right_forward, _x.left_speed, _x.right_speed))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -84,8 +84,8 @@ int16 right_speed
       _x = self
       start = end
       end += 11
-      (_x.time, _x.duration, _x.left_forward, _x.right_forward, _x.left_speed, _x.right_speed,) = _get_struct_Bi2B2h().unpack(str[start:end])
-      self.time = bool(self.time)
+      (_x.timed, _x.duration, _x.left_forward, _x.right_forward, _x.left_speed, _x.right_speed,) = _get_struct_Bi2B2h().unpack(str[start:end])
+      self.timed = bool(self.timed)
       self.left_forward = bool(self.left_forward)
       self.right_forward = bool(self.right_forward)
       return self
@@ -101,7 +101,7 @@ int16 right_speed
     """
     try:
       _x = self
-      buff.write(_get_struct_Bi2B2h().pack(_x.time, _x.duration, _x.left_forward, _x.right_forward, _x.left_speed, _x.right_speed))
+      buff.write(_get_struct_Bi2B2h().pack(_x.timed, _x.duration, _x.left_forward, _x.right_forward, _x.left_speed, _x.right_speed))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -116,8 +116,8 @@ int16 right_speed
       _x = self
       start = end
       end += 11
-      (_x.time, _x.duration, _x.left_forward, _x.right_forward, _x.left_speed, _x.right_speed,) = _get_struct_Bi2B2h().unpack(str[start:end])
-      self.time = bool(self.time)
+      (_x.timed, _x.duration, _x.left_forward, _x.right_forward, _x.left_speed, _x.right_speed,) = _get_struct_Bi2B2h().unpack(str[start:end])
+      self.timed = bool(self.timed)
       self.left_forward = bool(self.left_forward)
       self.right_forward = bool(self.right_forward)
       return self

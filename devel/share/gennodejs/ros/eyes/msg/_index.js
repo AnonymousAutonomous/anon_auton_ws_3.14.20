@@ -3,12 +3,12 @@
 
 let Custom = require('./Custom.js');
 let Choreo = require('./Choreo.js');
+let Generic = require('./Generic.js');
 let Autonomous = require('./Autonomous.js');
-let Big_Boi = require('./Big_Boi.js');
 
 module.exports = {
   Custom: Custom,
   Choreo: Choreo,
+  Generic: Generic,
   Autonomous: Autonomous,
-  Big_Boi: Big_Boi,
 };

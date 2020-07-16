@@ -24,7 +24,7 @@ struct Choreo_
   typedef Choreo_<ContainerAllocator> Type;
 
   Choreo_()
-    : time(false)
+    : timed(false)
     , duration(0)
     , left_forward(false)
     , right_forward(false)
@@ -32,7 +32,7 @@ struct Choreo_
     , right_speed(0)  {
     }
   Choreo_(const ContainerAllocator& _alloc)
-    : time(false)
+    : timed(false)
     , duration(0)
     , left_forward(false)
     , right_forward(false)
@@ -43,8 +43,8 @@ struct Choreo_
 
 
 
-   typedef uint8_t _time_type;
-  _time_type time;
+   typedef uint8_t _timed_type;
+  _timed_type timed;
 
    typedef int32_t _duration_type;
   _duration_type duration;
@@ -139,12 +139,12 @@ struct MD5Sum< ::eyes::Choreo_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "1c9b477594bac2435715c7e4261d26c8";
+    return "cc893b48a04f4c0dd26849bbdbb03ffa";
   }
 
   static const char* value(const ::eyes::Choreo_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x1c9b477594bac243ULL;
-  static const uint64_t static_value2 = 0x5715c7e4261d26c8ULL;
+  static const uint64_t static_value1 = 0xcc893b48a04f4c0dULL;
+  static const uint64_t static_value2 = 0xd26849bbdbb03ffaULL;
 };
 
 template<class ContainerAllocator>
@@ -163,7 +163,7 @@ struct Definition< ::eyes::Choreo_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "bool time\n"
+    return "bool timed\n"
 "int32 duration\n"
 "bool left_forward\n"
 "bool right_forward\n"
@@ -187,7 +187,7 @@ namespace serialization
   {
     template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
     {
-      stream.next(m.time);
+      stream.next(m.timed);
       stream.next(m.duration);
       stream.next(m.left_forward);
       stream.next(m.right_forward);
@@ -211,8 +211,8 @@ struct Printer< ::eyes::Choreo_<ContainerAllocator> >
 {
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::eyes::Choreo_<ContainerAllocator>& v)
   {
-    s << indent << "time: ";
-    Printer<uint8_t>::stream(s, indent + "  ", v.time);
+    s << indent << "timed: ";
+    Printer<uint8_t>::stream(s, indent + "  ", v.timed);
     s << indent << "duration: ";
     Printer<int32_t>::stream(s, indent + "  ", v.duration);
     s << indent << "left_forward: ";

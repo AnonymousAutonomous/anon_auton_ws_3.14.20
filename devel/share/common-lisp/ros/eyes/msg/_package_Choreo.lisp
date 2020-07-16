@@ -1,6 +1,6 @@
 (cl:in-package eyes-msg)
-(cl:export '(TIME-VAL
-          TIME
+(cl:export '(TIMED-VAL
+          TIMED
           DURATION-VAL
           DURATION
           LEFT_FORWARD-VAL

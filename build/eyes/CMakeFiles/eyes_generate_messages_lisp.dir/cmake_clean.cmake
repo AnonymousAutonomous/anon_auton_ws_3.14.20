@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/eyes_generate_messages_lisp"
+  "/home/anonymous3/anon_auton_ws/devel/share/common-lisp/ros/eyes/msg/Generic.lisp"
   "/home/anonymous3/anon_auton_ws/devel/share/common-lisp/ros/eyes/msg/Choreo.lisp"
   "/home/anonymous3/anon_auton_ws/devel/share/common-lisp/ros/eyes/msg/Custom.lisp"
   "/home/anonymous3/anon_auton_ws/devel/share/common-lisp/ros/eyes/msg/Autonomous.lisp"

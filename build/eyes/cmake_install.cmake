@@ -42,6 +42,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     "/home/anonymous3/anon_auton_ws/src/eyes/msg/Autonomous.msg"
     "/home/anonymous3/anon_auton_ws/src/eyes/msg/Choreo.msg"
     "/home/anonymous3/anon_auton_ws/src/eyes/msg/Custom.msg"
+    "/home/anonymous3/anon_auton_ws/src/eyes/msg/Generic.msg"
     )
 endif()
 

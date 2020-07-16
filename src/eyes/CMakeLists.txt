@@ -54,6 +54,7 @@ add_message_files(
   Autonomous.msg
   Choreo.msg
   Custom.msg
+  Generic.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -109,7 +110,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES eyes
-#  CATKIN_DEPENDS roscpp rospy sensor_msgs std_msgs message_runtime
+  CATKIN_DEPENDS roscpp rospy sensor_msgs std_msgs message_runtime
 #  DEPENDS system_lib
 )
 
@@ -142,11 +143,13 @@ add_executable(baby_driver src/baby_driver.cpp)
 add_executable(baby_bypass src/baby_bypass.cpp)
 add_executable(baby_sequel src/baby_sequel.cpp)
 add_executable(queue_up src/queue_up.cpp)
+add_executable(queue_two src/queue_two.cpp)
 target_link_libraries(camera_process ${catkin_LIBRARIES})
 target_link_libraries(baby_driver ${catkin_LIBRARIES})
 target_link_libraries(baby_bypass ${catkin_LIBRARIES})
 target_link_libraries(baby_sequel ${catkin_LIBRARIES})
 target_link_libraries(queue_up ${catkin_LIBRARIES})
+target_link_libraries(queue_two ${catkin_LIBRARIES})
 #add_dependencies(camera_process beginner_tutorials_generate_messages_cpp) 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the

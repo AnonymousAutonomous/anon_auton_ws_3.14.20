@@ -1,6 +1,6 @@
 # generated from genmsg/cmake/pkg-genmsg.context.in
 
-messages_str = "/home/anonymous3/anon_auton_ws/src/eyes/msg/Autonomous.msg;/home/anonymous3/anon_auton_ws/src/eyes/msg/Choreo.msg;/home/anonymous3/anon_auton_ws/src/eyes/msg/Custom.msg"
+messages_str = "/home/anonymous3/anon_auton_ws/src/eyes/msg/Autonomous.msg;/home/anonymous3/anon_auton_ws/src/eyes/msg/Choreo.msg;/home/anonymous3/anon_auton_ws/src/eyes/msg/Custom.msg;/home/anonymous3/anon_auton_ws/src/eyes/msg/Generic.msg"
 services_str = ""
 pkg_name = "eyes"
 dependencies_str = "sensor_msgs;std_msgs"
