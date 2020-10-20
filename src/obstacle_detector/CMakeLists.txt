@@ -58,11 +58,11 @@ target_link_libraries(director ${catkin_LIBRARIES})
 add_executable(bystander src/nodes/bystander.cpp)
 target_link_libraries(bystander ${catkin_LIBRARIES})
 
-add_executable(antisocial src/nodes/antisocial.cpp)
-target_link_libraries(antisocial ${catkin_LIBRARIES})
+add_executable(new_antisocial src/nodes/new_antisocial.cpp)
+target_link_libraries(new_antisocial ${catkin_LIBRARIES})
 
-add_executable(social src/nodes/social.cpp)
-target_link_libraries(social ${catkin_LIBRARIES})
+add_executable(new_social src/nodes/new_social.cpp)
+target_link_libraries(new_social ${catkin_LIBRARIES})
 
 add_executable(frechet src/nodes/frechet.cpp)
 target_link_libraries(frechet ${catkin_LIBRARIES})
@@ -75,6 +75,15 @@ target_link_libraries(analyzer ${catkin_LIBRARIES})
 
 add_executable(blind src/nodes/blind.cpp)
 target_link_libraries(blind ${catkin_LIBRARIES})
+
+add_executable(new_director src/nodes/new_director.cpp)
+target_link_libraries(new_director ${catkin_LIBRARIES})
+
+add_executable(stop_director src/nodes/stop_director.cpp)
+target_link_libraries(stop_director ${catkin_LIBRARIES})
+
+add_executable(tart_director src/nodes/tart_director.cpp)
+target_link_libraries(tart_director ${catkin_LIBRARIES})
 
 # We did it! Clock skew is no more
 

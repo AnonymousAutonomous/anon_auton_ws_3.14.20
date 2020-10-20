@@ -1,3 +1,5 @@
+// OBSOLETE - DO NOT USE
+
 #include "ros/ros.h"
 #include <obstacle_detector/Obstacles.h>
 #include "std_msgs/Float64.h"

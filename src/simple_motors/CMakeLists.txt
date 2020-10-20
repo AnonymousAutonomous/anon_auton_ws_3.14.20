@@ -212,3 +212,6 @@ add_dependencies(trigger simple_motors_generate_messages_cpp)
 add_executable(listener src/listener.cpp)
 target_link_libraries(listener ${catkin_LIBRARIES})
 add_dependencies(listener simple_motors_generate_messages_cpp)
+
+add_executable(new_trigger src/new_trigger.cpp)
+target_link_libraries(new_trigger ${catkin_LIBRARIES})

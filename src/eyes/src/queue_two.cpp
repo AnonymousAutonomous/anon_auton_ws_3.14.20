@@ -150,7 +150,7 @@ int main(int argc, char** argv) {
 	side.setCallbackQueue(&side_queue);
 	ros::Subscriber side_sub = side.subscribe("notifications", 1000, side_callback);
 
-	generic_pub = nh.advertise<eyes::Generic>("generic_feed", 1000);
+	generic_pub = nh.advertise<eyes::Generic>("queue_output", 1000);
 
 	mode = state::autonomous;
 	while (ros::ok()) {

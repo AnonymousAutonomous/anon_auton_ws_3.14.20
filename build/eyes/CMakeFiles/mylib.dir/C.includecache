@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/anonymous3/Desktop/bcm2835-1.64/src/bcm2835.c
+stdlib.h
+-
+stdio.h
+-
+errno.h
+-
+fcntl.h
+-
+sys/mman.h
+-
+string.h
+-
+time.h
+-
+unistd.h
+-
+sys/types.h
+-
+bcm2835.h
+/home/anonymous3/Desktop/bcm2835-1.64/src/bcm2835.h
+
+/home/anonymous3/Desktop/bcm2835-1.64/src/bcm2835.h
+stdint.h
+-
+stdlib.h
+-
+

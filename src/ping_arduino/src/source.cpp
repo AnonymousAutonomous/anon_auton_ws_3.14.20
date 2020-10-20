@@ -1,6 +1,7 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
-
+#include "../../../constants/str_cmds.h"
+#include <string>
 #include <sstream>
 
 int main(int argc, char** argv) {
@@ -9,16 +10,16 @@ int main(int argc, char** argv) {
 	ros::Publisher pub = nh.advertise<std_msgs::String>("driver_output", 0);
 	ros::Rate loop_rate(10);
 
-	int count = 0;
+	// int count = 0;
 
 	while (ros::ok()) {
 		std_msgs::String msg;
 		std::stringstream ss;
-		ss << "A";
-		ss << count;
+		ss << FWD;
+		// ss << count;
 		msg.data = ss.str();
 
-		++count;
+		// ++count;
 
 		pub.publish(msg);
 		ros::spinOnce();

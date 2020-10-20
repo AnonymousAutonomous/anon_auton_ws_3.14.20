@@ -543,6 +543,9 @@ mmalutil_LIBS:FILEPATH=/opt/vc/lib/libmmal_util.so
 //Path to a library.
 mmalvcclient_LIBS:FILEPATH=/opt/vc/lib/libmmal_vc_client.so
 
+//Dependencies for target
+mylib_LIB_DEPENDS:STATIC=
+
 //Value Computed by CMake
 mylidar_BINARY_DIR:STATIC=/home/anonymous3/anon_auton_ws/build/mylidar
 

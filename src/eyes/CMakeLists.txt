@@ -138,18 +138,34 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
+
+add_library(mylib ~/Desktop/bcm2835-1.64/src/bcm2835.c)
+
 add_executable(camera_process src/camera_process.cpp)
+add_executable(new_processor src/new_processor.cpp)
 add_executable(baby_driver src/baby_driver.cpp)
 add_executable(baby_bypass src/baby_bypass.cpp)
 add_executable(baby_sequel src/baby_sequel.cpp)
+add_executable(baby_trilogy src/baby_trilogy.cpp)
 add_executable(queue_up src/queue_up.cpp)
 add_executable(queue_two src/queue_two.cpp)
+add_executable(safety_filter src/safety_filter.cpp)
+add_executable(queue_three src/queue_three.cpp)
+add_executable(queue_four src/queue_four.cpp)
 target_link_libraries(camera_process ${catkin_LIBRARIES})
+target_link_libraries(new_processor ${catkin_LIBRARIES})
 target_link_libraries(baby_driver ${catkin_LIBRARIES})
 target_link_libraries(baby_bypass ${catkin_LIBRARIES})
 target_link_libraries(baby_sequel ${catkin_LIBRARIES})
+target_link_libraries(baby_trilogy ${catkin_LIBRARIES})
 target_link_libraries(queue_up ${catkin_LIBRARIES})
 target_link_libraries(queue_two ${catkin_LIBRARIES})
+target_link_libraries(safety_filter ${catkin_LIBRARIES})
+target_link_libraries(queue_three ${catkin_LIBRARIES})
+target_link_libraries(queue_four ${catkin_LIBRARIES})
+
+target_link_libraries(safety_filter mylib)
+
 #add_dependencies(camera_process beginner_tutorials_generate_messages_cpp) 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the

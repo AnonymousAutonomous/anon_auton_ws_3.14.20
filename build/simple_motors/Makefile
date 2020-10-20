@@ -80,6 +80,16 @@ install/fast: preinstall/fast
 	/usr/bin/cmake -P cmake_install.cmake
 .PHONY : install/fast
 
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
+
 # Special rule for the target install/local
 install/local: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
@@ -124,16 +134,6 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
-
-# Special rule for the target list_install_components
-list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
-.PHONY : list_install_components
-
-# Special rule for the target list_install_components
-list_install_components/fast: list_install_components
-
-.PHONY : list_install_components/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -197,6 +197,21 @@ trigger/fast:
 	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f simple_motors/CMakeFiles/trigger.dir/build.make simple_motors/CMakeFiles/trigger.dir/build
 .PHONY : trigger/fast
 
+# Convenience name for target.
+simple_motors/CMakeFiles/new_trigger.dir/rule:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 simple_motors/CMakeFiles/new_trigger.dir/rule
+.PHONY : simple_motors/CMakeFiles/new_trigger.dir/rule
+
+# Convenience name for target.
+new_trigger: simple_motors/CMakeFiles/new_trigger.dir/rule
+
+.PHONY : new_trigger
+
+# fast build rule for target.
+new_trigger/fast:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f simple_motors/CMakeFiles/new_trigger.dir/build.make simple_motors/CMakeFiles/new_trigger.dir/build
+.PHONY : new_trigger/fast
+
 src/listener.o: src/listener.cpp.o
 
 .PHONY : src/listener.o
@@ -223,6 +238,33 @@ src/listener.s: src/listener.cpp.s
 src/listener.cpp.s:
 	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f simple_motors/CMakeFiles/listener.dir/build.make simple_motors/CMakeFiles/listener.dir/src/listener.cpp.s
 .PHONY : src/listener.cpp.s
+
+src/new_trigger.o: src/new_trigger.cpp.o
+
+.PHONY : src/new_trigger.o
+
+# target to build an object file
+src/new_trigger.cpp.o:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f simple_motors/CMakeFiles/new_trigger.dir/build.make simple_motors/CMakeFiles/new_trigger.dir/src/new_trigger.cpp.o
+.PHONY : src/new_trigger.cpp.o
+
+src/new_trigger.i: src/new_trigger.cpp.i
+
+.PHONY : src/new_trigger.i
+
+# target to preprocess a source file
+src/new_trigger.cpp.i:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f simple_motors/CMakeFiles/new_trigger.dir/build.make simple_motors/CMakeFiles/new_trigger.dir/src/new_trigger.cpp.i
+.PHONY : src/new_trigger.cpp.i
+
+src/new_trigger.s: src/new_trigger.cpp.s
+
+.PHONY : src/new_trigger.s
+
+# target to generate assembly for a file
+src/new_trigger.cpp.s:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f simple_motors/CMakeFiles/new_trigger.dir/build.make simple_motors/CMakeFiles/new_trigger.dir/src/new_trigger.cpp.s
+.PHONY : src/new_trigger.cpp.s
 
 src/trigger.o: src/trigger.cpp.o
 
@@ -259,16 +301,20 @@ help:
 	@echo "... depend"
 	@echo "... install/strip"
 	@echo "... install"
+	@echo "... list_install_components"
 	@echo "... listener"
 	@echo "... trigger"
+	@echo "... new_trigger"
 	@echo "... install/local"
 	@echo "... test"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... list_install_components"
 	@echo "... src/listener.o"
 	@echo "... src/listener.i"
 	@echo "... src/listener.s"
+	@echo "... src/new_trigger.o"
+	@echo "... src/new_trigger.i"
+	@echo "... src/new_trigger.s"
 	@echo "... src/trigger.o"
 	@echo "... src/trigger.i"
 	@echo "... src/trigger.s"
