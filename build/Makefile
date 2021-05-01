@@ -649,6 +649,19 @@ queue_four/fast:
 .PHONY : queue_four/fast
 
 #=============================================================================
+# Target rules for targets named interceptor
+
+# Build rule for target.
+interceptor: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 interceptor
+.PHONY : interceptor
+
+# fast build rule for target.
+interceptor/fast:
+	$(MAKE) -f eyes/CMakeFiles/interceptor.dir/build.make eyes/CMakeFiles/interceptor.dir/build
+.PHONY : interceptor/fast
+
+#=============================================================================
 # Target rules for targets named _eyes_generate_messages_check_deps_Choreo
 
 # Build rule for target.
@@ -2752,6 +2765,7 @@ help:
 	@echo "... trigger"
 	@echo "... new_trigger"
 	@echo "... queue_four"
+	@echo "... interceptor"
 	@echo "... _eyes_generate_messages_check_deps_Choreo"
 	@echo "... geometry_msgs_generate_messages_lisp"
 	@echo "... camera_process"

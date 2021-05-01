@@ -1,3 +1,5 @@
+// nice
+
 #include "ros/ros.h"
 #include <obstacle_detector/Obstacles.h>
 #include "std_msgs/String.h"

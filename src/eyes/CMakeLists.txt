@@ -152,6 +152,7 @@ add_executable(queue_two src/queue_two.cpp)
 add_executable(safety_filter src/safety_filter.cpp)
 add_executable(queue_three src/queue_three.cpp)
 add_executable(queue_four src/queue_four.cpp)
+add_executable(interceptor src/interceptor.cpp)
 target_link_libraries(camera_process ${catkin_LIBRARIES})
 target_link_libraries(new_processor ${catkin_LIBRARIES})
 target_link_libraries(baby_driver ${catkin_LIBRARIES})
@@ -163,8 +164,10 @@ target_link_libraries(queue_two ${catkin_LIBRARIES})
 target_link_libraries(safety_filter ${catkin_LIBRARIES})
 target_link_libraries(queue_three ${catkin_LIBRARIES})
 target_link_libraries(queue_four ${catkin_LIBRARIES})
+target_link_libraries(interceptor ${catkin_LIBRARIES})
 
 target_link_libraries(safety_filter mylib)
+target_link_libraries(interceptor mylib)
 
 #add_dependencies(camera_process beginner_tutorials_generate_messages_cpp) 
 ## Rename C++ executable without prefix

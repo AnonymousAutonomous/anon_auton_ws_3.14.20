@@ -52,7 +52,7 @@ void callback(const eyes::Generic& generic_msg) {
 		if (generic_msg.identifier == 'h') {
 			pub.publish(generic_msg);
 		}
-		if (generic_msg.identifier == 'c') {
+		if (generic_msg.identifier == 'c' || generic_msg.identifier == 'b') {
 			std_msgs::Empty empty_msg;
 			override_pub.publish(empty_msg);
 			// ROS_INFO("NOTIFICATIONS PUB");
@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
 	side.setCallbackQueue(&side_queue);
 	ros::Subscriber side_sub = side.subscribe("safety_switch", 1000, side_callback);
 
-	pub = nh.advertise<eyes::Generic>("generic_feed", 1000);
+	pub = nh.advertise<eyes::Generic>("safety_output", 1000);
 	override_pub = nh.advertise<std_msgs::Empty>("notifications", 1000);
 
 	bcm2835_init();

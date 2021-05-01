@@ -1,3 +1,5 @@
+// nice
+
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "std_msgs/Empty.h"
@@ -137,7 +139,7 @@ void callback(const std_msgs::String& command) {
 		}
 		case 'B':
 		{
-			// parse broadcast command here (PLACEHOLDER)
+			// parse broadcast command here (PLACEHOLDER), need end of broadcast somehow
 			eyes::Generic generic_message;
 			generic_message.identifier = 'b';
 			generic_message.left_forward = (command.data[2] == 'f' ? true : false);
@@ -188,7 +190,7 @@ int main(int argc, char** argv) {
 	mode = state::autonomous;
 	while (ros::ok()) {
 		switch (mode) {
-			case state::autonomous:
+			case state::autonomous: // matches FSM
 			{
 				if (!autonomous_queue.empty()) {
 					generic_pub.publish(autonomous_queue.front());
@@ -197,12 +199,13 @@ int main(int argc, char** argv) {
 				}
 
 				if (!custom_queue.empty()) mode = state::custom;
+				else if (!broadcast_queue.empty()) mode = state::broadcast;
 				else if (!choreo_queue.empty()) mode = state::choreo;
 				else mode = state::autonomous;
 
 				break;
 			}
-			case state::choreo:
+			case state::choreo: // potential issue if choreo queue is empty, only possible if choreo stages are not received fast enough following transition from autonomous state
 			{
 				if (choreo_queue.front().identifier == 'e') {
 					ROS_INFO("END OF CHOREO");
@@ -216,10 +219,13 @@ int main(int argc, char** argv) {
 					wait_for_notification();
 				}
 				
-				autonomous_queue = std::queue<eyes::Generic>();
 				if (!custom_queue.empty()) mode = state::custom;
+				else if (!broadcast_queue.empty()) mode = state::broadcast;
 				else if (!choreo_queue.empty()) mode = state::choreo;
-				else mode = state::autonomous;
+				else {
+					mode = state::autonomous;
+					autonomous_queue = std::queue<eyes::Generic>();
+				}
 
 				break;
 			}
@@ -227,11 +233,11 @@ int main(int argc, char** argv) {
 			{
 				if (!custom_queue.empty()) {
 					if (custom_queue.front().identifier == 't') {
-						custom_queue.pop();
 						mode = state::autonomous;
 						autonomous_queue = std::queue<eyes::Generic>();
 						choreo_queue = std::queue<eyes::Generic>();
 						custom_queue = std::queue<eyes::Generic>();
+						broadcast_queue = std::queue<eyes::Generic>();
 						ROS_INFO("TOGGLE");
 					}
 					else {
@@ -242,33 +248,28 @@ int main(int argc, char** argv) {
 				}
 				break;
 			}
-			case state::broadcast:
+			case state::broadcast: // potential issue if broadcast queue is empty, only possible if broadcast stages are not received fast enough following transition from autonomous / choreographed states
 			{
-				generic_pub.publish(broadcast_queue.front());
-				broadcast_queue.pop();
-				ROS_INFO("PUBLISHING BROADCAST COMMAND");
-				// wait for notification of end of broadcast stage
-				
-				autonomous_queue = std::queue<eyes::Generic>();
-				if (!custom_queue.empty()) mode = state::custom;
-				else if (!broadcast_queue.empty()) mode = state::broadcast;
-				else if (!choreo_queue.empty()) mode = state::choreo;
-				else mode = state::autonomous;
-
-				/*** BAD CODE FOLLOWS ***
-				if (!broadcast_queue.empty()) {
+				if (broadcast_queue.front().identifier == 'e') {
+					ROS_INFO("END OF BROADCAST");
+					// does end of broadcast need to be published?
+					broadcast_queue = std::queue<eyes::Generic>();
+				}
+				else {
 					generic_pub.publish(broadcast_queue.front());
 					broadcast_queue.pop();
 					ROS_INFO("PUBLISHING BROADCAST COMMAND");
+					wait_for_notification(); // wait for notification of end of broadcast stage
 				}
+				
+				// autonomous_queue = std::queue<eyes::Generic>();
+				if (!custom_queue.empty()) mode = state::custom;
+				else if (!broadcast_queue.empty()) mode = state::broadcast;
 				else {
 					mode = state::autonomous;
 					autonomous_queue = std::queue<eyes::Generic>();
 					choreo_queue = std::queue<eyes::Generic>();
-
-					ROS_INFO("END OF BROADCAST");
 				}
-				*** END OF BAD CODE ***/
 
 				// chair should choose handwritten command if present
 				break;

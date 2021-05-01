@@ -183,6 +183,21 @@ queue_four/fast:
 .PHONY : queue_four/fast
 
 # Convenience name for target.
+eyes/CMakeFiles/interceptor.dir/rule:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 eyes/CMakeFiles/interceptor.dir/rule
+.PHONY : eyes/CMakeFiles/interceptor.dir/rule
+
+# Convenience name for target.
+interceptor: eyes/CMakeFiles/interceptor.dir/rule
+
+.PHONY : interceptor
+
+# fast build rule for target.
+interceptor/fast:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f eyes/CMakeFiles/interceptor.dir/build.make eyes/CMakeFiles/interceptor.dir/build
+.PHONY : interceptor/fast
+
+# Convenience name for target.
 eyes/CMakeFiles/_eyes_generate_messages_check_deps_Choreo.dir/rule:
 	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f CMakeFiles/Makefile2 eyes/CMakeFiles/_eyes_generate_messages_check_deps_Choreo.dir/rule
 .PHONY : eyes/CMakeFiles/_eyes_generate_messages_check_deps_Choreo.dir/rule
@@ -884,6 +899,33 @@ src/camera_process.cpp.s:
 	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f eyes/CMakeFiles/camera_process.dir/build.make eyes/CMakeFiles/camera_process.dir/src/camera_process.cpp.s
 .PHONY : src/camera_process.cpp.s
 
+src/interceptor.o: src/interceptor.cpp.o
+
+.PHONY : src/interceptor.o
+
+# target to build an object file
+src/interceptor.cpp.o:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f eyes/CMakeFiles/interceptor.dir/build.make eyes/CMakeFiles/interceptor.dir/src/interceptor.cpp.o
+.PHONY : src/interceptor.cpp.o
+
+src/interceptor.i: src/interceptor.cpp.i
+
+.PHONY : src/interceptor.i
+
+# target to preprocess a source file
+src/interceptor.cpp.i:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f eyes/CMakeFiles/interceptor.dir/build.make eyes/CMakeFiles/interceptor.dir/src/interceptor.cpp.i
+.PHONY : src/interceptor.cpp.i
+
+src/interceptor.s: src/interceptor.cpp.s
+
+.PHONY : src/interceptor.s
+
+# target to generate assembly for a file
+src/interceptor.cpp.s:
+	cd /home/anonymous3/anon_auton_ws/build && $(MAKE) -f eyes/CMakeFiles/interceptor.dir/build.make eyes/CMakeFiles/interceptor.dir/src/interceptor.cpp.s
+.PHONY : src/interceptor.cpp.s
+
 src/new_processor.o: src/new_processor.cpp.o
 
 .PHONY : src/new_processor.o
@@ -1057,6 +1099,7 @@ help:
 	@echo "... list_install_components"
 	@echo "... edit_cache"
 	@echo "... queue_four"
+	@echo "... interceptor"
 	@echo "... _eyes_generate_messages_check_deps_Choreo"
 	@echo "... rebuild_cache"
 	@echo "... geometry_msgs_generate_messages_lisp"
@@ -1114,6 +1157,9 @@ help:
 	@echo "... src/camera_process.o"
 	@echo "... src/camera_process.i"
 	@echo "... src/camera_process.s"
+	@echo "... src/interceptor.o"
+	@echo "... src/interceptor.i"
+	@echo "... src/interceptor.s"
 	@echo "... src/new_processor.o"
 	@echo "... src/new_processor.i"
 	@echo "... src/new_processor.s"
