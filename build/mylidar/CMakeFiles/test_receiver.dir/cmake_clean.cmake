@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/test_receiver.dir/src/test_receiver.cpp.o"
-  "/home/anonymous3/anon_auton_ws/devel/lib/mylidar/test_receiver.pdb"
-  "/home/anonymous3/anon_auton_ws/devel/lib/mylidar/test_receiver"
+  "/home/anonymous2/anon_auton_ws/devel/lib/mylidar/test_receiver.pdb"
+  "/home/anonymous2/anon_auton_ws/devel/lib/mylidar/test_receiver"
 )
 
 # Per-language clean rules from dependency scanning.

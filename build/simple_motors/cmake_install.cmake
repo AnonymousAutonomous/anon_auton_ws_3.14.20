@@ -1,8 +1,8 @@
-# Install script for directory: /home/anonymous3/anon_auton_ws/src/simple_motors
+# Install script for directory: /home/anonymous2/anon_auton_ws/src/simple_motors
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/anonymous3/anon_auton_ws/install")
+  set(CMAKE_INSTALL_PREFIX "/home/anonymous2/anon_auton_ws/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -38,17 +38,17 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/anonymous3/anon_auton_ws/build/simple_motors/catkin_generated/installspace/simple_motors.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/anonymous2/anon_auton_ws/build/simple_motors/catkin_generated/installspace/simple_motors.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simple_motors/cmake" TYPE FILE FILES
-    "/home/anonymous3/anon_auton_ws/build/simple_motors/catkin_generated/installspace/simple_motorsConfig.cmake"
-    "/home/anonymous3/anon_auton_ws/build/simple_motors/catkin_generated/installspace/simple_motorsConfig-version.cmake"
+    "/home/anonymous2/anon_auton_ws/build/simple_motors/catkin_generated/installspace/simple_motorsConfig.cmake"
+    "/home/anonymous2/anon_auton_ws/build/simple_motors/catkin_generated/installspace/simple_motorsConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simple_motors" TYPE FILE FILES "/home/anonymous3/anon_auton_ws/src/simple_motors/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simple_motors" TYPE FILE FILES "/home/anonymous2/anon_auton_ws/src/simple_motors/package.xml")
 endif()
 

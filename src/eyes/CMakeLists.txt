@@ -139,7 +139,7 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 
-add_library(mylib ~/Desktop/bcm2835-1.64/src/bcm2835.c)
+add_library(mylib /home/anonymous2/Desktop/bcm2835-1.64/src/bcm2835.c)
 
 add_executable(camera_process src/camera_process.cpp)
 add_executable(new_processor src/new_processor.cpp)
@@ -179,6 +179,12 @@ target_link_libraries(interceptor mylib)
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(queue_up eyes_generate_messages_cpp)
+add_dependencies(queue_two eyes_generate_messages_cpp)
+add_dependencies(queue_three eyes_generate_messages_cpp)
+add_dependencies(queue_four eyes_generate_messages_cpp)
+add_dependencies(safety_filter eyes_generate_messages_cpp)
+add_dependencies(interceptor eyes_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node

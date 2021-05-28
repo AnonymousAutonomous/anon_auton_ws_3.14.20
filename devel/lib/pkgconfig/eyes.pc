@@ -1,8 +1,8 @@
-prefix=/home/anonymous3/anon_auton_ws/devel
+prefix=/home/anonymous2/anon_auton_ws/devel
 
 Name: eyes
 Description: Description of eyes
 Version: 0.0.0
-Cflags: -I/home/anonymous3/anon_auton_ws/devel/include
-Libs: -L/home/anonymous3/anon_auton_ws/devel/lib 
+Cflags: -I/home/anonymous2/anon_auton_ws/devel/include
+Libs: -L/home/anonymous2/anon_auton_ws/devel/lib 
 Requires: roscpp rospy sensor_msgs std_msgs message_runtime

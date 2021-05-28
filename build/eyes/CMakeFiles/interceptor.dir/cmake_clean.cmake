@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/interceptor.dir/src/interceptor.cpp.o"
-  "/home/anonymous3/anon_auton_ws/devel/lib/eyes/interceptor.pdb"
-  "/home/anonymous3/anon_auton_ws/devel/lib/eyes/interceptor"
+  "/home/anonymous2/anon_auton_ws/devel/lib/eyes/interceptor.pdb"
+  "/home/anonymous2/anon_auton_ws/devel/lib/eyes/interceptor"
 )
 
 # Per-language clean rules from dependency scanning.

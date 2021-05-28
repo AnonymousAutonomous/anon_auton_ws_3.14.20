@@ -6,11 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/anonymous3/anon_auton_ws/constants/str_cmds.h
+/home/anonymous2/anon_auton_ws/constants/str_cmds.h
 string
 -
 
-/home/anonymous3/anon_auton_ws/src/eyes/src/new_processor.cpp
+/home/anonymous2/anon_auton_ws/src/eyes/src/new_processor.cpp
 iostream
 -
 chrono
@@ -18,15 +18,15 @@ chrono
 future
 -
 ros/ros.h
-/home/anonymous3/anon_auton_ws/src/eyes/src/ros/ros.h
+/home/anonymous2/anon_auton_ws/src/eyes/src/ros/ros.h
 sensor_msgs/Image.h
-/home/anonymous3/anon_auton_ws/src/eyes/src/sensor_msgs/Image.h
+/home/anonymous2/anon_auton_ws/src/eyes/src/sensor_msgs/Image.h
 std_msgs/String.h
-/home/anonymous3/anon_auton_ws/src/eyes/src/std_msgs/String.h
+/home/anonymous2/anon_auton_ws/src/eyes/src/std_msgs/String.h
 std_msgs/Empty.h
-/home/anonymous3/anon_auton_ws/src/eyes/src/std_msgs/Empty.h
+/home/anonymous2/anon_auton_ws/src/eyes/src/std_msgs/Empty.h
 ../../../constants/str_cmds.h
-/home/anonymous3/anon_auton_ws/constants/str_cmds.h
+/home/anonymous2/anon_auton_ws/constants/str_cmds.h
 string
 -
 

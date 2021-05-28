@@ -54,36 +54,47 @@ target_link_libraries(obstacle_publisher_node obstacle_publisher)
 
 add_executable(director src/nodes/director.cpp)
 target_link_libraries(director ${catkin_LIBRARIES})
+add_dependencies(director obstacle_detector_generate_messages_cpp)
 
 add_executable(bystander src/nodes/bystander.cpp)
 target_link_libraries(bystander ${catkin_LIBRARIES})
+add_dependencies(bystander obstacle_detector_generate_messages_cpp)
 
 add_executable(new_antisocial src/nodes/new_antisocial.cpp)
 target_link_libraries(new_antisocial ${catkin_LIBRARIES})
+add_dependencies(new_antisocial obstacle_detector_generate_messages_cpp)
 
 add_executable(new_social src/nodes/new_social.cpp)
 target_link_libraries(new_social ${catkin_LIBRARIES})
+add_dependencies(new_social obstacle_detector_generate_messages_cpp)
 
 add_executable(frechet src/nodes/frechet.cpp)
 target_link_libraries(frechet ${catkin_LIBRARIES})
+add_dependencies(frechet obstacle_detector_generate_messages_cpp)
 
 add_executable(stale src/nodes/stale.cpp)
 target_link_libraries(stale ${catkin_LIBRARIES})
+add_dependencies(stale obstacle_detector_generate_messages_cpp)
 
 add_executable(analyzer src/nodes/analyzer.cpp)
 target_link_libraries(analyzer ${catkin_LIBRARIES})
+add_dependencies(analyzer obstacle_detector_generate_messages_cpp)
 
 add_executable(blind src/nodes/blind.cpp)
 target_link_libraries(blind ${catkin_LIBRARIES})
+add_dependencies(blind obstacle_detector_generate_messages_cpp)
 
 add_executable(new_director src/nodes/new_director.cpp)
 target_link_libraries(new_director ${catkin_LIBRARIES})
+add_dependencies(new_director obstacle_detector_generate_messages_cpp)
 
 add_executable(stop_director src/nodes/stop_director.cpp)
 target_link_libraries(stop_director ${catkin_LIBRARIES})
+add_dependencies(stop_director obstacle_detector_generate_messages_cpp)
 
 add_executable(tart_director src/nodes/tart_director.cpp)
 target_link_libraries(tart_director ${catkin_LIBRARIES})
+add_dependencies(tart_director obstacle_detector_generate_messages_cpp)
 
 # We did it! Clock skew is no more
 

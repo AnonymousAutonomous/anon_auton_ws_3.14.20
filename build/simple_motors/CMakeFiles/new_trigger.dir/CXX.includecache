@@ -6,17 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/home/anonymous3/anon_auton_ws/constants/user_cmds.h
+/home/anonymous2/anon_auton_ws/constants/user_cmds.h
 string
 -
 
-/home/anonymous3/anon_auton_ws/src/simple_motors/src/new_trigger.cpp
+/home/anonymous2/anon_auton_ws/src/simple_motors/src/new_trigger.cpp
 ros/ros.h
-/home/anonymous3/anon_auton_ws/src/simple_motors/src/ros/ros.h
+/home/anonymous2/anon_auton_ws/src/simple_motors/src/ros/ros.h
 std_msgs/String.h
-/home/anonymous3/anon_auton_ws/src/simple_motors/src/std_msgs/String.h
+/home/anonymous2/anon_auton_ws/src/simple_motors/src/std_msgs/String.h
 ../../../constants/user_cmds.h
-/home/anonymous3/anon_auton_ws/constants/user_cmds.h
+/home/anonymous2/anon_auton_ws/constants/user_cmds.h
 string
 -
 sstream
