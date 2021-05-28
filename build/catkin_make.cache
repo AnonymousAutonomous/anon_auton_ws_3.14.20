@@ -1,2 +1,0 @@
-error_server:eyes:mylidar:obstacle_detector:ping_arduino:rplidar_ros:simple_motors
--DCATKIN_DEVEL_PREFIX=/home/anonymous2/anon_auton_ws/devel -DCMAKE_INSTALL_PREFIX=/home/anonymous2/anon_auton_ws/install -G Unix Makefiles

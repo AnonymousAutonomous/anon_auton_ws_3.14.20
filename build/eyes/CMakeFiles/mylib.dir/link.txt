@@ -1,1 +1,0 @@
-/usr/bin/cc -fPIC   -shared -Wl,-soname,libmylib.so -o /home/anonymous2/anon_auton_ws/devel/lib/libmylib.so CMakeFiles/mylib.dir/home/anonymous2/Desktop/bcm2835-1.64/src/bcm2835.c.o 
