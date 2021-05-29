@@ -16,19 +16,19 @@ volatile long leftEncoderValue = 0;
 volatile long rightEncoderValue = 0;
 
 const int clockwiseLeftSpeed = 160; /* PLACEHOLDER */
-const int clockwiseRightSpeed = 60; /* PLACEHOLDER */
-const int clockwiseLoopDuration = 5000; /* PLACEHOLDER */
+const int clockwiseRightSpeed = 0; /* PLACEHOLDER */
+const long clockwiseLoopDuration = 42000; /* PLACEHOLDER */
 
-const int counterClockwiseLeftSpeed = 60; /* PLACEHOLDER */
-const int counterClockwiseRightSpeed = 160; /* PLACEHOLDER */
-const int counterClockwiseLoopDuration = 5000; /* PLACEHOLDER */
+const int counterClockwiseLeftSpeed = clockwiseRightSpeed; /* PLACEHOLDER */
+const int counterClockwiseRightSpeed = clockwiseLeftSpeed; /* PLACEHOLDER */
+const long counterClockwiseLoopDuration = clockwiseLoopDuration; /* PLACEHOLDER */
 
 const int forwardLeftSpeed = 60; /* PLACEHOLDER */
 const int forwardRightSpeed = 60; /* PLACEHOLDER */
 const int forwardOffset = 10; /* PLACEHOLDER */
 
-const int straightDistance1 = 500; /* PLACEHOLDER */
-const int straightDistance2 = 500; /* PLACEHOLDER */
+const int straightDistance1 = 4900; /* PLACEHOLDER */
+const int straightDistance2 = straightDistance1; /* PLACEHOLDER */
 
 void goStraight(int distance) {
   leftEncoderValue = 0;
@@ -86,6 +86,11 @@ void loop() {
     analogWrite(speedPin1, clockwiseRightSpeed);
     analogWrite(speedPin2, clockwiseLeftSpeed);
   }
+//
+//  while(1) {
+//    analogWrite(speedPin1, 0 );
+//    analogWrite(speedPin2, 0);
+//  }
   
   // go straight
   
@@ -107,6 +112,10 @@ void loop() {
   // go straight
   
   goStraight(straightDistance2);
+//  while(1) {
+//    analogWrite(speedPin1, 0 );
+//    analogWrite(speedPin2, 0);
+//  }
 }
 
 void EncoderEvent1() {
