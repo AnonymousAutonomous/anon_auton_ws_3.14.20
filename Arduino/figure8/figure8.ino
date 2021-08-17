@@ -1,22 +1,27 @@
-                          // right motor
-const int dirPin1 = 5;
-const int speedPin1 = 6;
+//define motor 1 related pins (right)
+#define IN1 9
+#define IN2 8
+#define ENA 10
 
-const int motor1A = 3; // yellow, INTERRUPT
-const int motor1B = 4; // white
+#define MOTOR_1A 3 // yellow, INTERRUPT
+#define MOTOR_1B 4 // white
 
-                          // left motor
-const int dirPin2 = 9;
-const int speedPin2 = 10;
+//define motor 2 related pins (left)
+#define IN3 12
+#define IN4 13
+#define ENB 5                          
 
-const int motor2A = 2; // yellow, INTERRUPT
-const int motor2B = 7; // white
+#define MOTOR_2A 2 // yellow, INTERRUPT
+#define MOTOR_2B 7 // white
+
+//#define 
+
 
 volatile long leftEncoderValue = 0;
 volatile long rightEncoderValue = 0;
 
 const int clockwiseLeftSpeed = 160; /* PLACEHOLDER */
-const int clockwiseRightSpeed = 0; /* PLACEHOLDER */
+const int clockwiseRightSpeed = 40; /* PLACEHOLDER */
 const long clockwiseLoopDuration = 42000; /* PLACEHOLDER */
 
 const int counterClockwiseLeftSpeed = clockwiseRightSpeed; /* PLACEHOLDER */
@@ -27,70 +32,100 @@ const int forwardLeftSpeed = 60; /* PLACEHOLDER */
 const int forwardRightSpeed = 60; /* PLACEHOLDER */
 const int forwardOffset = 10; /* PLACEHOLDER */
 
-const int straightDistance1 = 4900; /* PLACEHOLDER */
+const int straightDistance1 = 3500; /* PLACEHOLDER */
 const int straightDistance2 = straightDistance1; /* PLACEHOLDER */
+
+int state = 0;
+
+
+void right_motor_fwd() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+}
+
+void right_motor_bwd() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+}
+
+void left_motor_fwd() {
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+}
+
+void left_motor_bwd() {
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+
 
 void goStraight(int distance) {
   leftEncoderValue = 0;
   rightEncoderValue = 0;
 
-  digitalWrite(dirPin1, HIGH);
-  digitalWrite(dirPin2, HIGH);
+  right_motor_fwd();
+  left_motor_fwd();
 
   while (leftEncoderValue < distance) {
     if (leftEncoderValue < rightEncoderValue) {
-      analogWrite(speedPin1, forwardRightSpeed - forwardOffset);
-      analogWrite(speedPin2, forwardLeftSpeed + forwardOffset);
+      analogWrite(ENA, forwardRightSpeed - forwardOffset);
+      analogWrite(ENB, forwardLeftSpeed + forwardOffset);
     }
     else if (leftEncoderValue > rightEncoderValue) {
-      analogWrite(speedPin1, forwardRightSpeed + forwardOffset);
-      analogWrite(speedPin2, forwardLeftSpeed - forwardOffset);
+      analogWrite(ENA, forwardRightSpeed + forwardOffset);
+      analogWrite(ENB, forwardLeftSpeed - forwardOffset);
     }
     else {
-      analogWrite(speedPin1, forwardRightSpeed);
-      analogWrite(speedPin2, forwardLeftSpeed);
+      analogWrite(ENA, forwardRightSpeed);
+      analogWrite(ENB, forwardLeftSpeed);
     }
   }
 }
 
 void setup() {
-  // put your setup code here, to run once:
-  pinMode(dirPin1, OUTPUT);
-  pinMode(speedPin1, OUTPUT);
+  Serial.begin(115200); // open the serial port at 115200 bps:
   
-  pinMode(dirPin2, OUTPUT);
-  pinMode(speedPin2, OUTPUT);
+  //set output for motor 1 related pins
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(ENA, OUTPUT);
   
-  pinMode(motor1A, INPUT);
-  pinMode(motor1B, INPUT);
+  //set output for motor 2 related pins
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  pinMode(ENB, OUTPUT);
+  
+  right_motor_fwd();
+  left_motor_fwd();
 
-  pinMode(motor2A, INPUT);
-  pinMode(motor2B, INPUT);
+  //set encoder input from motor 1
+  pinMode(MOTOR_1A, INPUT);
+  pinMode(MOTOR_1B, INPUT);
+
+  //set encoder input from motor 2
+  pinMode(MOTOR_2A, INPUT);
+  pinMode(MOTOR_2B, INPUT);
+
+  attachInterrupt(digitalPinToInterrupt(MOTOR_1A), EncoderEvent1, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(MOTOR_2A), EncoderEvent2, CHANGE);
   
-  attachInterrupt(digitalPinToInterrupt(3), EncoderEvent1, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(2), EncoderEvent2, CHANGE);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  
   // clockwise rotation
-  
   leftEncoderValue = 0;
   rightEncoderValue = 0;
 
-  digitalWrite(dirPin1, HIGH);
-  digitalWrite(dirPin2, HIGH);
+  left_motor_fwd();
+  right_motor_bwd();
   
   while (leftEncoderValue < clockwiseLoopDuration) {
-    analogWrite(speedPin1, clockwiseRightSpeed);
-    analogWrite(speedPin2, clockwiseLeftSpeed);
+    analogWrite(ENA, clockwiseRightSpeed);
+    analogWrite(ENB, clockwiseLeftSpeed);
+    Serial.print(leftEncoderValue, DEC);
+    Serial.print('\t');
+    Serial.println(rightEncoderValue, DEC); 
   }
-//
-//  while(1) {
-//    analogWrite(speedPin1, 0 );
-//    analogWrite(speedPin2, 0);
-//  }
   
   // go straight
   
@@ -101,32 +136,28 @@ void loop() {
   leftEncoderValue = 0;
   rightEncoderValue = 0;
   
-  digitalWrite(dirPin1, HIGH);
-  digitalWrite(dirPin2, HIGH);
+  left_motor_bwd();
+  right_motor_fwd();
   
   while (rightEncoderValue < counterClockwiseLoopDuration) {
-    analogWrite(speedPin1, counterClockwiseRightSpeed);
-    analogWrite(speedPin2, counterClockwiseLeftSpeed);
+    analogWrite(ENA, counterClockwiseRightSpeed);
+    analogWrite(ENB, counterClockwiseLeftSpeed);
   }
   
-  // go straight
-  
+  // go straight 
   goStraight(straightDistance2);
-//  while(1) {
-//    analogWrite(speedPin1, 0 );
-//    analogWrite(speedPin2, 0);
-//  }
+  
 }
 
 void EncoderEvent1() {
-  if (digitalRead(motor1A) == HIGH) {
-    if (digitalRead(motor1B) == LOW) {
+  if (digitalRead(MOTOR_1A) == HIGH) {
+    if (digitalRead(MOTOR_1B) == LOW) {
       ++rightEncoderValue; 
     } else {
       --rightEncoderValue;
     }
   } else {
-    if (digitalRead(motor1B) == LOW) {
+    if (digitalRead(MOTOR_1B) == LOW) {
       --rightEncoderValue;
     } else {
       ++rightEncoderValue;
@@ -135,14 +166,14 @@ void EncoderEvent1() {
 }
 
 void EncoderEvent2() {
-  if (digitalRead(motor2A) == HIGH) {
-    if (digitalRead(motor2B) == LOW) {
+  if (digitalRead(MOTOR_2A) == HIGH) {
+    if (digitalRead(MOTOR_2B) == LOW) {
       --leftEncoderValue; 
     } else {
       ++leftEncoderValue;
     }
   } else {
-    if (digitalRead(motor2B) == LOW) {
+    if (digitalRead(MOTOR_2B) == LOW) {
       ++leftEncoderValue;
     } else {
       --leftEncoderValue;
