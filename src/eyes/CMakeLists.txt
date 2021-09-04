@@ -139,7 +139,9 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 
-add_library(mylib /home/anonymous2/Desktop/bcm2835-1.64/src/bcm2835.c)
+# add_library(mylib ~/Desktop/bcm2835-1.64/src/bcm2835.c)
+
+find_library(mylib bcm2835)
 
 add_executable(camera_process src/camera_process.cpp)
 add_executable(new_processor src/new_processor.cpp)
@@ -153,6 +155,8 @@ add_executable(safety_filter src/safety_filter.cpp)
 add_executable(queue_three src/queue_three.cpp)
 add_executable(queue_four src/queue_four.cpp)
 add_executable(interceptor src/interceptor.cpp)
+add_executable(queue_five src/queue_five.cpp)
+add_executable(baby_pseudo src/baby_pseudo.cpp)
 target_link_libraries(camera_process ${catkin_LIBRARIES})
 target_link_libraries(new_processor ${catkin_LIBRARIES})
 target_link_libraries(baby_driver ${catkin_LIBRARIES})
@@ -165,9 +169,11 @@ target_link_libraries(safety_filter ${catkin_LIBRARIES})
 target_link_libraries(queue_three ${catkin_LIBRARIES})
 target_link_libraries(queue_four ${catkin_LIBRARIES})
 target_link_libraries(interceptor ${catkin_LIBRARIES})
+target_link_libraries(queue_five ${catkin_LIBRARIES})
+target_link_libraries(baby_pseudo ${catkin_LIBRARIES})
 
-target_link_libraries(safety_filter mylib)
-target_link_libraries(interceptor mylib)
+target_link_libraries(safety_filter ${mylib})
+target_link_libraries(interceptor ${mylib})
 
 #add_dependencies(camera_process beginner_tutorials_generate_messages_cpp) 
 ## Rename C++ executable without prefix
@@ -183,6 +189,7 @@ add_dependencies(queue_up eyes_generate_messages_cpp)
 add_dependencies(queue_two eyes_generate_messages_cpp)
 add_dependencies(queue_three eyes_generate_messages_cpp)
 add_dependencies(queue_four eyes_generate_messages_cpp)
+add_dependencies(queue_five eyes_generate_messages_cpp)
 add_dependencies(safety_filter eyes_generate_messages_cpp)
 add_dependencies(interceptor eyes_generate_messages_cpp)
 

@@ -11,8 +11,8 @@ static const std::vector<eyes::Generic> DANCE_C = {
 		first.right_forward = false;
 		first.left_speed = 255;
 		first.right_speed = 255;
-		first.timed = true; // false;
-		first.duration = 5; // 20000;
+		first.timed = false;
+		first.duration = 10000;
 		return first;
 	}(),
 	[] {
@@ -23,7 +23,7 @@ static const std::vector<eyes::Generic> DANCE_C = {
 		second.left_speed = 0;
 		second.right_speed = 0;
 		second.timed = true;
-		second.duration = 5;
+		second.duration = 2;
 		return second;
 	}(),
 	[] {
@@ -33,8 +33,8 @@ static const std::vector<eyes::Generic> DANCE_C = {
 		third.right_forward = false;
 		third.left_speed = 255;
 		third.right_speed = 255;
-		third.timed = true; // false;
-		third.duration = 5; // 20000;
+		third.timed = false;
+		third.duration = 10000;
 		return third;
 	}(),
 	[] {
@@ -45,7 +45,7 @@ static const std::vector<eyes::Generic> DANCE_C = {
 		fourth.left_speed = 0;
 		fourth.right_speed = 0;
 		fourth.timed = true;
-		fourth.duration = 5;
+		fourth.duration = 2;
 		return fourth;
 	}(),
 	[] {

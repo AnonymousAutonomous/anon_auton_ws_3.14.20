@@ -1,0 +1,15 @@
+<launch>
+
+	<node name="serial_node" pkg="rosserial_python" type="serial_node.py">
+		<param name="port" value="/dev/ttyUSB0" />
+		<param name="baud" value="57600" />
+	</node>
+
+	<node name="cv_camera_node" pkg="cv_camera" type="cv_camera_node">
+		<param name="device_path" value="/dev/video0" />
+	</node>
+
+	<rosparam command="load" file="$(find mylidar)/my_laser_config.yaml" />
+	<include file="$(find obstacle_detector)/launch/myNodes3.launch" />
+
+</launch>
