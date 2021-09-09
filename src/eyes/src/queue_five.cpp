@@ -1,4 +1,4 @@
-// nice, seems good to me? I think so
+// nice, seems good to me? I think so, but just in case
 
 #include "ros/ros.h"
 #include "std_msgs/String.h"
@@ -18,7 +18,7 @@
 enum state : char {autonomous, choreo, custom, broadcast};
 state mode = state::autonomous;
 
-enum broadcast_state : char {outside, ready, performing, success, failure};
+enum broadcast_state : char {outside, ready, wait};
 broadcast_state broadcast_mode = broadcast_state::outside;
 
 #define flag_A !autonomous_queue.empty()
@@ -231,6 +231,7 @@ int main(int argc, char** argv) {
 				else if (flag_SOB) {
 					mode = state::broadcast;
 					flag_SOB = false;
+					flag_EOB = false;
 				}
 				else if (flag_C) mode = state::choreo;
 				else mode = state::autonomous;
@@ -302,6 +303,7 @@ int main(int argc, char** argv) {
 					mode = state::broadcast;
 					flag_D = true; // <-- exit case, resetting flag_D for next time, likely temporary
 					flag_SOB = false;
+					flag_EOB = false;
 				}
 				else if (flag_C) {
 					mode = state::choreo;
@@ -338,12 +340,88 @@ int main(int argc, char** argv) {
 				switch (broadcast_mode) {
 					case broadcast_state::outside:
 					{
-						ROS_INFO("ARRIVED IN BROADCAST STATE");
+						// ROS_INFO("ARRIVED IN BROADCAST STATE");
 						broadcast_mode = broadcast_state::ready;
+						eyes::Generic stop;
+						stop.identifier = 'b';
+						stop.left_forward = true;
+						stop.right_forward = true;
+						stop.left_speed = 0;
+						stop.right_speed = 0;
+						stop.timed = false; // inconsequential
+						stop.duration = 0; // inconsequential
+						generic_pub.publish(stop);
+						// TODO: PUBLISH INDICATION THAT CHAIR IS READY TO GO TO INFORM HUB
 						break;
 					}
-					case broadcast_state::ready:
+					case broadcast_state::ready: // absorbed performing
 					{
+						// ROS_INFO("AWAITING BROADCAST");
+						if (flag_B) {
+							if (broadcast_queue.front().identifier == 'e') {
+								ROS_INFO("LAST STAGE OF BROADCAST");
+								broadcast_mode = broadcast_state::wait;
+								broadcast_queue = std::queue<eyes::Generic>();
+								// publish safety stop
+								eyes::Generic stop;
+								stop.identifier = 'b';
+								stop.left_forward = true;
+								stop.right_forward = true;
+								stop.left_speed = 0;
+								stop.right_speed = 0;
+								stop.timed = false; // inconsequential
+								stop.duration = 0; // inconsequential
+								generic_pub.publish(stop);
+								// TODO: PUBLISH INDICATION THAT CHAIR COMPLETED BROADCAST SUCCESSFULLY
+							}
+							else {
+								// duration, replaces wait_for_notification();
+								// if broadcast stage uses encoder motors
+								if (broadcast_queue.front().timed == false) {
+									if (flag_D) {
+										// clear flag_D and record initial_value
+										flag_D = false;
+										initial_encoder_value = encoder_count_R;
+										generic_pub.publish(broadcast_queue.front());
+									}
+									else {
+										final_encoder_value = encoder_count_R;
+										int difference = abs(final_encoder_value - initial_encoder_value);
+										ROS_INFO("ENCODER DIF: %d", difference);
+										if (difference > broadcast_queue.front().duration) flag_D = true;
+									}
+								}
+								// if broadcast stage uses a timer
+								else {
+									if (flag_D) {
+										// clear flag_D and record initial_value
+										flag_D = false;
+										time(&initial_time);
+										generic_pub.publish(broadcast_queue.front());
+										ROS_INFO("STARTING");
+										ROS_INFO("RIGHT SPEED: %d", broadcast_queue.front().right_speed);
+									}
+									else {
+										time(&final_time);
+										int difference = difftime(final_time, initial_time);
+										// ROS_INFO("TIMER DIF: %f", difference);
+										if (difference > broadcast_queue.front().duration) flag_D = true;
+									}
+								}
+							}
+							// if block should never execute if broadcast_queue is empty
+							if (flag_D && broadcast_mode == broadcast_state::ready) {
+								ROS_INFO("JUST FINISHED");
+								ROS_INFO("RIGHT SPEED: %d", broadcast_queue.front().right_speed);
+								broadcast_queue.pop();
+								ROS_INFO("POP!");
+							}
+						}
+						break;
+					}
+					case broadcast_state::wait:
+					{
+						// wait until EOB flag
 						break;
 					}
 					default:
@@ -360,7 +438,9 @@ int main(int argc, char** argv) {
 					flag_T = false;
 					flag_SOB = false;
 					flag_EOB = false;
+					flag_D = true; // <-- exit case, resetting flag_D for next time
 				}
+				// TODO: ADD CHECK FOR flag_SOB TO ENABLE SEQUENTIAL BROADCASTS?
 				else if (flag_EOB) {
 					mode = state::autonomous;
 					broadcast_mode = broadcast_state::outside;
@@ -371,6 +451,7 @@ int main(int argc, char** argv) {
 					ROS_INFO("END OF BROADCAST");
 					flag_SOB = false;
 					flag_EOB = false;
+					flag_D = true; // <-- exit case, resetting flag_D for next time
 				}
 				break;
 			}
