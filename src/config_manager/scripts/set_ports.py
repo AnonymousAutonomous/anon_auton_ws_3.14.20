@@ -48,3 +48,6 @@ if not os.path.exists(outfolder):
 with open(outyaml, 'w+') as f:
      for dev, path  in devices.items():
          f.write(dev + ": '" + path + "'\n")
+
+print("Set the following values:\n")
+print(devices)
