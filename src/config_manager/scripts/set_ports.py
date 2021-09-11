@@ -25,7 +25,7 @@ for i in df.split('\n'):
 
                 # Arduino
                 if "Arduino" in val or "1a86_USB2.0" in val:
-                    devices["arduino_port"] = '/dev/' + devname
+                    devices["port"] = '/dev/' + devname
                 # Antenna
                 if "Basic_UART" in val:
                     devices["antenna_port"] = '/dev/' + devname
