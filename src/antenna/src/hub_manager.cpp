@@ -5,7 +5,7 @@
 #include <queue>
 #include <vector>
 
-#define NUMBER_OF_CHAIRS 5
+#define NUMBER_OF_CHAIRS 1
 
 enum chair_broadcast_status : char {ready, success, failure};
 enum chair_stuck_status : char {stuck, not_stuck};
@@ -18,17 +18,44 @@ struct chair_status {
 
 std::vector<chair_status> chair_status_vector(5);
 
-enum state : char {outside, awaiting_confirmation, transmit, awaiting_status};
+enum state : char {outside, awaiting_confirmation, awaiting_status};
 state mode = state::outside;
 
 std::queue<std_msgs::String> transmit_queue;
 
-void receive_callback(const std_msgs::String::ConstPtr& msg) {
+void receive_callback(const std_msgs::String& msg) {
 	// update chair status vector
+	// format of str msg is {chair number}{chair status indicator}{new value}
+	int chair_number = msg.data[0] - 48;
+	ROS_INFO("UPDATING STATUS OF CHAIR %d", chair_number);
+
+	char chair_property = msg.data[1];
+	char property_value = msg.data[2];
+
+	switch (chair_property) {
+		case 'B':
+		{
+			chair_status_vector[chair_number].cbs = (chair_broadcast_status)(property_value);
+			if (chair_status_vector[chair_number].cbs == chair_broadcast_status::ready) {
+				ROS_INFO("CHAIR %d IS READY TO RECEIVE BROADCAST", chair_number);
+			}
+			break;
+		}
+		case 'S':
+		{
+			chair_status_vector[chair_number].css = (chair_stuck_status)(property_value);
+			break;
+		}
+		default:
+		{
+			ROS_INFO("INVALID CHAIR PROPERTY");
+			break;
+		}
+	}
 }
 
-void broadcast_callback(const std_msgs::String::ConstPtr& msg) {
-	transmit_queue.push(*msg);
+void broadcast_callback(const std_msgs::String& msg) {
+	transmit_queue.push(msg);
 }
 
 ros::Publisher hub_manager_pub;
@@ -57,6 +84,9 @@ int main (int argc, char** argv) {
 				if (!transmit_queue.empty()) {
 					mode = state::awaiting_confirmation;
 					// also transmit start of broadcast
+					std_msgs::String msg;
+					msg.data = "0Bstart";
+					hub_manager_pub.publish(msg);
 				}
 				break;
 			}
