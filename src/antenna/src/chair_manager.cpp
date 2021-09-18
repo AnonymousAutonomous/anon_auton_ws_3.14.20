@@ -7,11 +7,11 @@
 #include <string>
 
 // probably not necessary
-#define NUMBER_OF_CHAIRS 1
+// #define NUMBER_OF_CHAIRS 1
 
 // probably not necessary
-enum chair_broadcast_status : char {ready, success, failure};
-enum chair_stuck_status : char {stuck, not_stuck};
+// enum chair_broadcast_status : char {ready, success, failure};
+// enum chair_stuck_status : char {stuck, not_stuck};
 
 ros::Publisher chair_manager_pub;
 
