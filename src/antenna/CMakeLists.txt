@@ -136,7 +136,9 @@ include_directories(
 # add_executable(${PROJECT_NAME}_node src/antenna_node.cpp)
 
 add_executable(hub_manager src/hub_manager.cpp)
+add_executable(chair_manager src/chair_manager.cpp)
 target_link_libraries(hub_manager ${catkin_LIBRARIES})
+target_link_libraries(chair_manager ${catkin_LIBRARIES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
