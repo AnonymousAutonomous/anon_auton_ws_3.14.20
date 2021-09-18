@@ -4,6 +4,7 @@
 #include <ros/spinner.h>
 #include <queue>
 #include <vector>
+#include <string>
 
 // probably not necessary
 #define NUMBER_OF_CHAIRS 1
@@ -16,7 +17,7 @@ ros::Publisher chair_manager_pub;
 
 void receive_callback(const std_msgs::String& msg) {
 	chair_manager_pub.publish(msg);
-	ROS_INFO("PUBLISHING %s", msg.data);
+	ROS_INFO("PUBLISHING %s", msg.data.c_str());
 }
 
 int main (int argc, char** argv) {

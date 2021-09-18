@@ -9,7 +9,7 @@ def chair_receiver():
     rospy.init_node("chair_receiver", anonymous=True)
     ser = serial.Serial("/dev/ttyUSB0", 57600)
     while not rospy.is_shutdown():
-        str_msg = ser.readline()
+        str_msg = ser.readline()[:-1]
         rospy.loginfo(str_msg)
         pub.publish(str_msg)
 
