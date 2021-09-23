@@ -361,6 +361,8 @@ int main(int argc, char** argv) {
 						std_msgs::String to_hub;
 						to_hub.data = "0B" + (char)(chair_broadcast_status::ready);
 						update_hub_pub.publish(to_hub);
+						ROS_INFO("CHAIR 0 IS READY");
+						ROS_INFO("CHAIR 0 IS IN READY BROADCAST STATE");
 						break;
 					}
 					case broadcast_state::ready: // absorbed performing
