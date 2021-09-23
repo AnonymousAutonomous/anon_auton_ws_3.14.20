@@ -15,11 +15,15 @@
 #include <ctime>
 #include <cmath>
 
-enum state : char {autonomous, choreo, custom, broadcast};
+enum class state : char {autonomous, choreo, custom, broadcast};
 state mode = state::autonomous;
 
-enum broadcast_state : char {outside, ready, wait};
+enum class broadcast_state : char {outside, ready, wait};
 broadcast_state broadcast_mode = broadcast_state::outside;
+
+// mirror chair status enums in hub manager
+enum class chair_broadcast_status : char {ready, success, failure};
+enum class chair_stuck_status : char {stuck, not_stuck};
 
 #define flag_A !autonomous_queue.empty()
 #define flag_B !broadcast_queue.empty()
@@ -196,6 +200,7 @@ void callback(const std_msgs::String& command) {
 
 ros::Publisher generic_pub;
 ros::Publisher eoc_pub;
+ros::Publisher update_hub_pub;
 
 int main(int argc, char** argv) {
 	ros::init(argc, argv, "queue_five");	
@@ -210,6 +215,7 @@ int main(int argc, char** argv) {
 
 	generic_pub = nh.advertise<eyes::Generic>("generic_feed", 1000);
 	eoc_pub = nh.advertise<std_msgs::Empty>("end_of_choreo", 1000);
+	update_hub_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 
 	mode = state::autonomous;
 	while (ros::ok()) {
@@ -352,6 +358,9 @@ int main(int argc, char** argv) {
 						stop.duration = 0; // inconsequential
 						generic_pub.publish(stop);
 						// TODO: PUBLISH INDICATION THAT CHAIR IS READY TO GO TO INFORM HUB
+						std_msgs::String to_hub;
+						to_hub.data = "0B" + (char)(chair_broadcast_status::ready);
+						update_hub_pub.publish(to_hub);
 						break;
 					}
 					case broadcast_state::ready: // absorbed performing
