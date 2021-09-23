@@ -7,8 +7,8 @@
 
 #define NUMBER_OF_CHAIRS 1
 
-enum chair_broadcast_status : char {ready, success, failure};
-enum chair_stuck_status : char {stuck, not_stuck};
+enum class chair_broadcast_status : char {ready, success, failure};
+enum class chair_stuck_status : char {stuck, not_stuck};
 
 struct chair_status {
 	chair_broadcast_status cbs = chair_broadcast_status::success;
@@ -18,7 +18,16 @@ struct chair_status {
 
 std::vector<chair_status> chair_status_vector(5);
 
-enum state : char {outside, awaiting_confirmation, awaiting_status};
+bool all_chairs_are_ready() {
+	for (chair_status& status : chair_status_vector) {
+		if (status.cbs != chair_broadcast_status::ready) {
+			return false;
+		}
+	}
+	return true;
+}
+
+enum class state : char {outside, awaiting_confirmation, awaiting_status};
 state mode = state::outside;
 
 std::queue<std_msgs::String> transmit_queue;
@@ -94,6 +103,11 @@ int main (int argc, char** argv) {
 			{
 				// wait until cbs is ready for all chairs
 				// then transmit until end of broadcast stage
+				while (!all_chairs_are_ready()) {
+					// pass
+				}
+				ROS_INFO("ALL CHAIRS ARE READY");
+				while (1);
 				break;
 			}
 			case state::awaiting_status:
