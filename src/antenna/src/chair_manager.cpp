@@ -9,11 +9,12 @@
 // probably not necessary
 // #define NUMBER_OF_CHAIRS 1
 
-// probably not necessary
+// for reference
 // enum chair_broadcast_status : char {ready, success, failure};
 // enum chair_stuck_status : char {stuck, not_stuck};
 
 ros::Publisher chair_manager_pub;
+// ros::Publisher test_pub;
 
 void receive_callback(const std_msgs::String& msg) {
 	chair_manager_pub.publish(msg);
@@ -34,8 +35,13 @@ int main (int argc, char** argv) {
 
 	// initialize publishers
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
+	// test_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 
 	while (ros::ok()) {
-		// pass
+		/*
+		std_msgs::String msg;
+		msg.data = "0B" + (char)(chair_broadcast_status::ready);
+		test_pub.publish(msg);
+		*/
 	}
 }
