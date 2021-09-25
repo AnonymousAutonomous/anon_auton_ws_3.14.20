@@ -48,11 +48,23 @@ void receive_callback(const std_msgs::String& msg) {
 			if (chair_status_vector[chair_number].cbs == chair_broadcast_status::ready) {
 				ROS_INFO("CHAIR %d IS READY TO RECEIVE BROADCAST", chair_number);
 			}
+			if (chair_status_vector[chair_number].cbs == chair_broadcast_status::success) {
+				ROS_INFO("CHAIR %d SUCCESSFULLY COMPLETED BROADCAST", chair_number);
+			}
+			if (chair_status_vector[chair_number].cbs == chair_broadcast_status::failure) {
+				ROS_INFO("CHAIR %d FAILED TO COMPLETE BROADCAST", chair_number);
+			}
 			break;
 		}
 		case 'S':
 		{
 			chair_status_vector[chair_number].css = (chair_stuck_status)(property_value);
+			if (chair_status_vector[chair_number].css == chair_stuck_status::stuck) {
+				ROS_INFO("CHAIR %d IS STUCK", chair_number);
+			}
+			if (chair_status_vector[chair_number].css == chair_stuck_status::not_stuck) {
+				ROS_INFO("CHAIR %d IS NOT STUCK", chair_number);
+			}
 			break;
 		}
 		default:
@@ -107,7 +119,11 @@ int main (int argc, char** argv) {
 					// pass
 				}
 				ROS_INFO("ALL CHAIRS ARE READY");
-				while (1);
+				mode = state::awaiting_status;
+				while (!transmit_queue.empty()) {
+					hub_manager_pub.publish(transmit_queue.front());
+					transmit_queue.pop();
+				}
 				break;
 			}
 			case state::awaiting_status:
@@ -115,6 +131,8 @@ int main (int argc, char** argv) {
 				// wait until cbs is success / failure for all chairs
 				// change state to outside
 				// transmit end of broadcast message
+				ROS_INFO("AWAITING CHAIR STATUS");
+				while (1);
 				break;
 			}
 			default:

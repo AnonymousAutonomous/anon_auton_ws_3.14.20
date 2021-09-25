@@ -171,8 +171,20 @@ void callback(const std_msgs::String& command) {
 				flag_SOB = true;
 			}
 			else if (command.data == "0Bfinish") {
-				ROS_INFO("END OF BROADCAST");
+				ROS_INFO("FINISHED BROADCAST");
 				flag_EOB = true;
+			}
+			else if (command.data == "0Bend") {
+				ROS_INFO("END OF BROADCAST");
+				eyes::Generic generic_message;
+				generic_message.identifier = 'e';
+				generic_message.left_forward = true;
+				generic_message.right_forward = true;
+				generic_message.left_speed = 0;
+				generic_message.right_speed = 0;
+				generic_message.timed = true;
+				generic_message.duration = 0;
+				broadcast_queue.push(generic_message);
 			}
 			else {
 				eyes::Generic generic_message;
@@ -362,7 +374,6 @@ int main(int argc, char** argv) {
 						to_hub.data = "0B" + (char)(chair_broadcast_status::ready);
 						update_hub_pub.publish(to_hub);
 						ROS_INFO("CHAIR 0 IS READY");
-						ROS_INFO("CHAIR 0 IS IN READY BROADCAST STATE");
 						break;
 					}
 					case broadcast_state::ready: // absorbed performing
@@ -372,18 +383,14 @@ int main(int argc, char** argv) {
 							if (broadcast_queue.front().identifier == 'e') {
 								ROS_INFO("LAST STAGE OF BROADCAST");
 								broadcast_mode = broadcast_state::wait;
+								// safety stop
+								generic_pub.publish(broadcast_queue.front());
 								broadcast_queue = std::queue<eyes::Generic>();
-								// publish safety stop
-								eyes::Generic stop;
-								stop.identifier = 'b';
-								stop.left_forward = true;
-								stop.right_forward = true;
-								stop.left_speed = 0;
-								stop.right_speed = 0;
-								stop.timed = false; // inconsequential
-								stop.duration = 0; // inconsequential
-								generic_pub.publish(stop);
 								// TODO: PUBLISH INDICATION THAT CHAIR COMPLETED BROADCAST SUCCESSFULLY
+								std_msgs::String to_hub;
+								to_hub.data = "0B" + (char)(chair_broadcast_status::success);
+								update_hub_pub.publish(to_hub);
+								ROS_INFO("CHAIR 0 SUCCESSFULLY COMPLETED BROADCAST");
 							}
 							else {
 								// duration, replaces wait_for_notification();
