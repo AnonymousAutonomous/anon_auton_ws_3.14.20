@@ -13,4 +13,20 @@ int main(int argc, char** argv) {
 	test_pub.publish(msg);
 	msg.data = "0Bf000f000t2";
 	test_pub.publish(msg);
+	msg.data = "0Br100r100t4";
+	test_pub.publish(msg);
+	msg.data = "0Br000r000t2";
+	test_pub.publish(msg);
+	msg.data = "0Bf100r100t4";
+	test_pub.publish(msg);
+	msg.data = "0Bf000r000t2";
+	test_pub.publish(msg);
+	msg.data = "0Br100f100t4";
+	test_pub.publish(msg);
+	msg.data = "0Br000f000t2";
+	test_pub.publish(msg);
+	msg.data = "0Bend";
+	test_pub.publish(msg);
+
+	return 0;
 }
