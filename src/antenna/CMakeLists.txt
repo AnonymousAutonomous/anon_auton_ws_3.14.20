@@ -137,8 +137,10 @@ include_directories(
 
 add_executable(hub_manager src/hub_manager.cpp)
 add_executable(chair_manager src/chair_manager.cpp)
+add_executable(test_broadcast_transmitter src/test_broadcast_transmitter.cpp)
 target_link_libraries(hub_manager ${catkin_LIBRARIES})
 target_link_libraries(chair_manager ${catkin_LIBRARIES})
+target_link_libraries(test_broadcast_transmitter ${catkin_LIBRARIES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
