@@ -7,8 +7,8 @@
 
 #define NUMBER_OF_CHAIRS 1
 
-enum class chair_broadcast_status : char {ready, success, failure};
-enum class chair_stuck_status : char {stuck, not_stuck};
+enum class chair_broadcast_status : char {ready = '0', success, failure};
+enum class chair_stuck_status : char {stuck = '0', not_stuck};
 
 struct chair_status {
 	chair_broadcast_status cbs = chair_broadcast_status::success;
