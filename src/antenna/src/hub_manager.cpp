@@ -16,7 +16,7 @@ struct chair_status {
 	// being user-controlled? low battery? surrounded? current command? connection break?
 };
 
-std::vector<chair_status> chair_status_vector(5);
+std::vector<chair_status> chair_status_vector(NUMBER_OF_CHAIRS);
 
 bool all_chairs_are_ready() {
 	for (chair_status& status : chair_status_vector) {
