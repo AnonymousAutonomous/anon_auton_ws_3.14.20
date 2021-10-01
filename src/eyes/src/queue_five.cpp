@@ -175,7 +175,7 @@ void callback(const std_msgs::String& command) {
 				flag_EOB = true;
 			}
 			else if (command.data == "0Bend") {
-				ROS_INFO("END OF BROADCAST");
+				// ROS_INFO("END OF BROADCAST");
 				eyes::Generic generic_message;
 				generic_message.identifier = 'e';
 				generic_message.left_forward = true;
@@ -371,7 +371,8 @@ int main(int argc, char** argv) {
 						generic_pub.publish(stop);
 						// TODO: PUBLISH INDICATION THAT CHAIR IS READY TO GO TO INFORM HUB
 						std_msgs::String to_hub;
-						to_hub.data = "0B" + (char)(chair_broadcast_status::ready);
+						to_hub.data = "0B";
+						to_hub.data.push_back(static_cast<char>(chair_broadcast_status::ready));
 						update_hub_pub.publish(to_hub);
 						ROS_INFO("CHAIR 0 IS READY");
 						break;
@@ -388,7 +389,8 @@ int main(int argc, char** argv) {
 								broadcast_queue = std::queue<eyes::Generic>();
 								// TODO: PUBLISH INDICATION THAT CHAIR COMPLETED BROADCAST SUCCESSFULLY
 								std_msgs::String to_hub;
-								to_hub.data = "0B" + (char)(chair_broadcast_status::success);
+								to_hub.data = "0B";
+								to_hub.data.push_back(static_cast<char>(chair_broadcast_status::success));
 								update_hub_pub.publish(to_hub);
 								ROS_INFO("CHAIR 0 SUCCESSFULLY COMPLETED BROADCAST");
 							}
@@ -466,7 +468,7 @@ int main(int argc, char** argv) {
 					choreo_queue = std::queue<eyes::Generic>();
 					custom_queue = std::queue<eyes::Generic>();
 					broadcast_queue = std::queue<eyes::Generic>();
-					ROS_INFO("END OF BROADCAST");
+					ROS_INFO("RESUMING AUTONOMOUS BEHAVIOR");
 					flag_SOB = false;
 					flag_EOB = false;
 					flag_D = true; // <-- exit case, resetting flag_D for next time
