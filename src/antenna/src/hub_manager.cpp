@@ -7,8 +7,8 @@
 
 #define NUMBER_OF_CHAIRS 1
 
-enum class chair_broadcast_status : char {ready = '0', success, failure};
-enum class chair_stuck_status : char {stuck = '0', not_stuck};
+enum class chair_broadcast_status : char {ready, success, failure};
+enum class chair_stuck_status : char {stuck, not_stuck};
 
 struct chair_status {
 	chair_broadcast_status cbs = chair_broadcast_status::success;
@@ -21,6 +21,15 @@ std::vector<chair_status> chair_status_vector(NUMBER_OF_CHAIRS);
 bool all_chairs_are_ready() {
 	for (chair_status& status : chair_status_vector) {
 		if (status.cbs != chair_broadcast_status::ready) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool all_chairs_are_done() {
+	for (chair_status& status : chair_status_vector) {
+		if (status.cbs == chair_broadcast_status::ready) {
 			return false;
 		}
 	}
@@ -44,7 +53,7 @@ void receive_callback(const std_msgs::String& msg) {
 	switch (chair_property) {
 		case 'B':
 		{
-			chair_status_vector[chair_number].cbs = (chair_broadcast_status)(property_value);
+			chair_status_vector[chair_number].cbs = static_cast<chair_broadcast_status>(property_value);
 			if (chair_status_vector[chair_number].cbs == chair_broadcast_status::ready) {
 				ROS_INFO("CHAIR %d IS READY TO RECEIVE BROADCAST", chair_number);
 			}
@@ -58,7 +67,7 @@ void receive_callback(const std_msgs::String& msg) {
 		}
 		case 'S':
 		{
-			chair_status_vector[chair_number].css = (chair_stuck_status)(property_value);
+			chair_status_vector[chair_number].css = static_cast<chair_stuck_status>(property_value);
 			if (chair_status_vector[chair_number].css == chair_stuck_status::stuck) {
 				ROS_INFO("CHAIR %d IS STUCK", chair_number);
 			}
@@ -131,8 +140,15 @@ int main (int argc, char** argv) {
 				// wait until cbs is success / failure for all chairs
 				// change state to outside
 				// transmit end of broadcast message
-				ROS_INFO("AWAITING CHAIR STATUS");
-				while (1);
+				while (!all_chairs_are_done()) {
+					// pass
+				}
+				ROS_INFO("ALL CHAIRS ARE DONE");
+				mode = state::outside;
+				std_msgs::String msg;
+				msg.data = "0Bfinish";
+				hub_manager_pub.publish(msg);
+				ROS_INFO("BROADCAST IS FINISHED");
 				break;
 			}
 			default:
