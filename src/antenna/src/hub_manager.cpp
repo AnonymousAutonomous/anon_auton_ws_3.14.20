@@ -7,7 +7,7 @@
 
 #define NUMBER_OF_CHAIRS 1
 
-enum class chair_broadcast_status : char {ready, success, failure};
+enum class chair_broadcast_status : char {ready, exclude, success, failure};
 enum class chair_stuck_status : char {stuck, not_stuck};
 
 struct chair_status {
@@ -20,16 +20,24 @@ std::vector<chair_status> chair_status_vector(NUMBER_OF_CHAIRS);
 
 bool all_chairs_are_ready() {
 	for (chair_status& status : chair_status_vector) {
-		if (status.cbs != chair_broadcast_status::ready) {
+		if (status.cbs != chair_broadcast_status::ready && status.cbs != chair_broadcast_status::exclude) {
 			return false;
 		}
 	}
 	return true;
 }
 
+void overwrite_excluded_chairs() {
+	for (chair_status& status : chair_status_vector) {
+		if (status.cbs == chair_broadcast_status::exclude) {
+			status.cbs = chair_broadcast_status::failure;
+		}
+	}
+}
+
 bool all_chairs_are_done() {
 	for (chair_status& status : chair_status_vector) {
-		if (status.cbs == chair_broadcast_status::ready) {
+		if (status.cbs == chair_broadcast_status::ready || status.cbs == chair_broadcast_status::exclude) {
 			return false;
 		}
 	}
@@ -56,6 +64,9 @@ void receive_callback(const std_msgs::String& msg) {
 			chair_status_vector[chair_number].cbs = static_cast<chair_broadcast_status>(property_value);
 			if (chair_status_vector[chair_number].cbs == chair_broadcast_status::ready) {
 				ROS_INFO("CHAIR %d IS READY TO RECEIVE BROADCAST", chair_number);
+			}
+			if (chair_status_vector[chair_number].cbs == chair_broadcast_status::exclude) {
+				ROS_INFO("CHAIR %d IS EXCLUDED FROM THIS BROADCAST", chair_number);
 			}
 			if (chair_status_vector[chair_number].cbs == chair_broadcast_status::success) {
 				ROS_INFO("CHAIR %d SUCCESSFULLY COMPLETED BROADCAST", chair_number);
@@ -128,6 +139,7 @@ int main (int argc, char** argv) {
 					// pass
 				}
 				ROS_INFO("ALL CHAIRS ARE READY");
+				overwrite_excluded_chairs();
 				mode = state::awaiting_status;
 				while (!transmit_queue.empty()) {
 					bool break_out = transmit_queue.front().data == "0Bend";
