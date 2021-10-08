@@ -130,8 +130,10 @@ int main (int argc, char** argv) {
 				ROS_INFO("ALL CHAIRS ARE READY");
 				mode = state::awaiting_status;
 				while (!transmit_queue.empty()) {
+					bool break_out = transmit_queue.front().data == "0Bend";
 					hub_manager_pub.publish(transmit_queue.front());
 					transmit_queue.pop();
+					if (break_out) break;
 				}
 				break;
 			}
