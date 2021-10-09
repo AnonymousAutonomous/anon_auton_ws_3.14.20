@@ -37,7 +37,7 @@ void overwrite_excluded_chairs() {
 
 bool all_chairs_are_done() {
 	for (chair_status& status : chair_status_vector) {
-		if (status.cbs == chair_broadcast_status::ready || status.cbs == chair_broadcast_status::exclude) {
+		if (status.cbs == chair_broadcast_status::ready) {
 			return false;
 		}
 	}
@@ -139,7 +139,6 @@ int main (int argc, char** argv) {
 					// pass
 				}
 				ROS_INFO("ALL CHAIRS ARE READY");
-				overwrite_excluded_chairs();
 				mode = state::awaiting_status;
 				while (!transmit_queue.empty()) {
 					bool break_out = transmit_queue.front().data == "0Bend";
@@ -163,6 +162,7 @@ int main (int argc, char** argv) {
 				msg.data = "0Bfinish";
 				hub_manager_pub.publish(msg);
 				ROS_INFO("BROADCAST IS FINISHED");
+				overwrite_excluded_chairs();
 				break;
 			}
 			default:
