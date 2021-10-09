@@ -464,12 +464,12 @@ int main(int argc, char** argv) {
 					mode = state::custom;
 					broadcast_mode = broadcast_state::outside;
 					flag_T = false;
-					// flag_SOB = false;
+					flag_SOB = false; // shouldn't be necessary, but just to be safe to avoid double update
 					flag_EOB = false;
 					flag_D = true; // <-- exit case, resetting flag_D for next time
 					std_msgs::String to_hub;
 					to_hub.data = "0B";
-					to_hub.data.push_back(static_cast<char>(chair_broadcast_status::failure));
+					to_hub.data.push_back(static_cast<char>(chair_broadcast_status::exclude));
 					update_hub_pub.publish(to_hub);
 					ROS_INFO("CHAIR 0 IS YANKED FROM BROADCAST");
 				}
