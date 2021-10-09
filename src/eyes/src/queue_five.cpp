@@ -22,7 +22,7 @@ enum class broadcast_state : char {outside, ready, wait};
 broadcast_state broadcast_mode = broadcast_state::outside;
 
 // mirror chair status enums in hub manager
-enum class chair_broadcast_status : char {ready, success, failure};
+enum class chair_broadcast_status : char {ready, exclude, success, failure};
 enum class chair_stuck_status : char {stuck, not_stuck};
 
 #define flag_A !autonomous_queue.empty()
@@ -244,7 +244,7 @@ int main(int argc, char** argv) {
 				if (flag_H) {
 					mode = state::custom;
 					flag_T = false;
-					flag_SOB = false;
+					// flag_SOB = false;
 				}
 				else if (flag_SOB) {
 					mode = state::broadcast;
@@ -315,7 +315,7 @@ int main(int argc, char** argv) {
 					mode = state::custom;
 					flag_T = false;
 					flag_D = true; // <-- exit case, resetting flag_D for next time
-					flag_SOB = false;
+					// flag_SOB = false;
 				}
 				else if (flag_SOB) {
 					mode = state::broadcast;
@@ -335,6 +335,14 @@ int main(int argc, char** argv) {
 			}
 			case state::custom:
 			{
+				if (flag_SOB) {
+					std_msgs::String to_hub;
+					to_hub.data = "0B";
+					to_hub.data.push_back(static_cast<char>(chair_broadcast_status::exclude));
+					update_hub_pub.publish(to_hub);
+					ROS_INFO("CHAIR 0 IS EXCLUDED FROM BROADCAST");
+					flag_SOB = false;
+				}
 				if (flag_T) {
 					mode = state::autonomous;
 					autonomous_queue = std::queue<eyes::Generic>();
@@ -450,15 +458,20 @@ int main(int argc, char** argv) {
 						break;
 					}
 				}
-				
+
 				// state transition logic (WIP)
 				if (flag_H) {
 					mode = state::custom;
 					broadcast_mode = broadcast_state::outside;
 					flag_T = false;
-					flag_SOB = false;
+					// flag_SOB = false;
 					flag_EOB = false;
 					flag_D = true; // <-- exit case, resetting flag_D for next time
+					std_msgs::String to_hub;
+					to_hub.data = "0B";
+					to_hub.data.push_back(static_cast<char>(chair_broadcast_status::failure));
+					update_hub_pub.publish(to_hub);
+					ROS_INFO("CHAIR 0 IS YANKED FROM BROADCAST");
 				}
 				// TODO: ADD CHECK FOR flag_SOB TO ENABLE SEQUENTIAL BROADCASTS?
 				else if (flag_EOB) {
