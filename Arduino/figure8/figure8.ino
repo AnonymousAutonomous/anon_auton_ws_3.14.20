@@ -377,7 +377,7 @@ void loop() {
   } else if (mode == '1') {
     leftEncoderValue = 0;
     rightEncoderValue = 0;
-    go_fwd_bwd(FWD, 6000, 115, 100);
+    go_fwd_bwd(FWD, 6000, 110, 100);
     leftEncoderValue = 0;
     rightEncoderValue = 0;
     go_fwd_bwd(BWD, 6000, 100, 100);
