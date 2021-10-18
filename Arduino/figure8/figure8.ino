@@ -24,15 +24,15 @@ const char BWD = 'b';
 volatile long leftEncoderValue = 0;
 volatile long rightEncoderValue = 0;
 
-const int clockwiseLeftFwdSpeed = 100; /* PLACEHOLDER */
-const int clockwiseRightSpeed = 90; /* PLACEHOLDER */
-const long clockwiseLoopDuration = 42000; /* in encoder ticks PLACEHOLDER */
+const int clockwiseLeftFwdSpeed = 150; /* PLACEHOLDER */
+const int clockwiseRightSpeed = 130; /* PLACEHOLDER */
+const long clockwiseLoopDuration = 24500; /* in encoder ticks PLACEHOLDER */
 
-const int counterClockwiseRightFwdSpeed = 100; /* PLACEHOLDER */
-const int counterclockwiseLeftSpeed = 90; /* PLACEHOLDER */
+const int counterClockwiseRightFwdSpeed = clockwiseLeftFwdSpeed; /* PLACEHOLDER */
+const int counterClockwiseLeftSpeed = clockwiseRightSpeed; /* PLACEHOLDER */
 const long counterClockwiseLoopDuration = clockwiseLoopDuration; /* in encoder ticks PLACEHOLDER */
 
-const int forwardLeftSpeed = 85; /* PLACEHOLDER */
+const int forwardLeftSpeed = 110; /* PLACEHOLDER */
 const int forwardRightSpeed = forwardLeftSpeed; /* PLACEHOLDER */
 const int forwardOffset = 0; /* PLACEHOLDER */
 
@@ -67,7 +67,9 @@ void setLeftMotorDir(char dir) {
 void goStraight(int distance, int mtrspeed = -1) {
   int rightspeed = mtrspeed == -1 ? forwardRightSpeed : mtrspeed;
   int leftspeed  = mtrspeed == -1 ? forwardLeftSpeed : mtrspeed;
-  
+
+  Serial.println(rightspeed, DEC);
+  Serial.println(leftspeed, DEC);
   leftEncoderValue = 0;
   rightEncoderValue = 0;
 
@@ -75,49 +77,29 @@ void goStraight(int distance, int mtrspeed = -1) {
   setRightMotorDir(FWD);
 
   while (leftEncoderValue < distance) {
-    if (leftEncoderValue < rightEncoderValue) {
-      analogWrite(RIGHT_MOTOR, rightspeed - forwardOffset);
-      analogWrite(LEFT_MOTOR, leftspeed + forwardOffset);
-    }
-    else if (leftEncoderValue > rightEncoderValue) {
-      analogWrite(RIGHT_MOTOR, rightspeed + forwardOffset);
-      analogWrite(LEFT_MOTOR, leftspeed - forwardOffset);
-    }
-    else {
-      analogWrite(RIGHT_MOTOR, rightspeed);
-      analogWrite(LEFT_MOTOR, leftspeed);
-    }
+    analogWrite(RIGHT_MOTOR, rightspeed);
+    analogWrite(LEFT_MOTOR, leftspeed);
+    Serial.print(leftEncoderValue, DEC);
+    Serial.print('\t');
+    Serial.println(rightEncoderValue, DEC); 
   }
+//
+//  while (leftEncoderValue < distance) {
+//    if (leftEncoderValue < rightEncoderValue) {
+//      analogWrite(RIGHT_MOTOR, rightspeed - forwardOffset);
+//      analogWrite(LEFT_MOTOR, leftspeed + forwardOffset);
+//    }
+//    else if (leftEncoderValue > rightEncoderValue) {
+//      analogWrite(RIGHT_MOTOR, rightspeed + forwardOffset);
+//      analogWrite(LEFT_MOTOR, leftspeed - forwardOffset);
+//    }
+//    else {
+//      analogWrite(RIGHT_MOTOR, rightspeed);
+//      analogWrite(LEFT_MOTOR, leftspeed);
+//    }
+//  }
 }
 
-void setup() {
-  Serial.begin(115200); // open the serial port at 115200 bps:
-  
-  //set output for motor 1 related pins
-  pinMode(IN1, OUTPUT);
-  pinMode(IN2, OUTPUT);
-  pinMode(ENA, OUTPUT);
-  
-  //set output for motor 2 related pins
-  pinMode(IN3, OUTPUT);
-  pinMode(IN4, OUTPUT);
-  pinMode(ENB, OUTPUT);
-  
-  setLeftMotorDir(FWD);
-  setRightMotorDir(FWD);
-
-  //set encoder input from motor 1
-  pinMode(MOTOR_1A, INPUT);
-  pinMode(MOTOR_1B, INPUT);
-
-  //set encoder input from motor 2
-  pinMode(MOTOR_2A, INPUT);
-  pinMode(MOTOR_2B, INPUT);
-
-  attachInterrupt(digitalPinToInterrupt(MOTOR_1A), EncoderEvent1, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(MOTOR_2A), EncoderEvent2, CHANGE);
-  
-}
 
 
 void rampUp() {
@@ -195,31 +177,95 @@ void testspeed(int mtrspeed, char mtrdir) {
   Serial.println(right_duration, DEC); 
 }
 
-void goose() {
-  setRightMotorDir(FWD);
-  setLeftMotorDir(FWD);
+void go_fwd_bwd(char dir, long duration, int maxLeftSpeed, int maxRightSpeed) {
 
-  analogWrite(RIGHT_MOTOR, 140);
-  analogWrite(LEFT_MOTOR, 140);
+  leftEncoderValue = 0;
+  rightEncoderValue = 0;
+
+  Serial.println(String(dir) + " " + String(maxLeftSpeed) + " " + String(maxRightSpeed));
+
+  int gooseSpeed = 140;
+  
+  setRightMotorDir(dir);
+  setLeftMotorDir(dir);
+
+  // goose
+  analogWrite(RIGHT_MOTOR, gooseSpeed);
+  analogWrite(LEFT_MOTOR, gooseSpeed);
 
   delay(500);
 
-  for (int i = 140; i >= 100; i--) {
-     analogWrite(RIGHT_MOTOR, i);
-     analogWrite(LEFT_MOTOR, i);
+  // go forward 10 seconds
+  int leftSpeed = gooseSpeed;
+  int rightSpeed = gooseSpeed;
+
+  while (leftSpeed > maxLeftSpeed || rightSpeed > maxRightSpeed) {
+    analogWrite(LEFT_MOTOR, leftSpeed);
+    analogWrite(RIGHT_MOTOR, rightSpeed);
+
+    leftSpeed = max(leftSpeed - 1, maxLeftSpeed);
+    rightSpeed = max(rightSpeed - 1, maxRightSpeed);
+
+//    Serial.println(String(leftSpeed) + "," + String(rightSpeed));
   }
 
-  analogWrite(RIGHT_MOTOR, 100);
-  analogWrite(LEFT_MOTOR, 110);
+  leftEncoderValue = 0;
+  rightEncoderValue = 0;
 
-  delay(10000);
+  leftEncoderValue = 0;
+  rightEncoderValue = 0;
+
+  Serial.println("ENCODERS");
+
+  if (dir == FWD) {
+    while (leftEncoderValue < duration) {
+      Serial.println(String(leftEncoderValue) + "," + String(rightEncoderValue));
+    }
+  } else {
+    while (leftEncoderValue > -1 * duration) {
+       Serial.println(String(leftEncoderValue) + "," + String(rightEncoderValue));
+    }
+  }
+  
+
+  // slow down and stop one second
+  while (leftSpeed > 0 && rightSpeed > 0) {
+    analogWrite(LEFT_MOTOR, leftSpeed);
+    analogWrite(RIGHT_MOTOR, rightSpeed);
+
+    leftSpeed = max(leftSpeed - 1, 0);
+    rightSpeed = max(rightSpeed - 1, 0);
+  }
 
   analogWrite(RIGHT_MOTOR, 0);
   analogWrite(LEFT_MOTOR, 0);
 
-  delay(2000);
+  delay(1000);
 
 }
+
+
+void test() {
+  int startSpeed = 50;
+  int endSpeed = 100;
+  int increment = 50;
+  
+  Serial.println("fwd_speed,left_ms,right_ms");
+  for (int i = startSpeed; i <= endSpeed; i += increment) {
+    testspeed(i, FWD);
+  }
+  
+  Serial.println("bwd_speed,left_ms,right_ms");
+  for (int i = startSpeed; i <= endSpeed; i += increment) {
+    testspeed(i, BWD);
+  }
+
+  delay(5000);
+}
+
+/**********************************************************/
+/*                        FIGURE 8                        */  
+/**********************************************************/
 
 void figureEight() {
 
@@ -256,26 +302,57 @@ void figureEight() {
   
   while (rightEncoderValue < counterClockwiseLoopDuration) {
     analogWrite(RIGHT_MOTOR, counterClockwiseRightFwdSpeed);
-    analogWrite(LEFT_MOTOR, counterclockwiseLeftSpeed);
+    analogWrite(LEFT_MOTOR, counterClockwiseLeftSpeed);
   }
 }
 
-void test() {
-  int startSpeed = 50;
-  int endSpeed = 100;
-  int increment = 50;
-  
-  Serial.println("fwd_speed,left_ms,right_ms");
-  for (int i = startSpeed; i <= endSpeed; i += increment) {
-    testspeed(i, FWD);
-  }
-  
-  Serial.println("bwd_speed,left_ms,right_ms");
-  for (int i = startSpeed; i <= endSpeed; i += increment) {
-    testspeed(i, BWD);
-  }
 
-  delay(5000);
+/**********************************************************/
+/*                        SETUP & LOOP                    */  
+/**********************************************************/
+
+
+void setup() {
+  Serial.begin(115200); // open the serial port at 115200 bps:
+  
+  //set output for motor 1 related pins
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(ENA, OUTPUT);
+  
+  //set output for motor 2 related pins
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  pinMode(ENB, OUTPUT);
+  
+  setLeftMotorDir(FWD);
+  setRightMotorDir(FWD);
+
+  //set encoder input from motor 1
+  pinMode(MOTOR_1A, INPUT);
+  pinMode(MOTOR_1B, INPUT);
+
+  //set encoder input from motor 2
+  pinMode(MOTOR_2A, INPUT);
+  pinMode(MOTOR_2B, INPUT);
+
+  attachInterrupt(digitalPinToInterrupt(MOTOR_1A), EncoderEvent1, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(MOTOR_2A), EncoderEvent2, CHANGE);
+
+
+  leftEncoderValue = 0;
+  rightEncoderValue = 0;
+
+//  setLeftMotorDir(BWD);
+//  setRightMotorDir(FWD);
+//  
+//  while (rightEncoderValue < 2500) {
+//    analogWrite(RIGHT_MOTOR, counterClockwiseRightFwdSpeed);
+//    analogWrite(LEFT_MOTOR, counterClockwiseLeftSpeed);
+//    Serial.print(leftEncoderValue, DEC);
+//    Serial.print('\t');
+//    Serial.println(rightEncoderValue, DEC); 
+//  }
 }
 
 
@@ -286,7 +363,10 @@ void loop() {
   //    t: test       (collect time for each wheel to complete 5 revolutions at diff speeds)
   //    f: figure 8   (run figure 8)
   //    r: ramp up    (ramp up speed with robot going fwd)
-  char mode = 'f';
+  //    1: go fwd/bwd
+  //    2: go clockwise circle
+  //    3: go counterclockwise circle
+  char mode = '1';
 
   if (mode == 't') {
     test();
@@ -294,10 +374,23 @@ void loop() {
     figureEight();
   } else if (mode == 'r') {
     rampUp();
+  } else if (mode == '1') {
+    leftEncoderValue = 0;
+    rightEncoderValue = 0;
+    go_fwd_bwd(FWD, 8000, 115, 100);
+    leftEncoderValue = 0;
+    rightEncoderValue = 0;
+    go_fwd_bwd(BWD, 9500, 100, 100);
   } else {
-    Serial.println("Unsupported loop mode. Must be one of: [t, f, r]."); 
+    Serial.println("Unsupported loop mode. Must be one of: [t, f, r, '1', '2', '3']."); 
   }
 }
+
+
+
+/**********************************************************/
+/*                          ENCODERS                      */  
+/**********************************************************/
 
 void EncoderEvent1() {
   if (digitalRead(MOTOR_1A) == HIGH) {
