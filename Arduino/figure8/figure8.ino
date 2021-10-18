@@ -377,10 +377,10 @@ void loop() {
   } else if (mode == '1') {
     leftEncoderValue = 0;
     rightEncoderValue = 0;
-    go_fwd_bwd(FWD, 8000, 115, 100);
+    go_fwd_bwd(FWD, 6000, 115, 100);
     leftEncoderValue = 0;
     rightEncoderValue = 0;
-    go_fwd_bwd(BWD, 9500, 100, 100);
+    go_fwd_bwd(BWD, 6000, 100, 100);
   } else {
     Serial.println("Unsupported loop mode. Must be one of: [t, f, r, '1', '2', '3']."); 
   }
