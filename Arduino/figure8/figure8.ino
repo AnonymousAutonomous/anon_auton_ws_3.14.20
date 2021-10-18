@@ -228,14 +228,14 @@ void go_fwd_bwd(char dir, long duration, int maxLeftSpeed, int maxRightSpeed) {
   }
   
 
-  // slow down and stop one second
-  while (leftSpeed > 0 && rightSpeed > 0) {
-    analogWrite(LEFT_MOTOR, leftSpeed);
-    analogWrite(RIGHT_MOTOR, rightSpeed);
+  // // slow down and stop one second
+  // while (leftSpeed > 0 && rightSpeed > 0) {
+  //   analogWrite(LEFT_MOTOR, leftSpeed);
+  //   analogWrite(RIGHT_MOTOR, rightSpeed);
 
-    leftSpeed = max(leftSpeed - 1, 0);
-    rightSpeed = max(rightSpeed - 1, 0);
-  }
+  //   leftSpeed = max(leftSpeed - 1, 0);
+  //   rightSpeed = max(rightSpeed - 1, 0);
+  // }
 
   analogWrite(RIGHT_MOTOR, 0);
   analogWrite(LEFT_MOTOR, 0);
