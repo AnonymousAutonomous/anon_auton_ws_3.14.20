@@ -15,19 +15,19 @@ int main(int argc, char** argv) {
 	}
 
 	std_msgs::String msg;
-	msg.data = "0Bf100f100t4";
+	msg.data = "0Bf200f200t1";
 	test_pub.publish(msg);
-	msg.data = "0Bf000f000t2";
+	msg.data = "0Bf000f000t4";
 	test_pub.publish(msg);
-	msg.data = "0Br100r100t4";
+	msg.data = "0Br200r200t1";
 	test_pub.publish(msg);
-	msg.data = "0Br000r000t2";
+	msg.data = "0Br000r000t4";
 	test_pub.publish(msg);
-	msg.data = "0Bf100r100t4";
+	msg.data = "0Bf255r255t4";
 	test_pub.publish(msg);
 	msg.data = "0Bf000r000t2";
 	test_pub.publish(msg);
-	msg.data = "0Br100f100t4";
+	msg.data = "0Br255f255t4";
 	test_pub.publish(msg);
 	msg.data = "0Br000f000t2";
 	test_pub.publish(msg);
