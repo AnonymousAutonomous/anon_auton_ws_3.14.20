@@ -15,11 +15,15 @@
 #include <ctime>
 #include <cmath>
 
-enum state : char {autonomous, choreo, custom, broadcast};
+enum class state : char {autonomous, choreo, custom, broadcast};
 state mode = state::autonomous;
 
-enum broadcast_state : char {outside, ready, wait};
+enum class broadcast_state : char {outside, ready, wait};
 broadcast_state broadcast_mode = broadcast_state::outside;
+
+// mirror chair status enums in hub manager
+enum class chair_broadcast_status : char {ready, exclude, success, failure};
+enum class chair_stuck_status : char {stuck, not_stuck};
 
 #define flag_A !autonomous_queue.empty()
 #define flag_B !broadcast_queue.empty()
@@ -167,8 +171,20 @@ void callback(const std_msgs::String& command) {
 				flag_SOB = true;
 			}
 			else if (command.data == "0Bfinish") {
-				ROS_INFO("END OF BROADCAST");
+				ROS_INFO("FINISHED BROADCAST");
 				flag_EOB = true;
+			}
+			else if (command.data == "0Bend") {
+				// ROS_INFO("END OF BROADCAST");
+				eyes::Generic generic_message;
+				generic_message.identifier = 'e';
+				generic_message.left_forward = true;
+				generic_message.right_forward = true;
+				generic_message.left_speed = 0;
+				generic_message.right_speed = 0;
+				generic_message.timed = true;
+				generic_message.duration = 0;
+				broadcast_queue.push(generic_message);
 			}
 			else {
 				eyes::Generic generic_message;
@@ -196,6 +212,7 @@ void callback(const std_msgs::String& command) {
 
 ros::Publisher generic_pub;
 ros::Publisher eoc_pub;
+ros::Publisher update_hub_pub;
 
 int main(int argc, char** argv) {
 	ros::init(argc, argv, "queue_five");	
@@ -210,6 +227,7 @@ int main(int argc, char** argv) {
 
 	generic_pub = nh.advertise<eyes::Generic>("generic_feed", 1000);
 	eoc_pub = nh.advertise<std_msgs::Empty>("end_of_choreo", 1000);
+	update_hub_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 
 	mode = state::autonomous;
 	while (ros::ok()) {
@@ -226,7 +244,7 @@ int main(int argc, char** argv) {
 				if (flag_H) {
 					mode = state::custom;
 					flag_T = false;
-					flag_SOB = false;
+					// flag_SOB = false;
 				}
 				else if (flag_SOB) {
 					mode = state::broadcast;
@@ -297,7 +315,7 @@ int main(int argc, char** argv) {
 					mode = state::custom;
 					flag_T = false;
 					flag_D = true; // <-- exit case, resetting flag_D for next time
-					flag_SOB = false;
+					// flag_SOB = false;
 				}
 				else if (flag_SOB) {
 					mode = state::broadcast;
@@ -317,6 +335,14 @@ int main(int argc, char** argv) {
 			}
 			case state::custom:
 			{
+				if (flag_SOB) {
+					std_msgs::String to_hub;
+					to_hub.data = "0B";
+					to_hub.data.push_back(static_cast<char>(chair_broadcast_status::exclude));
+					update_hub_pub.publish(to_hub);
+					ROS_INFO("CHAIR 0 IS EXCLUDED FROM BROADCAST");
+					flag_SOB = false;
+				}
 				if (flag_T) {
 					mode = state::autonomous;
 					autonomous_queue = std::queue<eyes::Generic>();
@@ -352,6 +378,11 @@ int main(int argc, char** argv) {
 						stop.duration = 0; // inconsequential
 						generic_pub.publish(stop);
 						// TODO: PUBLISH INDICATION THAT CHAIR IS READY TO GO TO INFORM HUB
+						std_msgs::String to_hub;
+						to_hub.data = "0B";
+						to_hub.data.push_back(static_cast<char>(chair_broadcast_status::ready));
+						update_hub_pub.publish(to_hub);
+						ROS_INFO("CHAIR 0 IS READY");
 						break;
 					}
 					case broadcast_state::ready: // absorbed performing
@@ -361,18 +392,15 @@ int main(int argc, char** argv) {
 							if (broadcast_queue.front().identifier == 'e') {
 								ROS_INFO("LAST STAGE OF BROADCAST");
 								broadcast_mode = broadcast_state::wait;
+								// safety stop
+								generic_pub.publish(broadcast_queue.front());
 								broadcast_queue = std::queue<eyes::Generic>();
-								// publish safety stop
-								eyes::Generic stop;
-								stop.identifier = 'b';
-								stop.left_forward = true;
-								stop.right_forward = true;
-								stop.left_speed = 0;
-								stop.right_speed = 0;
-								stop.timed = false; // inconsequential
-								stop.duration = 0; // inconsequential
-								generic_pub.publish(stop);
 								// TODO: PUBLISH INDICATION THAT CHAIR COMPLETED BROADCAST SUCCESSFULLY
+								std_msgs::String to_hub;
+								to_hub.data = "0B";
+								to_hub.data.push_back(static_cast<char>(chair_broadcast_status::success));
+								update_hub_pub.publish(to_hub);
+								ROS_INFO("CHAIR 0 SUCCESSFULLY COMPLETED BROADCAST");
 							}
 							else {
 								// duration, replaces wait_for_notification();
@@ -430,15 +458,20 @@ int main(int argc, char** argv) {
 						break;
 					}
 				}
-				
+
 				// state transition logic (WIP)
 				if (flag_H) {
 					mode = state::custom;
 					broadcast_mode = broadcast_state::outside;
 					flag_T = false;
-					flag_SOB = false;
+					flag_SOB = false; // shouldn't be necessary, but just to be safe to avoid double update
 					flag_EOB = false;
 					flag_D = true; // <-- exit case, resetting flag_D for next time
+					std_msgs::String to_hub;
+					to_hub.data = "0B";
+					to_hub.data.push_back(static_cast<char>(chair_broadcast_status::exclude));
+					update_hub_pub.publish(to_hub);
+					ROS_INFO("CHAIR 0 IS YANKED FROM BROADCAST");
 				}
 				// TODO: ADD CHECK FOR flag_SOB TO ENABLE SEQUENTIAL BROADCASTS?
 				else if (flag_EOB) {
@@ -448,7 +481,7 @@ int main(int argc, char** argv) {
 					choreo_queue = std::queue<eyes::Generic>();
 					custom_queue = std::queue<eyes::Generic>();
 					broadcast_queue = std::queue<eyes::Generic>();
-					ROS_INFO("END OF BROADCAST");
+					ROS_INFO("RESUMING AUTONOMOUS BEHAVIOR");
 					flag_SOB = false;
 					flag_EOB = false;
 					flag_D = true; // <-- exit case, resetting flag_D for next time

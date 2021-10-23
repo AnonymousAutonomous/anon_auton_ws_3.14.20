@@ -135,6 +135,13 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/antenna_node.cpp)
 
+add_executable(hub_manager src/hub_manager.cpp)
+add_executable(chair_manager src/chair_manager.cpp)
+add_executable(test_broadcast_transmitter src/test_broadcast_transmitter.cpp)
+target_link_libraries(hub_manager ${catkin_LIBRARIES})
+target_link_libraries(chair_manager ${catkin_LIBRARIES})
+target_link_libraries(test_broadcast_transmitter ${catkin_LIBRARIES})
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -163,6 +170,10 @@ include_directories(
 #   scripts/my_python_script
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
+
+catkin_install_python(PROGRAMS scripts/chair_receiver.py
+	DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html

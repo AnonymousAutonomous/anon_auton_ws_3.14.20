@@ -4,18 +4,22 @@
 #include <eyes/Generic.h>
 
 // right motor
-const int dirPinR = 5;
-const int speedPinR = 6;
+#define IN1 9
+#define IN2 8
+#define ENA 6
+#define RIGHT_MOTOR ENA
 
-const int motorRA = 3; // yellow, INTERRUPT
-const int motorRB = 4; // white
+#define MOTOR_RA 3 // yellow, INTERRUPT
+#define MOTOR_RB 4 // white
 
 // left motor
-const int dirPinL = 9;
-const int speedPinL = 10;
+#define IN3 12
+#define IN4 13
+#define ENB 5
+#define LEFT_MOTOR ENB
 
-const int motorLA = 2; // yellow, INTERRUPT
-const int motorLB = 7; // white
+#define MOTOR_LA 2 // yellow, INTERRUPT
+#define MOTOR_LB 7 // white
 
 volatile long countR = 0;
 volatile long countL = 0;
@@ -27,21 +31,46 @@ std_msgs::Int32 int32_msg_L;
 ros::Publisher pubR("encoder_value_R", &int32_msg_R);
 ros::Publisher pubL("encoder_value_L", &int32_msg_L);
 
+const char FWD = 'f';
+const char BWD = 'b';
+
+void setRightMotorDir(char dir) {
+  if (dir == BWD) {
+    digitalWrite(IN1, HIGH);
+    digitalWrite(IN2, LOW);
+  }
+  else {
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, HIGH);
+  }
+}
+
+void setLeftMotorDir(char dir) {
+  if (dir == BWD) {
+    digitalWrite(IN3, HIGH);
+    digitalWrite(IN4, LOW);
+  }
+  else {
+    digitalWrite(IN3, LOW);
+    digitalWrite(IN4, HIGH);
+  }
+}
+
 void generic_callback(const eyes::Generic& generic_msg) {
   if (generic_msg.left_forward) {
-    digitalWrite(dirPinL, HIGH);
+    setLeftMotorDir(FWD);
   }
   else {
-    digitalWrite(dirPinL, LOW);
+    setLeftMotorDir(BWD);
   }
   if (generic_msg.right_forward) {
-    digitalWrite(dirPinR, HIGH);
+    setRightMotorDir(FWD);
   }
   else {
-    digitalWrite(dirPinR, LOW);
+    setRightMotorDir(BWD);
   }
-  analogWrite(speedPinL, generic_msg.left_speed);
-  analogWrite(speedPinR, generic_msg.right_speed);
+  analogWrite(LEFT_MOTOR, generic_msg.left_speed);
+  analogWrite(RIGHT_MOTOR, generic_msg.right_speed);
 
   return;
 }
@@ -56,20 +85,22 @@ void setup() {
 
   pinMode(LED_BUILTIN, OUTPUT);
 
-  pinMode(motorRA, INPUT);
-  pinMode(motorRB, INPUT);
+  pinMode(MOTOR_RA, INPUT);
+  pinMode(MOTOR_RB, INPUT);
 
-  pinMode(motorLA, INPUT);
-  pinMode(motorLB, INPUT);
+  pinMode(MOTOR_LA, INPUT);
+  pinMode(MOTOR_LB, INPUT);
 
-  attachInterrupt(digitalPinToInterrupt(3), EncoderEventR, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(2), EncoderEventL, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(MOTOR_RA), EncoderEventR, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(MOTOR_LA), EncoderEventL, CHANGE);
 
-  pinMode(dirPinR, OUTPUT);
-  pinMode(speedPinR, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(ENA, OUTPUT);
 
-  pinMode(dirPinL, OUTPUT);
-  pinMode(speedPinL, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  pinMode(ENB, OUTPUT);
 
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -109,14 +140,14 @@ void loop() {
 }
 
 void EncoderEventR() {
-  if (digitalRead(motorRA) == HIGH) {
-    if (digitalRead(motorRB) == LOW) {
+  if (digitalRead(MOTOR_RA) == HIGH) {
+    if (digitalRead(MOTOR_RB) == LOW) {
       ++countR;
     } else {
       --countR;
     }
   } else {
-    if (digitalRead(motorRB) == LOW) {
+    if (digitalRead(MOTOR_RB) == LOW) {
       --countR;
     } else {
       ++countR;
@@ -125,14 +156,14 @@ void EncoderEventR() {
 }
 
 void EncoderEventL() {
-  if (digitalRead(motorLA) == HIGH) {
-    if (digitalRead(motorLB) == LOW) {
+  if (digitalRead(MOTOR_LA) == HIGH) {
+    if (digitalRead(MOTOR_LB) == LOW) {
       --countL;
     } else {
       ++countL;
     }
   } else {
-    if (digitalRead(motorLB) == LOW) {
+    if (digitalRead(MOTOR_LB) == LOW) {
       ++countL;
     } else {
       --countL;
