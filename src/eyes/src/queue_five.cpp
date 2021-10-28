@@ -291,28 +291,34 @@ int main(int argc, char** argv) {
 					choreo_queue = std::queue<eyes::Generic>();
 				}
 				else if (choreo_queue.front().identifier == 'p') {
+					flag_EOC = false;
 					// beep
 					std_msgs::String str_msg;
 					str_msg.data = "beep";
 					audio_pub.publish(str_msg);
+					ROS_INFO("BEEP");
 					// pop
-					choreo_queue.pop();
+					// choreo_queue.pop();
 				}
 				else if (choreo_queue.front().identifier == 'k') {
+					flag_EOC = false;
 					// honk
 					std_msgs::String str_msg;
 					str_msg.data = "honk";
 					audio_pub.publish(str_msg);
+					ROS_INFO("HONK");
 					// pop
-					choreo_queue.pop();
+					// choreo_queue.pop();
 				}
 				else if (choreo_queue.front().identifier == 't') {
+					flag_EOC = false;
 					// low battery
 					std_msgs::String str_msg;
 					str_msg.data = "batt";
 					audio_pub.publish(str_msg);
+					ROS_INFO("BATT");
 					// pop
-					choreo_queue.pop();
+					// choreo_queue.pop();
 				}
 				else {
 					flag_EOC = false;
@@ -326,11 +332,15 @@ int main(int argc, char** argv) {
 							flag_D = false;
 							initial_encoder_value = encoder_count_R;
 							generic_pub.publish(choreo_queue.front());
+							ROS_INFO("STARTING (ENCODER)");
+							ROS_INFO("LEFT SPEED: %d", choreo_queue.front().left_speed);
+							ROS_INFO("RIGHT SPEED: %d", choreo_queue.front().right_speed);
+							ROS_INFO("DURATION: %d", choreo_queue.front().duration);
 						}
 						else {
 							final_encoder_value = encoder_count_R;
 							int difference = abs(final_encoder_value - initial_encoder_value);
-							ROS_INFO("ENCODER DIF: %d", difference);
+							// ROS_INFO("ENCODER DIF: %d", difference);
 							if (difference > choreo_queue.front().duration) flag_D = true;
 						}
 					}
@@ -341,8 +351,10 @@ int main(int argc, char** argv) {
 							flag_D = false;
 							time(&initial_time);
 							generic_pub.publish(choreo_queue.front());
-							ROS_INFO("STARTING");
+							ROS_INFO("STARTING (TIMER)");
+							ROS_INFO("LEFT SPEED: %d", choreo_queue.front().left_speed);
 							ROS_INFO("RIGHT SPEED: %d", choreo_queue.front().right_speed);
+							ROS_INFO("DURATION: %d", choreo_queue.front().duration);
 						}
 						else {
 							time(&final_time);
@@ -355,10 +367,10 @@ int main(int argc, char** argv) {
 				
 				// state transition logic (WIP)
 				if (flag_D && !flag_EOC) {
-					ROS_INFO("JUST FINISHED");
-					ROS_INFO("RIGHT SPEED: %d", choreo_queue.front().right_speed);
+					// ROS_INFO("JUST FINISHED");
+					// ROS_INFO("RIGHT SPEED: %d", choreo_queue.front().right_speed);
 					choreo_queue.pop();
-					ROS_INFO("POP!");
+					// ROS_INFO("POP!");
 				}
 				if (flag_H) {
 					mode = state::custom;

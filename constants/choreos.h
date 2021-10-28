@@ -283,7 +283,7 @@ static const std::vector<eyes::Generic> AUDIO_C = {
 		fourth.left_speed = 150;
 		fourth.right_speed = 150;
 		fourth.timed = false;
-		fourth.duration = 12000;
+		fourth.duration = 40000;
 		return fourth;
 	}(),
 	[] {
@@ -316,7 +316,7 @@ static const std::vector<eyes::Generic> AUDIO_C = {
 		seventh.left_speed = 150;
 		seventh.right_speed = 150;
 		seventh.timed = false;
-		seventh.duration = 12000;
+		seventh.duration = 40000;
 		return seventh;
 	}(),
 	[] {
