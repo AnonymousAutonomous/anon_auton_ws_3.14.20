@@ -17,9 +17,13 @@ int main(int argc, char** argv) {
 	std_msgs::String msg;
 	msg.data = "0Bf200f200t1";
 	test_pub.publish(msg);
+	msg.data = "0BAp";
+	test_pub.publish(msg);
 	msg.data = "0Bf000f000t4";
 	test_pub.publish(msg);
 	msg.data = "0Br200r200t1";
+	test_pub.publish(msg);
+	msg.data = "0BAk";
 	test_pub.publish(msg);
 	msg.data = "0Br000r000t4";
 	test_pub.publish(msg);
@@ -29,7 +33,9 @@ int main(int argc, char** argv) {
 	test_pub.publish(msg);
 	msg.data = "0Br255f255t4";
 	test_pub.publish(msg);
-	msg.data = "0Br000f000t2";
+	msg.data = "0BAt";
+	test_pub.publish(msg);
+	msg.data = "0Br000f000t5";
 	test_pub.publish(msg);
 	msg.data = "0Bend";
 	test_pub.publish(msg);

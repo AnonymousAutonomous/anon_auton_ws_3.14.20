@@ -154,6 +154,18 @@ void callback(const std_msgs::String& command) {
 					choreo_queue.push(RCP_C[1]);
 					break;
 				}
+				case 'K':
+				{
+					choreo_queue.push(AUDIO_C[0]);
+					choreo_queue.push(AUDIO_C[1]);
+					choreo_queue.push(AUDIO_C[2]);
+					choreo_queue.push(AUDIO_C[3]);
+					choreo_queue.push(AUDIO_C[4]);
+					choreo_queue.push(AUDIO_C[5]);
+					choreo_queue.push(AUDIO_C[6]);
+					choreo_queue.push(AUDIO_C[7]);
+					break;
+				}
 				default:
 				{
 					// haha choreo go brrrr
@@ -178,6 +190,17 @@ void callback(const std_msgs::String& command) {
 				// ROS_INFO("END OF BROADCAST");
 				eyes::Generic generic_message;
 				generic_message.identifier = 'e';
+				generic_message.left_forward = true;
+				generic_message.right_forward = true;
+				generic_message.left_speed = 0;
+				generic_message.right_speed = 0;
+				generic_message.timed = true;
+				generic_message.duration = 0;
+				broadcast_queue.push(generic_message);
+			}
+			else if (command.data[2] == 'A') {
+				eyes::Generic generic_message;
+				generic_message.identifier = command.data[3];
 				generic_message.left_forward = true;
 				generic_message.right_forward = true;
 				generic_message.left_speed = 0;
@@ -213,6 +236,7 @@ void callback(const std_msgs::String& command) {
 ros::Publisher generic_pub;
 ros::Publisher eoc_pub;
 ros::Publisher update_hub_pub;
+ros::Publisher audio_pub;
 
 int main(int argc, char** argv) {
 	ros::init(argc, argv, "queue_five");	
@@ -228,6 +252,7 @@ int main(int argc, char** argv) {
 	generic_pub = nh.advertise<eyes::Generic>("generic_feed", 1000);
 	eoc_pub = nh.advertise<std_msgs::Empty>("end_of_choreo", 1000);
 	update_hub_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
+	audio_pub = nh.advertise<std_msgs::String>("audio_channel", 1000);
 
 	mode = state::autonomous;
 	while (ros::ok()) {
@@ -264,6 +289,30 @@ int main(int argc, char** argv) {
 					std_msgs::Empty empty_msg;
 					eoc_pub.publish(empty_msg);
 					choreo_queue = std::queue<eyes::Generic>();
+				}
+				else if (choreo_queue.front().identifier == 'p') {
+					// beep
+					std_msgs::String str_msg;
+					str_msg.data = "beep";
+					audio_pub.publish(str_msg);
+					// pop
+					choreo_queue.pop();
+				}
+				else if (choreo_queue.front().identifier == 'k') {
+					// honk
+					std_msgs::String str_msg;
+					str_msg.data = "honk";
+					audio_pub.publish(str_msg);
+					// pop
+					choreo_queue.pop();
+				}
+				else if (choreo_queue.front().identifier == 't') {
+					// low battery
+					std_msgs::String str_msg;
+					str_msg.data = "batt";
+					audio_pub.publish(str_msg);
+					// pop
+					choreo_queue.pop();
 				}
 				else {
 					flag_EOC = false;
@@ -401,6 +450,30 @@ int main(int argc, char** argv) {
 								to_hub.data.push_back(static_cast<char>(chair_broadcast_status::success));
 								update_hub_pub.publish(to_hub);
 								ROS_INFO("CHAIR 0 SUCCESSFULLY COMPLETED BROADCAST");
+							}
+							else if (broadcast_queue.front().identifier == 'p') {
+								// beep
+								std_msgs::String str_msg;
+								str_msg.data = "beep";
+								audio_pub.publish(str_msg);
+								// pop
+								broadcast_queue.pop();
+							}
+							else if (broadcast_queue.front().identifier == 'k') {
+								// honk
+								std_msgs::String str_msg;
+								str_msg.data = "honk";
+								audio_pub.publish(str_msg);
+								// pop
+								broadcast_queue.pop();
+							}
+							else if (broadcast_queue.front().identifier == 't') {
+								// low battery
+								std_msgs::String str_msg;
+								str_msg.data = "batt";
+								audio_pub.publish(str_msg);
+								// pop
+								broadcast_queue.pop();
 							}
 							else {
 								// duration, replaces wait_for_notification();

@@ -44,9 +44,8 @@ def callback(data):
 
 	rospy.loginfo(data.data)
 	choice = data.data
-	rospy.loginfo(choice == "beep")
 
-	if choice == "beep":
+	if choice == "beep":	
 		while beep_data:
 			beep_stream.write(beep_data)
 			beep_data = beep_f.readframes(chunk)
