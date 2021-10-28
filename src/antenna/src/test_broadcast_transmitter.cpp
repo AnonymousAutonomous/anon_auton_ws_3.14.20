@@ -15,27 +15,25 @@ int main(int argc, char** argv) {
 	}
 
 	std_msgs::String msg;
-	msg.data = "0Bf200f200t1";
+	msg.data = "0Bf200f200t5";
 	test_pub.publish(msg);
 	msg.data = "0BAp";
 	test_pub.publish(msg);
-	msg.data = "0Bf000f000t4";
+	msg.data = "0Bf000f000t5";
 	test_pub.publish(msg);
-	msg.data = "0Br200r200t1";
+	msg.data = "0Bf000f000t5";
 	test_pub.publish(msg);
 	msg.data = "0BAk";
 	test_pub.publish(msg);
-	msg.data = "0Br000r000t4";
+	msg.data = "0Br200r200t5";
 	test_pub.publish(msg);
-	msg.data = "0Bf255r255t4";
-	test_pub.publish(msg);
-	msg.data = "0Bf000r000t2";
-	test_pub.publish(msg);
-	msg.data = "0Br255f255t4";
+	msg.data = "0Br200r200t5";
 	test_pub.publish(msg);
 	msg.data = "0BAt";
 	test_pub.publish(msg);
-	msg.data = "0Br000f000t5";
+	msg.data = "0Bf000f000t5";
+	test_pub.publish(msg);
+	msg.data = "0Bf000f000t5";
 	test_pub.publish(msg);
 	msg.data = "0Bend";
 	test_pub.publish(msg);
