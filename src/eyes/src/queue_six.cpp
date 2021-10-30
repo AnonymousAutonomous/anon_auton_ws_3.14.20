@@ -30,7 +30,6 @@ enum class chair_stuck_status : char {stuck, not_stuck};
 #define flag_C !choreo_queue.empty()
 #define flag_H !custom_queue.empty()
 
-bool flag_T = true; // toggle
 bool flag_S = false; // stuck
 
 bool flag_EOC = false; // end of choreo
@@ -73,8 +72,16 @@ void callback(const std_msgs::String& command) {
 		{
 			// parse handwritten command here (PLACEHOLDER)
 			if (command.data == "0Htoggle") {
-				ROS_INFO("SET TO TOGGLE");
-				flag_T = true;
+				if (mode == state::custom) {
+					ROS_INFO("TOGGLE");
+					mode = state::autonomous;
+					autonomous_queue = std::queue<eyes::Generic>();
+					choreo_queue = std::queue<eyes::Generic>();
+					custom_queue = std::queue<eyes::Generic>();
+					broadcast_queue = std::queue<eyes::Generic>();
+					flag_SOB = false;
+					flag_EOB = false;
+				}
 			}
 			else {
 				eyes::Generic generic_message;
@@ -270,7 +277,6 @@ int main(int argc, char** argv) {
 				// state transition logic (WIP)
 				if (flag_H) {
 					mode = state::custom;
-					flag_T = false;
 					// flag_SOB = false;
 				}
 				else if (flag_SOB) {
@@ -370,7 +376,6 @@ int main(int argc, char** argv) {
 				}
 				if (flag_H) {
 					mode = state::custom;
-					flag_T = false;
 					choreo_buffer = std::queue<eyes::Generic>(); // <-- exit case, resetting choreo buffer for next time
 					// flag_SOB = false;
 				}
@@ -399,16 +404,6 @@ int main(int argc, char** argv) {
 					update_hub_pub.publish(to_hub);
 					ROS_INFO("CHAIR 0 IS EXCLUDED FROM BROADCAST");
 					flag_SOB = false;
-				}
-				if (flag_T) {
-					mode = state::autonomous;
-					autonomous_queue = std::queue<eyes::Generic>();
-					choreo_queue = std::queue<eyes::Generic>();
-					custom_queue = std::queue<eyes::Generic>();
-					broadcast_queue = std::queue<eyes::Generic>();
-					ROS_INFO("TOGGLE");
-					flag_SOB = false;
-					flag_EOB = false;
 				}
 				else if (flag_H) {
 					generic_pub.publish(custom_queue.front());
@@ -544,7 +539,6 @@ int main(int argc, char** argv) {
 				if (flag_H) {
 					mode = state::custom;
 					broadcast_mode = broadcast_state::outside;
-					flag_T = false;
 					flag_SOB = false; // shouldn't be necessary, but just to be safe to avoid double update
 					flag_EOB = false;
 					broadcast_buffer = std::queue<eyes::Generic>(); // <-- exit case, resetting broadcast buffer for next time
