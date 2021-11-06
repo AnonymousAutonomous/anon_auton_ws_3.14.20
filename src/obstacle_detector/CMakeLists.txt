@@ -96,6 +96,10 @@ add_executable(tart_director src/nodes/tart_director.cpp)
 target_link_libraries(tart_director ${catkin_LIBRARIES})
 add_dependencies(tart_director obstacle_detector_generate_messages_cpp)
 
+add_executable(multi_tart src/nodes/multi_tart.cpp)
+target_link_libraries(multi_tart ${catkin_LIBRARIES})
+add_dependencies(multi_tart obstacle_detector_generate_messages_cpp)
+
 # We did it! Clock skew is no more
 
 #

@@ -10,11 +10,22 @@
 #include <algorithm>
 
 int stop_counter = 0;
-int stop_limit = 50;
+int stop_limit = 150;
+
+int move_counter = 0;
+int move_limit = stop_limit / 5;
 
 bool listening = true;
 
-Tart new_director_standard(
+enum class state : char {wait, noise, pivot, noise_again, pivot_again, escape};
+state mode = state::wait;
+
+std::string high_priority(std::string str) {
+	str[0] = '0';
+	return str;
+}
+
+Tart standard(
         {
                 {3*M_PI/4, 5*M_PI/4, 0.5},
                 {M_PI/4, 3*M_PI/4, 1},
@@ -37,7 +48,50 @@ Tart new_director_standard(
         }
 );
 
+// Escape is used in two cases
+// - chair is encircled by people
+// - chair is encircled by paper
+// In both cases, chair should use LIDAR to navigate and escape
+// Goal is constant forward progress
+// - chair does not stop
+// - chair turns away from obstacles
+// - chair tries to find a clear path forward
+// All commands should be high priority
+// Two cases may require separate tarts in the future
+Tart escape(
+	{
+		{3*M_PI/4, 5*M_PI/4, 0.5},
+		{M_PI/4, 3*M_PI/4, 0.5},
+		{5*M_PI/4, 7*M_PI/4, 0.5}
+	},
+	{
+		{3*M_PI/4, 5*M_PI/4, 0.5},
+		{M_PI/4, 3*M_PI/4, 0.5},
+		{5*M_PI/4, 7*M_PI/4, 0.5}
+	},
+	{
+		{{{0,1,2},{}}, high_priority(PIVOTR)},
+		{{{},{0,1,2}}, high_priority(PIVOTR)},
+		{{{0,1},{}}, high_priority(PIVOTL)},
+		{{{},{0,1}}, high_priority(PIVOTL)},
+		{{{0,2},{}}, high_priority(PIVOTR)},
+		{{{},{0,2}}, high_priority(PIVOTR)},
+		{{{0},{}}, high_priority(PIVOTR)},
+		{{{},{0}}, high_priority(PIVOTR)},
+		{{{1,2},{}}, high_priority(FWD)},
+		{{{},{1,2}}, high_priority(FWD)},
+		{{{1},{}}, high_priority(VEERL)},
+		{{{},{1}}, high_priority(VEERL)},
+		{{{2},{}}, high_priority(VEERR)},
+		{{{},{2}}, high_priority(VEERR)},
+		{{{},{}}, high_priority(FWD)}
+	}
+);
+
+Tart& tart_in_use = standard;
+
 ros::Publisher George;
+ros::Publisher audio_pub;
 
 void pauseCallback(const std_msgs::Empty empty_msg) {
   listening = true;
@@ -55,7 +109,7 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
   for (const auto& circ : obs->circles) {
     double x = circ.center.x;
     double y = circ.center.y;
-    new_director_standard.circle_update(x,y);
+    tart_in_use.circle_update(x,y);
   }
   for (const auto& seg : obs->segments) {
     std::pair<double, double> p1;
@@ -87,24 +141,24 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 	std::min(p1.second, p2.second) <= p3.second &&
 	p3.second <= std::max(p1.second, p2.second)) {
       x = p3.first;
-      y = p3.second;//use p3
+      y = p3.second; //use p3
     }
     else {
       double dist_cf = sqrt(pow((p1.first - p3.first),2) + pow((p1.second - p3.second),2));
       double dist_cl = sqrt(pow((p2.first - p3.first),2) + pow((p2.second - p3.second),2));
       if (dist_cf < dist_cl) {
         x = p1.first;
-	y = p1.second;//use p1
+	y = p1.second; //use p1
       }
       else {
         x = p2.first;
-	y = p2.second;//use p2
+	y = p2.second; //use p2
       }
     }
-    new_director_standard.line_update(x,y);
+    tart_in_use.line_update(x,y);
   }
 
-  ss << new_director_standard.evaluate();
+  ss << tart_in_use.evaluate();
 
   msg.data = ss.str();
 
@@ -112,23 +166,81 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
   	++stop_counter;
   }
   else {
-  	stop_counter = 0;
+  	++move_counter;
   }
   if (stop_counter >= stop_limit) {
   	stop_counter = 0;
-	msg.data = RREVERSE;
+	move_counter = 0;
+	// Check state of chair
+	switch (mode) {
+		case state::wait:
+		{
+			std_msgs::String audio_msg;
+			audio_msg.data = "beep";
+			audio_pub.publish(audio_msg);
+			mode = state::noise;
+			break;
+		}
+		case state::noise:
+		{
+			msg.data = RREVERSE;
+			mode = state::pivot;
+			break;
+		}
+		case state::pivot:
+		{
+			std_msgs::String audio_msg;
+			audio_msg.data = "beep";
+			audio_pub.publish(audio_msg);
+			audio_pub.publish(audio_msg);
+			mode = state::noise_again;
+			break;
+		}
+		case state::noise_again:
+		{
+			msg.data = RREVERSE;
+			mode = state::pivot_again;
+			break;
+		}
+		case state::pivot_again:
+		{
+			// Change tarts
+			tart_in_use = escape;
+			stop_counter = stop_limit; // force chair to stay in FSM
+			mode = state::escape;
+			// TODO: record initial time
+			break;
+		}
+		case state::escape:
+		{
+			// TODO: after some time, change tarts back
+			stop_counter = stop_limit; // force chair to stay in FSM
+			mode = state::wait;
+			break;
+		}
+		default:
+		{
+			ROS_INFO("How did we get here? LIDAR edition");
+			break;
+		}
+	}
+  }
+  else if (move_counter >= move_limit) {
+  	stop_counter = 0;
+	move_counter = 0;
+	mode = state::wait;
   }
 
   if (msg.data[1] == 'C') {
-    listening = false;
+	listening = false;
   }
 
   George.publish(msg);
-  new_director_standard.reset();
+  tart_in_use.reset();
 }
 
 int main (int argc, char** argv) {
-  ros::init(argc, argv, "tart_director");
+  ros::init(argc, argv, "multi_tart");
 
   ros::AsyncSpinner spinner(0);
   spinner.start();
@@ -139,6 +251,7 @@ int main (int argc, char** argv) {
 
   ros::NodeHandle oi;
   George = oi.advertise<std_msgs::String>("larry", 1000);
+  audio_pub = oi.advertise<std_msgs::String>("audio_channel", 1000);
 
   ros::waitForShutdown();
 
