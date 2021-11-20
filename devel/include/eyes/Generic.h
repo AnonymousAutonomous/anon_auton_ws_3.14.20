@@ -27,8 +27,8 @@ struct Generic_
     : identifier(0)
     , left_forward(false)
     , right_forward(false)
-    , left_speed(0)
-    , right_speed(0)
+    , left_speed(0.0)
+    , right_speed(0.0)
     , timed(false)
     , duration(0)  {
     }
@@ -36,8 +36,8 @@ struct Generic_
     : identifier(0)
     , left_forward(false)
     , right_forward(false)
-    , left_speed(0)
-    , right_speed(0)
+    , left_speed(0.0)
+    , right_speed(0.0)
     , timed(false)
     , duration(0)  {
   (void)_alloc;
@@ -54,10 +54,10 @@ struct Generic_
    typedef uint8_t _right_forward_type;
   _right_forward_type right_forward;
 
-   typedef uint8_t _left_speed_type;
+   typedef float _left_speed_type;
   _left_speed_type left_speed;
 
-   typedef uint8_t _right_speed_type;
+   typedef float _right_speed_type;
   _right_speed_type right_speed;
 
    typedef uint8_t _timed_type;
@@ -144,12 +144,12 @@ struct MD5Sum< ::eyes::Generic_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "7a33c669a022f7fea29ccba33d517b1f";
+    return "436f5f30261c38b114bc3f3bb4a0dea3";
   }
 
   static const char* value(const ::eyes::Generic_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x7a33c669a022f7feULL;
-  static const uint64_t static_value2 = 0xa29ccba33d517b1fULL;
+  static const uint64_t static_value1 = 0x436f5f30261c38b1ULL;
+  static const uint64_t static_value2 = 0x14bc3f3bb4a0dea3ULL;
 };
 
 template<class ContainerAllocator>
@@ -171,8 +171,8 @@ struct Definition< ::eyes::Generic_<ContainerAllocator> >
     return "char identifier\n"
 "bool left_forward\n"
 "bool right_forward\n"
-"uint8 left_speed\n"
-"uint8 right_speed\n"
+"float32 left_speed\n"
+"float32 right_speed\n"
 "bool timed\n"
 "uint32 duration\n"
 ;
@@ -225,9 +225,9 @@ struct Printer< ::eyes::Generic_<ContainerAllocator> >
     s << indent << "right_forward: ";
     Printer<uint8_t>::stream(s, indent + "  ", v.right_forward);
     s << indent << "left_speed: ";
-    Printer<uint8_t>::stream(s, indent + "  ", v.left_speed);
+    Printer<float>::stream(s, indent + "  ", v.left_speed);
     s << indent << "right_speed: ";
-    Printer<uint8_t>::stream(s, indent + "  ", v.right_speed);
+    Printer<float>::stream(s, indent + "  ", v.right_speed);
     s << indent << "timed: ";
     Printer<uint8_t>::stream(s, indent + "  ", v.timed);
     s << indent << "duration: ";

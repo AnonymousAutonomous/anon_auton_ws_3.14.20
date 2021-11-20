@@ -84,9 +84,9 @@ void callback(const std_msgs::String& command) {
 				generic_message.left_forward = (command.data[2] == 'f' ? true : false);
 				generic_message.right_forward =	(command.data[6] == 'f' ? true : false);
 				std::string ls = command.data.substr(3,3);
-				generic_message.left_speed = atoi(ls.c_str());
+				generic_message.left_speed = atof(ls.c_str());
 				std::string rs = command.data.substr(7,3);
-				generic_message.right_speed = atoi(rs.c_str());
+				generic_message.right_speed = atof(rs.c_str());
 				custom_queue.push(generic_message);
 			}
 			break;
@@ -99,9 +99,9 @@ void callback(const std_msgs::String& command) {
 			generic_message.left_forward = (command.data[2] == 'f' ? true : false);
 			generic_message.right_forward = (command.data[6] == 'f' ? true : false);
 			std::string ls = command.data.substr(3,3);
-			generic_message.left_speed = atoi(ls.c_str());
+			generic_message.left_speed = atof(ls.c_str());
 			std::string rs = command.data.substr(7,3);
-			generic_message.right_speed = atoi(rs.c_str());
+			generic_message.right_speed = atof(rs.c_str());
 			generic_message.timed = false; // inconsequential
 			generic_message.duration = 0; // inconsequential
 
@@ -217,12 +217,12 @@ void callback(const std_msgs::String& command) {
 				generic_message.left_forward = (command.data[2] == 'f' ? true : false);
 				generic_message.right_forward = (command.data[6] == 'f' ? true : false);
 				std::string ls = command.data.substr(3,3);
-				generic_message.left_speed = atoi(ls.c_str());
+				generic_message.left_speed = atof(ls.c_str());
 				std::string rs = command.data.substr(7,3);
-				generic_message.right_speed = atoi(rs.c_str());
+				generic_message.right_speed = atof(rs.c_str());
 				generic_message.timed = (command.data[10] == 't' ? true : false);
 				std::string dur = command.data.substr(11);
-				generic_message.duration = atoi(dur.c_str());
+				generic_message.duration = atof(dur.c_str());
 				broadcast_queue.push(generic_message);
 			}
 			break;

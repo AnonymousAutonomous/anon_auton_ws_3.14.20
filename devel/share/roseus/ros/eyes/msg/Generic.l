@@ -22,8 +22,8 @@
     ((:identifier __identifier) 0)
     ((:left_forward __left_forward) nil)
     ((:right_forward __right_forward) nil)
-    ((:left_speed __left_speed) 0)
-    ((:right_speed __right_speed) 0)
+    ((:left_speed __left_speed) 0.0)
+    ((:right_speed __right_speed) 0.0)
     ((:timed __timed) nil)
     ((:duration __duration) 0)
     )
@@ -31,8 +31,8 @@
    (setq _identifier (round __identifier))
    (setq _left_forward __left_forward)
    (setq _right_forward __right_forward)
-   (setq _left_speed (round __left_speed))
-   (setq _right_speed (round __right_speed))
+   (setq _left_speed (float __left_speed))
+   (setq _right_speed (float __right_speed))
    (setq _timed __timed)
    (setq _duration (round __duration))
    self)
@@ -66,10 +66,10 @@
     1
     ;; bool _right_forward
     1
-    ;; uint8 _left_speed
-    1
-    ;; uint8 _right_speed
-    1
+    ;; float32 _left_speed
+    4
+    ;; float32 _right_speed
+    4
     ;; bool _timed
     1
     ;; uint32 _duration
@@ -85,10 +85,10 @@
        (if _left_forward (write-byte -1 s) (write-byte 0 s))
      ;; bool _right_forward
        (if _right_forward (write-byte -1 s) (write-byte 0 s))
-     ;; uint8 _left_speed
-       (write-byte _left_speed s)
-     ;; uint8 _right_speed
-       (write-byte _right_speed s)
+     ;; float32 _left_speed
+       (sys::poke _left_speed (send s :buffer) (send s :count) :float) (incf (stream-count s) 4)
+     ;; float32 _right_speed
+       (sys::poke _right_speed (send s :buffer) (send s :count) :float) (incf (stream-count s) 4)
      ;; bool _timed
        (if _timed (write-byte -1 s) (write-byte 0 s))
      ;; uint32 _duration
@@ -103,10 +103,10 @@
      (setq _left_forward (not (= 0 (sys::peek buf ptr- :char)))) (incf ptr- 1)
    ;; bool _right_forward
      (setq _right_forward (not (= 0 (sys::peek buf ptr- :char)))) (incf ptr- 1)
-   ;; uint8 _left_speed
-     (setq _left_speed (sys::peek buf ptr- :char)) (incf ptr- 1)
-   ;; uint8 _right_speed
-     (setq _right_speed (sys::peek buf ptr- :char)) (incf ptr- 1)
+   ;; float32 _left_speed
+     (setq _left_speed (sys::peek buf ptr- :float)) (incf ptr- 4)
+   ;; float32 _right_speed
+     (setq _right_speed (sys::peek buf ptr- :float)) (incf ptr- 4)
    ;; bool _timed
      (setq _timed (not (= 0 (sys::peek buf ptr- :char)))) (incf ptr- 1)
    ;; uint32 _duration
@@ -115,14 +115,14 @@
    self)
   )
 
-(setf (get eyes::Generic :md5sum-) "7a33c669a022f7fea29ccba33d517b1f")
+(setf (get eyes::Generic :md5sum-) "436f5f30261c38b114bc3f3bb4a0dea3")
 (setf (get eyes::Generic :datatype-) "eyes/Generic")
 (setf (get eyes::Generic :definition-)
       "char identifier
 bool left_forward
 bool right_forward
-uint8 left_speed
-uint8 right_speed
+float32 left_speed
+float32 right_speed
 bool timed
 uint32 duration
 
@@ -130,6 +130,6 @@ uint32 duration
 
 
 
-(provide :eyes/Generic "7a33c669a022f7fea29ccba33d517b1f")
+(provide :eyes/Generic "436f5f30261c38b114bc3f3bb4a0dea3")
 
 

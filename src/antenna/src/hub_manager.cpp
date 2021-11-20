@@ -154,7 +154,7 @@ int main (int argc, char** argv) {
 			{
 				if (a_chair_is_trapped()) {
 					std_msgs::String msg;
-					msg.data = "0Bf150r150t5";
+					msg.data = "0Bf2.5r2.5t5";
 					transmit_queue = std::queue<std_msgs::String>();
 					transmit_queue.push(msg);
 					transmit_queue.push(msg);

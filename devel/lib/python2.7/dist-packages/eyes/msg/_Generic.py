@@ -7,19 +7,19 @@ import struct
 
 
 class Generic(genpy.Message):
-  _md5sum = "7a33c669a022f7fea29ccba33d517b1f"
+  _md5sum = "436f5f30261c38b114bc3f3bb4a0dea3"
   _type = "eyes/Generic"
   _has_header = False #flag to mark the presence of a Header object
   _full_text = """char identifier
 bool left_forward
 bool right_forward
-uint8 left_speed
-uint8 right_speed
+float32 left_speed
+float32 right_speed
 bool timed
 uint32 duration
 """
   __slots__ = ['identifier','left_forward','right_forward','left_speed','right_speed','timed','duration']
-  _slot_types = ['char','bool','bool','uint8','uint8','bool','uint32']
+  _slot_types = ['char','bool','bool','float32','float32','bool','uint32']
 
   def __init__(self, *args, **kwds):
     """
@@ -45,9 +45,9 @@ uint32 duration
       if self.right_forward is None:
         self.right_forward = False
       if self.left_speed is None:
-        self.left_speed = 0
+        self.left_speed = 0.
       if self.right_speed is None:
-        self.right_speed = 0
+        self.right_speed = 0.
       if self.timed is None:
         self.timed = False
       if self.duration is None:
@@ -56,8 +56,8 @@ uint32 duration
       self.identifier = 0
       self.left_forward = False
       self.right_forward = False
-      self.left_speed = 0
-      self.right_speed = 0
+      self.left_speed = 0.
+      self.right_speed = 0.
       self.timed = False
       self.duration = 0
 
@@ -74,7 +74,7 @@ uint32 duration
     """
     try:
       _x = self
-      buff.write(_get_struct_6BI().pack(_x.identifier, _x.left_forward, _x.right_forward, _x.left_speed, _x.right_speed, _x.timed, _x.duration))
+      buff.write(_get_struct_3B2fBI().pack(_x.identifier, _x.left_forward, _x.right_forward, _x.left_speed, _x.right_speed, _x.timed, _x.duration))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -87,8 +87,8 @@ uint32 duration
       end = 0
       _x = self
       start = end
-      end += 10
-      (_x.identifier, _x.left_forward, _x.right_forward, _x.left_speed, _x.right_speed, _x.timed, _x.duration,) = _get_struct_6BI().unpack(str[start:end])
+      end += 16
+      (_x.identifier, _x.left_forward, _x.right_forward, _x.left_speed, _x.right_speed, _x.timed, _x.duration,) = _get_struct_3B2fBI().unpack(str[start:end])
       self.left_forward = bool(self.left_forward)
       self.right_forward = bool(self.right_forward)
       self.timed = bool(self.timed)
@@ -105,7 +105,7 @@ uint32 duration
     """
     try:
       _x = self
-      buff.write(_get_struct_6BI().pack(_x.identifier, _x.left_forward, _x.right_forward, _x.left_speed, _x.right_speed, _x.timed, _x.duration))
+      buff.write(_get_struct_3B2fBI().pack(_x.identifier, _x.left_forward, _x.right_forward, _x.left_speed, _x.right_speed, _x.timed, _x.duration))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -119,8 +119,8 @@ uint32 duration
       end = 0
       _x = self
       start = end
-      end += 10
-      (_x.identifier, _x.left_forward, _x.right_forward, _x.left_speed, _x.right_speed, _x.timed, _x.duration,) = _get_struct_6BI().unpack(str[start:end])
+      end += 16
+      (_x.identifier, _x.left_forward, _x.right_forward, _x.left_speed, _x.right_speed, _x.timed, _x.duration,) = _get_struct_3B2fBI().unpack(str[start:end])
       self.left_forward = bool(self.left_forward)
       self.right_forward = bool(self.right_forward)
       self.timed = bool(self.timed)
@@ -132,9 +132,9 @@ _struct_I = genpy.struct_I
 def _get_struct_I():
     global _struct_I
     return _struct_I
-_struct_6BI = None
-def _get_struct_6BI():
-    global _struct_6BI
-    if _struct_6BI is None:
-        _struct_6BI = struct.Struct("<6BI")
-    return _struct_6BI
+_struct_3B2fBI = None
+def _get_struct_3B2fBI():
+    global _struct_3B2fBI
+    if _struct_3B2fBI is None:
+        _struct_3B2fBI = struct.Struct("<3B2fBI")
+    return _struct_3B2fBI

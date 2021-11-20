@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
     while (ros::ok()) {
     	std_msgs::String msg;
 	std::stringstream ss;
-	ss << "0Af200f000";
+	ss << "0Af2.5f2.5";
 	msg.data = ss.str();
 
 	driver_pub.publish(msg);
