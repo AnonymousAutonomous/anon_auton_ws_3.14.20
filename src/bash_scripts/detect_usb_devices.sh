@@ -25,3 +25,14 @@ for sysdevpath in $(find /sys/bus/usb/devices/usb*/ -name dev); do
 		fi
 	)
 done
+
+while IFS= read -r line
+do
+	echo "$line"
+	arr=($line)
+	echo ${arr[0]}
+	echo ${arr[1]}
+	export ${arr[0]}=${arr[1]}
+done < "$DEV_TO_PORT_FILE"
+
+echo $ARDUINO_PORT

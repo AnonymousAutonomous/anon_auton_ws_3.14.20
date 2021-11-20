@@ -1,2 +1,2 @@
-arduino /dev/ttyACM0
-antenna /dev/ttyUSB0
+ARDUINO_PORT /dev/ttyACM0
+ANTENNA_PORT /dev/ttyUSB0
