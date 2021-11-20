@@ -1,20 +1,22 @@
+// left and right motor swapped!!!!!!!! -- changing all the values here 
+
 //define motor 1 related pins (right)
-#define IN1 9
-#define IN2 8
-#define ENA 6
+#define IN1 12         // was 9
+#define IN2 13         // was 8
+#define ENA 10        // was 11
 #define RIGHT_MOTOR ENA
 
-#define MOTOR_1A 3 // yellow, INTERRUPT
-#define MOTOR_1B 4 // white
+#define MOTOR_1A 2 // yellow, INTERRUPT // was 3
+#define MOTOR_1B 7 // white             // was 4
 
 //define motor 2 related pins (left)
-#define IN3 12
-#define IN4 13
-#define ENB 5
+#define IN3 9        // was 12
+#define IN4 8        // was 13
+#define ENB 11        // was 10
 #define LEFT_MOTOR ENB
                           
-#define MOTOR_2A 2 // yellow, INTERRUPT
-#define MOTOR_2B 7 // white
+#define MOTOR_2A 3 // yellow, INTERRUPT // was 2
+#define MOTOR_2B 4 // white             // was 7
 
 // define constants
 const int FULL_REV_ENCODER_TICKS = 4200;
@@ -184,7 +186,7 @@ void go_fwd_bwd(char dir, long duration, int maxLeftSpeed, int maxRightSpeed) {
 
   Serial.println(String(dir) + " " + String(maxLeftSpeed) + " " + String(maxRightSpeed));
 
-  int gooseSpeed = 140;
+  int gooseSpeed = 100;
   
   setRightMotorDir(dir);
   setLeftMotorDir(dir);
@@ -218,11 +220,11 @@ void go_fwd_bwd(char dir, long duration, int maxLeftSpeed, int maxRightSpeed) {
   Serial.println("ENCODERS");
 
   if (dir == FWD) {
-    while (leftEncoderValue < duration) {
+    while (leftEncoderValue > -1 * duration) {
       Serial.println(String(leftEncoderValue) + "," + String(rightEncoderValue));
     }
   } else {
-    while (leftEncoderValue > -1 * duration) {
+    while (leftEncoderValue < duration) {
        Serial.println(String(leftEncoderValue) + "," + String(rightEncoderValue));
     }
   }
@@ -242,6 +244,24 @@ void go_fwd_bwd(char dir, long duration, int maxLeftSpeed, int maxRightSpeed) {
 
   delay(1000);
 
+}
+
+void spin(char dir_left, char dir_right, int leftSpeed, int rightSpeed) {
+  setLeftMotorDir(dir_left);
+  setRightMotorDir(dir_right);
+
+  while(true) {
+    analogWrite(LEFT_MOTOR, leftSpeed);
+    analogWrite(RIGHT_MOTOR, rightSpeed);
+  }
+}
+
+void goClockwise() {
+  spin(FWD, FWD, 200, 0);
+}
+
+void goCounterClockwise() {
+  spin(FWD, FWD, 0, 200);
 }
 
 
@@ -377,10 +397,14 @@ void loop() {
   } else if (mode == '1') {
     leftEncoderValue = 0;
     rightEncoderValue = 0;
-    go_fwd_bwd(FWD, 6000, 110, 100);
+    go_fwd_bwd(FWD, 12000, 80, 80);
     leftEncoderValue = 0;
     rightEncoderValue = 0;
-    go_fwd_bwd(BWD, 6000, 100, 100);
+    go_fwd_bwd(BWD, 12000, 80, 80);
+  } else if (mode == '2') {
+    goClockwise();
+  } else if (mode == '3') {
+    goCounterClockwise();
   } else {
     Serial.println("Unsupported loop mode. Must be one of: [t, f, r, '1', '2', '3']."); 
   }
