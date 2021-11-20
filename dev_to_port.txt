@@ -1,0 +1,3 @@
+ARDUINO_PORT /dev/ttyACM0
+LIDAR_PORT /dev/ttyUSB0
+CAMERA_PORT /dev/video0
