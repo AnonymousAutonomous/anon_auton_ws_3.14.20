@@ -1,0 +1,2 @@
+ARDUINO_PORT /dev/ttyACM0
+ANTENNA_PORT /dev/ttyUSB0
