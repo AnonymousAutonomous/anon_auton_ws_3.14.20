@@ -15,17 +15,13 @@ for sysdevpath in $(find /sys/bus/usb/devices/usb*/ -name dev); do
 		echo "/dev/$devname - $ID_SERIAL"
 
 		if [[ "$ID_SERIAL" == *"Arduino"* || "$ID_SERIAL" == *"1a86_USB2.0"* ]]; then
-			echo "arduino /dev/$devname" >> $DEV_TO_PORT_FILE
-			export ARDUINO_PORT="/dev/$devname"
+			echo "ARDUINO_PORT /dev/$devname" >> $DEV_TO_PORT_FILE
 		elif [[ "$ID_SERIAL" == *"Basic_UART"* ]]; then
-			echo "antenna /dev/$devname" >> $DEV_TO_PORT_FILE
-			export ANTENNA_PORT="/dev/$devname"
+			echo "ANTENNA_PORT /dev/$devname" >> $DEV_TO_PORT_FILE
 		elif [[ "$ID_SERIAL" == *"Silicon_Labs"* ]]; then
-			echo "lidar /dev/$devname" >> $DEV_TO_PORT_FILE
-			export LIDAR_PORT="/dev/$devname"
+			echo "LIDAR_PORT /dev/$devname" >> $DEV_TO_PORT_FILE
 		elif [[ "$devname" == *"video"* ]]; then
-			echo "camera /dev/$devname" >> $DEV_TO_PORT_FILE
-			export CAMERA_PORT="/dev/$devname"
+			echo "CAMERA_PORT /dev/$devname" >> $DEV_TO_PORT_FILE
 		fi
 	)
 done
