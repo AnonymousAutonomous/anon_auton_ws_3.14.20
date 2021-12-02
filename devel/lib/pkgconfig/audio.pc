@@ -1,0 +1,8 @@
+prefix=/home/anonymous2/anon_auton_ws/devel
+
+Name: audio
+Description: Description of audio
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/anonymous2/anon_auton_ws/devel/lib 
+Requires: 

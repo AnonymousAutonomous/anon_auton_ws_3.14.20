@@ -6,7 +6,7 @@
 // right motor
 #define IN1 9
 #define IN2 8
-#define ENA 6
+#define ENA 11
 #define RIGHT_MOTOR ENA
 
 #define MOTOR_RA 3 // yellow, INTERRUPT
@@ -15,7 +15,7 @@
 // left motor
 #define IN3 12
 #define IN4 13
-#define ENB 5
+#define ENB 10
 #define LEFT_MOTOR ENB
 
 #define MOTOR_LA 2 // yellow, INTERRUPT

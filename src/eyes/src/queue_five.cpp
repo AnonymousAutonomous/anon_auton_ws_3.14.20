@@ -4,6 +4,7 @@
 #include "std_msgs/String.h"
 #include "std_msgs/Empty.h"
 #include "std_msgs/Int32.h"
+#include "std_msgs/Char.h"
 #include "eyes/Generic.h"
 #include "../../../constants/choreos.h"
 
@@ -237,6 +238,7 @@ ros::Publisher generic_pub;
 ros::Publisher eoc_pub;
 ros::Publisher update_hub_pub;
 ros::Publisher audio_pub;
+ros::Publisher notify_lidar;
 
 int main(int argc, char** argv) {
 	ros::init(argc, argv, "queue_five");	
@@ -253,12 +255,17 @@ int main(int argc, char** argv) {
 	eoc_pub = nh.advertise<std_msgs::Empty>("end_of_choreo", 1000);
 	update_hub_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 	audio_pub = nh.advertise<std_msgs::String>("audio_channel", 1000);
+	notify_lidar = nh.advertise<std_msgs::Char>("queue_to_lidar", 1000);
 
 	mode = state::autonomous;
 	while (ros::ok()) {
 		switch (mode) {
 			case state::autonomous: // matches FSM
 			{
+				std_msgs::Char queue_to_lidar_msg;
+				queue_to_lidar_msg.data = 'A';
+				notify_lidar.publish(queue_to_lidar_msg);
+
 				if (flag_A) {
 					generic_pub.publish(autonomous_queue.front());
 					autonomous_queue.pop();
@@ -283,6 +290,10 @@ int main(int argc, char** argv) {
 			}
 			case state::choreo: // potential issue if choreo queue is empty, only possible if choreo stages are not received fast enough following transition from autonomous state
 			{
+				std_msgs::Char queue_to_lidar_msg;
+				queue_to_lidar_msg.data = 'C';
+				notify_lidar.publish(queue_to_lidar_msg);
+
 				if (choreo_queue.front().identifier == 'e') {
 					flag_EOC = true;
 					ROS_INFO("END OF CHOREO");
@@ -396,6 +407,10 @@ int main(int argc, char** argv) {
 			}
 			case state::custom:
 			{
+				std_msgs::Char queue_to_lidar_msg;
+				queue_to_lidar_msg.data = 'H';
+				notify_lidar.publish(queue_to_lidar_msg);
+
 				if (flag_SOB) {
 					std_msgs::String to_hub;
 					to_hub.data = "0B";
@@ -421,8 +436,12 @@ int main(int argc, char** argv) {
 				}
 				break;
 			}
-			case state::broadcast: // WIP! WIP! WIP!
+			case state::broadcast:
 			{
+				std_msgs::Char queue_to_lidar_msg;
+				queue_to_lidar_msg.data = 'B';
+				notify_lidar.publish(queue_to_lidar_msg);
+
 				// ROS_INFO("IN BROADCAST STATE");
 				switch (broadcast_mode) {
 					case broadcast_state::outside:

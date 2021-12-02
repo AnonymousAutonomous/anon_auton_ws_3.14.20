@@ -8,11 +8,13 @@
 #include "sensor_msgs/Image.h"
 #include "std_msgs/String.h"
 #include "std_msgs/Empty.h"
+#include "std_msgs/UInt8.h"
 #include "../../../constants/str_cmds.h"
 #include <string>
 
 ros::Publisher george; //the variable formerly known as signal
 ros::Publisher debug;
+ros::Publisher notify_lidar;
 
 bool data_read = false;
 
@@ -57,6 +59,7 @@ int main(int argc, char** argv)
     george = Iris.advertise<std_msgs::String>("cameron", 10); // 10 was 1000
     //ros::spin();
     debug = Iris.advertise<std_msgs::String>("cam_debug", 10);
+    notify_lidar = Iris.advertise<std_msgs::UInt8>("camera_to_lidar", 1000);
 
     // Fee copied over from simple_motors trigger 
     ros::Rate delay_rate(5);
@@ -118,8 +121,6 @@ void pauseCallback(const std_msgs::Empty empty_msg) {
 
 void chatterCallBack(const sensor_msgs::Image& view)
 {
-    if (!listening) return;
-
     double topCount = 0;
     double leftCount = 0;
     double rightCount = 0;
@@ -171,6 +172,12 @@ void chatterCallBack(const sensor_msgs::Image& view)
         bwdr = i
         
     */
+
+    std_msgs::UInt8 camera_to_lidar_msg;
+    camera_to_lidar_msg.data = 4 * (topAverage > top_percent_threshold) + 2 * (rightAverage > side_percent_threshold) + 1 * (leftAverage > side_percent_threshold);
+    notify_lidar.publish(camera_to_lidar_msg);
+
+    if (!listening) return;
 
     if(topAverage > top_percent_threshold && leftAverage > side_percent_threshold && rightAverage > side_percent_threshold) // white in top, left, right
     {

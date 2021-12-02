@@ -15,6 +15,9 @@ int stop_limit = 150;
 int move_counter = 0;
 int move_limit = stop_limit / 5;
 
+int escape_counter = 0;
+int escape_limit = 20;
+
 bool listening = true;
 
 enum class state : char {wait, noise, pivot, noise_again, pivot_again, escape};
@@ -27,12 +30,12 @@ std::string high_priority(std::string str) {
 
 Tart standard(
         {
-                {3*M_PI/4, 5*M_PI/4, 0.5},
+                {3*M_PI/4, 5*M_PI/4, 1},
                 {M_PI/4, 3*M_PI/4, 1},
                 {5*M_PI/4, 7*M_PI/4, 1}
         },
 	{
-		{3*M_PI/4, 5*M_PI/4, 0.5},
+		{3*M_PI/4, 5*M_PI/4, 1},
 		{M_PI/4, 3*M_PI/4, 1},
 		{5*M_PI/4, 7*M_PI/4, 1}
 	},
@@ -60,14 +63,14 @@ Tart standard(
 // Two cases may require separate tarts in the future
 Tart escape(
 	{
-		{3*M_PI/4, 5*M_PI/4, 0.5},
-		{M_PI/4, 3*M_PI/4, 0.5},
-		{5*M_PI/4, 7*M_PI/4, 0.5}
+		{3*M_PI/4, 5*M_PI/4, 1},
+		{M_PI/4, 3*M_PI/4, 1},
+		{5*M_PI/4, 7*M_PI/4, 1}
 	},
 	{
-		{3*M_PI/4, 5*M_PI/4, 0.5},
-		{M_PI/4, 3*M_PI/4, 0.5},
-		{5*M_PI/4, 7*M_PI/4, 0.5}
+		{3*M_PI/4, 5*M_PI/4, 1},
+		{M_PI/4, 3*M_PI/4, 1},
+		{5*M_PI/4, 7*M_PI/4, 1}
 	},
 	{
 		{{{0,1,2},{}}, high_priority(PIVOTR)},
@@ -88,7 +91,7 @@ Tart escape(
 	}
 );
 
-Tart& tart_in_use = standard;
+Tart* tart_in_use = &standard;
 
 ros::Publisher George;
 ros::Publisher audio_pub;
@@ -109,7 +112,7 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
   for (const auto& circ : obs->circles) {
     double x = circ.center.x;
     double y = circ.center.y;
-    tart_in_use.circle_update(x,y);
+    tart_in_use->circle_update(x,y);
   }
   for (const auto& seg : obs->segments) {
     std::pair<double, double> p1;
@@ -155,10 +158,10 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 	y = p2.second; //use p2
       }
     }
-    tart_in_use.line_update(x,y);
+    tart_in_use->line_update(x,y);
   }
 
-  ss << tart_in_use.evaluate();
+  ss << tart_in_use->evaluate();
 
   msg.data = ss.str();
 
@@ -179,12 +182,14 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 			audio_msg.data = "beep";
 			audio_pub.publish(audio_msg);
 			mode = state::noise;
+			ROS_INFO("GOING TO NOISE");
 			break;
 		}
 		case state::noise:
 		{
 			msg.data = RREVERSE;
 			mode = state::pivot;
+			ROS_INFO("GOING TO PIVOT");
 			break;
 		}
 		case state::pivot:
@@ -194,28 +199,22 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 			audio_pub.publish(audio_msg);
 			audio_pub.publish(audio_msg);
 			mode = state::noise_again;
+			ROS_INFO("GOING TO NOISE AGAIN");
 			break;
 		}
 		case state::noise_again:
 		{
 			msg.data = RREVERSE;
 			mode = state::pivot_again;
+			ROS_INFO("GOING TO PIVOT AGAIN");
 			break;
 		}
 		case state::pivot_again:
 		{
 			// Change tarts
-			tart_in_use = escape;
-			stop_counter = stop_limit; // force chair to stay in FSM
+			tart_in_use = &escape;
 			mode = state::escape;
-			// TODO: record initial time
-			break;
-		}
-		case state::escape:
-		{
-			// TODO: after some time, change tarts back
-			stop_counter = stop_limit; // force chair to stay in FSM
-			mode = state::wait;
+			ROS_INFO("GOING TO ESCAPE");
 			break;
 		}
 		default:
@@ -226,9 +225,22 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 	}
   }
   else if (move_counter >= move_limit) {
-  	stop_counter = 0;
-	move_counter = 0;
-	mode = state::wait;
+	if (mode == state::escape) {
+		stop_counter = 0;
+		move_counter = 0;
+		++escape_counter;
+		if (escape_counter >= escape_limit) {
+			escape_counter = 0;
+			tart_in_use = &standard;
+			mode = state::wait;
+		}
+	}
+	else {
+  		stop_counter = 0;
+		move_counter = 0;
+		escape_counter = 0;
+		mode = state::wait;
+	}
   }
 
   if (msg.data[1] == 'C') {
@@ -236,7 +248,11 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
   }
 
   George.publish(msg);
-  tart_in_use.reset();
+  tart_in_use->reset();
+
+  ROS_INFO("STOP COUNTER: %d", stop_counter);
+  ROS_INFO("MOVE COUNTER: %d", move_counter);
+  ROS_INFO("ESCAPE COUNTER: %d", escape_counter);
 }
 
 int main (int argc, char** argv) {
