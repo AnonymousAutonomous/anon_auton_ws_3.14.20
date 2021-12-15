@@ -90,6 +90,7 @@ void loop(){
 //  Serial.print(storeB); Serial.print("  "); Serial.print(outputB); Serial.print("  ");
   if (storeB != outputB){
     storeB = outputB;
+    Serial.print(outputA); Serial.print(" "); Serial.print(outputB); Serial.print("\n");
     
   }
 //    Serial.print(inputA); Serial.print("  ");
@@ -167,7 +168,7 @@ void initPWM(){
   motorB.SetMode(AUTOMATIC);
 }
 void isr_A(){
-  Serial.print("A"); Serial.print(" "); Serial.println(countIntA);
+//  Serial.print("A"); Serial.print(" "); Serial.println(countIntA);
 //  Serial.println("A ENCODER");
   // count sufficient interrupts to get accurate timing
   // inputX is the encoder frequency in Hz
@@ -179,7 +180,7 @@ void isr_A(){
   }
 }
 void isr_B(){
-    Serial.print("B"); Serial.print(" "); Serial.println(countIntB);
+//    Serial.print("B"); Serial.print(" "); Serial.println(countIntB);
   // count sufficient interrupts to get accurate timing
   // inputX is the encoder frequency in Hz
   countIntB++;
