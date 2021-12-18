@@ -35,6 +35,42 @@ volatile long rightEncoderValue = 0;
 const unsigned int MAX_INPUT = 50;
 
 
+/**********************************************************/
+/*                          ENCODERS                      */  
+/**********************************************************/
+
+void EncoderEvent1() {
+  if (digitalRead(MOTOR_1A) == HIGH) {
+    if (digitalRead(MOTOR_1B) == LOW) {
+      ++rightEncoderValue; 
+    } else {
+      --rightEncoderValue;
+    }
+  } else {
+    if (digitalRead(MOTOR_1B) == LOW) {
+      --rightEncoderValue;
+    } else {
+      ++rightEncoderValue;
+    }
+  }
+}
+
+void EncoderEvent2() {
+  if (digitalRead(MOTOR_2A) == HIGH) {
+    if (digitalRead(MOTOR_2B) == LOW) {
+      --leftEncoderValue; 
+    } else {
+      ++leftEncoderValue;
+    }
+  } else {
+    if (digitalRead(MOTOR_2B) == LOW) {
+      ++leftEncoderValue;
+    } else {
+      --leftEncoderValue;
+    }
+  }
+}
+
 
 
 void goRight(char dir, int mtrspeed) {
@@ -49,21 +85,21 @@ void goLeft(char dir, int mtrspeed) {
 
 void setRightMotorDir(char dir) {
   if (dir == BWD) {
-    digitalWrite(IN1, HIGH);
-    digitalWrite(IN2, LOW);
-  } else {
     digitalWrite(IN1, LOW);
     digitalWrite(IN2, HIGH);
+  } else {
+    digitalWrite(IN1, HIGH);
+    digitalWrite(IN2, LOW);
   }
 }
 
 void setLeftMotorDir(char dir) {
   if (dir == BWD) {
-    digitalWrite(IN3, HIGH);
-    digitalWrite(IN4, LOW);
-  } else {
     digitalWrite(IN3, LOW);
     digitalWrite(IN4, HIGH);
+  } else {
+    digitalWrite(IN3, HIGH);
+    digitalWrite(IN4, LOW);
   }
 }
 
@@ -288,14 +324,40 @@ void setup() {
 void process_data (const char* data) {
   Serial.print("Processing: "); Serial.print(data); Serial.print("\n");
   
-  if (data == "stop") {
-      goLeft(FWD, 0);
-      goRight(FWD, 0);
+  if (data[0] == 's') { // stop
+      dir_left = FWD;
+      dir_right = FWD;
+      speed_left = 0;
+      speed_right = 0;
   }
 
-  istringstream iss(data);
+  String sub = "";
+  bool left = true;
 
-  iss >> dir_left >> speed_left >> dir_right >> speed_right;
+ for (int i = 0; i < strlen(data); ++i) {
+  if (data[i] == ' ' || data[i] == '\n') {
+  }
+  else if (data[i] == FWD || data[i] == BWD) {
+    if (left) {
+      dir_left = data[i];
+      left = false;
+    }
+    else {
+      dir_right = data[i];
+      speed_left = sub.toInt();
+      sub = "";
+    }
+  }
+  else {
+    sub += data[i];
+  }
+  }
+         speed_right = sub.toInt();
+
+
+  Serial.print("Running: "); Serial.print(dir_left); Serial.print(' '); Serial.print(speed_left);
+    Serial.print(" "); Serial.print(dir_right); Serial.print(' '); Serial.print(speed_right); Serial.print('\n');
+
 }
 
 void processIncomingByte(const byte inByte) {
@@ -358,42 +420,4 @@ void loop() {
 //   } else {
 //     Serial.println("Unsupported loop mode. Must be one of: [t, f, r, '1', '2', '3']."); 
 //   }
-}
-
-
-
-/**********************************************************/
-/*                          ENCODERS                      */  
-/**********************************************************/
-
-void EncoderEvent1() {
-  if (digitalRead(MOTOR_1A) == HIGH) {
-    if (digitalRead(MOTOR_1B) == LOW) {
-      ++rightEncoderValue; 
-    } else {
-      --rightEncoderValue;
-    }
-  } else {
-    if (digitalRead(MOTOR_1B) == LOW) {
-      --rightEncoderValue;
-    } else {
-      ++rightEncoderValue;
-    }
-  }
-}
-
-void EncoderEvent2() {
-  if (digitalRead(MOTOR_2A) == HIGH) {
-    if (digitalRead(MOTOR_2B) == LOW) {
-      --leftEncoderValue; 
-    } else {
-      ++leftEncoderValue;
-    }
-  } else {
-    if (digitalRead(MOTOR_2B) == LOW) {
-      ++leftEncoderValue;
-    } else {
-      --leftEncoderValue;
-    }
-  }
 }
