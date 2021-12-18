@@ -176,23 +176,23 @@ void loop(){
   }
 }
 void forwardA(uint16_t pwm){
-  digitalWrite(AIN1, LOW);
-  digitalWrite(AIN2, HIGH);
-  analogWrite(PWMA, pwm);
-}
-void forwardB(uint16_t pwm){
-  digitalWrite(BIN1, LOW);
-  digitalWrite(BIN2, HIGH);
-  analogWrite(PWMB, pwm);
-}
-void reverseA(uint16_t pwm){
   digitalWrite(AIN1, HIGH);
   digitalWrite(AIN2, LOW);
   analogWrite(PWMA, pwm);
 }
-void reverseB(uint16_t pwm){
+void forwardB(uint16_t pwm){
   digitalWrite(BIN1, HIGH);
-  digitalWrite(BIN2, LOW);  
+  digitalWrite(BIN2, LOW);
+  analogWrite(PWMB, pwm);
+}
+void reverseA(uint16_t pwm){
+  digitalWrite(AIN1, LOW);
+  digitalWrite(AIN2, HIGH);
+  analogWrite(PWMA, pwm);
+}
+void reverseB(uint16_t pwm){
+  digitalWrite(BIN1, LOW);
+  digitalWrite(BIN2, HIGH);  
   analogWrite(PWMB, pwm);
 }
 void brakeA(){
