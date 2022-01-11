@@ -1,10 +1,14 @@
 import re
 import subprocess
-device_re = re.compile("Bus\s+(?P<bus>\d+)\s+Device\s+(?P<device>\d+).+ID\s(?P<id>\w+:\w+)\s(?P<tag>.+)$", re.I)
-df = subprocess.check_output("find /sys/bus/usb/devices/usb*/ -name dev")
-print(df)
+
+# Find all USB devices
+df = subprocess.check_output("find /sys/bus/usb/devices/usb*/ -name dev", shell=True)
 devices = []
+
 for i in df.split('\n'):
+    devname = subprocess.check_output("udevadm info -q name -p " + i, shell=True)
+    print(devname)
+
     if i:
         info = device_re.match(i)
         if info:
