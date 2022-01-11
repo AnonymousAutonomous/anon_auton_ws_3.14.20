@@ -181,7 +181,6 @@ static float getAngle(const rplidar_response_measurement_node_hq_t& node)
 
 int main(int argc, char * argv[]) {
     ros::init(argc, argv, "rplidar_node");
-    
     std::string channel_type;
     std::string tcp_ip;
     std::string serial_port;
