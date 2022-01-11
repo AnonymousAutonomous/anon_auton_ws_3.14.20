@@ -1,0 +1,38 @@
+<launch>
+  <rosparam command="load" file="$(find config_manager)/configs/ports/active.yaml"/>
+
+  <node name="arduino" pkg="rosserial_python" type="serial_node.py">
+    <!--param name="TODO- PORT" /-->
+  </node>
+
+  <node name="simple_motors" pkg="simple_motors" type="new_trigger">
+  </node>
+
+  <node name="lidar" pkg="obstacle_detector">
+    <!-- param name="TODO myNodes3.launch" /-->
+  </node>
+
+  <rosparam command="load" file="$(find mylidar)/my_laser_config.yaml"/>
+  <node name="scanfilter" pkg="laser_filters" type="scan_to_scan_filter_chain"
+  </node>
+
+  <node name="tart pkg="obstacle_detector" type="tart_director">
+  </node>
+
+  <node name="camera" pkg="cv_camera" type="cv_camera_node">
+  </node>
+
+  <node name="image_proc" pkg="image_proc" type="image_proc">
+  </node>
+
+  <node name="eyes" pkg="eyes" type="new_processor">
+  </node>
+
+  <node name="queue" pkg="eyes" type="queue_five">
+  </node>
+
+  <node name="driver" pkg="eyes" type="baby_trilogy">
+  </node>
+
+
+</launch>
