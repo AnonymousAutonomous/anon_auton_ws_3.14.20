@@ -1,4 +1,3 @@
-import re
 import os
 import subprocess
 
@@ -15,7 +14,7 @@ for i in df.split('\n'):
     devname = devname.strip('\n')
 
     if (not devname.startswith('bus/')):
-	devinfo = subprocess.check_output("udevadm info -q property --export -p " + i, shell=True)
+    devinfo = subprocess.check_output("udevadm info -q property --export -p " + i, shell=True)
 
         if ("ID_SERIAL" in devinfo):
             id = [line for line in devinfo.split('\n') if "ID_SERIAL" in line and "ID_SERIAL_SHORT" not in line]
