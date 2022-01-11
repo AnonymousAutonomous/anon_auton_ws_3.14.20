@@ -1,0 +1,4 @@
+antenna_port: '/dev/ttyUSB1'
+camera_port: '/dev/video0'
+lidar_port: '/dev/ttyUSB0'
+arduino_port: '/dev/ttyACM0'
