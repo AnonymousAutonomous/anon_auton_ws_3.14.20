@@ -3,7 +3,8 @@ import rospy
 import serial
 from std_msgs.msg import String
 
-ser = serial.Serial('/dev/ttyUSB0', 57600)
+antenna_port = rospy.get_param('antenna_port')
+ser = serial.Serial(antenna_port, 57600)
 
 def callback(data):
     rospy.loginfo(data.data)
