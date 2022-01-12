@@ -10,6 +10,6 @@ if __name__ == '__main__':
     while True:
         msg = input('Message:\n')
         print(msg)
-        ser.write(msg + '\n')
+        ser.write((msg + '\n').encode())
         
 
