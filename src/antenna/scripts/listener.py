@@ -2,7 +2,7 @@
 
 import serial
 
-antenna_port = "/dev/ttyUSB0"
+antenna_port = "/dev/ttyUSB2"
 
 if __name__ == '__main__':
     ser = serial.Serial(antenna_port, 57600)
