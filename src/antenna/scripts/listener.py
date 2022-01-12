@@ -9,5 +9,5 @@ if __name__ == '__main__':
 
     while True:
         str_msg = ser.readline()[:-1]
-        print(str_msg)
+        print(str(str_msg))
 
