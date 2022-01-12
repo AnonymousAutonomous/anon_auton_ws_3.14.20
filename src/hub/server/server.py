@@ -1,19 +1,13 @@
 from flask import Flask, request, redirect, url_for, render_template
 
 import serial
+from urllib.parse import urlsplit
 
 app = Flask(__name__)
 
 @app.route("/")
-def hello_world():
-    render_template("index.html")
-    data = request.form
-    print(data)
-    if request.method == 'GET':
-        return render_template("index.html")
-    else: 
-        print("POST!")
-        return redirect(url_for('transmit'))
+def index():
+    return render_template("index.html")
 
 
 @app.route("/test")
@@ -29,8 +23,10 @@ def test():
 def transmit():
     data = request.form
     print(data)
+    print(request.base_url)
+    print(urlsplit(request.base_url))
     send_to_antenna(data['message'])
-    return redirect(url_for('test'))
+    return redirect(url_for('index'))
     # if request.method == 'POST':
     #     return do_the_login()
     # else:
@@ -42,4 +38,4 @@ def send_to_antenna(message):
     antenna_port = '/dev/ttyUSB0'
     ser = serial.Serial(antenna_port, 57600)
 
-    ser.write(message + '\n')
+    ser.write((message + '\n').encode())
