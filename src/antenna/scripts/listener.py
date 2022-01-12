@@ -28,7 +28,7 @@ def cleanStr(msg):
     return msg.lower().strip().rstrip()
 
 def launch_script_cmd(filename):
-    return "usr/bin/bash ~/anon_auton_ws/src/launch_manager/launch/" + filename
+    return ["~/anon_auton_ws/src/launch_manager/launch/" + filename]
 
 if __name__ == '__main__':
     ser = serial.Serial(antenna_port, 57600)
@@ -52,5 +52,5 @@ if __name__ == '__main__':
         print(f"Running command for: {{str_msg}}")
 
         if cmd is not None: 
-            subprocess.run(launch_script_cmd(cmd_to_script[cmd]), shell=True, check=True)
+            subprocess.Popen(launch_script_cmd(cmd_to_script[cmd]), shell=True, executable="/bin/bash")
 
