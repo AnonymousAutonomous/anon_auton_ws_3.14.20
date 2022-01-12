@@ -1,6 +1,6 @@
 <launch>
   <rosparam command="load" file="$(find config_manager)/configs/ports/active.yaml"/>
-  <node name="chair_receiver" pkg="antenna" type="chair_receiver" />
-  <node name="chair_transmitter" pkg="antenna" type="chair_transmitter" />
+  <node name="chair_receiver" pkg="antenna" type="chair_receiver.py" />
+  <node name="chair_transmitter" pkg="antenna" type="chair_transmitter.py" />
   <node name="chair_manager" pkg="antenna" type="chair_manager" />
 </launch>
