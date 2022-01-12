@@ -10,4 +10,4 @@ source env/bin/activate
 # comment this out when it's time to go live
 export FLASK_ENV=development
 export FLASK_APP=server
-flask run --host=0.0.0.0
+python3 -m flask run --host=35.0.45.26 --port=8080
