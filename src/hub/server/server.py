@@ -1,4 +1,5 @@
 from flask import Flask, request, redirect, url_for, render_template
+import subprocess
 
 import serial
 from urllib.parse import urlsplit
@@ -36,6 +37,13 @@ def transmit():
 def send_to_antenna(message):
     print('sending to antenna')
     antenna_port = '/dev/ttyUSB0'
-    ser = serial.Serial(antenna_port, 57600)
 
-    ser.write((message + '\n').encode())
+    subprocess.run(["rostopic", "pub", "-1", "/from_hub", "std_msgs/String", message + '\n'], shell=True)
+
+
+
+    # ser = serial.Serial(antenna_port, 57600)
+
+    # ser.write((message + '\n').encode())
+
+    # rostopic pub -1 something something something
