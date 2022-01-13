@@ -38,7 +38,7 @@ def send_to_antenna(message):
     print('sending to antenna')
     antenna_port = '/dev/ttyUSB0'
 
-    subprocess.run(["rostopic", "pub", "-1", "/from_hub", "std_msgs/String", message + '\n'], shell=True)
+    subprocess.check_output("rostopic pub -1 /from_hub std_msgs/String " + message, shell=True)
 
 
 
