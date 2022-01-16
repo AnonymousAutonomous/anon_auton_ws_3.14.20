@@ -49,7 +49,7 @@ if __name__ == '__main__':
         elif str_msg == 'pre':
             cmd = Command.PRE
 
-        print(f"Running command for: {{str_msg}}")
+        print(f"Running command for: {str_msg}")
 
         if cmd is not None: 
             subprocess.Popen(launch_script_cmd(cmd_to_script[cmd]), shell=True, executable="/bin/bash")
