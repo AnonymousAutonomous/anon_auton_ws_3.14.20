@@ -16,12 +16,23 @@ def graphData(Kp, Ki, Kd, setpoint, ffwd, start_time, filename, df):
 
     print(df)
 
+    f1 = plt.figure()
+
     plt.plot(df['timestamp'], df['input']) 
     plt.axhline(y=float(setpoint), color='r', linestyle='-')
-    plt.title(f"Kp: {Kp}, Ki: {Ki}, Kd: {Kd}\nsetpoint: {setpoint}, feedfwd: {ffwd}")
+    plt.title(f"Kp: {Kp}, Ki: {Ki}, Kd: {Kd}\nINPUT setpoint: {setpoint}, feedfwd: {ffwd}")
 
     # plt.show()
-    plt.savefig(f'data/{filename}.pdf')  
+    plt.savefig(f'data/graphs/{filename}_input.pdf')  
+
+    f2 = plt.figure()
+
+    plt.plot(df['timestamp'], df['output']) 
+    plt.axhline(y=float(setpoint), color='r', linestyle='-')
+    plt.title(f"Kp: {Kp}, Ki: {Ki}, Kd: {Kd}\nOUTPUT setpoint: {setpoint}, feedfwd: {ffwd}")
+
+    # plt.show()
+    plt.savefig(f'data/graphs/{filename}_output.pdf')  
 
 def getDfFromCsv(filename):
     path = os.path.join(data_dir, filename)

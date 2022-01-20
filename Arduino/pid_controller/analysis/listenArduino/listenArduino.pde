@@ -8,9 +8,9 @@ int startTime;
 
 boolean sentCommands = false;
    
- float p = 1.0;
- float i = 1.0;
- float d = 1.0;
+ float p = 100.0;
+ float i = 0.0;
+ float d = 0.0;
  float s = 3.0;
 
 void setup() {
