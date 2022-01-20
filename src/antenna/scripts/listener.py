@@ -9,7 +9,7 @@ import subprocess
 df = subprocess.check_output("find /sys/bus/usb/devices/usb*/ -name dev", shell=True)
 devices = {}
 
-antenna_port = "/dev/ttyUSB2"
+antenna_port = "/dev/ttyUSB0"
 
 class Command(Enum):
     LAUNCH = 1
