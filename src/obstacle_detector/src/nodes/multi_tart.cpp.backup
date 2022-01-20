@@ -1,4 +1,4 @@
-// nice time skew
+// nice time skew, lol, oops
 
 #include "ros/ros.h"
 #include <obstacle_detector/Obstacles.h>
@@ -33,14 +33,16 @@ uint8_t camera_state = 0;
 
 enum class state : char {
   wait,
-  escape,
   // LIDAR protocol
   noise,
   pivot,
   noise_again,
   pivot_again,
+  escape,
   // CAMERA protocol
-  turn
+  turn,
+  help
+  // TODO: add beacon state?
 };
 
 state mode = state::wait;
@@ -95,21 +97,21 @@ Tart escape(
 		{5*M_PI/4, 7*M_PI/4, 1}
 	},
 	{
-		{{{0,1,2},{}}, high_priority(PIVOTR)},
-		{{{},{0,1,2}}, high_priority(PIVOTR)},
-		{{{0,1},{}}, high_priority(PIVOTL)},
-		{{{},{0,1}}, high_priority(PIVOTL)},
-		{{{0,2},{}}, high_priority(PIVOTR)},
-		{{{},{0,2}}, high_priority(PIVOTR)},
-		{{{0},{}}, high_priority(PIVOTR)},
-		{{{},{0}}, high_priority(PIVOTR)},
-		{{{1,2},{}}, high_priority(FWD)},
-		{{{},{1,2}}, high_priority(FWD)},
-		{{{1},{}}, high_priority(VEERL)},
-		{{{},{1}}, high_priority(VEERL)},
-		{{{2},{}}, high_priority(VEERR)},
-		{{{},{2}}, high_priority(VEERR)},
-		{{{},{}}, high_priority(FWD)}
+		{{{0,1,2},{}}, PIVOTR},
+		{{{},{0,1,2}}, PIVOTR},
+		{{{0,1},{}}, PIVOTL},
+		{{{},{0,1}}, PIVOTL},
+		{{{0,2},{}}, PIVOTR},
+		{{{},{0,2}}, PIVOTR},
+		{{{0},{}}, PIVOTR},
+		{{{},{0}}, PIVOTR},
+		{{{1,2},{}}, FWD},
+		{{{},{1,2}}, FWD},
+		{{{1},{}}, VEERL},
+		{{{},{1}}, VEERL},
+		{{{2},{}}, VEERR},
+		{{{},{2}}, VEERR},
+		{{{},{}}, FWD}
 	}
 );
 
@@ -147,6 +149,7 @@ void cameraCallback(const std_msgs::UInt8 uint8_msg) {
 }
 
 void pauseCallback(const std_msgs::Empty empty_msg) {
+  queue_state = 'A';
   listening = true;
 }
 
@@ -221,9 +224,15 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 	{
 	  msg.data == STOP ? ++stop_counter : ++move_counter;
 	  camera_state >= 4 ? ++turn_counter : ++proc_counter;
-	  // LIDAR trans
 	  // camera trans
-	  if (stop_counter >= stop_limit) {
+	  // LIDAR trans
+	  if (turn_counter >= turn_limit) {
+	    mode = state::turn;
+	    ROS_INFO("GOING TO TURN");
+	    reset_lidar_counters();
+	    reset_camera_counters();
+	  }
+	  else if (stop_counter >= stop_limit) {
 	    std_msgs::String audio_msg;
 	    audio_msg.data = "beep";
 	    audio_pub.publish(audio_msg);
@@ -232,19 +241,15 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 	    reset_lidar_counters();
 	    reset_camera_counters();
 	  }
-	  else if (turn_counter >= turn_limit) {
-	    mode = state::turn;
-	    ROS_INFO("GOING TO TURN");
-	    reset_lidar_counters();
-	    reset_camera_counters();
-	  }
-	  if (move_counter >= move_limit) {
-	    mode = state::wait;
-	    reset_lidar_counters();
-	  }
-	  if (proc_counter >= proc_limit) {
-	    mode = state::wait;
-	    reset_camera_counters();
+	  else {
+	    if (move_counter >= move_limit) {
+	      mode = state::wait;
+	      reset_lidar_counters();
+	    }
+	    if (proc_counter >= proc_limit) {
+	      mode = state::wait;
+	      reset_camera_counters();
+	    }
 	  }
 	  break;
 	}
@@ -256,7 +261,6 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 	  if (turn_counter >= turn_limit) {
 	    mode = state::turn;
 	    ROS_INFO("GOING TO TURN");
-	    reset_lidar_counters();
 	    reset_camera_counters();
 	  }
 	  else if (proc_counter >= proc_limit) {
@@ -296,8 +300,11 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 	}
 	case 'C':
 	{
-	  // hold LIDAR counters
 	  reset_camera_counters();
+	  if (listening) {
+	    mode = state::wait;
+	    reset_lidar_counters();
+	  }
 	  break;
 	}
 	default:
@@ -334,8 +341,11 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 	}
 	case 'C':
 	{
-	  // hold LIDAR counters
 	  reset_camera_counters();
+	  if (listening) {
+	    mode = state::wait;
+	    reset_lidar_counters();
+	  }
 	  break;
 	}
 	default:
@@ -369,8 +379,11 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 	}
 	case 'C':
 	{
-	  // hold LIDAR counters
 	  reset_camera_counters();
+	  if (listening) {
+	    mode = state::wait;
+	    reset_lidar_counters();
+	  }
 	  break;
 	}
 	default:
@@ -405,8 +418,11 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 	}
 	case 'C':
 	{
-	  // hold LIDAR counters
 	  reset_camera_counters();
+	  if (listening) {
+	    mode = state::wait;
+	    reset_lidar_counters();
+	  }
 	  break;
 	}
 	default:
@@ -486,13 +502,38 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 	{
 	  reset_lidar_counters();
 	  reset_camera_counters();
-	  // hold escape counters
+	  ++escape_counter;
+	  if (escape_counter >= escape_limit) {
+	    // Change tarts
+	    tart_in_use = &standard;
+	    mode = state::wait;
+	    reset_escape_counters();
+	  }
 	  break;
 	}
 	default:
 	{
 	  reset_all_counters();
+	  tart_in_use = &standard;
 	  mode = state::wait;
+	  break;
+	}
+      }
+      break;
+    }
+    case state::help:
+    {
+      switch (queue_state) {
+        case 'A':
+	{
+	  break;
+	}
+	case 'C':
+	{
+	  break;
+	}
+	default:
+	{
 	  break;
 	}
       }
@@ -585,10 +626,9 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
   }
 */
 
-  // if (msg.data[1] == 'C') {
-	// listening = false;
-  // }
-  // can restore listening functionality if necessary
+  if (msg.data[1] == 'C') {
+    listening = false;
+  }
 
   George.publish(msg);
   tart_in_use->reset();

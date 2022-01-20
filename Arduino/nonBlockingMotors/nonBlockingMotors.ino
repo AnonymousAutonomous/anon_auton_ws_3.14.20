@@ -36,23 +36,23 @@ const char BWD = 'b';
 
 void setRightMotorDir(char dir) {
   if (dir == BWD) {
-    digitalWrite(IN1, LOW);
-    digitalWrite(IN2, HIGH);
-  }
-  else {
     digitalWrite(IN1, HIGH);
     digitalWrite(IN2, LOW);
+  }
+  else {
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, HIGH);
   }
 }
 
 void setLeftMotorDir(char dir) {
   if (dir == BWD) {
-    digitalWrite(IN3, LOW);
-    digitalWrite(IN4, HIGH);
-  }
-  else {
     digitalWrite(IN3, HIGH);
     digitalWrite(IN4, LOW);
+  }
+  else {
+    digitalWrite(IN3, LOW);
+    digitalWrite(IN4, HIGH);
   }
 }
 

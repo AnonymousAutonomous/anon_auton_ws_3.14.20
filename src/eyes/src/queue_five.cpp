@@ -25,6 +25,7 @@ broadcast_state broadcast_mode = broadcast_state::outside;
 // mirror chair status enums in hub manager
 enum class chair_broadcast_status : char {ready, exclude, success, failure};
 enum class chair_stuck_status : char {stuck, not_stuck};
+enum class chair_trapped_status : char {trapped, not_trapped};
 
 #define flag_A !autonomous_queue.empty()
 #define flag_B !broadcast_queue.empty()
