@@ -1,0 +1,4 @@
+<launch>
+  <node pkg="config_manager" name="ports" type="set_ports.py" output="screen">
+  </node>
+</launch>
