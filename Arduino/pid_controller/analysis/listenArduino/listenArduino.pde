@@ -3,15 +3,15 @@ Serial mySerial;
 PrintWriter output;
 
 int savedTime;
-int totalTime = 60000;   // 1 min
+int totalTime = 30000;   // 30 seconds
 int startTime;
 
 boolean sentCommands = false;
    
- float p = 100.0;
- float i = 0.0;
+ float p = 10.0;
+ float i = 25.0;
  float d = 0.0;
- float s = 3.0;
+ String s = "f0f0";
 
 void setup() {
    int arduino_index = 0;
@@ -28,7 +28,7 @@ void setup() {
    mySerial.clear();
 
 
-   output = createWriter( "data/" + p + "_" + i + "_" + d + "_" + s + ".csv" );
+   output = createWriter( "data/csvs/" + p + "_" + i + "_" + d + "_" + s + ".csv" );
    
    savedTime = millis();
 }
@@ -38,7 +38,7 @@ void draw() {
            mySerial.write("p " + str(p) + '\n');
            mySerial.write("i " + str(i) + '\n');
            mySerial.write("d " + str(d) + '\n');
-           mySerial.write("s " + str(s) + '\n');
+           mySerial.write("s " + s + '\n');
            startTime = millis();
            sentCommands = true;
         }
