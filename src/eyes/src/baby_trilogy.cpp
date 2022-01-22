@@ -33,7 +33,7 @@ void command_compare() {
     ROS_INFO("%s OR %s", command_pair.first.data.c_str(), command_pair.second.data.c_str());
     if (command_pair.first.data.empty() && command_pair.second.data.empty()) {
         std_msgs::String low_prio;
-	low_prio.data = "EAf055f055";
+	low_prio.data = "EAf2.0f2.0";
 	driver_pub.publish(low_prio);
 	ROS_INFO("SELECTED: %s", low_prio.data.c_str());
     }
