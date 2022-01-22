@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+cd $SCRIPT_DIR
+cd ..
+
+source env/bin/activate
+
+# comment this out when it's time to go live
+export FLASK_ENV=development
+export FLASK_APP=server
+python3 -m flask run --host=0.0.0.0 --port=5000
