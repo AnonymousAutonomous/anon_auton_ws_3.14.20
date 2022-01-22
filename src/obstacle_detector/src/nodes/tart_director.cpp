@@ -145,7 +145,7 @@ int main (int argc, char** argv) {
             commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
         }
         ROS_INFO("Autonomous commands have been loaded for tart director.");
-        new_director_standard[2] = {
+        new_director_standard.updateChecks({
 		// {{{0,1},{}}, "CIRCLE FRONT, CIRCLE RIGHT"},
 		// {{{0},{1}}, "CIRCLE FRONT, LINE RIGHT"},
                 {{{0},{}}, commands[STOP]},
@@ -154,7 +154,7 @@ int main (int argc, char** argv) {
                 {{{2},{}}, commands[SPOOK]},
                 {{{},{1}}, commands[SPOOK]},
                 {{{},{2}}, commands[SPOOK]}
-        };
+        });
     }
     else {
         ROS_INFO("You must load autonomous commands before using tart director.");
