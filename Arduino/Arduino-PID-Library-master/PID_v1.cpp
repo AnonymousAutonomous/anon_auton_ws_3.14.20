@@ -17,7 +17,7 @@
  *    The parameters specified here are those for for which we can't set up
  *    reliable defaults, so we need to have the user set them.
  ***************************************************************************/
-PID::PID(double* Input, double* Output, double* Setpoint,
+PID::PID(double* Input, double* Output, double Setpoint,
         double Kp, double Ki, double Kd, int POn, int ControllerDirection)
 {
     myOutput = Output;
@@ -41,7 +41,7 @@ PID::PID(double* Input, double* Output, double* Setpoint,
  *    to use Proportional on Error without explicitly saying so
  ***************************************************************************/
 
-PID::PID(double* Input, double* Output, double* Setpoint,
+PID::PID(double* Input, double* Output, double Setpoint,
         double Kp, double Ki, double Kd, int ControllerDirection)
     :PID::PID(Input, Output, Setpoint, Kp, Ki, Kd, P_ON_E, ControllerDirection)
 {
@@ -64,7 +64,7 @@ bool PID::Compute()
    {
       /*Compute all the working error variables*/
       double input = *myInput;
-      double error = *mySetpoint - input;
+      double error = mySetpoint - input;
       double dInput = (input - lastInput);
       outputSum+= (ki * error);
 
@@ -92,6 +92,14 @@ bool PID::Compute()
 	    return true;
    }
    else return false;
+}
+
+/* SetSetpoint(...)*************************************************************
+ * Set Setpoint to the next value and clear errors
+ ******************************************************************************/
+void PID::SetSetpoint(double setpoint){
+      mySetpoint = setpoint;
+      PID::Initialize();
 }
 
 /* SetTunings(...)*************************************************************

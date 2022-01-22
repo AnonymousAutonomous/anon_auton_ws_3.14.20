@@ -15,18 +15,18 @@
  #include <PID_v1.h>
 
 // ROS connection to pi
-// #include <ros.h>
-// #include <std_msgs/String.h>
-// #include <std_msgs/Int32.h>
-// #include <eyes/Generic.h>
+#include <ros.h>
+#include <std_msgs/String.h>
+#include <std_msgs/Int32.h>
+#include <eyes/Generic.h>
 
-// ros::NodeHandle nh;
+ros::NodeHandle nh;
 
 // init to zero and update with each encoder tick
-// std_msgs::Int32 int32_msg_R;
-// std_msgs::Int32 int32_msg_L;
-// ros::Publisher pubR("encoder_value_R", &int32_msg_R);
-// ros::Publisher pubL("encoder_value_L", &int32_msg_L);
+std_msgs::Int32 int32_msg_R;
+std_msgs::Int32 int32_msg_L;
+ros::Publisher pubR("encoder_value_R", &int32_msg_R);
+ros::Publisher pubL("encoder_value_L", &int32_msg_L);
 
  
 // Output pins used to control motors
@@ -66,22 +66,22 @@ const unsigned long SAMPLE_TIME = 10;  // time between PID updates
 const unsigned long INT_COUNT = 100;     // 100 encoder ticks for accurate timing
 
 // !!!!!!!!!!!!! SETPOINTS MUST BE POSITIVE !!!!!!!!!!!!!!
-double setpointA = 1.5;         // setpoint is inches / second
+double setpointA = 2.0;         // setpoint is inches / second
 double setpointB = setpointA;   // setpoint is inches / second
 
 double inputA = 0;              // input is inches / second
 double outputA = 0;             // output is PWM to motors
-int FEEDFWDA = 80;
+int FEEDFWDA = 60;
 int a_adjust = 0;
 
 double inputB = 0;              // input is inches / second
 double outputB = 0;             // output is PWM to motors
-int FEEDFWDB = 80;
+int FEEDFWDB = 60;
 int b_adjust = 0;
 
 //double KpA = 2.0, KiA = 7.0, KdA = 2.0;
 // TODO: diff tunings for fwd or bwd? how to even out between the two motors? -- send avg to both? OR diff FEEDFWD terms for the two?
-double KpA = 1.0, KiA = 0.0, KdA = 0.0;
+double KpA = 10.0, KiA = 25.0, KdA = 0.0;
 double KpB = KpA, KiB = KiA, KdB = KdA;
 PID motorA(&inputA, &outputA, setpointA, KpA, KiA, KdA, DIRECT);
 PID motorB(&inputB, &outputB, setpointB, KpB, KiB, KdB, DIRECT);
@@ -95,17 +95,20 @@ const char FWD = 'f';
 const char BWD = 'r';
 const char STOP = 's';
 
+volatile long countR = 0;
+volatile long countL = 0;
+
 /***********************************************************
  * SERIAL / PRINTING HELPER FUNCTIONS                      *
  ***********************************************************/
  void printPID() {
-  Serial.print("KpA"); Serial.print(","); Serial.print("KiA"); Serial.print(","); Serial.print("KdA"); Serial.print(","); Serial.print("setpointA"); Serial.print(","); Serial.print("FEEDFWDA"); Serial.print(",");
-  Serial.print("KpB"); Serial.print(","); Serial.print("KiB"); Serial.print(","); Serial.print("KdB"); Serial.print(","); Serial.print("setpointB"); Serial.print(","); Serial.print("FEEDFWDB"); Serial.print("\n");
-  Serial.print(KpA); Serial.print(","); Serial.print(KiA); Serial.print(","); Serial.print(KdA); Serial.print(","); Serial.print(setpointA); Serial.print(","); Serial.print(FEEDFWDA); Serial.print(",");
-  Serial.print(KpB); Serial.print(","); Serial.print(KiB); Serial.print(","); Serial.print(KdB); Serial.print(","); Serial.print(setpointB); Serial.print(","); Serial.print(FEEDFWDB); Serial.print("\n");
+//   Serial.print("KpA"); Serial.print(","); Serial.print("KiA"); Serial.print(","); Serial.print("KdA"); Serial.print(","); Serial.print("setpointA"); Serial.print(","); Serial.print("FEEDFWDA"); Serial.print(",");
+//   Serial.print("KpB"); Serial.print(","); Serial.print("KiB"); Serial.print(","); Serial.print("KdB"); Serial.print(","); Serial.print("setpointB"); Serial.print(","); Serial.print("FEEDFWDB"); Serial.print("\n");
+//   Serial.print(KpA); Serial.print(","); Serial.print(KiA); Serial.print(","); Serial.print(KdA); Serial.print(","); Serial.print(setpointA); Serial.print(","); Serial.print(FEEDFWDA); Serial.print(",");
+//   Serial.print(KpB); Serial.print(","); Serial.print(KiB); Serial.print(","); Serial.print(KdB); Serial.print(","); Serial.print(setpointB); Serial.print(","); Serial.print(FEEDFWDB); Serial.print("\n");
  
- Serial.print("inputA"); Serial.print(","); Serial.print("outputA"); Serial.print(","); Serial.print("a_adjust"); Serial.print(","); 
-  Serial.print("inputB"); Serial.print(","); Serial.print("outputB"); Serial.print(","); Serial.print("b_adjust"); Serial.print("\n"); 
+//  Serial.print("inputA"); Serial.print(","); Serial.print("outputA"); Serial.print(","); Serial.print("a_adjust"); Serial.print(","); 
+//   Serial.print("inputB"); Serial.print(","); Serial.print("outputB"); Serial.print(","); Serial.print("b_adjust"); Serial.print("\n"); 
  }
 
  void printUpdates() {
@@ -115,7 +118,6 @@ const char STOP = 's';
  }
  
  void process_data (const char* data) {
-  Serial.print("Processing: "); Serial.print(data); Serial.print("\n");
   char changeVar = data[0];
   if (changeVar == 'p') {
     KpA = KpB = String(data).substring(1).toFloat();
@@ -130,7 +132,7 @@ const char STOP = 's';
         standbyMotors(true);
   }
   else if (changeVar == 's') {
-    parseNewSetpointsIn(String(data).substring(1));
+    parseNewSetpoints(String(data).substring(1));
   }
     motorA.SetTunings(KpA, KiA, KdA);
     motorB.SetTunings(KpB, KiB, KdB);
@@ -230,6 +232,7 @@ void setNewSetpointMotorA(float setpoint, char dir) {
   else {
     a_adjust = FEEDFWDA;
   }
+  setpointA = setpoint;
   motorA.SetSetpoint(setpoint);
   setADir(dir);
 }
@@ -241,6 +244,7 @@ void setNewSetpointMotorB(float setpoint, char dir) {
   else {
     b_adjust = FEEDFWDB;
   }
+  setpointB = setpoint;
   motorB.SetSetpoint(setpoint);
   setBDir(dir);
 }
@@ -325,36 +329,32 @@ void initPWM(){
 /***********************************************************
  * ROS                                                     *
  ***********************************************************/
-// void generic_callback(const eyes::Generic& generic_msg) {
-//   if (generic_msg.left_forward) {
-//     setLeftMotorDir(FWD);
-//   }
-//   else {
-//     setLeftMotorDir(BWD);
-//   }
-//   if (generic_msg.right_forward) {
-//     setRightMotorDir(FWD);
-//   }
-//   else {
-//     setRightMotorDir(BWD);
-//   }
-//   analogWrite(LEFT_MOTOR, generic_msg.left_speed);
-//   analogWrite(RIGHT_MOTOR, generic_msg.right_speed);
+void generic_callback(const eyes::Generic& generic_msg) {
+  char leftdir = generic_msg.left_forward ? FWD : BWD;
+  char rightdir = generic_msg.right_forward ? FWD : BWD;
+  if (generic_msg.left_speed < 0.001) {
+    leftdir = STOP;
+  }
+  if (generic_msg.right_speed < 0.001) {
+    rightdir = STOP;
+  }
+  setNewSetpointMotorA(generic_msg.left_speed, leftdir);
+  setNewSetpointMotorB(generic_msg.right_speed, rightdir);
 
-//   return;
-// }
+  return;
+}
 
 /***********************************************************
  * SETUP & LOOP                                            *
  ***********************************************************/
-// ros::Subscriber<eyes::Generic> generic_sub("generic_feed", &generic_callback);
+ros::Subscriber<eyes::Generic> generic_sub("generic_feed", &generic_callback);
 
 void setup(){
   // Set up ROS
-  // nh.initNode();
-  // nh.advertise(pubR);
-  // nh.advertise(pubL);
-  // nh.subscribe(generic_sub);
+  nh.initNode();
+  nh.advertise(pubR);
+  nh.advertise(pubL);
+  nh.subscribe(generic_sub);
 
   // Initialize pins and value ranges
  initMotors();
@@ -362,22 +362,22 @@ void setup(){
  initPWM();
 
   // Connect to Arduino serial
- Serial.begin(115200);
- while(!Serial){
-  // wait for serial to start
- }
+//  Serial.begin(115200);
+//  while(!Serial){
+//   // wait for serial to start
+//  }
  
 //setADir(FWD);
 // setBDir(FWD);
-
-// for (int i = 0; i <= 250; i+=10) {
+//
+// for (int i = 100; i >= 0; i-=10) {
 //   Serial.print(i); Serial.print("\n");
 //   moveA(i);
 //   moveB(i);
 //   delay(5000);
 // }
 
-printPID();
+// printPID();
 
 }
 
@@ -389,20 +389,20 @@ void loop(){
   moveA(max(0, min(255, (int)outputA + a_adjust)));
   moveB(max(0, min(255, (int)outputB + b_adjust)));
 
-  while (Serial.available() > 0) {
-    processIncomingByte(Serial.read());
-  }
+  // while (Serial.available() > 0) {
+  //   processIncomingByte(Serial.read());
+  // }
 
-  printUpdates();
+  // printUpdates();
  
-  // int32_msg_R.data = countR;
-  // int32_msg_L.data = countL;
-  // pubR.publish(&int32_msg_R);
-  // pubL.publish(&int32_msg_L);
+  int32_msg_R.data = countR;
+  int32_msg_L.data = countL;
+  pubR.publish(&int32_msg_R);
+  pubL.publish(&int32_msg_L);
 
   // // TODO: check if this will cause issues
-  // nh.spinOnce();
-  // delay(10);
+  nh.spinOnce();
+  delay(1);
 
 
   if (storeB != outputB){
@@ -435,6 +435,19 @@ void isr_A(){
     startTimeA = nowTime;
     countIntA = 0;
   }
+  if (digitalRead(ENCA) == HIGH) {
+    if (digitalRead(STBYA) == LOW) {
+      --countL;
+    } else {
+      ++countL;
+    }
+  } else {
+    if (digitalRead(STBYA) == LOW) {
+      ++countL;
+    } else {
+      --countL;
+    }
+  }
 }
 
 void isr_B(){
@@ -444,5 +457,19 @@ void isr_B(){
     inputB = (float) encoderConversion * (1.0 / (float)(nowTime - startTimeB));
     startTimeB = nowTime;
     countIntB = 0;
+  }
+  
+  if (digitalRead(ENCB) == HIGH) {
+    if (digitalRead(STBYB) == LOW) {
+      ++countR;
+    } else {
+      --countR;
+    }
+  } else {
+    if (digitalRead(STBYB) == LOW) {
+      --countR;
+    } else {
+      ++countR;
+    }
   }
 }
