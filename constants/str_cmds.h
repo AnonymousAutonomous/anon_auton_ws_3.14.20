@@ -23,7 +23,7 @@ enum AutonomousCmd {
     GO 		,
 };
 
-static const std::unordered_map<std::string, AutonomousCmd> AUTOCMD_STRING_TO_ENUM = {
+static std::unordered_map<std::string, AutonomousCmd> AUTOCMD_STRING_TO_ENUM = {
     {"RREVERSE", RREVERSE},
     {"LREVERSE" ,	LREVERSE},
     {"LCW" , LCW},
