@@ -6,9 +6,6 @@
     <rosparam command="load" file="$(find config_manager)/configs/ports/active.yaml"/>
   </node>
 
-  <node name="simple_motors" pkg="simple_motors" type="new_trigger">
-  </node>
-
   <include file="$(find obstacle_detector)/launch/myNodes3.launch"/>
 
   <rosparam command="load" file="$(find mylidar)/my_laser_config.yaml"/>
