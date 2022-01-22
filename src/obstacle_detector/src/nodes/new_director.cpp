@@ -1,9 +1,14 @@
 #include "ros/ros.h"
 #include <obstacle_detector/Obstacles.h>
 #include "std_msgs/String.h"
+#include "../../../../constants/str_cmds.h"
 #include "../../../../constants/pies.h"
 #include <cmath>
 #include <algorithm>
+
+// All available autonomous commands
+std::map<std::string, std::string> commands_in;
+std::unordered_map<AutonomousCmd, std::string> commands;
 
 Pie new_director_standard(
         {
@@ -12,9 +17,9 @@ Pie new_director_standard(
                 {5*M_PI/4, 7*M_PI/4, 1}
         },
         {
-                {{0}, STOP},
-                {{1}, SPOOK},
-                {{2}, SPOOK}
+                {{0}, commands[STOP]},
+                {{1}, commands[SPOOK]},
+                {{2}, commands[SPOOK]}
         }
 );
 
@@ -90,6 +95,16 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 int main (int argc, char** argv) {
   ros::init(argc, argv, "director");
   ros::NodeHandle nh;
+  if (nh.getParam("autonomous", commands_in)) {
+        for (auto i = commands_in.begin(); i != commands_in.end(); i++) {
+            commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
+        }
+        ROS_INFO("Autonomous commands have been loaded for new director.");
+    }
+    else {
+        ROS_INFO("You must load autonomous commands before using new director.");
+        return 1;
+    }
   ros::Subscriber sub = nh.subscribe("raw_obstacles", 10, dirCallback);
 
   ros::NodeHandle oi;
