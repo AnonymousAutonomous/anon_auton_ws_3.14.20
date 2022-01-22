@@ -182,7 +182,7 @@ void setNewSetpointMotorA(float setpoint, char dir) {
   if (!AreSame(signed_setpoint, setpointA)) {
     motorA.SetSetpoint(setpoint);
     setADir(dir);
-    setpointA = signed_setpoint
+    setpointA = signed_setpoint;
   }
   
 }
