@@ -234,7 +234,7 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
       switch (queue_state) {
         case 'A':
 	{
-	  msg.data == STOP ? ++stop_counter : ++move_counter;
+	  msg.data == commands[STOP] ? ++stop_counter : ++move_counter;
 	  camera_state >= 4 ? ++turn_counter : ++proc_counter;
 	  // camera trans
 	  // LIDAR trans
@@ -295,7 +295,7 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
       switch (queue_state) {
         case 'A':
 	{
-	  msg.data == STOP ? ++stop_counter : ++move_counter;
+	  msg.data == commands[STOP] ? ++stop_counter : ++move_counter;
 	  reset_camera_counters();
 	  // LIDAR trans
 	  if (stop_counter >= stop_limit) {
@@ -333,7 +333,7 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
       switch (queue_state) {
         case 'A':
 	{
-	  msg.data == STOP ? ++stop_counter : ++move_counter;
+	  msg.data == commands[STOP] ? ++stop_counter : ++move_counter;
 	  reset_camera_counters();
 	  // LIDAR trans
 	  if (stop_counter >= stop_limit) {
@@ -374,7 +374,7 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
       switch (queue_state) {
         case 'A':
 	{
-	  msg.data == STOP ? ++stop_counter : ++move_counter;
+	  msg.data == commands[STOP] ? ++stop_counter : ++move_counter;
 	  reset_camera_counters();
 	  // LIDAR trans
 	  if (stop_counter >= stop_limit) {
@@ -412,7 +412,7 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
       switch (queue_state) {
         case 'A':
 	{
-	  msg.data == STOP ? ++stop_counter : ++move_counter;
+	  msg.data == commands[STOP] ? ++stop_counter : ++move_counter;
 	  reset_camera_counters();
 	  // LIDAR trans
 	  if (stop_counter >= stop_limit) {

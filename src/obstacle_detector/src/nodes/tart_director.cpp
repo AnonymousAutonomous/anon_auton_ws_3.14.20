@@ -114,7 +114,7 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 
   msg.data = ss.str();
 
-  if (msg.data == STOP) {
+  if (msg.data == commands[STOP]) {
   	++stop_counter;
   }
   else {
