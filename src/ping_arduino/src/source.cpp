@@ -4,9 +4,23 @@
 #include <string>
 #include <sstream>
 
+std::unordered_map<std::string, std::string> commands_in;
+std::unordered_map<AutonomousCmd, std::string> commands;
+
 int main(int argc, char** argv) {
 	ros::init(argc, argv, "source");
 	ros::NodeHandle nh;
+	if (nh.getParam("autonomous", commands_in)) {
+        for (auto i = commands_in.begin(); i != commands_in.end(); i++)
+            commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
+        }
+        ROS_INFO("Autonomous commands have been loaded for ping arduino source.");
+    }
+    else {
+        ROS_INFO("You must load autonomous commands before using ping arduino source.");
+        return 1;
+    }
+
 	ros::Publisher pub = nh.advertise<std_msgs::String>("driver_output", 0);
 	ros::Rate loop_rate(10);
 
@@ -15,7 +29,7 @@ int main(int argc, char** argv) {
 	while (ros::ok()) {
 		std_msgs::String msg;
 		std::stringstream ss;
-		ss << FWD;
+		ss << commands[FWD];
 		// ss << count;
 		msg.data = ss.str();
 
