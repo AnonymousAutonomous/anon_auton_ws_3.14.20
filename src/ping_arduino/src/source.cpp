@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 	ros::init(argc, argv, "source");
 	ros::NodeHandle nh;
 	if (nh.getParam("autonomous", commands_in)) {
-        for (auto i = commands_in.begin(); i != commands_in.end(); i++)
+        for (auto i = commands_in.begin(); i != commands_in.end(); i++) {
 			AutonomousCmd cmd = AUTOCMD_STRING_TO_ENUM[i->first];
             commands[cmd] = i->second;
         }
