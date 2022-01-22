@@ -49,7 +49,7 @@ int main(int argc, char** argv)
 
     ros::NodeHandle nh;
     if (nh.getParam("autonomous", commands_in)) {
-        for (auto i = commands_in.begin(); i != commands_in.end(); i++)
+        for (auto i = commands_in.begin(); i != commands_in.end(); i++) {
             commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
         }
         ROS_INFO("Autonomous commands have been loaded for camera.");
