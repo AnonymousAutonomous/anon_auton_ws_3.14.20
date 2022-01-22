@@ -227,7 +227,7 @@ void standbyMotors(bool standby){
 
 bool AreSame(double a, double b)
 {
-    return fabs(a - b) < EPSILON;
+    return fabs(a - b) < 0.001;
 }
 
 void setNewSetpointMotorA(float setpoint, char dir) {
@@ -238,9 +238,12 @@ void setNewSetpointMotorA(float setpoint, char dir) {
     a_adjust = FEEDFWDA;
   }
   if (!AreSame(setpoint, setpointA)) {
-    setpointA = setpoint;
     motorA.SetSetpoint(setpoint);
     setADir(dir);
+    setpointA = setpoint;
+    if (dir == BWD) {
+      setpointA = -1 * setpointA;
+    }
   }
   
 }
@@ -258,6 +261,9 @@ void setNewSetpointMotorB(float setpoint, char dir) {
       setpointB = setpoint;
       motorB.SetSetpoint(setpoint);
       setBDir(dir);
+      if (dir == BWD) {
+      setpointB = -1 * setpointB;
+      }
     }  
 }
 
@@ -414,7 +420,7 @@ void loop(){
 
   // // TODO: check if this will cause issues
   nh.spinOnce();
-  delay(1);
+  delay(10);
 
 
   if (storeB != outputB){
