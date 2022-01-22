@@ -1,8 +1,8 @@
 // test update???
 #include <string>
 
-static const std::string LEFT 	= "0Hf3.0f0.0";
-static const std::string RIGHT 	= "0Hf0.0f3.0";
+static const std::string LEFT 	= "0Hf0.0f3.0";
+static const std::string RIGHT 	= "0Hf3.0f0.0";
 static const std::string FWD 	= "0Hf2.0f2.0";
 static const std::string FFWD 	= "0Hf3.0f3.0";
 static const std::string FWDL 	= "0Hf1.5f3.0";
