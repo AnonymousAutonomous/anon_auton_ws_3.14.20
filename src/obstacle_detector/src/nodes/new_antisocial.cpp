@@ -148,13 +148,13 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
   if (result == "") {
     ROS_INFO("FINDING WALL...");
     if (closest_midpt.first < -4 * abs(closest_midpt.second)) {
-      ss << FWD;
+      ss << commands[FWD];
     }
     else if (closest_midpt.second > 0) {
-      ss << PIVOTR; //CW
+      ss << commands[PIVOTR]; //CW
     }
     else {
-      ss << PIVOTL; //CCW
+      ss << commands[PIVOTL]; //CCW
     }
   }
   else {

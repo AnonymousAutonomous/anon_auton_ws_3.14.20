@@ -20,17 +20,17 @@ std::pair<std_msgs::String, std_msgs::String> command_pair;
 bool favor_right = true;
 
 // All available autonomous commands
-std::map<std::string, std::string> commands_in;
-std::unordered_map<AutonomousCmd, std::string> commands;
+std::map<std::string, std::string> auto_commands_in;
+std::unordered_map<AutonomousCmd, std::string> auto_commands;
 
 
 int main(int argc, char** argv) {
     ros::init(argc, argv, "baby_trilogy");
 
     ros::NodeHandle nh;
-	if (nh.getParam("autonomous", commands_in)) {
-        for (auto i = commands_in.begin(); i != commands_in.end(); i++) {
-            commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
+	if (nh.getParam("autonomous", auto_commands_in)) {
+        for (auto i = auto_commands_in.begin(); i != auto_commands_in.end(); i++) {
+            auto_commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
         }
         ROS_INFO("Autonomous commands have been loaded for baby trilogy.");
     }
@@ -61,8 +61,8 @@ void command_compare() {
 	    	return;
 	    }
 	    else {
-		if (priority.data == commands[RREVERSE] && !favor_right) {
-		    priority.data = commands[LREVERSE];
+		if (priority.data == auto_commands[RREVERSE] && !favor_right) {
+		    priority.data = auto_commands[LREVERSE];
 		}
 	    	driver_pub.publish(priority);
 		ROS_INFO("SELECTED: %s", priority.data.c_str());
@@ -98,8 +98,8 @@ void command_compare() {
 	    	return;
 	    }
 	    else {
-		if (priority.data == commands[RREVERSE] && !favor_right) {
-		    priority.data = commands[LREVERSE];
+		if (priority.data == auto_commands[RREVERSE] && !favor_right) {
+		    priority.data = auto_commands[LREVERSE];
 		}
 	    	driver_pub.publish(priority);
 		ROS_INFO("SELECTED: %s", priority.data.c_str());
@@ -114,16 +114,16 @@ void command_compare() {
 }
 
 void camera_callback(const std_msgs::String& commands) {
-    if (commands.data == commands[PIVOTR] ||
-	commands.data == commands[RCP] ||
-	commands.data == commands[VEERR] ||
-	commands.data == commands[FPIVOTR]) {
+    if (commands.data == auto_commands[PIVOTR] ||
+	commands.data == auto_commands[RCP] ||
+	commands.data == auto_commands[VEERR] ||
+	commands.data == auto_commands[FPIVOTR]) {
     	favor_right = true;
     }
-    else if (commands.data == commands[PIVOTL] ||
-        commands.data == commands[LCP] ||
-	commands.data == commands[VEERL] ||
-	commands.data == commands[FPIVOTL]) {
+    else if (commands.data == auto_commands[PIVOTL] ||
+        commands.data == auto_commands[LCP] ||
+	commands.data == auto_commands[VEERL] ||
+	commands.data == auto_commands[FPIVOTL]) {
     	favor_right = false;
     }
     else {
