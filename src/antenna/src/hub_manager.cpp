@@ -9,10 +9,12 @@
 
 enum class chair_broadcast_status : char {ready, exclude, success, failure};
 enum class chair_stuck_status : char {stuck, not_stuck};
+enum class chair_trapped_status : char {trapped, not_trapped};
 
 struct chair_status {
 	chair_broadcast_status cbs = chair_broadcast_status::success;
 	chair_stuck_status css = chair_stuck_status::not_stuck;
+	chair_trapped_status cts = chair_trapped_status::not_trapped;
 	// being user-controlled? low battery? surrounded? current command? connection break?
 };
 
@@ -35,6 +37,14 @@ void overwrite_excluded_chairs() {
 	}
 }
 
+void overwrite_trapped_chairs() {
+	for (chair_status& status : chair_status_vector) {
+		if (status.cts == chair_trapped_status::trapped) {
+			status.cts = chair_trapped_status::not_trapped;
+		}
+	}
+}
+
 bool all_chairs_are_done() {
 	for (chair_status& status : chair_status_vector) {
 		if (status.cbs == chair_broadcast_status::ready) {
@@ -42,6 +52,15 @@ bool all_chairs_are_done() {
 		}
 	}
 	return true;
+}
+
+bool a_chair_is_trapped() {
+	for (chair_status& status : chair_status_vector) {
+		if (status.cts == chair_trapped_status::trapped) {
+			return true;
+		}
+	}
+	return false;
 }
 
 enum class state : char {outside, awaiting_confirmation, awaiting_status};
@@ -87,6 +106,17 @@ void receive_callback(const std_msgs::String& msg) {
 			}
 			break;
 		}
+		case 'T':
+		{
+			chair_status_vector[chair_number].cts = static_cast<chair_trapped_status>(property_value);
+			if (chair_status_vector[chair_number].cts == chair_trapped_status::trapped) {
+				ROS_INFO("CHAIR %d IS TRAPPED", chair_number);
+			}
+			if (chair_status_vector[chair_number].cts == chair_trapped_status::not_trapped) {
+				ROS_INFO("CHAIR %d IS NOT TRAPPED", chair_number);
+			}
+			break;
+		}
 		default:
 		{
 			ROS_INFO("INVALID CHAIR PROPERTY");
@@ -122,6 +152,17 @@ int main (int argc, char** argv) {
 		switch (mode) {
 			case state::outside:
 			{
+				if (a_chair_is_trapped()) {
+					std_msgs::String msg;
+					msg.data = "0Bf150r150t5";
+					transmit_queue = std::queue<std_msgs::String>();
+					transmit_queue.push(msg);
+					transmit_queue.push(msg);
+					transmit_queue.push(msg);
+					transmit_queue.push(msg);
+					msg.data = "0Bend";
+					transmit_queue.push(msg);
+				}
 				if (!transmit_queue.empty()) {
 					mode = state::awaiting_confirmation;
 					// also transmit start of broadcast
@@ -162,6 +203,7 @@ int main (int argc, char** argv) {
 				msg.data = "0Bfinish";
 				hub_manager_pub.publish(msg);
 				ROS_INFO("BROADCAST IS FINISHED");
+				overwrite_trapped_chairs();
 				overwrite_excluded_chairs();
 				break;
 			}

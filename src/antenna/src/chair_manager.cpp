@@ -10,8 +10,9 @@
 // #define NUMBER_OF_CHAIRS 1
 
 // for reference
-// enum chair_broadcast_status : char {ready, success, failure};
-// enum chair_stuck_status : char {stuck, not_stuck};
+// enum class chair_broadcast_status : char {ready, success, failure};
+// enum class chair_stuck_status : char {stuck, not_stuck};
+// enum class chair_trapped_status : char {trapped, not_trapped};
 
 ros::Publisher chair_manager_pub;
 // ros::Publisher test_pub;

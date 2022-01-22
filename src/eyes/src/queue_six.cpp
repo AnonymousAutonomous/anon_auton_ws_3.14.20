@@ -1,4 +1,5 @@
 // nice, seems good to me? I think so, but just in case
+// TODO: restore flag_T
 
 #include "ros/ros.h"
 #include "std_msgs/String.h"

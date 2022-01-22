@@ -1,3 +1,5 @@
+// nice
+
 #include <iostream>
 #include <chrono> 
 #include <future>
@@ -5,6 +7,7 @@
 #include "ros/ros.h"
 #include "sensor_msgs/Image.h"
 #include "std_msgs/String.h"
+#include "std_msgs/Empty.h"
 #include "../../../constants/str_cmds.h"
 #include <string>
 
@@ -27,7 +30,10 @@ double top_percent_threshold = 0.20;
 bool favorRight = false; 
 double num_middle_pixels = 100800;
 
+bool listening = true;
+
 void chatterCallBack(const sensor_msgs::Image& view);
+void pauseCallback(const std_msgs::Empty empty_msg);
 
 std::string GetLineFromCin() {
     std::string line; 
@@ -39,10 +45,14 @@ std::string GetLineFromCin() {
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "camera_process");
+
+    ros::AsyncSpinner spinner(0);
+    spinner.start();
     
     ros::NodeHandle Iris; //subscriber
     ros::NodeHandle Cornea; //publisher
     ros::Subscriber Handle = Iris.subscribe("/cv_camera/image_mono", 10, chatterCallBack); // 10 was 1000
+    ros::Subscriber eoc_sub = Iris.subscribe("end_of_choreo", 1000, pauseCallback);
     //george = Cornea.advertise<std_msgs::String>("cameron", 1000);
     george = Iris.advertise<std_msgs::String>("cameron", 10); // 10 was 1000
     //ros::spin();
@@ -94,7 +104,7 @@ std::cout << "TOP: " << std::to_string(top_percent_threshold) << std::endl;
 
             
 
-            ros::spinOnce(); // ros::spin(); ?? 
+            // ros::spinOnce(); ros::spin(); // uses async spinner now 
 
 //delay_rate.sleep();
 
@@ -102,8 +112,14 @@ std::cout << "TOP: " << std::to_string(top_percent_threshold) << std::endl;
     }
 }
 
+void pauseCallback(const std_msgs::Empty empty_msg) {
+	listening = true;
+}
+
 void chatterCallBack(const sensor_msgs::Image& view)
 {
+    if (!listening) return;
+
     double topCount = 0;
     double leftCount = 0;
     double rightCount = 0;
@@ -167,12 +183,14 @@ void chatterCallBack(const sensor_msgs::Image& view)
     }
     else if(topAverage > top_percent_threshold && leftAverage > side_percent_threshold && rightAverage <= side_percent_threshold) // white in top, left
     {
-        result = PIVOTR;
+        result = RCP; // PIVOTR;
+	listening = false;
         favorRight = true;
     }
     else if(topAverage > top_percent_threshold && leftAverage <= side_percent_threshold && rightAverage > side_percent_threshold) // white in top, right
     {
-        result = PIVOTL;
+        result = LCP; // PIVOTL;
+	listening = false;
         favorRight = false;
     }
     else if(topAverage > top_percent_threshold && leftAverage <= side_percent_threshold && rightAverage <= side_percent_threshold) // white in top
@@ -204,6 +222,7 @@ void chatterCallBack(const sensor_msgs::Image& view)
     }
      
     if (middleAverage > top_percent_threshold) { // crossed over line --> backup and then pivot
+	listening = true; // added in case choreo is overwritten by FPIVOTX
         if (favorRight) {
             result = FPIVOTR;
         }
