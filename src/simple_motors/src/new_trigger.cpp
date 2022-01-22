@@ -4,9 +4,9 @@
 #include "std_msgs/String.h"
 #include <string>
 #include <sstream>
-#include <unordered_map>
+#include <map>
 
-std::unordered_map<std::string, std::string> commands;
+std::map<std::string, std::string> commands;
 
 int main(int argc, char** argv) {
   ros::init(argc, argv, "new_trigger");

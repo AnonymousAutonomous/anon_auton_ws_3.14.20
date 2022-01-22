@@ -11,6 +11,8 @@
 #include "std_msgs/UInt8.h"
 #include "../../../constants/str_cmds.h"
 #include <string>
+#include <map>
+#include <unordered_map>
 
 ros::Publisher george; //the variable formerly known as signal
 ros::Publisher debug;
@@ -37,7 +39,7 @@ bool listening = true;
 void chatterCallBack(const sensor_msgs::Image& view);
 void pauseCallback(const std_msgs::Empty empty_msg);
 
-std::unordered_map<std::string, std::string> commands_in;
+std::map<std::string, std::string> commands_in;
 std::unordered_map<AutonomousCmd, std::string> commands;
 
 int main(int argc, char** argv)
