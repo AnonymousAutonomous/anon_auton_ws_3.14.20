@@ -142,59 +142,59 @@ void chatterCallBack(const sensor_msgs::Image& view)
     if(topAverage > top_percent_threshold && leftAverage > side_percent_threshold && rightAverage > side_percent_threshold) // white in top, left, right
     {
         if (favorRight) {
-            result = commands[AutonomousCmd.PIVOTR];
+            result = commands[PIVOTR];
         } else {
-            result = commands[AutonomousCmd.PIVOTL];
+            result = commands[PIVOTL];
         }
         
     }
     else if(topAverage > top_percent_threshold && leftAverage > side_percent_threshold && rightAverage <= side_percent_threshold) // white in top, left
     {
-        result = commands[AutonomousCmd.RCP]; // PIVOTR;
+        result = commands[RCP]; // PIVOTR;
 	listening = false;
         favorRight = true;
     }
     else if(topAverage > top_percent_threshold && leftAverage <= side_percent_threshold && rightAverage > side_percent_threshold) // white in top, right
     {
-        result = commands[AutonomousCmd.LCP]; // PIVOTL;
+        result = commands[LCP]; // PIVOTL;
 	listening = false;
         favorRight = false;
     }
     else if(topAverage > top_percent_threshold && leftAverage <= side_percent_threshold && rightAverage <= side_percent_threshold) // white in top
     {
         if (favorRight) {
-            result = commands[AutonomousCmd.PIVOTR];
+            result = commands[PIVOTR];
         }
         else {
-            result = commands[AutonomousCmd.PIVOTL];
+            result = commands[PIVOTL];
         }
     }
     else if(topAverage <= top_percent_threshold && leftAverage > side_percent_threshold && rightAverage > side_percent_threshold) // white in left, right
     {
-        result = commands[AutonomousCmd.FWD];
+        result = commands[FWD];
     }
     else if(topAverage <= top_percent_threshold && leftAverage > side_percent_threshold && rightAverage <= side_percent_threshold) // white in left
     {
-        result = commands[AutonomousCmd.VEERR];
+        result = commands[VEERR];
         favorRight = true;
     }
     else if(topAverage <= top_percent_threshold && leftAverage <= side_percent_threshold && rightAverage > side_percent_threshold) // white in right
     {
-        result = commands[AutonomousCmd.VEERL];
+        result = commands[VEERL];
         favorRight = false;
     }
     else // no white
     {
-        result = commands[AutonomousCmd.GO]; //f = fwd but with lower priority
+        result = commands[GO]; //f = fwd but with lower priority
     }
      
     if (middleAverage > top_percent_threshold) { // crossed over line --> backup and then pivot
 	listening = true; // added in case choreo is overwritten by FPIVOTX
         if (favorRight) {
-            result = commands[AutonomousCmd.FPIVOTR];
+            result = commands[FPIVOTR];
         }
         else {
-            result = commands[AutonomousCmd.FPIVOTL];
+            result = commands[FPIVOTL];
         }
     }
 
