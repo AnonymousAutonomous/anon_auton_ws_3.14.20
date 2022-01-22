@@ -49,13 +49,13 @@ class Generic {
         this.left_speed = initObj.left_speed
       }
       else {
-        this.left_speed = 0;
+        this.left_speed = 0.0;
       }
       if (initObj.hasOwnProperty('right_speed')) {
         this.right_speed = initObj.right_speed
       }
       else {
-        this.right_speed = 0;
+        this.right_speed = 0.0;
       }
       if (initObj.hasOwnProperty('timed')) {
         this.timed = initObj.timed
@@ -81,9 +81,9 @@ class Generic {
     // Serialize message field [right_forward]
     bufferOffset = _serializer.bool(obj.right_forward, buffer, bufferOffset);
     // Serialize message field [left_speed]
-    bufferOffset = _serializer.uint8(obj.left_speed, buffer, bufferOffset);
+    bufferOffset = _serializer.float32(obj.left_speed, buffer, bufferOffset);
     // Serialize message field [right_speed]
-    bufferOffset = _serializer.uint8(obj.right_speed, buffer, bufferOffset);
+    bufferOffset = _serializer.float32(obj.right_speed, buffer, bufferOffset);
     // Serialize message field [timed]
     bufferOffset = _serializer.bool(obj.timed, buffer, bufferOffset);
     // Serialize message field [duration]
@@ -102,9 +102,9 @@ class Generic {
     // Deserialize message field [right_forward]
     data.right_forward = _deserializer.bool(buffer, bufferOffset);
     // Deserialize message field [left_speed]
-    data.left_speed = _deserializer.uint8(buffer, bufferOffset);
+    data.left_speed = _deserializer.float32(buffer, bufferOffset);
     // Deserialize message field [right_speed]
-    data.right_speed = _deserializer.uint8(buffer, bufferOffset);
+    data.right_speed = _deserializer.float32(buffer, bufferOffset);
     // Deserialize message field [timed]
     data.timed = _deserializer.bool(buffer, bufferOffset);
     // Deserialize message field [duration]
@@ -113,7 +113,7 @@ class Generic {
   }
 
   static getMessageSize(object) {
-    return 10;
+    return 16;
   }
 
   static datatype() {
@@ -123,7 +123,7 @@ class Generic {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '7a33c669a022f7fea29ccba33d517b1f';
+    return '436f5f30261c38b114bc3f3bb4a0dea3';
   }
 
   static messageDefinition() {
@@ -132,8 +132,8 @@ class Generic {
     char identifier
     bool left_forward
     bool right_forward
-    uint8 left_speed
-    uint8 right_speed
+    float32 left_speed
+    float32 right_speed
     bool timed
     uint32 duration
     
@@ -171,14 +171,14 @@ class Generic {
       resolved.left_speed = msg.left_speed;
     }
     else {
-      resolved.left_speed = 0
+      resolved.left_speed = 0.0
     }
 
     if (msg.right_speed !== undefined) {
       resolved.right_speed = msg.right_speed;
     }
     else {
-      resolved.right_speed = 0
+      resolved.right_speed = 0.0
     }
 
     if (msg.timed !== undefined) {

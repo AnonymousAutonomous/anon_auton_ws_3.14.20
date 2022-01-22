@@ -25,13 +25,13 @@
    (left_speed
     :reader left_speed
     :initarg :left_speed
-    :type cl:fixnum
-    :initform 0)
+    :type cl:float
+    :initform 0.0)
    (right_speed
     :reader right_speed
     :initarg :right_speed
-    :type cl:fixnum
-    :initform 0)
+    :type cl:float
+    :initform 0.0)
    (timed
     :reader timed
     :initarg :timed
@@ -91,8 +91,16 @@
   (cl:write-byte (cl:ldb (cl:byte 8 0) (cl:slot-value msg 'identifier)) ostream)
   (cl:write-byte (cl:ldb (cl:byte 8 0) (cl:if (cl:slot-value msg 'left_forward) 1 0)) ostream)
   (cl:write-byte (cl:ldb (cl:byte 8 0) (cl:if (cl:slot-value msg 'right_forward) 1 0)) ostream)
-  (cl:write-byte (cl:ldb (cl:byte 8 0) (cl:slot-value msg 'left_speed)) ostream)
-  (cl:write-byte (cl:ldb (cl:byte 8 0) (cl:slot-value msg 'right_speed)) ostream)
+  (cl:let ((bits (roslisp-utils:encode-single-float-bits (cl:slot-value msg 'left_speed))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream))
+  (cl:let ((bits (roslisp-utils:encode-single-float-bits (cl:slot-value msg 'right_speed))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream))
   (cl:write-byte (cl:ldb (cl:byte 8 0) (cl:if (cl:slot-value msg 'timed) 1 0)) ostream)
   (cl:write-byte (cl:ldb (cl:byte 8 0) (cl:slot-value msg 'duration)) ostream)
   (cl:write-byte (cl:ldb (cl:byte 8 8) (cl:slot-value msg 'duration)) ostream)
@@ -104,8 +112,18 @@
     (cl:setf (cl:ldb (cl:byte 8 0) (cl:slot-value msg 'identifier)) (cl:read-byte istream))
     (cl:setf (cl:slot-value msg 'left_forward) (cl:not (cl:zerop (cl:read-byte istream))))
     (cl:setf (cl:slot-value msg 'right_forward) (cl:not (cl:zerop (cl:read-byte istream))))
-    (cl:setf (cl:ldb (cl:byte 8 0) (cl:slot-value msg 'left_speed)) (cl:read-byte istream))
-    (cl:setf (cl:ldb (cl:byte 8 0) (cl:slot-value msg 'right_speed)) (cl:read-byte istream))
+    (cl:let ((bits 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
+    (cl:setf (cl:slot-value msg 'left_speed) (roslisp-utils:decode-single-float-bits bits)))
+    (cl:let ((bits 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
+    (cl:setf (cl:slot-value msg 'right_speed) (roslisp-utils:decode-single-float-bits bits)))
     (cl:setf (cl:slot-value msg 'timed) (cl:not (cl:zerop (cl:read-byte istream))))
     (cl:setf (cl:ldb (cl:byte 8 0) (cl:slot-value msg 'duration)) (cl:read-byte istream))
     (cl:setf (cl:ldb (cl:byte 8 8) (cl:slot-value msg 'duration)) (cl:read-byte istream))
@@ -121,23 +139,23 @@
   "eyes/Generic")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<Generic>)))
   "Returns md5sum for a message object of type '<Generic>"
-  "7a33c669a022f7fea29ccba33d517b1f")
+  "436f5f30261c38b114bc3f3bb4a0dea3")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'Generic)))
   "Returns md5sum for a message object of type 'Generic"
-  "7a33c669a022f7fea29ccba33d517b1f")
+  "436f5f30261c38b114bc3f3bb4a0dea3")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<Generic>)))
   "Returns full string definition for message of type '<Generic>"
-  (cl:format cl:nil "char identifier~%bool left_forward~%bool right_forward~%uint8 left_speed~%uint8 right_speed~%bool timed~%uint32 duration~%~%~%"))
+  (cl:format cl:nil "char identifier~%bool left_forward~%bool right_forward~%float32 left_speed~%float32 right_speed~%bool timed~%uint32 duration~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'Generic)))
   "Returns full string definition for message of type 'Generic"
-  (cl:format cl:nil "char identifier~%bool left_forward~%bool right_forward~%uint8 left_speed~%uint8 right_speed~%bool timed~%uint32 duration~%~%~%"))
+  (cl:format cl:nil "char identifier~%bool left_forward~%bool right_forward~%float32 left_speed~%float32 right_speed~%bool timed~%uint32 duration~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <Generic>))
   (cl:+ 0
      1
      1
      1
-     1
-     1
+     4
+     4
      1
      4
 ))
