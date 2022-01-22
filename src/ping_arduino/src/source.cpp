@@ -3,8 +3,10 @@
 #include "../../../constants/str_cmds.h"
 #include <string>
 #include <sstream>
+#include <map>
+#include <unordered_map>
 
-std::unordered_map<std::string, std::string> commands_in;
+std::map<std::string, std::string> commands_in;
 std::unordered_map<AutonomousCmd, std::string> commands;
 
 int main(int argc, char** argv) {
