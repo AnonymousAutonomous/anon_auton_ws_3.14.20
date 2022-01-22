@@ -2,6 +2,7 @@
 #include <obstacle_detector/Obstacles.h>
 #include "std_msgs/String.h"
 #include "std_msgs/Empty.h"
+#include "../../../../constants/str_cmds.h"
 #include "../../../../constants/tarts.h"
 #include "../../../../constants/choreos.h"
 #include <cmath>
