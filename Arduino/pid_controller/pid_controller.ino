@@ -66,7 +66,7 @@ const unsigned long SAMPLE_TIME = 10;  // time between PID updates
 const unsigned long INT_COUNT = 100;     // 100 encoder ticks for accurate timing
 
 // !!!!!!!!!!!!! SETPOINTS MUST BE POSITIVE !!!!!!!!!!!!!!
-double setpointA = 2.0;         // setpoint is inches / second
+double setpointA = 0.0;         // setpoint is inches / second
 double setpointB = setpointA;   // setpoint is inches / second
 
 double inputA = 0;              // input is inches / second
@@ -225,6 +225,11 @@ void standbyMotors(bool standby){
           // motorB.SetOutputLimits(MIN_PWM, MAX_PWM);
           // }
 
+bool AreSame(double a, double b)
+{
+    return fabs(a - b) < EPSILON;
+}
+
 void setNewSetpointMotorA(float setpoint, char dir) {
   if (dir == STOP) {
     a_adjust = 0;
@@ -232,21 +237,28 @@ void setNewSetpointMotorA(float setpoint, char dir) {
   else {
     a_adjust = FEEDFWDA;
   }
-  setpointA = setpoint;
-  motorA.SetSetpoint(setpoint);
-  setADir(dir);
+  if (!AreSame(setpoint, setpointA)) {
+    setpointA = setpoint;
+    motorA.SetSetpoint(setpoint);
+    setADir(dir);
+  }
+  
 }
 
 void setNewSetpointMotorB(float setpoint, char dir) {
+  if 
   if (dir == STOP) {
     b_adjust = 0;
   }
   else {
     b_adjust = FEEDFWDB;
   }
-  setpointB = setpoint;
-  motorB.SetSetpoint(setpoint);
-  setBDir(dir);
+    if (!AreSame(setpoint, setpointB)) {
+
+      setpointB = setpoint;
+      motorB.SetSetpoint(setpoint);
+      setBDir(dir);
+    }  
 }
 
 void parseNewSetpoints(String setpointsIn) {
