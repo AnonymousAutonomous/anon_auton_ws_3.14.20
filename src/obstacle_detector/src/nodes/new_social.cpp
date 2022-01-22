@@ -2,10 +2,15 @@
 #include <obstacle_detector/Obstacles.h>
 #include "std_msgs/String.h"
 #include "std_msgs/Empty.h"
+#include "../../../../constants/str_cmds.h"
 #include "../../../../constants/tarts.h"
 #include "../../../../constants/choreos.h"
 #include <cmath>
 #include <algorithm>
+
+// All available autonomous commands
+std::map<std::string, std::string> commands_in;
+std::unordered_map<AutonomousCmd, std::string> commands;
 
 Tart social_standard(
   {
@@ -15,8 +20,8 @@ Tart social_standard(
     {3*M_PI/4, 5*M_PI/4, 1} // 0
   },
   {
-    {{{0},{}}, SPIN},
-    {{{},{0}}, STOP}
+    {{{0},{}}, commands[SPIN]},
+    {{{},{0}}, commands[STOP]}
   }
 );
 
@@ -88,15 +93,15 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
   if (result == "") {
     ROS_INFO("%f,%f", closest_agent.first, closest_agent.second);
     if (closest_agent.first < -4 * abs(closest_agent.second)) {
-      ss << FWD;
+      ss << commands[FWD];
       ROS_INFO("APPROACHING AGENT");
     }
     else if (closest_agent.second > 0) {
-      ss << PIVOTR;
+      ss << commands[PIVOTR];
       ROS_INFO("TURNING CLOCKWISE TOWARD AGENT");
     }
     else {
-      ss << PIVOTL;
+      ss << commands[PIVOTL];
       ROS_INFO("TURNING COUNTER CLOCKWISE TOWARD AGENT");
     }
   }
@@ -112,6 +117,16 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 int main (int argc, char** argv) {
   ros::init(argc, argv, "director");
   ros::NodeHandle nh;
+  if (nh.getParam("autonomous", commands_in)) {
+        for (auto i = commands_in.begin(); i != commands_in.end(); i++) {
+            commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
+        }
+        ROS_INFO("Autonomous commands have been loaded for new social.");
+    }
+    else {
+        ROS_INFO("You must load autonomous commands before using new social.");
+        return 1;
+    }
   ros::Subscriber sub = nh.subscribe("raw_obstacles", 10, dirCallback);
 
   ros::NodeHandle oi;
