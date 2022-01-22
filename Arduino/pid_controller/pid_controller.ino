@@ -242,14 +242,13 @@ void setNewSetpointMotorA(float setpoint, char dir) {
     setADir(dir);
     setpointA = setpoint;
     if (dir == BWD) {
-      setpointA = -1 * setpointA;
+      setpointA = -1 * setpoint;
     }
   }
   
 }
 
 void setNewSetpointMotorB(float setpoint, char dir) {
-  if 
   if (dir == STOP) {
     b_adjust = 0;
   }
@@ -262,7 +261,7 @@ void setNewSetpointMotorB(float setpoint, char dir) {
       motorB.SetSetpoint(setpoint);
       setBDir(dir);
       if (dir == BWD) {
-      setpointB = -1 * setpointB;
+      setpointB = -1 * setpoint;
       }
     }  
 }
