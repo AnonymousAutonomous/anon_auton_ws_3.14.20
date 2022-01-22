@@ -5,6 +5,8 @@
 #include "std_msgs/String.h"
 #include <string>
 #include <sstream>
+#include <map>
+#include <unordered_map>
 
 ros::Publisher driver_pub;
 
@@ -18,7 +20,7 @@ std::pair<std_msgs::String, std_msgs::String> command_pair;
 bool favor_right = true;
 
 // All available autonomous commands
-std::unordered_map<std::string, std::string> commands_in;
+std::map<std::string, std::string> commands_in;
 std::unordered_map<AutonomousCmd, std::string> commands;
 
 
@@ -27,7 +29,7 @@ int main(int argc, char** argv) {
 
     ros::NodeHandle nh;
 	if (nh.getParam("autonomous", commands_in)) {
-        for (auto i = commands_in.begin(); i != commands_in.end(); i++)
+        for (auto i = commands_in.begin(); i != commands_in.end(); i++) {
             commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
         }
         ROS_INFO("Autonomous commands have been loaded for baby trilogy.");
