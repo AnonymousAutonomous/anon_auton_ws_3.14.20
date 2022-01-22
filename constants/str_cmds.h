@@ -43,4 +43,8 @@ static const std::unordered_map<std::string, AutonomousCmd> AUTOCMD_STRING_TO_EN
     {"SLIGHTL" , SLIGHTL},
     {"SPOOK" , SPOOK},
     {"GO" , GO},
+<<<<<<< HEAD
 };
+=======
+}
+>>>>>>> a3e125733334221544ec8fe4e70d19bbb65bbeb6
