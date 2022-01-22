@@ -67,14 +67,14 @@ set(obstacle_detector_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(obstacle_detector_SOURCE_PREFIX /home/anonymous3/anon_auton_ws/src/obstacle_detector)
-  set(obstacle_detector_DEVEL_PREFIX /home/anonymous3/anon_auton_ws/devel)
+  set(obstacle_detector_SOURCE_PREFIX /home/anonymous2/anon_auton_ws/src/obstacle_detector)
+  set(obstacle_detector_DEVEL_PREFIX /home/anonymous2/anon_auton_ws/devel)
   set(obstacle_detector_INSTALL_PREFIX "")
   set(obstacle_detector_PREFIX ${obstacle_detector_DEVEL_PREFIX})
 else()
   set(obstacle_detector_SOURCE_PREFIX "")
   set(obstacle_detector_DEVEL_PREFIX "")
-  set(obstacle_detector_INSTALL_PREFIX /home/anonymous3/anon_auton_ws/install)
+  set(obstacle_detector_INSTALL_PREFIX /home/anonymous2/anon_auton_ws/install)
   set(obstacle_detector_PREFIX ${obstacle_detector_INSTALL_PREFIX})
 endif()
 
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(obstacle_detector_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/anonymous3/anon_auton_ws/devel/include;/home/anonymous3/anon_auton_ws/src/obstacle_detector/include " STREQUAL " ")
+if(NOT "/home/anonymous2/anon_auton_ws/devel/include;/home/anonymous2/anon_auton_ws/src/obstacle_detector/include " STREQUAL " ")
   set(obstacle_detector_INCLUDE_DIRS "")
-  set(_include_dirs "/home/anonymous3/anon_auton_ws/devel/include;/home/anonymous3/anon_auton_ws/src/obstacle_detector/include")
+  set(_include_dirs "/home/anonymous2/anon_auton_ws/devel/include;/home/anonymous2/anon_auton_ws/src/obstacle_detector/include")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -110,7 +110,7 @@ if(NOT "/home/anonymous3/anon_auton_ws/devel/include;/home/anonymous3/anon_auton
         message(FATAL_ERROR "Project 'obstacle_detector' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  ${_report}")
       endif()
     else()
-      message(FATAL_ERROR "Project 'obstacle_detector' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/anonymous3/anon_auton_ws/src/obstacle_detector/${idir}'.  ${_report}")
+      message(FATAL_ERROR "Project 'obstacle_detector' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/anonymous2/anon_auton_ws/src/obstacle_detector/${idir}'.  ${_report}")
     endif()
     _list_append_unique(obstacle_detector_INCLUDE_DIRS ${include})
   endforeach()
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/anonymous3/anon_auton_ws/devel/lib;/opt/ros/melodic/lib)
+    foreach(path /home/anonymous2/anon_auton_ws/devel/lib;/opt/ros/melodic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
