@@ -59,7 +59,6 @@ int main(int argc, char** argv)
     ros::Rate delay_rate(5);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    }
 }
 
 void pauseCallback(const std_msgs::Empty empty_msg) {

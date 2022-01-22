@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
   ros::init(argc, argv, "new_trigger");
   ros::NodeHandle nh;
 
-  if (nh.getParam("handwritten", commands) {
+  if (nh.getParam("handwritten", commands)) {
     ROS_INFO("Handwritten commands have been loaded.");
   }
   else {
