@@ -1,9 +1,10 @@
 .DS_Store
 .vscode
 build/*
-
 devel/*
 
 *.pyc
 
 active.yaml
+*.pdf
+*.csv
