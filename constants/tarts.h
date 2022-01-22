@@ -1,7 +1,6 @@
 #include <cmath>
 #include <utility>
 #include <vector>
-#include "str_cmds.h"
 
 std::pair<double, double> rect_to_polar(double x, double y) {
 	double r = sqrt(x * x + y * y);
