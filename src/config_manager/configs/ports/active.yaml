@@ -1,4 +1,4 @@
-serial_port: '/dev/ttyUSB0'
-antenna_port: '/dev/ttyUSB0'
+antenna_port: '/dev/ttyUSB1'
 device_path: '/dev/video0'
+serial_port: '/dev/ttyUSB0'
 port: '/dev/ttyACM0'

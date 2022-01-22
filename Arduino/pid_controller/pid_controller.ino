@@ -170,6 +170,9 @@ bool AreSame(double a, double b)
 
 void setNewSetpointMotorA(float setpoint, char dir) {
   float signed_setpoint = dir == BWD ? -1 * setpoint : setpoint;
+  if (setpoint < 0.001) {
+    dir = STOP;
+  }
   if (dir == STOP) {
     a_adjust = 0;
   }
@@ -187,6 +190,9 @@ void setNewSetpointMotorA(float setpoint, char dir) {
 void setNewSetpointMotorB(float setpoint, char dir) {
   float signed_setpoint = dir == BWD ? -1 * setpoint : setpoint;
 
+  if (setpoint < 0.001) {
+    dir = STOP;
+  }
   if (dir == STOP) {
     b_adjust = 0;
   }
@@ -346,8 +352,8 @@ void loop(){
 
   // printUpdates();
  
-  int32_msg_R.data = countR;
-  int32_msg_L.data = countL;
+  int32_msg_R.data = setpointB * 2;
+  int32_msg_L.data = setpointA * 2;
   pubR.publish(&int32_msg_R);
   pubL.publish(&int32_msg_L);
 
