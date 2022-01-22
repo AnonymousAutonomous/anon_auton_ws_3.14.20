@@ -37,6 +37,8 @@ bool listening = true;
 void chatterCallBack(const sensor_msgs::Image& view);
 void pauseCallback(const std_msgs::Empty empty_msg);
 
+std::unordered_map<std::string, std::string> commands_in;
+std::unordered_map<AutonomousCmd, std::string> commands;
 
 int main(int argc, char** argv)
 {
@@ -44,6 +46,18 @@ int main(int argc, char** argv)
 
     ros::AsyncSpinner spinner(0);
     spinner.start();
+
+    ros::NodeHandle nh;
+    if (nh.getParam("autonomous", commands_in)) {
+        for (auto i = commands_in.begin(); i != commands_in.end(); i++)
+            commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
+        }
+        ROS_INFO("Autonomous commands have been loaded for camera.");
+    }
+    else {
+        ROS_INFO("You must load autonomous commands before using camera.");
+        return 1;
+    }
     
     ros::NodeHandle Iris; //subscriber
     ros::NodeHandle Cornea; //publisher
@@ -128,59 +142,59 @@ void chatterCallBack(const sensor_msgs::Image& view)
     if(topAverage > top_percent_threshold && leftAverage > side_percent_threshold && rightAverage > side_percent_threshold) // white in top, left, right
     {
         if (favorRight) {
-            result = PIVOTR;
+            result = commands[AutonomousCmd.PIVOTR];
         } else {
-            result = PIVOTL;
+            result = commands[AutonomousCmd.PIVOTL];
         }
         
     }
     else if(topAverage > top_percent_threshold && leftAverage > side_percent_threshold && rightAverage <= side_percent_threshold) // white in top, left
     {
-        result = RCP; // PIVOTR;
+        result = commands[AutonomousCmd.RCP]; // PIVOTR;
 	listening = false;
         favorRight = true;
     }
     else if(topAverage > top_percent_threshold && leftAverage <= side_percent_threshold && rightAverage > side_percent_threshold) // white in top, right
     {
-        result = LCP; // PIVOTL;
+        result = commands[AutonomousCmd.LCP]; // PIVOTL;
 	listening = false;
         favorRight = false;
     }
     else if(topAverage > top_percent_threshold && leftAverage <= side_percent_threshold && rightAverage <= side_percent_threshold) // white in top
     {
         if (favorRight) {
-            result = PIVOTR;
+            result = commands[AutonomousCmd.PIVOTR];
         }
         else {
-            result = PIVOTL;
+            result = commands[AutonomousCmd.PIVOTL];
         }
     }
     else if(topAverage <= top_percent_threshold && leftAverage > side_percent_threshold && rightAverage > side_percent_threshold) // white in left, right
     {
-        result = FWD;
+        result = commands[AutonomousCmd.FWD];
     }
     else if(topAverage <= top_percent_threshold && leftAverage > side_percent_threshold && rightAverage <= side_percent_threshold) // white in left
     {
-        result = VEERR;
+        result = commands[AutonomousCmd.VEERR];
         favorRight = true;
     }
     else if(topAverage <= top_percent_threshold && leftAverage <= side_percent_threshold && rightAverage > side_percent_threshold) // white in right
     {
-        result = VEERL;
+        result = commands[AutonomousCmd.VEERL];
         favorRight = false;
     }
     else // no white
     {
-        result = GO; //f = fwd but with lower priority
+        result = commands[AutonomousCmd.GO]; //f = fwd but with lower priority
     }
      
     if (middleAverage > top_percent_threshold) { // crossed over line --> backup and then pivot
 	listening = true; // added in case choreo is overwritten by FPIVOTX
         if (favorRight) {
-            result = FPIVOTR;
+            result = commands[AutonomousCmd.FPIVOTR];
         }
         else {
-            result = FPIVOTL;
+            result = commands[AutonomousCmd.FPIVOTL];
         }
     }
 
