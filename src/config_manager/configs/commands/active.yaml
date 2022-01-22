@@ -1,0 +1,16 @@
+handwritten: {
+  'left' 	  : "0Hf0.0f3.0",
+  'right' 	: "0Hf3.0f0.0",
+  'fwd' 	  : "0Hf2.0f2.0",
+  'ffwd' 	  : "0Hf3.0f3.0",
+  'fwdl' 	  : "0Hf1.5f3.0",
+  'fwdr' 	  : "0Hf3.0f1.5",
+  'bwd' 	  : "0Hr2.0r2.0",
+  'fbwd' 	  : "0Hr3.0r3.0",
+  'bwdl' 	  : "0Hr1.5r3.0",
+  'bwdr' 	  : "0Hr3.0r1.5",
+  'pivotl'  : "0Hr2.5f2.5",
+  'pivotr'  : "0Hf2.5r2.5",
+  'stop' 	  : "0Hf0.0f0.0",
+  'toggle'  : "0Htoggle",
+}
