@@ -172,7 +172,7 @@ int main (int argc, char** argv) {
   ros::NodeHandle nh;
   ros::Subscriber sub = nh.subscribe("raw_obstacles", 10, dirCallback);
 
-	if (nh.getParam("autonomous", commands_in)) {
+	if (nh.getParam("/autonomous", commands_in)) {
         for (auto i = commands_in.begin(); i != commands_in.end(); i++) {
             commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
         }
