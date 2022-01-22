@@ -117,7 +117,7 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 int main (int argc, char** argv) {
   ros::init(argc, argv, "director");
   ros::NodeHandle nh;
-  if (nh.getParam("autonomous", commands_in)) {
+  if (nh.getParam("/autonomous", commands_in)) {
         for (auto i = commands_in.begin(); i != commands_in.end(); i++) {
             commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
         }

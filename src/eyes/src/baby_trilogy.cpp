@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
     ros::init(argc, argv, "baby_trilogy");
 
     ros::NodeHandle nh;
-	if (nh.getParam("autonomous", auto_commands_in)) {
+	if (nh.getParam("/autonomous", auto_commands_in)) {
         for (auto i = auto_commands_in.begin(); i != auto_commands_in.end(); i++) {
             auto_commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
         }
