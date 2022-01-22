@@ -98,68 +98,6 @@ const char STOP = 's';
 volatile long countR = 0;
 volatile long countL = 0;
 
-/***********************************************************
- * SERIAL / PRINTING HELPER FUNCTIONS                      *
- ***********************************************************/
- void printPID() {
-//   Serial.print("KpA"); Serial.print(","); Serial.print("KiA"); Serial.print(","); Serial.print("KdA"); Serial.print(","); Serial.print("setpointA"); Serial.print(","); Serial.print("FEEDFWDA"); Serial.print(",");
-//   Serial.print("KpB"); Serial.print(","); Serial.print("KiB"); Serial.print(","); Serial.print("KdB"); Serial.print(","); Serial.print("setpointB"); Serial.print(","); Serial.print("FEEDFWDB"); Serial.print("\n");
-//   Serial.print(KpA); Serial.print(","); Serial.print(KiA); Serial.print(","); Serial.print(KdA); Serial.print(","); Serial.print(setpointA); Serial.print(","); Serial.print(FEEDFWDA); Serial.print(",");
-//   Serial.print(KpB); Serial.print(","); Serial.print(KiB); Serial.print(","); Serial.print(KdB); Serial.print(","); Serial.print(setpointB); Serial.print(","); Serial.print(FEEDFWDB); Serial.print("\n");
- 
-//  Serial.print("inputA"); Serial.print(","); Serial.print("outputA"); Serial.print(","); Serial.print("a_adjust"); Serial.print(","); 
-//   Serial.print("inputB"); Serial.print(","); Serial.print("outputB"); Serial.print(","); Serial.print("b_adjust"); Serial.print("\n"); 
- }
-
- void printUpdates() {
- Serial.print(inputA); Serial.print(","); Serial.print(outputA); Serial.print(","); Serial.print(a_adjust); Serial.print(","); 
-  Serial.print(inputB); Serial.print(","); Serial.print(outputB); Serial.print(","); Serial.print(b_adjust); Serial.print("\n"); 
- 
- }
- 
- void process_data (const char* data) {
-  char changeVar = data[0];
-  if (changeVar == 'p') {
-    KpA = KpB = String(data).substring(1).toFloat();
-  }
-  else if (changeVar == 'i') {
-    KiA = KiB = String(data).substring(1).toFloat();
-  }
-  else if (changeVar == 'd') {
-    KdA = KdB = String(data).substring(1).toFloat();
-  }
-  else if (changeVar == 'b') {
-        standbyMotors(true);
-  }
-  else if (changeVar == 's') {
-    parseNewSetpoints(String(data).substring(1));
-  }
-    motorA.SetTunings(KpA, KiA, KdA);
-    motorB.SetTunings(KpB, KiB, KdB);
-
-    printPID();
-
-}
-
-void processIncomingByte(const byte inByte) {
-  static char input_line [MAX_INPUT];
-  static unsigned int input_pos = 0;
-
-  switch (inByte) {
-    case '\n':
-      input_line[input_pos] = 0; // terminating null byte
-      process_data(input_line);
-      // reset
-      input_pos = 0;
-      break;
-    case '\r':
-      break; 
-    default:
-      if (input_pos < (MAX_INPUT - 1))
-        input_line [input_pos++] = inByte;
-      break;
-  }
-}
 
 /***********************************************************
  * MOTOR HELPER FUNCTIONS                                  *
@@ -231,38 +169,34 @@ bool AreSame(double a, double b)
 }
 
 void setNewSetpointMotorA(float setpoint, char dir) {
+  float signed_setpoint = dir == BWD ? -1 * setpoint : setpoint;
   if (dir == STOP) {
     a_adjust = 0;
   }
   else {
     a_adjust = FEEDFWDA;
   }
-  if (!AreSame(setpoint, setpointA)) {
+  if (!AreSame(signed_setpoint, setpointA)) {
     motorA.SetSetpoint(setpoint);
     setADir(dir);
-    setpointA = setpoint;
-    if (dir == BWD) {
-      setpointA = -1 * setpoint;
-    }
+    setpointA = signed_setpoint
   }
   
 }
 
 void setNewSetpointMotorB(float setpoint, char dir) {
+  float signed_setpoint = dir == BWD ? -1 * setpoint : setpoint;
+
   if (dir == STOP) {
     b_adjust = 0;
   }
   else {
     b_adjust = FEEDFWDB;
   }
-    if (!AreSame(setpoint, setpointB)) {
-
-      setpointB = setpoint;
+    if (!AreSame(signed_setpoint, setpointB)) {
+      setpointB = signed_setpoint;
       motorB.SetSetpoint(setpoint);
       setBDir(dir);
-      if (dir == BWD) {
-      setpointB = -1 * setpoint;
-      }
     }  
 }
 
