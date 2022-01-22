@@ -37,12 +37,6 @@ bool listening = true;
 void chatterCallBack(const sensor_msgs::Image& view);
 void pauseCallback(const std_msgs::Empty empty_msg);
 
-std::string GetLineFromCin() {
-    std::string line; 
-    std::getline(std::cin, line); 
-    return line;
-}
-
 
 int main(int argc, char** argv)
 {
@@ -61,57 +55,6 @@ int main(int argc, char** argv)
     debug = Iris.advertise<std_msgs::String>("cam_debug", 10);
     notify_lidar = Iris.advertise<std_msgs::UInt8>("camera_to_lidar", 1000);
 
-    // Fee copied over from simple_motors trigger 
-    ros::Rate delay_rate(5);
-
-    std::string cmd = "";
-    //int value; 
-
-    auto future = std::async(std::launch::async, GetLineFromCin);
-
-    while (ros::ok() &&cmd != "exit") {
-
-        if (future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-            auto cmd = future.get();
-
-            future = std::async(std::launch::async, GetLineFromCin);
-            std::cout << "CMD: " << cmd << std::endl;
-            
-if (cmd[0] == 't') {
-                std::string value = "";
-                value += cmd[1];
-                value += cmd[2];
-                value += cmd[3];
-                threshold = std::stoi(value);
-             } else if (cmd[0] == 'p') {
-                std::string value = "";
-                value += cmd[1];
-                value += cmd[2];
-                value += cmd[3];
-                top_percent_threshold = std::stod(value) / 100.0; 
-             } else if (cmd[0] == 's') {
-                std::string value = "";
-                value += cmd[1];
-                value += cmd[2];
-                value += cmd[3];
-                side_percent_threshold = std::stod(value) / 100.0;
-             } else {}
-
-        // delay_rate.sleep(); // need this? 
-}
-            std::cout << "THRESHOLD: " <<   std::to_string(threshold) << std::endl;        
-std::cout << "SIDE: " << std::to_string(side_percent_threshold) << std::endl;
-std::cout << "TOP: " << std::to_string(top_percent_threshold) << std::endl;
-
-
-
-            
-
-            // ros::spinOnce(); ros::spin(); // uses async spinner now 
-
-//delay_rate.sleep();
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
 
