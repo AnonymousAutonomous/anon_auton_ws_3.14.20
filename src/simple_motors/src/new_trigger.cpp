@@ -6,11 +6,11 @@
 #include <sstream>
 #include <map>
 
+std::map<std::string, std::string> commands;
 
 int main(int argc, char** argv) {
   ros::init(argc, argv, "new_trigger");
   ros::NodeHandle nh;
-  nh.param<std::map<std::string, std::string>> commands;
 
   if (nh.getParam("handwritten", commands) {
     ROS_INFO("Handwritten commands have been loaded.");
