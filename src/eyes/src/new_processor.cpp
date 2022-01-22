@@ -54,6 +54,12 @@ int main(int argc, char** argv)
     //ros::spin();
     debug = Iris.advertise<std_msgs::String>("cam_debug", 10);
     notify_lidar = Iris.advertise<std_msgs::UInt8>("camera_to_lidar", 1000);
+
+    // Fee copied over from simple_motors trigger 
+    ros::Rate delay_rate(5);
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
 }
 
 void pauseCallback(const std_msgs::Empty empty_msg) {
