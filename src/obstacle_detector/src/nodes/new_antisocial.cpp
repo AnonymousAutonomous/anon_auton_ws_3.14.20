@@ -6,6 +6,8 @@
 #include "../../../../constants/choreos.h"
 #include <cmath>
 #include <algorithm>
+#include <map>
+#include <unordered_map>
 
 // All available autonomous commands
 std::map<std::string, std::string> commands_in;
@@ -45,14 +47,14 @@ Tart antisocial_standard(
     {{{},{0}}, commands[FWD]},
     {{{},{1}}, commands[FWD]},
     {{{},{10}}, commands[PIVOTR]},
-    {{{},{11}}, VEERL},
-    {{{},{12}}, VEERR},
+    {{{},{11}}, commands[VEERL]},
+    {{{},{12}}, commands[VEERR]},
     {{{},{13}}, commands[PIVOTL]},
     {{{},{2}}, commands[FWD]},
     {{{},{3}}, commands[FWD]},
     {{{},{14}}, commands[PIVOTR]},
-    {{{},{15}}, SLIGHTL},
-    {{{},{16}}, SLIGHTR},
+    {{{},{15}}, commands[SLIGHTL]},
+    {{{},{16}}, commands[SLIGHTR]},
     {{{},{17}}, commands[PIVOTL]},
     {{{},{4}}, commands[FWD]},
     {{{},{5}}, commands[FWD]}
