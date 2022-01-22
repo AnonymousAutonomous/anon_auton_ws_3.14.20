@@ -7,6 +7,11 @@
 #include <cmath>
 #include <algorithm>
 
+// All available autonomous commands
+std::map<std::string, std::string> commands_in;
+std::unordered_map<AutonomousCmd, std::string> commands;
+
+
 Tart antisocial_standard(
   {
     {3*M_PI/4, 5*M_PI/4, 0.5} // 0
@@ -32,25 +37,25 @@ Tart antisocial_standard(
     {3*M_PI/2 + 0.1, 2*M_PI, 1.5} // 17
   },
   {
-    {{{0},{}}, STOP},
-    {{{},{6}}, PIVOTR},
-    {{{},{7}}, PIVOTL},
-    {{{},{8}}, PIVOTR},
-    {{{},{9}}, PIVOTL},
-    {{{},{0}}, FWD},
-    {{{},{1}}, FWD},
-    {{{},{10}}, PIVOTR},
+    {{{0},{}}, commands[STOP]},
+    {{{},{6}}, commands[PIVOTR]},
+    {{{},{7}}, commands[PIVOTL]},
+    {{{},{8}}, commands[PIVOTR]},
+    {{{},{9}}, commands[PIVOTL]},
+    {{{},{0}}, commands[FWD]},
+    {{{},{1}}, commands[FWD]},
+    {{{},{10}}, commands[PIVOTR]},
     {{{},{11}}, VEERL},
     {{{},{12}}, VEERR},
-    {{{},{13}}, PIVOTL},
-    {{{},{2}}, FWD},
-    {{{},{3}}, FWD},
-    {{{},{14}}, PIVOTR},
+    {{{},{13}}, commands[PIVOTL]},
+    {{{},{2}}, commands[FWD]},
+    {{{},{3}}, commands[FWD]},
+    {{{},{14}}, commands[PIVOTR]},
     {{{},{15}}, SLIGHTL},
     {{{},{16}}, SLIGHTR},
-    {{{},{17}}, PIVOTL},
-    {{{},{4}}, FWD},
-    {{{},{5}}, FWD}
+    {{{},{17}}, commands[PIVOTL]},
+    {{{},{4}}, commands[FWD]},
+    {{{},{5}}, commands[FWD]}
   }
 );
 
@@ -163,6 +168,17 @@ int main (int argc, char** argv) {
   ros::init(argc, argv, "antisocial");
   ros::NodeHandle nh;
   ros::Subscriber sub = nh.subscribe("raw_obstacles", 10, dirCallback);
+
+	if (nh.getParam("autonomous", commands_in)) {
+        for (auto i = commands_in.begin(); i != commands_in.end(); i++) {
+            commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
+        }
+        ROS_INFO("Autonomous commands have been loaded for baby trilogy.");
+    }
+    else {
+        ROS_INFO("You must load autonomous commands before using baby trilogy.");
+        return 1;
+    }
 
   ros::NodeHandle oi;
   George = oi.advertise<std_msgs::String>("larry", 1000);
