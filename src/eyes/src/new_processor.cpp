@@ -54,8 +54,6 @@ int main(int argc, char** argv)
     //ros::spin();
     debug = Iris.advertise<std_msgs::String>("cam_debug", 10);
     notify_lidar = Iris.advertise<std_msgs::UInt8>("camera_to_lidar", 1000);
-
-    }
 }
 
 void pauseCallback(const std_msgs::Empty empty_msg) {
