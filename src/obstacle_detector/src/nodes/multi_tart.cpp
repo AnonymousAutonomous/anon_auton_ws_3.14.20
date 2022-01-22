@@ -6,10 +6,16 @@
 #include "std_msgs/Empty.h"
 #include "std_msgs/Char.h"
 #include "std_msgs/UInt8.h"
+#include "../../../../constants/str_cmds.h"
 #include "../../../../constants/tarts.h"
 #include "../../../../constants/choreos.h"
 #include <cmath>
 #include <algorithm>
+
+// All available autonomous commands
+std::map<std::string, std::string> commands_in;
+std::unordered_map<AutonomousCmd, std::string> commands;
+
 
 int stop_counter = 0;
 int stop_limit = 150;
@@ -71,12 +77,12 @@ Tart standard(
         {
 		// {{{0,1},{}}, "CIRCLE FRONT, CIRCLE RIGHT"},
 		// {{{0},{1}}, "CIRCLE FRONT, LINE RIGHT"},
-                {{{0},{}}, STOP},
-		{{{},{0}}, STOP},
-		{{{1},{}}, SPOOK},
-		{{{2},{}}, SPOOK},
-                {{{},{1}}, SPOOK},
-                {{{},{2}}, SPOOK}
+                {{{0},{}}, commands[STOP]},
+		{{{},{0}}, commands[STOP]},
+		{{{1},{}}, commands[SPOOK]},
+		{{{2},{}}, commands[SPOOK]},
+                {{{},{1}}, commands[SPOOK]},
+                {{{},{2}}, commands[SPOOK]}
         }
 );
 
@@ -102,21 +108,21 @@ Tart escape(
 		{5*M_PI/4, 7*M_PI/4, 1}
 	},
 	{
-		{{{0,1,2},{}}, PIVOTR},
-		{{{},{0,1,2}}, PIVOTR},
-		{{{0,1},{}}, PIVOTL},
-		{{{},{0,1}}, PIVOTL},
-		{{{0,2},{}}, PIVOTR},
-		{{{},{0,2}}, PIVOTR},
-		{{{0},{}}, PIVOTR},
-		{{{},{0}}, PIVOTR},
-		{{{1,2},{}}, FWD},
-		{{{},{1,2}}, FWD},
-		{{{1},{}}, VEERL},
-		{{{},{1}}, VEERL},
-		{{{2},{}}, VEERR},
-		{{{},{2}}, VEERR},
-		{{{},{}}, FWD}
+		{{{0,1,2},{}}, commands[PIVOTR]},
+		{{{},{0,1,2}}, commands[PIVOTR]},
+		{{{0,1},{}}, commands[PIVOTL]},
+		{{{},{0,1}}, commands[PIVOTL]},
+		{{{0,2},{}}, commands[PIVOTR]},
+		{{{},{0,2}}, commands[PIVOTR]},
+		{{{0},{}}, commands[PIVOTR]},
+		{{{},{0}}, commands[PIVOTR]},
+		{{{1,2},{}}, commands[FWD]},
+		{{{},{1,2}}, commands[FWD]},
+		{{{1},{}}, commands[VEERL]},
+		{{{},{1}}, commands[VEERL]},
+		{{{2},{}}, commands[VEERR]},
+		{{{},{2}}, commands[VEERR]},
+		{{{},{}}, commands[FWD]}
 	}
 );
 
@@ -293,7 +299,7 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 	  reset_camera_counters();
 	  // LIDAR trans
 	  if (stop_counter >= stop_limit) {
-	    msg.data = RREVERSE;
+	    msg.data = commands[RREVERSE];
 	    mode = state::pivot;
 	    ROS_INFO("GOING TO PIVOT");
 	    reset_lidar_counters();
@@ -372,7 +378,7 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 	  reset_camera_counters();
 	  // LIDAR trans
 	  if (stop_counter >= stop_limit) {
-	    msg.data = RREVERSE;
+	    msg.data = commands[RREVERSE];
 	    mode = state::pivot_again;
 	    ROS_INFO("GOING TO PIVOT AGAIN");
 	    reset_lidar_counters();
@@ -661,6 +667,17 @@ int main (int argc, char** argv) {
   spinner.start();
 
   ros::NodeHandle nh;
+  if (nh.getParam("autonomous", commands_in)) {
+        for (auto i = commands_in.begin(); i != commands_in.end(); i++) {
+            commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
+        }
+        ROS_INFO("Autonomous commands have been loaded for multitart.");
+    }
+    else {
+        ROS_INFO("You must load autonomous commands before using multitart.");
+        return 1;
+    }
+
   ros::Subscriber sub = nh.subscribe("raw_obstacles", 10, dirCallback);
   ros::Subscriber eoc_sub = nh.subscribe("end_of_choreo", 1000, pauseCallback);
   ros::Subscriber queue_sub = nh.subscribe("queue_to_lidar", 1000, queueCallback);

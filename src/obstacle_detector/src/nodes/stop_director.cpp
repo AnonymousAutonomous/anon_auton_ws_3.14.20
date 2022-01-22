@@ -2,10 +2,16 @@
 #include <obstacle_detector/Obstacles.h>
 #include "std_msgs/String.h"
 #include "std_msgs/Empty.h"
+#include "../../../../constants/str_cmds.h"
 #include "../../../../constants/pies.h"
 #include "../../../../constants/choreos.h"
 #include <cmath>
 #include <algorithm>
+
+// All available autonomous commands
+std::map<std::string, std::string> commands_in;
+std::unordered_map<AutonomousCmd, std::string> commands;
+
 
 int stop_counter = 0;
 int stop_limit = 50;
@@ -19,9 +25,9 @@ Pie new_director_standard(
                 {5*M_PI/4, 7*M_PI/4, 1}
         },
         {
-                {{0}, STOP},
-                {{1}, SPOOK},
-                {{2}, SPOOK}
+                {{0}, commands[STOP]},
+                {{1}, commands[SPOOK]},
+                {{2}, commands[SPOOK]}
         }
 );
 
@@ -96,7 +102,7 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
 
   msg.data = ss.str();
 
-  if (msg.data == STOP) {
+  if (msg.data == commands[STOP]) {
   	++stop_counter;
   }
   else {
@@ -104,7 +110,7 @@ void dirCallback(const obstacle_detector::Obstacles::ConstPtr& obs) {
   }
   if (stop_counter >= stop_limit) {
   	stop_counter = 0;
-	msg.data = RREVERSE;
+	msg.data = commands[RREVERSE];
   }
 
   if (msg.data[1] == 'C') {
@@ -122,6 +128,17 @@ int main (int argc, char** argv) {
   spinner.start();
 
   ros::NodeHandle nh;
+  if (nh.getParam("autonomous", commands_in)) {
+        for (auto i = commands_in.begin(); i != commands_in.end(); i++) {
+            commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
+        }
+        ROS_INFO("Autonomous commands have been loaded for stop director.");
+    }
+    else {
+        ROS_INFO("You must load autonomous commands before using stop director.");
+        return 1;
+    }
+  
   ros::Subscriber sub = nh.subscribe("raw_obstacles", 10, dirCallback);
   ros::Subscriber eoc_sub = nh.subscribe("end_of_choreo", 1000, pauseCallback);
 
