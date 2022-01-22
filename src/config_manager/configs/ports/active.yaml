@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 serial_port: '/dev/ttyUSB0'
-=======
 antenna_port: '/dev/ttyUSB0'
 device_path: '/dev/video0'
 port: '/dev/ttyACM0'
->>>>>>> configs_and_launch
