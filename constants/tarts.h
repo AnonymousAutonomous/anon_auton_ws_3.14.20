@@ -62,6 +62,10 @@ public:
 		}
 	}
 
+	void updateChecks(std::vector<std::pair<std::pair<std::vector<size_t>, std::vector<size_t>>, std::string>> c_in) {
+		checks = c_in;
+	}
+
 	std::string evaluate() {
 		for (size_t i = 0; i < checks.size(); ++i) {
 			std::pair<std::pair<std::vector<size_t>, std::vector<size_t>>, std::string>& condition = checks[i];
