@@ -49,8 +49,8 @@ int main(int argc, char** argv)
     ros::AsyncSpinner spinner(0);
     spinner.start();
 
-    ros::NodeHandle nh;
-    if (nh.getParam("/autonomous", commands_in)) {
+    ros::NodeHandle Iris; //subscriber
+    if (Iris.getParam("/autonomous", commands_in)) {
         for (auto i = commands_in.begin(); i != commands_in.end(); i++) {
             commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
         }
@@ -60,8 +60,6 @@ int main(int argc, char** argv)
         ROS_INFO("You must load autonomous commands before using camera.");
         return 1;
     }
-    
-    ros::NodeHandle Iris; //subscriber
     ros::NodeHandle Cornea; //publisher
     ros::Subscriber Handle = Iris.subscribe("/cv_camera/image_mono", 10, chatterCallBack); // 10 was 1000
     ros::Subscriber eoc_sub = Iris.subscribe("end_of_choreo", 1000, pauseCallback);
