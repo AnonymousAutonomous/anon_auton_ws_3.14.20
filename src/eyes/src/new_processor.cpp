@@ -57,7 +57,7 @@ int main(int argc, char** argv)
         ROS_INFO("Autonomous commands have been loaded for camera.");
     }
     else {
-        ROS_INFO("You must load autonomous commands before using camera.");
+        ROS_ERROR("You must load autonomous commands before using camera.");
         return 1;
     }
     ros::NodeHandle Cornea; //publisher
@@ -71,8 +71,10 @@ int main(int argc, char** argv)
 
     // Fee copied over from simple_motors trigger 
     ros::Rate delay_rate(5);
-
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    
+    while(ros::ok()) {
+	
+    }
 }
 
 void pauseCallback(const std_msgs::Empty empty_msg) {
