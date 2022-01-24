@@ -2,35 +2,10 @@
   <rosparam command="load" file="$(find config_manager)/configs/commands/active.yaml"/>
   <rosparam command="load" file="$(find config_manager)/configs/ports/active.yaml"/>
 
-  <node name="arduino" pkg="rosserial_python" type="serial_node.py">
-    <param name="baud" value="57600"/>
-    <rosparam command="load" file="$(find config_manager)/configs/ports/active.yaml"/>
-  </node>
-
-  <include file="$(find obstacle_detector)/launch/myNodes3.launch"/>
-
-  <rosparam command="load" file="$(find mylidar)/my_laser_config.yaml"/>
-  <node name="scanfilter" pkg="laser_filters" type="scan_to_scan_filter_chain">
-  </node>
-
-  <node name="tart" pkg="obstacle_detector" type="tart_director">
-  </node>
-
-  <node name="cv_camera" pkg="cv_camera" type="cv_camera_node">
-    <rosparam command="load" file="$(find config_manager)/configs/ports/active.yaml"/>
-  </node>
-
-  <node name="image_proc" pkg="image_proc" type="image_proc" ns="cv_camera">
-  </node>
-
-  <node name="eyes" pkg="eyes" type="new_processor">
-  </node>
-
-  <node name="queue" pkg="eyes" type="queue_five">
-  </node>
-
-  <node name="driver" pkg="eyes" type="baby_trilogy">
-  </node>
-
+  <include file="$(find obstacle_detector)/launch/components/antenna_chair.launch"/>
+  <include file="$(find obstacle_detector)/launch/components/arduino.launch"/>
+  <include file="$(find obstacle_detector)/launch/components/camera.launch"/>
+  <include file="$(find obstacle_detector)/launch/components/lidar.launch"/>
+  <include file="$(find obstacle_detector)/launch/components/queue.launch"/>
 
 </launch>

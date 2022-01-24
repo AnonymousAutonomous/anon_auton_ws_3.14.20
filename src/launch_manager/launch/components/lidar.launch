@@ -1,0 +1,13 @@
+<launch>
+  <rosparam command="load" file="$(find config_manager)/configs/commands/active.yaml"/>
+  <rosparam command="load" file="$(find config_manager)/configs/ports/active.yaml"/>
+
+  <include file="$(find obstacle_detector)/launch/myNodes3.launch"/>
+
+  <rosparam command="load" file="$(find mylidar)/my_laser_config.yaml"/>
+  <node name="scanfilter" pkg="laser_filters" type="scan_to_scan_filter_chain">
+  </node>
+
+  <node name="tart" pkg="obstacle_detector" type="tart_director">
+  </node>
+</launch>
