@@ -1,2 +1,1 @@
 antenna_port: '/dev/ttyUSB0'
-device_path: '/dev/video0'
