@@ -352,8 +352,8 @@ void loop(){
 
   // printUpdates();
  
-  int32_msg_R.data = setpointB * 2;
-  int32_msg_L.data = setpointA * 2;
+  int32_msg_R.data = countR;
+  int32_msg_L.data = countL;
   pubR.publish(&int32_msg_R);
   pubL.publish(&int32_msg_L);
 
