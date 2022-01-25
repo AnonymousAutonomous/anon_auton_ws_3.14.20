@@ -1,8 +1,0 @@
-prefix=/home/anonymous2/anon_auton_ws/devel
-
-Name: error_client
-Description: Description of error_client
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/anonymous2/anon_auton_ws/devel/lib 
-Requires: 
