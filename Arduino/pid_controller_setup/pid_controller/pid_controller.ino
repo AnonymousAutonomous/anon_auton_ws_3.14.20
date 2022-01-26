@@ -66,7 +66,7 @@ const unsigned long SAMPLE_TIME = 10;  // time between PID updates
 const unsigned long INT_COUNT = 100;     // 100 encoder ticks for accurate timing
 
 // !!!!!!!!!!!!! SETPOINTS MUST BE POSITIVE !!!!!!!!!!!!!!
-double setpointA = 2.0;         // setpoint is inches / second
+double setpointA = 3.0;         // setpoint is inches / second
 double setpointB = setpointA;   // setpoint is inches / second
 
 double inputA = 0;              // input is inches / second
