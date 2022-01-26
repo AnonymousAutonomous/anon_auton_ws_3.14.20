@@ -23,4 +23,5 @@ else
 fi
 
 
-until rostopic list; do sleep 1; done
+until rostopic list | grep 'chair_transmitter'; do sleep 1; done
+    rostopic pub -1 /from_chair std_msgs/String "chair registered"
