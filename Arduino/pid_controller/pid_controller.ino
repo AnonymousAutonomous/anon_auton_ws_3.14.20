@@ -32,20 +32,20 @@ ros::Publisher pubL("encoder_value_L", &int32_msg_L);
 // Output pins used to control motors
 
 // A is left motor
-const uint16_t PWMA = 10;         // Motor A PWM control     Orange // was 11
-const uint16_t AIN2 = 13;         // Motor A input 2         Brown   // was 8
-const uint16_t AIN1 = 12;         // Motor A input 1         Green   // was 9
-const uint16_t STBYA = 7;        // Standby                 Brown   // was 4
+const uint16_t PWMA = 11;         // Motor A PWM control     BLUE 
+const uint16_t AIN1 = 9;         // Motor A input 1         GREEN
+const uint16_t AIN2 = 8;         // Motor A input 2         YELLOW
+const uint16_t STBYA = 4;        // Standby                 
 
 // B is right motor
-const uint16_t BIN1 = 9;        // Motor B input 1         Yellow  // was 12
-const uint16_t BIN2 = 8;        // Motor B input 2         Purple  // was 13
-const uint16_t PWMB = 11;        // Motor B PWM control     White   // was 10
-const uint16_t STBYB = 4;        // Standby                 Brown   // was 7
+const uint16_t BIN1 = 12;        // Motor B input 1         Yellow  // was 12
+const uint16_t BIN2 = 13;        // Motor B input 2         Purple  // was 13
+const uint16_t PWMB = 10;        // Motor B PWM control     BROWN
+const uint16_t STBYB = 7;        // Standby                 Brown   // was 7
 
 // Motor encoder external interrupt pins
-const uint16_t ENCA = 2;        // Encoder A input         Yellow   // was 3
-const uint16_t ENCB = 3;        // Encoder B input         Green    // was 2
+const uint16_t ENCA = 3;        // Encoder A input         Yellow   // was 3
+const uint16_t ENCB = 2;        // Encoder B input         Green    // was 2
 
 // PWM
 const uint16_t ANALOG_WRITE_BITS = 8;
@@ -104,12 +104,12 @@ volatile long countL = 0;
  ***********************************************************/
 void setADir(char dir) {
   if (dir == BWD) {
-    digitalWrite(AIN1, HIGH);
-    digitalWrite(AIN2, LOW);
-  }
-  else if (dir == FWD) {
     digitalWrite(AIN1, LOW);
     digitalWrite(AIN2, HIGH);
+  }
+  else if (dir == FWD) {
+    digitalWrite(AIN1, HIGH);
+    digitalWrite(AIN2, LOW);
   }
   else { // STOP / BRAKE
     digitalWrite(AIN1, LOW);
@@ -119,12 +119,12 @@ void setADir(char dir) {
 
 void setBDir(char dir) {
   if (dir == BWD) {
-    digitalWrite(BIN1, HIGH);
-    digitalWrite(BIN2, LOW);
-  }
-  else if (dir == FWD) {
     digitalWrite(BIN1, LOW);
     digitalWrite(BIN2, HIGH);
+  }
+  else if (dir == FWD) {
+    digitalWrite(BIN1, HIGH);
+    digitalWrite(BIN2, LOW);
   }
   else { // STOP / BRAKE
     digitalWrite(BIN1, LOW);
