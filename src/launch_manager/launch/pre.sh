@@ -3,5 +3,5 @@
 cd ~/anon_auton_ws
 source devel/setup.bash
 
-./src/launch_manager/roscore.sh
-./src/launch_manager/set_ports.sh
+./src/launch_manager/launch/roscore.sh
+./src/launch_manager/launch/set_ports.sh
