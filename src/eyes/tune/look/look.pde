@@ -1,5 +1,5 @@
 PImage webImg;
-float threshold = 0;
+float threshold = 175;
 float topBandWidth = 120;
 float sideBandWidth = 180;
 float side_percent_threshold = 0.20;
@@ -9,37 +9,40 @@ int width = 640;
 int height = 480;
 
 Handle[] handles;
-// threshold, topBandWidth, sideBandWidth, side_percent_threshold, top_percent_threshold
-float[] variables = {0, 120, 180, 0.20, 0.20};
+// threshold, topBandWidth, sideBandWidth, top_percent_threshold, side_percent_threshold
+float[] variables = {175, 120, 180, 0.20, 0.20};
 
 
 void setup() {
-  size(640,480);
+  size(640,600);
+  background(80);
+  
   // Load image from a web server
   webImg = loadImage("test.JPG");
   webImg.resize(width, height);
 
    handles = new Handle[5];
   int hsize = 10;
-  handles[0] = new Handle(width/2, 10+0*15, 50-hsize/2, 10, handles, 0, 255, 0);
-  handles[1] = new Handle(width/2, 10+1*15, 50-hsize/2, 10, handles, 0, height, 1);
-  handles[2] = new Handle(width/2, 10+2*15, 50-hsize/2, 10, handles, 0, width / 2, 2);
-  handles[3] = new Handle(width/2, 10+3*15, 50-hsize/2, 10, handles, 0, 1, 3);
-  handles[4] = new Handle(width/2, 10+4*15, 50-hsize/2, 10, handles, 0, 1, 4);
+  handles[0] = new Handle(width/2, 500+0*15, 50-hsize/2, 10, handles, 0, 255, 0, variables[0]);
+  handles[1] = new Handle(width/2, 500+1*15, 50-hsize/2, 10, handles, 0, height, 1, variables[1]);
+  handles[2] = new Handle(width/2, 500+2*15, 50-hsize/2, 10, handles, 0, width / 2, 2, variables[2]);
+  handles[3] = new Handle(width/2, 500+3*15, 50-hsize/2, 10, handles, 0, 1, 3, variables[3]);
+  handles[4] = new Handle(width/2, 500+4*15, 50-hsize/2, 10, handles, 0, 1, 4, variables[4]);
 
-  \\
+  
 }
 
 void draw() {
   threshold = variables[0];
   topBandWidth = variables[1];
   sideBandWidth = variables[2];
-  side_percent_threshold = variables[3];
-  top_percent_threshold = variables[4];
+  top_percent_threshold = variables[3];
+  side_percent_threshold = variables[4];
+
 
   stroke(0, 0, 0);
   strokeWeight(1);
-  background(0);
+  background(80);
   image(webImg, 0, 0);
   loadPixels();
   for (int i = 0; i < width * height; i++) {
@@ -55,11 +58,11 @@ void draw() {
   }
   
   textSize(15);
-  text("threshold: " + str(threshold), 10, 20+0*15); 
-  text("top band width: " + str(topBandWidth), 10, 20+1*15); 
-  text("side band width: " + str(sideBandWidth), 10, 20+2*15); 
-  text("top percent threshold: " + str(top_percent_threshold), 10, 20+3*15); 
-  text("side percent threshold: " + str(side_percent_threshold), 10, 20+4*15); 
+  text("threshold: " + str(threshold), 10, 500+0*15); 
+  text("top band width: " + str(topBandWidth), 10, 500+1*15); 
+  text("side band width: " + str(sideBandWidth), 10, 500+2*15); 
+  text("top percent threshold: " + str(top_percent_threshold), 10, 500+3*15); 
+  text("side percent threshold: " + str(side_percent_threshold), 10, 500+4*15); 
 
 
   
@@ -163,8 +166,8 @@ class Handle {
   int boxx, boxy;
   int stretch;
   int size;
-  double min = 0;
-  double max = 1.0;
+  float min;
+  float max;
   boolean over;
   boolean press;
   boolean locked = false;
@@ -173,7 +176,7 @@ class Handle {
   Handle[] others;
 
   
-  Handle(int ix, int iy, int il, int is, Handle[] o, double imin, double imax, int iindex) {
+  Handle(int ix, int iy, int il, int is, Handle[] o, float imin, float imax, int iindex, float startval) {
     x = ix;
     y = iy;
     stretch = il;
@@ -184,6 +187,7 @@ class Handle {
     min = imin;
     max = imax;
     index = iindex;
+    stretch = lock(int((startval / (max - min)) * 100), 0, 100);
   }
   
   void update() {
@@ -205,7 +209,7 @@ class Handle {
     }
     
     if (press) {
-      stretch = lock(mouseX-width/2-size/2, 0, width/2-size-1);
+      stretch = lock(mouseX-width/2-size/2, 0, 100);
     }
   }
   
@@ -231,7 +235,11 @@ class Handle {
     println(boxx - x);
     println(size);
 
-    variables[index] = boxx - x;
+    float frac = (boxx - x) / 100.0;
+    println(boxx - x);
+    println(frac);
+    println(min + (frac * (max - min)));
+    variables[index] = min + (frac * (max - min));
   }
   
   void display() {
