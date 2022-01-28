@@ -66,7 +66,7 @@ def callback(data):
 		pass
 
 	else: 
-		print(f"{choice} is not a valid option. Please try again.")
+		print(choice + " is not a valid option. Please try again.")
 
 
 
