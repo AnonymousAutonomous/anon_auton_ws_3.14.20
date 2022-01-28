@@ -269,6 +269,7 @@ int main(int argc, char** argv) {
 
 				if (flag_A) {
 					generic_pub.publish(autonomous_queue.front());
+					generic_pub.publish(autonomous_queue.front());
 					autonomous_queue.pop();
 					// ROS_INFO("PUBLISHING AUTONOMOUS COMMAND");
 				}
@@ -344,6 +345,7 @@ int main(int argc, char** argv) {
 							flag_D = false;
 							initial_encoder_value = encoder_count_R;
 							generic_pub.publish(choreo_queue.front());
+							generic_pub.publish(choreo_queue.front());
 							ROS_INFO("STARTING (ENCODER)");
 							ROS_INFO("LEFT SPEED: %d", choreo_queue.front().left_speed);
 							ROS_INFO("RIGHT SPEED: %d", choreo_queue.front().right_speed);
@@ -363,6 +365,8 @@ int main(int argc, char** argv) {
 							flag_D = false;
 							time(&initial_time);
 							generic_pub.publish(choreo_queue.front());
+							generic_pub.publish(choreo_queue.front());
+
 							ROS_INFO("STARTING (TIMER)");
 							ROS_INFO("LEFT SPEED: %d", choreo_queue.front().left_speed);
 							ROS_INFO("RIGHT SPEED: %d", choreo_queue.front().right_speed);
@@ -432,6 +436,8 @@ int main(int argc, char** argv) {
 				}
 				else if (flag_H) {
 					generic_pub.publish(custom_queue.front());
+					generic_pub.publish(custom_queue.front());
+
 					custom_queue.pop();
 					ROS_INFO("PUBLISHING CUSTOM COMMAND");
 				}
@@ -458,6 +464,8 @@ int main(int argc, char** argv) {
 						stop.timed = false; // inconsequential
 						stop.duration = 0; // inconsequential
 						generic_pub.publish(stop);
+						generic_pub.publish(stop);
+
 						// TODO: PUBLISH INDICATION THAT CHAIR IS READY TO GO TO INFORM HUB
 						std_msgs::String to_hub;
 						to_hub.data = "0B";
@@ -474,6 +482,7 @@ int main(int argc, char** argv) {
 								ROS_INFO("LAST STAGE OF BROADCAST");
 								broadcast_mode = broadcast_state::wait;
 								// safety stop
+								generic_pub.publish(broadcast_queue.front());
 								generic_pub.publish(broadcast_queue.front());
 								broadcast_queue = std::queue<eyes::Generic>();
 								// TODO: PUBLISH INDICATION THAT CHAIR COMPLETED BROADCAST SUCCESSFULLY
@@ -516,6 +525,7 @@ int main(int argc, char** argv) {
 										flag_D = false;
 										initial_encoder_value = encoder_count_R;
 										generic_pub.publish(broadcast_queue.front());
+										generic_pub.publish(broadcast_queue.front());
 									}
 									else {
 										final_encoder_value = encoder_count_R;
@@ -530,6 +540,7 @@ int main(int argc, char** argv) {
 										// clear flag_D and record initial_value
 										flag_D = false;
 										time(&initial_time);
+										generic_pub.publish(broadcast_queue.front());
 										generic_pub.publish(broadcast_queue.front());
 										ROS_INFO("STARTING");
 										ROS_INFO("RIGHT SPEED: %d", broadcast_queue.front().right_speed);
