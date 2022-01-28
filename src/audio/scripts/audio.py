@@ -51,7 +51,7 @@ def callback(data):
 	choice = data.data
 
 	if choice == "beep":	
-        subprocess.Popen("ffplay -nodisp -autoexit " + beep_file + " >/dev/null 2>&1", shell=True)
+		subprocess.Popen("ffplay -nodisp -autoexit " + beep_file + " >/dev/null 2>&1", shell=True)
 
 		# while beep_data:
 		# 	beep_stream.write(beep_data)
