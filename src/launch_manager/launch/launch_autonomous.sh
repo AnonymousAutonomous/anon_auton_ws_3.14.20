@@ -40,4 +40,5 @@ else
 fi
 
 # Launch the queue to start everything
+roslaunch --wait speaker.launch
 roslaunch --wait queue.launch
