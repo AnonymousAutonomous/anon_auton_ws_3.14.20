@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import rospy
+import subprocess
 from std_msgs.msg import String
 
 import os
@@ -9,19 +10,48 @@ from subprocess import call
 
 file_dir = os.path.dirname(os.path.abspath(__file__))
 
-beep_file = "/../sounds/polite_beep/beepbeep3sec.wav"
+chunk = 16 # put 1 here if you want "strobe audio mode" (James)
+
+beep_file = "/../sounds/polite_beep/461679__15hpanska-ruttner-jan__05-horn.wav"
 honk_file = "/../sounds/angry_honk/182474__keweldog__car-horn.wav"
 batt_file = "/../sounds/low_battery/413396__flood-mix__synth-descending-tones-glitchy.wav"
 
-call(["amixer", "-D", "pulse", "sset", "Master", "80%"])
-call(["ffplay", "-nodisp", "-autoexit", "-loglevel", "quiet", beep_file])
+beep_f = wave.open(file_dir + r"/../sounds/polite_beep/461679__15hpanska-ruttner-jan__05-horn.wav", "rb")
+honk_f = wave.open(file_dir + r"/../sounds/angry_honk/182474__keweldog__car-horn.wav", "rb")
+batt_f = wave.open(file_dir + r"/../sounds/low_battery/413396__flood-mix__synth-descending-tones-glitchy.wav", "rb")
 
+# set volume
+call(["amixer", "-D", "pulse", "sset", "Master", "80%"])
+
+p = pyaudio.PyAudio()
+
+beep_stream = p.open(format = p.get_format_from_width(beep_f.getsampwidth()), channels = beep_f.getnchannels(), rate = beep_f.getframerate(), output = True)
+honk_stream = p.open(format = p.get_format_from_width(honk_f.getsampwidth()), channels = honk_f.getnchannels(), rate = honk_f.getframerate(), output = True)
+batt_stream = p.open(format = p.get_format_from_width(batt_f.getsampwidth()), channels = batt_f.getnchannels(), rate = batt_f.getframerate(), output = True)
+
+beep_data = beep_f.readframes(chunk)
+honk_data = honk_f.readframes(chunk)
+batt_data = batt_f.readframes(chunk)
 
 def callback(data):
+
+	global p
+	global beep_f
+	global honk_f
+	global batt_f
+
+	global beep_stream
+	global honk_stream
+	global batt_stream
+	global beep_data 
+	global honk_data 
+	global batt_data 
+
+	rospy.loginfo(data.data)
 	choice = data.data
 
 	if choice == "beep":	
-		call(["ffplay", "-nodisp", "-autoexit", "-loglevel", "quiet", beep_file])
+		subprocess.Popen("ffplay -nodisp -autoexit " + beep_file + " >/dev/null 2>&1", shell=True)
 
 		# while beep_data:
 		# 	beep_stream.write(beep_data)
