@@ -2,11 +2,11 @@
 <launch>
   <include file="$(find rplidar_ros)/launch/rplidar.launch" />
 
-  <node name="map_to_scanner_base" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 map robot"/>
-  <node name="scanner_base_to_front_scanner" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 robot scan"/>
-  <node name="scanner_base_to_rear_scanner" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 robot scan"/>
+  <node name="map_to_scanner_base" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 map robot" respawn="true"/>
+  <node name="scanner_base_to_front_scanner" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 robot scan" respawn="true"/>
+  <node name="scanner_base_to_rear_scanner" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 robot scan" respawn="true"/>
 
-  <node name="obstacle_extractor" pkg="obstacle_detector" type="obstacle_extractor_node">
+  <node name="obstacle_extractor" pkg="obstacle_detector" type="obstacle_extractor_node" respawn="true">
     <param name="active"               value="true"/>
     <param name="use_scan"             value="true"/>
     <param name="use_pcl"              value="false"/>
