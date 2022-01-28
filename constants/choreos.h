@@ -70,7 +70,7 @@ static const std::vector<eyes::Generic> RREVERSE_C = {
 		first.left_speed = 2.0;
 		first.right_speed = 2.0;
 		first.timed = true;
-		first.duration = 10;
+		first.duration = 5;
 		return first;
 	}(),
 	[] {
@@ -117,7 +117,7 @@ static const std::vector<eyes::Generic> LREVERSE_C = {
 		first.left_speed = 2.0;
 		first.right_speed = 2.0;
 		first.timed = true;
-		first.duration = 10;
+		first.duration = 5;
 		return first;
 	}(),
 	[] {
@@ -164,7 +164,7 @@ static const std::vector<eyes::Generic> LCP_C = {
 		first.left_speed = 2.0;
 		first.right_speed = 2.0;
 		first.timed = true;
-		first.duration = 10;
+		first.duration = 3;
 		return first;
 	}(),
 	[] {
@@ -200,7 +200,7 @@ static const std::vector<eyes::Generic> RCP_C = {
 		first.left_speed = 2.0;
 		first.right_speed = 2.0;
 		first.timed = true;
-		first.duration = 10;
+		first.duration = 3;
 		return first;
 	}(),
 	[] {
