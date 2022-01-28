@@ -364,12 +364,12 @@ void loop(){
   // delay(10);
 
   // PID is stuck. Tell it it's stuck.
-  if (nowTime - startTimeA >= 1000) {
+  if (nowTime - startTimeA >= 250) {
     inputA = 0;
     startTimeA = nowTime;
     countIntA = 0;
   }
-  if (nowTime - startTimeB >= 1000) {
+  if (nowTime - startTimeB >= 250) {
     inputB = 0;
     startTimeB = nowTime;
     countIntB = 0;
