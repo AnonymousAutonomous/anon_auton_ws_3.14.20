@@ -266,8 +266,8 @@ void initMotors(){
 void initEncoders(){
   pinMode(ENCA, INPUT);
   pinMode(ENCB, INPUT);
-  attachInterrupt(ENCA, isr_A, CHANGE);
-  attachInterrupt(ENCB, isr_B, CHANGE);
+  attachInterrupt(ENCA == 2 ? 0 : 1, isr_A, CHANGE);
+  attachInterrupt(ENCB == 2 ? 0 : 1, isr_B, CHANGE);
 }
 
 void initPWM(){
