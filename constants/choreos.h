@@ -169,13 +169,13 @@ static const std::vector<eyes::Generic> LCP_C = {
 	}(),
 	[] {
 		eyes::Generic second;
-		first.identifier = 'c';
-		first.left_forward = false;
-		first.right_forward = true;
-		first.left_speed = 2.5;
-		first.right_speed = 2.5;
-		first.timed = true;
-		first.duration = 5;
+		second.identifier = 'c';
+		second.left_forward = false;
+		second.right_forward = true;
+		second.left_speed = 2.5;
+		second.right_speed = 2.5;
+		second.timed = true;
+		second.duration = 5;
 		return second;
 	}(),
 	[] {
@@ -205,13 +205,13 @@ static const std::vector<eyes::Generic> RCP_C = {
 	}(),
 	[] {
 		eyes::Generic second;
-		first.identifier = 'c';
-		first.left_forward = true;
-		first.right_forward = false;
-		first.left_speed = 2.5;
-		first.right_speed = 2.5;
-		first.timed = true;
-		first.duration = 5;
+		second.identifier = 'c';
+		second.left_forward = true;
+		second.right_forward = false;
+		second.left_speed = 2.5;
+		second.right_speed = 2.5;
+		second.timed = true;
+		second.duration = 5;
 		return second;
 	}(),
 	[] {
