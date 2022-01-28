@@ -19,13 +19,13 @@ def callback(data):
 	print(choice)
 
 	if choice == "beep":
-		call("ffplay -nodisp -autoexit -loglevel quiet " + beep_file, shell=True)
+		call(["ffplay", "-nodisp", "-autoexit", os.path.join(file_dir, beep_file)])
 
 	elif choice == "honk":
-		call("ffplay -nodisp -autoexit -loglevel quiet " + honk_file, shell=True)
+		call(["ffplay", "-nodisp", "-autoexit", os.path.join(file_dir, honk_file)])
 
 	elif choice == "batt":
-		call("ffplay -nodisp -autoexit -loglevel quiet " + batt_file, shell=True)
+		call(["ffplay", "-nodisp", "-autoexit", os.path.join(file_dir, batt_file)])
 
 	elif choice == "exit" or choice == "quit":
 		pass
