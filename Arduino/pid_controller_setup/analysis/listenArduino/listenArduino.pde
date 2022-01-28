@@ -11,7 +11,7 @@ boolean sentCommands = false;
  float p = 10.0;
  float i = 25.0;
  float d = 0.0;
- String s = "f0f0";
+ String s = "f0.0f0.0";
 
 void setup() {
    int arduino_index = 0;
@@ -24,7 +24,7 @@ void setup() {
    
    printArray(Serial.list());
    print(arduino_index);
-   mySerial = new Serial( this, Serial.list()[arduino_index], 115200 );
+   mySerial = new Serial( this, Serial.list()[arduino_index], 57600 );
    mySerial.clear();
 
 

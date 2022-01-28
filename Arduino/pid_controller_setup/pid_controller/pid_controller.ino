@@ -163,12 +163,12 @@ void processIncomingByte(const byte inByte) {
  ***********************************************************/
 void setADir(char dir) {
   if (dir == BWD) {
-    digitalWrite(AIN1, HIGH);
-    digitalWrite(AIN2, LOW);
-  }
-  else if (dir == FWD) {
     digitalWrite(AIN1, LOW);
     digitalWrite(AIN2, HIGH);
+  }
+  else if (dir == FWD) {
+    digitalWrite(AIN1, HIGH);
+    digitalWrite(AIN2, LOW);
   }
   else { // STOP / BRAKE
     digitalWrite(AIN1, LOW);
@@ -178,12 +178,12 @@ void setADir(char dir) {
 
 void setBDir(char dir) {
   if (dir == BWD) {
-    digitalWrite(BIN1, HIGH);
-    digitalWrite(BIN2, LOW);
-  }
-  else if (dir == FWD) {
     digitalWrite(BIN1, LOW);
     digitalWrite(BIN2, HIGH);
+  }
+  else if (dir == FWD) {
+    digitalWrite(BIN1, HIGH);
+    digitalWrite(BIN2, LOW);
   }
   else { // STOP / BRAKE
     digitalWrite(BIN1, LOW);
@@ -363,7 +363,7 @@ void setup(){
  initPWM();
 
   // Connect to Arduino serial
- Serial.begin(115200);
+ Serial.begin(57600);
  while(!Serial){
   // wait for serial to start
  }
