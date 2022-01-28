@@ -3,18 +3,16 @@ import rospy
 from std_msgs.msg import String
 
 import os
-import pyaudio
-import wave
 from subprocess import call
 
 file_dir = os.path.dirname(os.path.abspath(__file__))
 
-beep_file = "/../sounds/polite_beep/beepbeep3sec.wav"
+beep_file = "../sounds/polite_beep/beepbeep3sec.wav"
 honk_file = "/../sounds/angry_honk/182474__keweldog__car-horn.wav"
 batt_file = "/../sounds/low_battery/413396__flood-mix__synth-descending-tones-glitchy.wav"
 
 call(["amixer", "-D", "pulse", "sset", "Master", "80%"])
-call(["ffplay", "-nodisp", "-autoexit", "-loglevel", "quiet", beep_file])
+call("ffplay -nodisp -autoexit -loglevel quiet " + beep_file, shell=True)
 
 
 def callback(data):
