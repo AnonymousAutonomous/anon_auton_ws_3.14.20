@@ -168,7 +168,7 @@ static const std::vector<eyes::Generic> LCP_C = {
 		return first;
 	}(),
 	[] {
-		eyes::Generic first;
+		eyes::Generic second;
 		first.identifier = 'c';
 		first.left_forward = false;
 		first.right_forward = true;
@@ -204,7 +204,7 @@ static const std::vector<eyes::Generic> RCP_C = {
 		return first;
 	}(),
 	[] {
-		eyes::Generic first;
+		eyes::Generic second;
 		first.identifier = 'c';
 		first.left_forward = true;
 		first.right_forward = false;
