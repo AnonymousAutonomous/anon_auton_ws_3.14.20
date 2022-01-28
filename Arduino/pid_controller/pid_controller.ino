@@ -31,25 +31,25 @@ ros::Publisher pubL("encoder_value_L", &int32_msg_L);
 // Output pins used to control motors
 
 // A is left motor
-const uint16_t PWMA = 11;         // Motor A PWM control     BLUE 
-const uint16_t AIN1 = 9;         // Motor A input 1         YELLOW
-const uint16_t AIN2 = 8;         // Motor A input 2         GREEN
-const uint16_t STBYA = 4;        // Standby                 
+const uint8_t PWMA = 11;         // Motor A PWM control     BLUE 
+const uint8_t AIN1 = 9;         // Motor A input 1         YELLOW
+const uint8_t AIN2 = 8;         // Motor A input 2         GREEN
+const uint8_t STBYA = 4;        // Standby                 
 
 // B is right motor
-const uint16_t BIN1 = 12;        // Motor B input 1         ORANGE
-const uint16_t BIN2 = 13;        // Motor B input 2         RED
-const uint16_t PWMB = 10;        // Motor B PWM control     BROWN
-const uint16_t STBYB = 7;        // Standby                 
+const uint8_t BIN1 = 12;        // Motor B input 1         ORANGE
+const uint8_t BIN2 = 13;        // Motor B input 2         RED
+const uint8_t PWMB = 10;        // Motor B PWM control     BROWN
+const uint8_t STBYB = 7;        // Standby                 
 
 // Motor encoder external interrupt pins
-const uint16_t ENCA = 3;        // Encoder A input         
-const uint16_t ENCB = 2;        // Encoder B input    
+const uint8_t ENCA = 3;        // Encoder A input         
+const uint8_t ENCB = 2;        // Encoder B input    
 
 // PWM
-const uint16_t ANALOG_WRITE_BITS = 8;
-const uint16_t MAX_PWM = pow(2, ANALOG_WRITE_BITS)-1;
-const uint16_t MIN_PWM = 0;    // Let motors stop
+const uint8_t ANALOG_WRITE_BITS = 8;
+const uint8_t MAX_PWM = pow(2, ANALOG_WRITE_BITS)-1;
+const uint8_t MIN_PWM = 0;    // Let motors stop
 
 // Motor timing
 unsigned long nowTime = 0;       // updated on every loop
@@ -57,8 +57,7 @@ unsigned long startTimeA = 0;    // start timing A interrupts
 unsigned long startTimeB = 0;    // start timing B interrupts
 unsigned long countIntA = 0;     // count the A interrupts
 unsigned long countIntB = 0;     // count the B interrupts
-double periodA = 0;              // motor A period
-double periodB = 0;              // motor B period
+
 
 // PID 
 const unsigned long SAMPLE_TIME = 10;  // time between PID updates
@@ -70,13 +69,13 @@ double setpointB = setpointA;   // setpoint is inches / second
 
 double inputA = 0;              // input is inches / second
 double outputA = 0;             // output is PWM to motors
-int FEEDFWDA = 60;
-int a_adjust = 0;
+uint8_t FEEDFWDA = 60;
+uint8_t a_adjust = 0;
 
 double inputB = 0;              // input is inches / second
 double outputB = 0;             // output is PWM to motors
-int FEEDFWDB = 60;
-int b_adjust = 0;
+uint8_t FEEDFWDB = 60;
+uint8_t b_adjust = 0;
 
 //double KpA = 2.0, KiA = 7.0, KdA = 2.0;
 // TODO: diff tunings for fwd or bwd? how to even out between the two motors? -- send avg to both? OR diff FEEDFWD terms for the two?
@@ -87,8 +86,6 @@ PID motorB(&inputB, &outputB, setpointB, KpB, KiB, KdB, DIRECT);
 double storeB = 0;               // used for debug print
 
 double encoderConversion = 1300000.0 / 4200.0; // (10 ticks *  1000 milliseconds * 1 rev * 13 in) / (x millisecond * 1 second * 4200 ticks * 1 rev)
-
-const unsigned int MAX_INPUT = 50;
 
 const char FWD = 'f';
 const char BWD = 'r';
