@@ -95,6 +95,13 @@ const char FWD = 'f';
 const char BWD = 'r';
 const char STOP = 's';
 
+float strToFloat(String str) {
+  char buffer[10];
+   str.toCharArray(buffer, 10);
+   return atof(buffer);
+}
+
+
 /***********************************************************
  * SERIAL / PRINTING HELPER FUNCTIONS                      *
  ***********************************************************/
@@ -117,13 +124,13 @@ const char STOP = 's';
  void process_data (const char* data) {
   char changeVar = data[0];
   if (changeVar == 'p') {
-    KpA = KpB = String(data).substring(1).toFloat();
+    KpA = KpB = strToFloat(String(data).substring(1));
   }
   else if (changeVar == 'i') {
-    KiA = KiB = String(data).substring(1).toFloat();
+    KiA = KiB = strToFloat(String(data).substring(1));
   }
   else if (changeVar == 'd') {
-    KdA = KdB = String(data).substring(1).toFloat();
+    KdA = KdB = strToFloat(String(data).substring(1));
   }
   else if (changeVar == 'b') {
         standbyMotors(true);
@@ -264,7 +271,7 @@ void parseNewSetpoints(String setpointsIn) {
       // second alpha = B direction. Set A speed
       else {
         BDir = c;
-        aSpeed = temp.toFloat();
+        aSpeed = strToFloat(temp);
         temp = "";
         if (aSpeed < 0.0001) {
           aSpeed = 0;
@@ -278,7 +285,7 @@ void parseNewSetpoints(String setpointsIn) {
     }
   }
   // set B Speed
-  bSpeed = temp.toFloat();
+  bSpeed = strToFloat(temp);
   if (bSpeed < 0.0001) {
     bSpeed = 0;
     BDir = STOP;
@@ -305,8 +312,8 @@ void initMotors(){
 void initEncoders(){
   pinMode(ENCA, INPUT);
   pinMode(ENCB, INPUT);
-  attachInterrupt(digitalPinToInterrupt(ENCA), isr_A, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(ENCB), isr_B, CHANGE);
+  attachInterrupt(ENCA, isr_A, CHANGE);
+  attachInterrupt(ENCB, isr_B, CHANGE);
 }
 
 void initPWM(){
