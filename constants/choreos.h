@@ -70,7 +70,7 @@ static const std::vector<eyes::Generic> RREVERSE_C = {
 		first.left_speed = 2.0;
 		first.right_speed = 2.0;
 		first.timed = true;
-		first.duration = 1;
+		first.duration = 10;
 		return first;
 	}(),
 	[] {
@@ -117,7 +117,7 @@ static const std::vector<eyes::Generic> LREVERSE_C = {
 		first.left_speed = 2.0;
 		first.right_speed = 2.0;
 		first.timed = true;
-		first.duration = 1;
+		first.duration = 10;
 		return first;
 	}(),
 	[] {
