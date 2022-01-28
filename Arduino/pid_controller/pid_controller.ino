@@ -33,19 +33,19 @@ ros::Publisher pubL("encoder_value_L", &int32_msg_L);
 
 // A is left motor
 const uint16_t PWMA = 11;         // Motor A PWM control     BLUE 
-const uint16_t AIN1 = 9;         // Motor A input 1         GREEN
-const uint16_t AIN2 = 8;         // Motor A input 2         YELLOW
+const uint16_t AIN1 = 9;         // Motor A input 1         YELLOW
+const uint16_t AIN2 = 8;         // Motor A input 2         GREEN
 const uint16_t STBYA = 4;        // Standby                 
 
 // B is right motor
-const uint16_t BIN1 = 12;        // Motor B input 1         Yellow  // was 12
-const uint16_t BIN2 = 13;        // Motor B input 2         Purple  // was 13
+const uint16_t BIN1 = 12;        // Motor B input 1         ORANGE
+const uint16_t BIN2 = 13;        // Motor B input 2         RED
 const uint16_t PWMB = 10;        // Motor B PWM control     BROWN
-const uint16_t STBYB = 7;        // Standby                 Brown   // was 7
+const uint16_t STBYB = 7;        // Standby                 
 
 // Motor encoder external interrupt pins
-const uint16_t ENCA = 3;        // Encoder A input         Yellow   // was 3
-const uint16_t ENCB = 2;        // Encoder B input         Green    // was 2
+const uint16_t ENCA = 3;        // Encoder A input         
+const uint16_t ENCB = 2;        // Encoder B input    
 
 // PWM
 const uint16_t ANALOG_WRITE_BITS = 8;
