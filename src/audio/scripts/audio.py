@@ -12,12 +12,13 @@ honk_file = "../sounds/angry_honk/182474__keweldog__car-horn.wav"
 batt_file = "../sounds/low_battery/413396__flood-mix__synth-descending-tones-glitchy.wav"
 
 call(["amixer", "-D", "pulse", "sset", "Master", "80%"])
-
+call(["ffplay", "-nodisp", "-autoexit", os.path.join(file_dir, beep_file)])
 
 def callback(data):
-	choice = data.data
+	choice = data.data.strip('\n')
+	print(choice)
 
-	if choice == "beep":	
+	if choice == "beep":
 		call("ffplay -nodisp -autoexit -loglevel quiet " + beep_file, shell=True)
 
 	elif choice == "honk":
