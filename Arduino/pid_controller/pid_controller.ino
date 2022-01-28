@@ -363,6 +363,18 @@ void loop(){
   nh.spinOnce();
   // delay(10);
 
+  // PID is stuck. Tell it it's stuck.
+  if (nowTime - startTimeA >= 1000) {
+    inputA = 0;
+    startTimeA = nowTime;
+    countIntA = 0;
+  }
+  if (nowTime - startTimeB >= 1000) {
+    inputB = 0;
+    startTimeB = nowTime;
+    countIntB = 0;
+  }
+
 
   if (storeB != outputB){
     storeB = outputB;
@@ -394,12 +406,7 @@ void isr_A(){
     startTimeA = nowTime;
     countIntA = 0;
   }
-  // PID is stuck. Tell it it's stuck.
-  if (nowTime - startTimeA >= 1000) {
-    inputA = 0;
-    startTimeA = nowTime;
-    countIntA = 0;
-  }
+  
   if (digitalRead(ENCA) == HIGH) {
     if (digitalRead(STBYA) == LOW) {
       --countL;
@@ -420,12 +427,6 @@ void isr_B(){
   countIntB++;
   if (countIntB == INT_COUNT){
     inputB = (float) encoderConversion * (1.0 / (float)(nowTime - startTimeB));
-    startTimeB = nowTime;
-    countIntB = 0;
-  }
-  // PID is stuck. Tell it it's stuck.
-  if (nowTime - startTimeB >= 1000) {
-    inputB = 0;
     startTimeB = nowTime;
     countIntB = 0;
   }
