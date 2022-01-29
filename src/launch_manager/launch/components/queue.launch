@@ -2,9 +2,9 @@
   <rosparam command="load" file="$(find config_manager)/configs/commands/active.yaml"/>
   <rosparam command="load" file="$(find config_manager)/configs/ports/active.yaml"/>
 
-  <node name="queue" pkg="eyes" type="queue_five" respawn="true">
+  <node name="queue" pkg="eyes" type="queue_five"  >
   </node>
 
-  <node name="driver" pkg="eyes" type="baby_trilogy" respawn="true">
+  <node name="driver" pkg="eyes" type="baby_trilogy"  >
   </node>
 </launch>
