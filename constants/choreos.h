@@ -67,10 +67,10 @@ static const std::vector<eyes::Generic> RREVERSE_C = {
 		first.identifier = 'c';
 		first.left_forward = false;
 		first.right_forward = false;
-		first.left_speed = 2.0;
-		first.right_speed = 2.0;
+		first.left_speed = 1.5;
+		first.right_speed = 1.5;
 		first.timed = true;
-		first.duration = 10;
+		first.duration = 3;
 		return first;
 	}(),
 	[] {
@@ -114,10 +114,10 @@ static const std::vector<eyes::Generic> LREVERSE_C = {
 		first.identifier = 'c';
 		first.left_forward = false;
 		first.right_forward = false;
-		first.left_speed = 2.0;
-		first.right_speed = 2.0;
+		first.left_speed = 1.5;
+		first.right_speed = 1.5;
 		first.timed = true;
-		first.duration = 10;
+		first.duration = 3;
 		return first;
 	}(),
 	[] {
@@ -160,12 +160,23 @@ static const std::vector<eyes::Generic> LCP_C = {
 		eyes::Generic first;
 		first.identifier = 'c';
 		first.left_forward = false;
-		first.right_forward = true;
-		first.left_speed = 2.5;
-		first.right_speed = 2.5;
+		first.right_forward = false;
+		first.left_speed = 1.5;
+		first.right_speed = 1.5;
 		first.timed = true;
-		first.duration = 5;
+		first.duration = 3;
 		return first;
+	}(),
+	[] {
+		eyes::Generic second;
+		second.identifier = 'c';
+		second.left_forward = false;
+		second.right_forward = true;
+		second.left_speed = 2.5;
+		second.right_speed = 2.5;
+		second.timed = true;
+		second.duration = 5;
+		return second;
 	}(),
 	[] {
 		eyes::Generic eoc;
@@ -184,13 +195,24 @@ static const std::vector<eyes::Generic> RCP_C = {
 	[] {
 		eyes::Generic first;
 		first.identifier = 'c';
-		first.left_forward = true;
+		first.left_forward = false;
 		first.right_forward = false;
-		first.left_speed = 2.5;
-		first.right_speed = 2.5;
+		first.left_speed = 1.5;
+		first.right_speed = 1.5;
 		first.timed = true;
-		first.duration = 5;
+		first.duration = 3;
 		return first;
+	}(),
+	[] {
+		eyes::Generic second;
+		second.identifier = 'c';
+		second.left_forward = true;
+		second.right_forward = false;
+		second.left_speed = 2.5;
+		second.right_speed = 2.5;
+		second.timed = true;
+		second.duration = 5;
+		return second;
 	}(),
 	[] {
 		eyes::Generic eoc;
