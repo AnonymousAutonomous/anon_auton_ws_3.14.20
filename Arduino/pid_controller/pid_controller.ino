@@ -292,7 +292,8 @@ void initPWM(){
 void generic_callback(const eyes::Generic& generic_msg) {
   char leftdir = generic_msg.left_forward ? FWD : BWD;
   char rightdir = generic_msg.right_forward ? FWD : BWD;
-  String info = "Callback for: " + leftdir + String(generic_msg.left_speed) + rightdir + String(generic_msg.right_speed);
+  String info = leftdir + String(generic_msg.left_speed) + rightdir + String(generic_msg.right_speed);
+  nh.loginfo("Callback for: ");
   nh.loginfo(info.c_str());
 
   if (generic_msg.left_speed < 0.001) {
