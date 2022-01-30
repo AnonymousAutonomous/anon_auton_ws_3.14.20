@@ -19,7 +19,7 @@
 #include <std_msgs/Int32.h>
 #include <eyes/Generic.h>
 
-ros::NodeHandle_<ArduinoHardware, 2, 2, 256, 256> nh;
+ros::NodeHandle nh;
 
 // init to zero and update with each encoder tick
 std_msgs::Int32 int32_msg_R;
@@ -311,6 +311,7 @@ void setup(){
   // Set up ROS
   nh.getHardware()->setBaud(57600);
   nh.initNode();
+  nh.loginfo("Node initialized");
   nh.advertise(pubR);
   nh.advertise(pubL);
   nh.subscribe(generic_sub);
@@ -361,7 +362,8 @@ void loop(){
 
   // // TODO: check if this will cause issues
   nh.spinOnce();
-  // delay(10);
+  nh.loginfo("Arduino has spun");
+  delay(500);
 
   // PID is stuck. Tell it it's stuck.
   if (nowTime - startTimeA >= 250) {
