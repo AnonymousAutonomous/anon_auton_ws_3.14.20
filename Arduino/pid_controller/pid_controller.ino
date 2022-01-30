@@ -54,6 +54,7 @@ const uint8_t MIN_PWM = 0;    // Let motors stop
 // Motor timing
 unsigned long nowTime = 0;       // updated on every loop
 unsigned long prevTime = 0;       // updated on every loop
+unsigned long prevTime2 = 0;     // updated on every loop
 unsigned long startTimeA = 0;    // start timing A interrupts
 unsigned long startTimeB = 0;    // start timing B interrupts
 unsigned long countIntA = 0;     // count the A interrupts
@@ -364,8 +365,13 @@ void loop(){
   }
  
   // // TODO: check if this will cause issues
-  nh.spinOnce();
-  nh.loginfo("Arduino has spun");
+  if (nowTime - prevTime2 >= 200) {
+    nh.spinOnce();
+    nh.loginfo("Arduino has spun");
+    prevTime2 = nowTime;
+  }
+
+  // Delay for PID
   delay(10);
 
   // PID is stuck. Tell it it's stuck.
