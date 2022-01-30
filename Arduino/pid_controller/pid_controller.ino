@@ -315,7 +315,7 @@ ros::Subscriber<eyes::Generic> generic_sub("generic_feed", &generic_callback);
 
 void setup(){
   // Set up ROS
-  nh.getHardware()->setBaud(57600);
+  nh.getHardware()->setBaud(115200);
   nh.initNode();
   nh.loginfo("Node initialized");
   nh.advertise(pubR);
