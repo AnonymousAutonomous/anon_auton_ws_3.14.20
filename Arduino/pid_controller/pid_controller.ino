@@ -53,6 +53,7 @@ const uint8_t MIN_PWM = 0;    // Let motors stop
 
 // Motor timing
 unsigned long nowTime = 0;       // updated on every loop
+unsigned long prevTime = 0;       // updated on every loop
 unsigned long startTimeA = 0;    // start timing A interrupts
 unsigned long startTimeB = 0;    // start timing B interrupts
 unsigned long countIntA = 0;     // count the A interrupts
@@ -353,17 +354,19 @@ void loop(){
   //   processIncomingByte(Serial.read());
   // }
 
-  // printUpdates();
+  // publish every 200 ms
+  if (nowTime - prevTime >= 200) {
+    int32_msg_R.data = countR;
+    int32_msg_L.data = countL;
+    pubR.publish(&int32_msg_R);
+    pubL.publish(&int32_msg_L);
+    prevTime = nowTime;
+  }
  
-  int32_msg_R.data = countR;
-  int32_msg_L.data = countL;
-  pubR.publish(&int32_msg_R);
-  pubL.publish(&int32_msg_L);
-
   // // TODO: check if this will cause issues
   nh.spinOnce();
   nh.loginfo("Arduino has spun");
-  delay(500);
+  delay(10);
 
   // PID is stuck. Tell it it's stuck.
   if (nowTime - startTimeA >= 250) {
