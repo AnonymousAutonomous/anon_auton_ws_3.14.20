@@ -57,13 +57,13 @@ unsigned long prevTime = 0;       // updated on every loop
 unsigned long prevTime2 = 0;     // updated on every loop
 unsigned long startTimeA = 0;    // start timing A interrupts
 unsigned long startTimeB = 0;    // start timing B interrupts
-unsigned long countIntA = 0;     // count the A interrupts
-unsigned long countIntB = 0;     // count the B interrupts
+uint8_t countIntA = 0;     // count the A interrupts
+uint8_t countIntB = 0;     // count the B interrupts
 
 
 // PID 
-const unsigned long SAMPLE_TIME = 10;  // time between PID updates
-const unsigned long INT_COUNT = 100;     // 100 encoder ticks for accurate timing
+const uint8_t SAMPLE_TIME = 10;  // time between PID updates
+const uint8_t INT_COUNT = 100;     // 100 encoder ticks for accurate timing
 
 // !!!!!!!!!!!!! SETPOINTS MUST BE POSITIVE !!!!!!!!!!!!!!
 double setpointA = 0.0;         // setpoint is inches / second
@@ -98,11 +98,7 @@ const char STOP = 's';
 volatile long countR = 0;
 volatile long countL = 0;
 
-float strToFloat(String str) {
-  char buffer[10];
-  str.toCharArray(buffer, 10);
-  return atof(buffer);
-}
+String info = "";
 
 
 /***********************************************************
@@ -276,48 +272,6 @@ void setNewSetpointMotorB(float setpoint, char dir) {
     }  
 }
 
-void parseNewSetpoints(String setpointsIn) {
-  char ADir = '\0';
-  char BDir = '\0';
-  float aSpeed = -1;
-  float bSpeed = -1;
-
-  String temp = "";
-  
-  // Go through string
-  for (char c : setpointsIn) {
-    if (isalpha(c)) {
-      // first alpha = A direction
-      if (ADir == '\0') {
-        ADir = c;
-      }
-      // second alpha = B direction. Set A speed
-      else {
-        BDir = c;
-        aSpeed = strToFloat(temp);
-        temp = "";
-        if (aSpeed < 0.0001) {
-          aSpeed = 0;
-          ADir = STOP;
-        }
-      }
-    }
-    // add to temp 
-    else {
-      temp += c;
-    }
-  }
-  // set B Speed
-  bSpeed = strToFloat(temp);
-  if (bSpeed < 0.0001) {
-    bSpeed = 0;
-    BDir = STOP;
-  }
-
-  // update setpoints
-  setNewSetpointMotorA(aSpeed, ADir);
-  setNewSetpointMotorB(bSpeed, BDir);
-}
 
 void initMotors(){
   pinMode(AIN1, OUTPUT);
@@ -361,8 +315,8 @@ void generic_callback(const eyes::Generic& generic_msg) {
   char leftdir = generic_msg.left_forward ? FWD : BWD;
   char rightdir = generic_msg.right_forward ? FWD : BWD;
   String info = leftdir + String(generic_msg.left_speed) + rightdir + String(generic_msg.right_speed);
-  nh.loginfo("Callback for: ");
-  nh.loginfo(info.c_str());
+//  nh.loginfo("Callback for: ");
+//  nh.loginfo(info.c_str());
 
   if (generic_msg.left_speed < 0.001) {
     leftdir = STOP;
@@ -455,11 +409,13 @@ void loop(){
     inputA = 0;
     startTimeA = nowTime;
     countIntA = 0;
+    nh.loginfo("L is stuck");
   }
   if (nowTime - startTimeB >= 250) {
     inputB = 0;
     startTimeB = nowTime;
     countIntB = 0;
+    nh.loginfo("R is stuck");
   }
 
 
@@ -488,6 +444,8 @@ void loop(){
 void isr_A(){
   // count sufficient interrupts to get accurate timing
   countIntA++;
+  info = 'A' + ' ' + String(countIntA) + ' ' + String(countIntB);
+  nh.loginfo(info.c_str());
   if (countIntA == INT_COUNT){
     inputA = (float) encoderConversion * (1.0 / (float)(nowTime - startTimeA));
     startTimeA = nowTime;
@@ -511,7 +469,8 @@ void isr_A(){
 
 void isr_B(){
   // count sufficient interrupts to get accurate timing
-  countIntB++;
+  info = 'B' + ' ' + String(countIntA) + ' ' + String(countIntB);
+  nh.loginfo(info.c_str());
   if (countIntB == INT_COUNT){
     inputB = (float) encoderConversion * (1.0 / (float)(nowTime - startTimeB));
     startTimeB = nowTime;

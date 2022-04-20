@@ -1,22 +1,4 @@
-// left and right motor swapped!!!!!!!! -- changing all the values here 
-
-//define motor 1 related pins (right)
-#define IN1 12         // was 9
-#define IN2 13         // was 8
-#define ENA 10        // was 11
-#define RIGHT_MOTOR ENA
-
-#define MOTOR_1A 2 // yellow, INTERRUPT // was 3
-#define MOTOR_1B 7 // white             // was 4
-
-//define motor 2 related pins (left)
-#define IN3 9        // was 12
-#define IN4 8        // was 13
-#define ENB 11        // was 10
-#define LEFT_MOTOR ENB
-                          
-#define MOTOR_2A 3 // yellow, INTERRUPT // was 2
-#define MOTOR_2B 4 // white             // was 7
+#include "/home/anonymous2/anon_auton_ws/Arduino/pins.h"
 
 // define constants
 const int FULL_REV_ENCODER_TICKS = 4200;
