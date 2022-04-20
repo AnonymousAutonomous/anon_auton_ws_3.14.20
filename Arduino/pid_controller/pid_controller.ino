@@ -89,6 +89,8 @@ double storeB = 0;               // used for debug print
 
 double encoderConversion = 1300000.0 / 4200.0; // (10 ticks *  1000 milliseconds * 1 rev * 13 in) / (x millisecond * 1 second * 4200 ticks * 1 rev)
 
+const unsigned int MAX_INPUT = 50;
+
 const char FWD = 'f';
 const char BWD = 'r';
 const char STOP = 's';
@@ -101,6 +103,71 @@ float strToFloat(String str) {
   str.toCharArray(buffer, 10);
   return atof(buffer);
 }
+
+
+/***********************************************************
+ * SERIAL / PRINTING HELPER FUNCTIONS                      *
+ ***********************************************************/
+ void printPID() {
+  Serial.print("KpA"); Serial.print(","); Serial.print("KiA"); Serial.print(","); Serial.print("KdA"); Serial.print(","); Serial.print("setpointA"); Serial.print(","); Serial.print("FEEDFWDA"); Serial.print(",");
+  Serial.print("KpB"); Serial.print(","); Serial.print("KiB"); Serial.print(","); Serial.print("KdB"); Serial.print(","); Serial.print("setpointB"); Serial.print(","); Serial.print("FEEDFWDB"); Serial.print("\n");
+  Serial.print(KpA); Serial.print(","); Serial.print(KiA); Serial.print(","); Serial.print(KdA); Serial.print(","); Serial.print(setpointA); Serial.print(","); Serial.print(FEEDFWDA); Serial.print(",");
+  Serial.print(KpB); Serial.print(","); Serial.print(KiB); Serial.print(","); Serial.print(KdB); Serial.print(","); Serial.print(setpointB); Serial.print(","); Serial.print(FEEDFWDB); Serial.print("\n");
+ 
+ Serial.print("inputA"); Serial.print(","); Serial.print("outputA"); Serial.print(","); Serial.print("a_adjust"); Serial.print(","); 
+  Serial.print("inputB"); Serial.print(","); Serial.print("outputB"); Serial.print(","); Serial.print("b_adjust"); Serial.print("\n"); 
+ }
+
+ void printUpdates() {
+ Serial.print(inputA); Serial.print(","); Serial.print(outputA); Serial.print(","); Serial.print(a_adjust); Serial.print(","); 
+  Serial.print(inputB); Serial.print(","); Serial.print(outputB); Serial.print(","); Serial.print(b_adjust); Serial.print("\n"); 
+ 
+ }
+ 
+ void process_data (const char* data) {
+  char changeVar = data[0];
+  if (changeVar == 'p') {
+    KpA = KpB = strToFloat(String(data).substring(1));
+  }
+  else if (changeVar == 'i') {
+    KiA = KiB = strToFloat(String(data).substring(1));
+  }
+  else if (changeVar == 'd') {
+    KdA = KdB = strToFloat(String(data).substring(1));
+  }
+  else if (changeVar == 'b') {
+        standbyMotors(true);
+  }
+  else if (changeVar == 's') {
+    parseNewSetpoints(String(data).substring(1));
+  }
+    motorA.SetTunings(KpA, KiA, KdA);
+    motorB.SetTunings(KpB, KiB, KdB);
+
+    printPID();
+
+}
+
+void processIncomingByte(const byte inByte) {
+  static char input_line [MAX_INPUT];
+  static unsigned int input_pos = 0;
+
+  switch (inByte) {
+    case '\n':
+      input_line[input_pos] = 0; // terminating null byte
+      process_data(input_line);
+      // reset
+      input_pos = 0;
+      break;
+    case '\r':
+      break; 
+    default:
+      if (input_pos < (MAX_INPUT - 1))
+        input_line [input_pos++] = inByte;
+      break;
+  }
+}
+
 
 /***********************************************************
  * MOTOR HELPER FUNCTIONS                                  *
@@ -289,6 +356,7 @@ void initPWM(){
 /***********************************************************
  * ROS                                                     *
  ***********************************************************/
+/*
 void generic_callback(const eyes::Generic& generic_msg) {
   char leftdir = generic_msg.left_forward ? FWD : BWD;
   char rightdir = generic_msg.right_forward ? FWD : BWD;
@@ -307,20 +375,21 @@ void generic_callback(const eyes::Generic& generic_msg) {
 
   return;
 }
+*/
 
 /***********************************************************
  * SETUP & LOOP                                            *
  ***********************************************************/
-ros::Subscriber<eyes::Generic> generic_sub("generic_feed", &generic_callback);
+// ros::Subscriber<eyes::Generic> generic_sub("generic_feed", &generic_callback);
 
 void setup(){
   // Set up ROS
-  nh.getHardware()->setBaud(115200);
-  nh.initNode();
-  nh.loginfo("Node initialized");
-  nh.advertise(pubR);
-  nh.advertise(pubL);
-  nh.subscribe(generic_sub);
+  // nh.getHardware()->setBaud(115200);
+  // nh.initNode();
+  // nh.loginfo("Node initialized");
+  // nh.advertise(pubR);
+  // nh.advertise(pubL);
+  // nh.subscribe(generic_sub);
 
   // Initialize pins and value ranges
  initMotors();
@@ -328,10 +397,10 @@ void setup(){
  initPWM();
 
   // Connect to Arduino serial
-//  Serial.begin(115200);
-//  while(!Serial){
-//   // wait for serial to start
-//  }
+ Serial.begin(57600);
+ while(!Serial){
+  // wait for serial to start
+ }
  
 //setADir(FWD);
 // setBDir(FWD);
@@ -343,7 +412,7 @@ void setup(){
 //   delay(5000);
 // }
 
-// printPID();
+printPID();
 
 }
 
@@ -355,28 +424,31 @@ void loop(){
   moveA(max(0, min(255, (int)outputA + a_adjust)));
   moveB(max(0, min(255, (int)outputB + b_adjust)));
 
-  // while (Serial.available() > 0) {
-  //   processIncomingByte(Serial.read());
-  // }
+  while (Serial.available() > 0) {
+    processIncomingByte(Serial.read());
+  }
+  
+  printUpdates();
+
 
   // publish every 200 ms
-  if (nowTime - prevTime >= 200) {
-    int32_msg_R.data = countR;
-    int32_msg_L.data = countL;
-    pubR.publish(&int32_msg_R);
-    pubL.publish(&int32_msg_L);
-    prevTime = nowTime;
-  }
+  // if (nowTime - prevTime >= 200) {
+  //   int32_msg_R.data = countR;
+  //   int32_msg_L.data = countL;
+  //   pubR.publish(&int32_msg_R);
+  //   pubL.publish(&int32_msg_L);
+  //   prevTime = nowTime;
+  // }
  
   // // TODO: check if this will cause issues
-  if (nowTime - prevTime2 >= 200) {
-    nh.spinOnce();
-//    nh.loginfo("Arduino has spun");
-    prevTime2 = nowTime;
-  }
+//   if (nowTime - prevTime2 >= 200) {
+//     nh.spinOnce();
+// //    nh.loginfo("Arduino has spun");
+//     prevTime2 = nowTime;
+//   }
 
   // Delay for PID
-  delay(10);
+  // delay(10);
 
   // PID is stuck. Tell it it's stuck.
   if (nowTime - startTimeA >= 250) {
