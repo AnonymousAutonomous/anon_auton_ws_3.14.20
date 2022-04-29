@@ -9,7 +9,7 @@
  * Low    High    Forward
  * High   Low     Reverse
  * 
- * Free to use for all -- Serial version
+ * Free to use for all
  * F Milburn, January 2020
  */
  #include <PID_v1.h>
