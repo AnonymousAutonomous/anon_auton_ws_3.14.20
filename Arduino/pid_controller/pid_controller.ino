@@ -29,12 +29,12 @@ double setpointB = setpointA;   // setpoint is inches / second
 
 double inputA = 0;              // input is inches / second
 double outputA = 0;             // output is PWM to motors
-int FEEDFWDA = 60;
+int FEEDFWDA = 30;
 int a_adjust = 0;
 
 double inputB = 0;              // input is inches / second
 double outputB = 0;             // output is PWM to motors
-int FEEDFWDB = 60;
+int FEEDFWDB = FEEDFWDA;
 int b_adjust = 0;
 
 double KpA = 10.0, KiA = 25.0, KdA = 0.0;
