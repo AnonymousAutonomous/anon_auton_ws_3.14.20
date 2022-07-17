@@ -37,7 +37,7 @@ const int BIN2 = REVERSE_B ? BIN1_tmp : BIN2_tmp;
 #define ENCB 2 // yellow, INTERRUPT
 #define STBYB 5 // white
 
-#define ENCODER_CONVERSION 309.523809524
+#define ENCODER_CONVERSION 309.523809524 // 1300000.0 / 4200.0; // (10 ticks *  1000 milliseconds * 1 rev * 13 in) / (x millisecond * 1 second * 4200 ticks * 1 rev)
 
 // PWM
 #define ANALOG_WRITE_BITS 8
