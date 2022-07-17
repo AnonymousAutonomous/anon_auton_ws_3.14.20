@@ -70,6 +70,12 @@ void generic_callback(const eyes::Generic& generic_msg) {
    else {
      right_dir = BWD;
    }
+   if (generic_msg.left_speed < 0.001) {
+    left_dir = STOP;
+   }
+   if (generic_msg.right_speed < 0.001) {
+    right_dir = STOP;
+   }
     setNewSetpointMotorA(generic_msg.left_speed, left_dir);
     setNewSetpointMotorB(generic_msg.right_speed, right_dir);
        analogWrite(LEFT_MOTOR, generic_msg.left_speed);
