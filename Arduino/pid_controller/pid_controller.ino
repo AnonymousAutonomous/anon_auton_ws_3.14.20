@@ -228,6 +228,8 @@ void parseNewSetpoints(String setpointsIn) {
 
 void setup() {
   if (CONNECTED_TO_ROS) {
+    Serial.begin(115200);
+    nh.getHardware()->setBaud(115200);
     initROSSerial();
   } else {
     initPIDSerial();
@@ -272,11 +274,18 @@ void loop() {
     }
   }
 
- if (CONNECTED_TO_ROS) {
-//   int32_msg_R.data = countR;
-//   int32_msg_L.data = countL;
+//   int32_msg_R.data = int(setpointA * 100);
+//   int32_msg_L.data = int(setpointB * 100);
 //   pubR.publish(&int32_msg_R);
 //   pubL.publish(&int32_msg_L);
+//   nh.spinOnce();
+//   delay(1000);
+   
+ if (CONNECTED_TO_ROS) {
+   int32_msg_R.data = int(setpointA * 100);
+   int32_msg_L.data = int(setpointB * 100);
+   pubR.publish(&int32_msg_R);
+   pubL.publish(&int32_msg_L);
 //
 //   // TODO: check if this will cause issues
    nh.spinOnce();
