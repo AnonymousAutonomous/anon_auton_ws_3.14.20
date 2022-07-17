@@ -54,31 +54,34 @@ ros::Publisher pubR("encoder_value_R", &int32_msg_R);
 ros::Publisher pubL("encoder_value_L", &int32_msg_L);
 
 
-  void generic_callback(const eyes::Generic& generic_msg) {
-     if (generic_msg.left_forward) {
-       setADir(FWD);
-     }
-     else {
-       setADir(BWD);
-     }
-     if (generic_msg.right_forward) {
-       setBDir(FWD);
-     }
-     else {
-       setBDir(BWD);
-     }
-     analogWrite(LEFT_MOTOR, generic_msg.left_speed);
-     analogWrite(RIGHT_MOTOR, generic_msg.right_speed);
-  
-     return;
-  };
+void generic_callback(const eyes::Generic& generic_msg) {
+   if (generic_msg.left_forward) {
+     setADir(FWD);
+   }
+   else {
+     setADir(BWD);
+   }
+   if (generic_msg.right_forward) {
+     setBDir(FWD);
+   }
+   else {
+     setBDir(BWD);
+   }
+   analogWrite(LEFT_MOTOR, generic_msg.left_speed);
+   analogWrite(RIGHT_MOTOR, generic_msg.right_speed);
 
-  void initROSSerial(ros::Subscriber<eyes::Generic>& generic_sub) {
-    nh.initNode();
-    nh.advertise(pubR);
-    nh.advertise(pubL);
-    nh.subscribe(generic_sub);
-  };
+   return;
+};
+
+ros::Subscriber<eyes::Generic> generic_sub("generic_feed", &generic_callback);
+
+
+void initROSSerial() {
+  nh.initNode();
+  nh.advertise(pubR);
+  nh.advertise(pubL);
+  nh.subscribe(generic_sub);
+};
 
 
 void initEncoders(){
@@ -217,11 +220,9 @@ void parseNewSetpoints(String setpointsIn) {
  * SETUP & LOOP                                            *
  ***********************************************************/
 
- ros::Subscriber<eyes::Generic> generic_sub("generic_feed", &generic_callback);
-
 void setup() {
   if (CONNECTED_TO_ROS) {
-    initROSSerial(generic_sub);
+    initROSSerial();
   } else {
     initPIDSerial();
   }
@@ -272,7 +273,7 @@ void loop() {
 //   pubL.publish(&int32_msg_L);
 //
 //   // TODO: check if this will cause issues
-//   nh.spinOnce();
+   nh.spinOnce();
    delay(10);
  }
 
