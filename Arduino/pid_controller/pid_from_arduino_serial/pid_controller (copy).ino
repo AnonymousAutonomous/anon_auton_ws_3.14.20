@@ -1,11 +1,7 @@
 #include "motors_and_pins.h"
 #include "pid_serial.h"
-#include "ros_serial.h"
+//#include "ros_serial.h"
 #include <PID_v1.h>
-#include <ros.h>
-#include <std_msgs/String.h>
-#include <std_msgs/Int32.h>
-#include <eyes/Generic.h>
 
 boolean DEBUG = true;
 
@@ -43,43 +39,7 @@ PID motorA(&inputA, &outputA, setpointA, KpA, KiA, KdA, DIRECT);
 PID motorB(&inputB, &outputB, setpointB, KpB, KiB, KdB, DIRECT);
 double storeB = 0;               // used for debug print
 
-boolean CONNECTED_TO_ROS = true;
-
-ros::NodeHandle nh;
-
-// init to zero and update with each encoder tick
-std_msgs::Int32 int32_msg_R;
-std_msgs::Int32 int32_msg_L;
-ros::Publisher pubR("encoder_value_R", &int32_msg_R);
-ros::Publisher pubL("encoder_value_L", &int32_msg_L);
-
-
-  void generic_callback(const eyes::Generic& generic_msg) {
-     if (generic_msg.left_forward) {
-       setADir(FWD);
-     }
-     else {
-       setADir(BWD);
-     }
-     if (generic_msg.right_forward) {
-       setBDir(FWD);
-     }
-     else {
-       setBDir(BWD);
-     }
-     analogWrite(LEFT_MOTOR, generic_msg.left_speed);
-     analogWrite(RIGHT_MOTOR, generic_msg.right_speed);
-  
-     return;
-  };
-
-  void initROSSerial(ros::Subscriber<eyes::Generic>& generic_sub) {
-    nh.initNode();
-    nh.advertise(pubR);
-    nh.advertise(pubL);
-    nh.subscribe(generic_sub);
-  };
-
+boolean CONNECTED_TO_ROS = false;
 
 void initEncoders(){
   pinMode(ENCA, INPUT);
@@ -216,12 +176,10 @@ void parseNewSetpoints(String setpointsIn) {
 /***********************************************************
  * SETUP & LOOP                                            *
  ***********************************************************/
-
- ros::Subscriber<eyes::Generic> generic_sub("generic_feed", &generic_callback);
-
+ 
 void setup() {
   if (CONNECTED_TO_ROS) {
-    initROSSerial(generic_sub);
+//    initROSSerial();
   } else {
     initPIDSerial();
   }
