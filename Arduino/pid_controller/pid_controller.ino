@@ -55,20 +55,25 @@ ros::Publisher pubL("encoder_value_L", &int32_msg_L);
 
 
 void generic_callback(const eyes::Generic& generic_msg) {
+  char left_dir = FWD;
+  char right_dir = FWD;
+  
    if (generic_msg.left_forward) {
-     setADir(FWD);
+     left_dir = FWD;
    }
    else {
-     setADir(BWD);
+     left_dir = BWD;
    }
    if (generic_msg.right_forward) {
-     setBDir(FWD);
+     right_dir = FWD;
    }
    else {
-     setBDir(BWD);
+     right_dir = BWD;
    }
-   analogWrite(LEFT_MOTOR, generic_msg.left_speed);
-   analogWrite(RIGHT_MOTOR, generic_msg.right_speed);
+//   analogWrite(LEFT_MOTOR, generic_msg.left_speed);
+//   analogWrite(RIGHT_MOTOR, generic_msg.right_speed);
+    setNewSetpointMotorA(generic_msg.left_speed, left_dir);
+    setNewSetpointMotorB(generic_msg.right_speed, right_dir);
 
    return;
 };
