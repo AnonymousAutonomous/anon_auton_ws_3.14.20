@@ -29,7 +29,7 @@ double setpointB = setpointA;   // setpoint is inches / second
 
 double inputA = 0;              // input is inches / second
 double outputA = 0;             // output is PWM to motors
-int FEEDFWDA = 30;
+int FEEDFWDA = 60;
 int a_adjust = 0;
 
 double inputB = 0;              // input is inches / second
@@ -234,8 +234,8 @@ void parseNewSetpoints(String setpointsIn) {
 
 void setup() {
   if (CONNECTED_TO_ROS) {
-    Serial.begin(115200);
-    nh.getHardware()->setBaud(115200);
+    Serial.begin(57600);
+    nh.getHardware()->setBaud(57600);
     initROSSerial();
   } else {
     initPIDSerial();
@@ -263,6 +263,14 @@ void loop() {
   motorA.Compute();
   motorB.Compute();
 
+  if (nowTime - startTimeA > 250) {
+    inputA = 0;
+  }
+
+  if (nowTime - startTimeB > 250) {
+    inputB = 0;
+  }
+
   moveA(max(0, min(255, (int)outputA + a_adjust)));
   moveB(max(0, min(255, (int)outputB + b_adjust)));
 
@@ -288,10 +296,10 @@ void loop() {
 //   delay(1000);
    
  if (CONNECTED_TO_ROS) {
-   int32_msg_R.data = int(setpointA * 100);
-   int32_msg_L.data = int(setpointB * 100);
-   pubR.publish(&int32_msg_R);
-   pubL.publish(&int32_msg_L);
+//   int32_msg_R.data = int(setpointA * 100);
+//   int32_msg_L.data = int(setpointB * 100);
+//   pubR.publish(&int32_msg_R);
+//   pubL.publish(&int32_msg_L);
 //
 //   // TODO: check if this will cause issues
    nh.spinOnce();
