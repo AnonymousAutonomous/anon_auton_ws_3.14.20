@@ -43,6 +43,12 @@ PID motorA(&inputA, &outputA, setpointA, KpA, KiA, KdA, DIRECT);
 PID motorB(&inputB, &outputB, setpointB, KpB, KiB, KdB, DIRECT);
 double storeB = 0;               // used for debug print
 
+unsigned long prevTime = 0;       // updated on every loop
+
+volatile long countR = 0;
+volatile long countL = 0;
+
+
 boolean CONNECTED_TO_ROS = true;
 
 ros::NodeHandle nh;
@@ -288,10 +294,14 @@ void loop() {
 //   delay(1000);
    
  if (CONNECTED_TO_ROS) {
-   int32_msg_R.data = int(setpointA * 100);
-   int32_msg_L.data = int(setpointB * 100);
-   pubR.publish(&int32_msg_R);
-   pubL.publish(&int32_msg_L);
+   if (nowTime - prevTime >= 200) {
+     int32_msg_R.data = countR;
+     int32_msg_L.data = countL;
+     pubR.publish(&int32_msg_R);
+     pubL.publish(&int32_msg_L);
+     prevTime = nowTime;
+   }
+
 //
 //   // TODO: check if this will cause issues
    nh.spinOnce();
@@ -312,6 +322,20 @@ void isr_A(){
     startTimeA = nowTime;
     countIntA = 0;
   }
+
+  if (digitalRead(ENCA) == HIGH) {
+    if (digitalRead(STBYA) == LOW) {
+      --countL;
+    } else {
+      ++countL;
+    }
+  } else {
+    if (digitalRead(STBYA) == LOW) {
+      ++countL;
+    } else {
+      --countL;
+    }
+  }
 }
 
 void isr_B(){
@@ -321,5 +345,19 @@ void isr_B(){
     inputB = (float) ENCODER_CONVERSION * (1.0 / (float)(nowTime - startTimeB));
     startTimeB = nowTime;
     countIntB = 0;
+  }
+  
+  if (digitalRead(ENCB) == HIGH) {
+    if (digitalRead(STBYB) == LOW) {
+      ++countR;
+    } else {
+      --countR;
+    }
+  } else {
+    if (digitalRead(STBYB) == LOW) {
+      --countR;
+    } else {
+      ++countR;
+    }
   }
 }
