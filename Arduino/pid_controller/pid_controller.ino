@@ -124,27 +124,35 @@ void initPWM(){
 
 
 void setNewSetpointMotorA(float setpoint, char dir) {
-  if (dir == STOP) {
+   float signed_setpoint = dir == BWD ? -1 * setpoint : setpoint;
+
+  if (setpoint < 0.001 || dir == STOP) {
     a_adjust = 0;
   }
   else {
     a_adjust = FEEDFWDA;
   }
-  setpointA = setpoint;
-  motorA.SetSetpoint(setpoint);
-  setADir(dir);
+  if (!AreSame(signed_setpoint, setpointA)) {
+      setpointA = signed_setpoint;
+      motorA.SetSetpoint(setpoint);
+      setADir(dir);
+    } 
 }
 
 void setNewSetpointMotorB(float setpoint, char dir) {
-  if (dir == STOP) {
+    float signed_setpoint = dir == BWD ? -1 * setpoint : setpoint;
+
+  if (setpoint < 0.001 || dir == STOP) {
     b_adjust = 0;
   }
   else {
     b_adjust = FEEDFWDB;
   }
-  setpointB = setpoint;
-  motorB.SetSetpoint(setpoint);
-  setBDir(dir);
+    if (!AreSame(signed_setpoint, setpointB)) {
+      setpointB = signed_setpoint;
+      motorB.SetSetpoint(setpoint);
+      setBDir(dir);
+    }  
 }
 
 void processIncomingByte(const byte inByte) {
