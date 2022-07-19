@@ -44,6 +44,9 @@ const int BIN2 = REVERSE_B ? BIN1_tmp : BIN2_tmp;
 #define MAX_PWM pow(2, ANALOG_WRITE_BITS)-1
 #define MIN_PWM 0    // Let motors stop
 
+#define readA bitRead(PIND,ENCA)
+#define readB bitRead(PIND,ENCB)
+
 
 /***********************************************************
  * HELPER FUNCTIONS                                        *

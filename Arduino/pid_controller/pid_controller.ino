@@ -103,8 +103,8 @@ void initROSSerial() {
 
 
 void initEncoders(){
-  pinMode(ENCA, INPUT);
-  pinMode(ENCB, INPUT);
+  pinMode(ENCA, INPUT_PULLUP);
+  pinMode(ENCB, INPUT_PULLUP);
   attachInterrupt(ENCA == 2 ? 0 : 1, isr_A, CHANGE);  // TODO: fix this for the updated arduino board
   attachInterrupt(ENCB == 2 ? 0 : 1, isr_B, CHANGE);
 };
@@ -121,6 +121,10 @@ void initPWM(){
   setNewSetpointMotorA(setpointA, FWD);
   setNewSetpointMotorB(setpointB, FWD);
 };
+
+bool AreSame(double a, double b) {
+  return fabs(a - b) < 0.001;
+}
 
 
 void setNewSetpointMotorA(float setpoint, char dir) {
@@ -269,9 +273,10 @@ void setup() {
      printPIDHeader();
      printPID(KpB, KiB, KdB, setpointB, FEEDFWDB, b_adjust);
   }
-    
+
 }
 
+String info = "";
 void loop() {
   nowTime = millis();
   motorA.Compute();
@@ -327,6 +332,8 @@ void loop() {
 //   // TODO: check if this will cause issues
    nh.spinOnce();
    delay(10);
+   info = String(countL) + ' ' + String(countR);
+   nh.loginfo(info.c_str());
  }
 
   
@@ -344,19 +351,24 @@ void isr_A(){
     countIntA = 0;
   }
 
-  if (digitalRead(ENCA) == HIGH) {
-    if (digitalRead(STBYA) == LOW) {
-      --countL;
-    } else {
-      ++countL;
-    }
+  if (readB != readA) {
+    countL++;
   } else {
-    if (digitalRead(STBYA) == LOW) {
-      ++countL;
-    } else {
-      --countL;
-    }
+    countL--;
   }
+//  if (digitalRead(ENCA) == HIGH) {
+//    if (digitalRead(STBYA) == LOW) {
+//      --countL;
+//    } else {
+//      ++countL;
+//    }
+//  } else {
+//    if (digitalRead(STBYA) == LOW) {
+//      ++countL;
+//    } else {
+//      --countL;
+//    }
+//  }
 }
 
 void isr_B(){
@@ -367,18 +379,24 @@ void isr_B(){
     startTimeB = nowTime;
     countIntB = 0;
   }
-  
-  if (digitalRead(ENCB) == HIGH) {
-    if (digitalRead(STBYB) == LOW) {
-      ++countR;
-    } else {
-      --countR;
-    }
+
+  if (readB == readA) {
+    countR++;
   } else {
-    if (digitalRead(STBYB) == LOW) {
-      --countR;
-    } else {
-      ++countR;
-    }
+    countR--;
   }
+
+//  if (digitalRead(ENCB) == HIGH) {
+//    if (digitalRead(STBYB) == LOW) {
+//      ++countR;
+//    } else {
+//      --countR;
+//    }
+//  } else {
+//    if (digitalRead(STBYB) == LOW) {
+//      --countR;
+//    } else {
+//      ++countR;
+//    }
+//  }
 }
