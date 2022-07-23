@@ -5,8 +5,8 @@ camera:
     "imageWidth": 640,
     "imageHeight": 480,
     "brightnessThreshold": 175,
-    "sidePercentThreshold": 0.50,
-    "topPercentThreshold": 0.50,
+    "sidePercentThreshold": 0.20,
+    "topPercentThreshold": 0.20,
     "numMiddlePixels": 100800,
     "test": 500,
   }
