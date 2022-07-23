@@ -41,6 +41,7 @@ void chatterCallBack(const sensor_msgs::Image &view);
 void pauseCallback(const std_msgs::Empty empty_msg);
 
 std::map<std::string, std::string> commands_in;
+std::map<std::string, std::string> variables_in;
 std::unordered_map<AutonomousCmd, std::string> commands;
 
 int main(int argc, char **argv)
@@ -65,8 +66,7 @@ int main(int argc, char **argv)
         ROS_ERROR("You must load autonomous commands before using camera.");
         return 1;
     }
-    commands_in.clear();
-    if (Iris.getParam("/camera", commands_in))
+    if (Iris.getParam("/camera", variables_in))
     {
         for (auto i = commands_in.begin(); i != commands_in.end(); i++)
         {
