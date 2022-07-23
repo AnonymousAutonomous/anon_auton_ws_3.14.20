@@ -104,7 +104,7 @@ int main(int argc, char **argv)
                 ROS_ERROR("%s", infostr.c_str());
             }
 
-            std::string infostr = "Loaded parameter: " + i->first + " - " + to_string(i->second);
+            std::string infostr = "Loaded parameter: " + i->first + " - " + std::to_string(i->second);
             ROS_ERROR("%s", infostr.c_str());
         }
     }
