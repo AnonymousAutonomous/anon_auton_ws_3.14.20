@@ -41,7 +41,7 @@ void chatterCallBack(const sensor_msgs::Image &view);
 void pauseCallback(const std_msgs::Empty empty_msg);
 
 std::map<std::string, std::string> commands_in;
-std::map<std::string, std::double> variables_in;
+std::map<std::string, double> variables_in;
 std::unordered_map<AutonomousCmd, std::string> commands;
 
 int main(int argc, char **argv)
