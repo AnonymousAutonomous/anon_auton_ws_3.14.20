@@ -70,28 +70,28 @@ int main(int argc, char **argv)
         {
             switch (CAMERA_VARIABLE_STRING_TO_ENUM[i->first])
             {
-            case CameraVariable.TOP_BAND_WIDTH:
+            case TOP_BAND_WIDTH:
                 topBandWidth = int(i->second);
                 break;
-            case CameraVariable.SIDE_BAND_WIDTH:
+            case SIDE_BAND_WIDTH:
                 sideBandWidth = int(i->second);
                 break;
-            case CameraVariable.IMAGE_WIDTH:
+            case IMAGE_WIDTH:
                 imageWidth = int(i->second);
                 break;
-            case CameraVariable.IMAGE_HEIGHT:
+            case IMAGE_HEIGHT:
                 imageHeight = int(i->second);
                 break;
-            case CameraVariable.BRIGHTNESS_THRESHOLD:
+            case BRIGHTNESS_THRESHOLD:
                 brightnessThreshold = int(i->second);
                 break;
-            case CameraVariable.SIDE_PERCENT_THRESHOLD:
+            case SIDE_PERCENT_THRESHOLD:
                 sidePercentThreshold = double(i->second);
                 break;
-            case CameraVariable.TOP_PERCENT_THRESHOLD:
+            case TOP_PERCENT_THRESHOLD:
                 topPercentThreshold = double(i->second);
                 break;
-            case CameraVariable.NUM_MIDDLE_PIXELS:
+            case NUM_MIDDLE_PIXELS:
                 numMiddlePixels = double(i->second);
                 break;
             default:
