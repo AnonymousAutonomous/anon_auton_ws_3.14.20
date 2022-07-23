@@ -70,6 +70,8 @@ int main(int argc, char **argv)
     {
         for (auto i = commands_in.begin(); i != commands_in.end(); i++)
         {
+            ROS_ERROR("%s", i->first.c_str());
+            ROS_ERROR("%s", i->second.c_str());
             switch (CAMERA_VARIABLE_STRING_TO_ENUM[i->first])
             {
             case TOP_BAND_WIDTH:
