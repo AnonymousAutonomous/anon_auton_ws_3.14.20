@@ -70,34 +70,34 @@ int main(int argc, char **argv)
             switch (CAMERA_VARIABLE_STRING_TO_ENUM[i->first])
             {
             case CameraVariable.TOP_BAND_WIDTH:
-                topBandWidth = i->second;
+                topBandWidth = int(i->second);
                 break;
             case CameraVariable.SIDE_BAND_WIDTH:
-                sideBandWidth = i->second;
+                sideBandWidth = int(i->second);
                 break;
             case CameraVariable.IMAGE_WIDTH:
-                imageWidth = i->second;
+                imageWidth = int(i->second);
                 break;
             case CameraVariable.IMAGE_HEIGHT:
-                imageHeight = i->second;
+                imageHeight = int(i->second);
                 break;
             case CameraVariable.BRIGHTNESS_THRESHOLD:
-                brightnessThreshold = i->second;
+                brightnessThreshold = int(i->second);
                 break;
             case CameraVariable.SIDE_PERCENT_THRESHOLD:
-                sidePercentThreshold = i->second;
+                sidePercentThreshold = double(i->second);
                 break;
             case CameraVariable.TOP_PERCENT_THRESHOLD:
-                topPercentThreshold = i->second;
+                topPercentThreshold = double(i->second);
                 break;
             case CameraVariable.NUM_MIDDLE_PIXELS:
-                numMiddlePixels = i->second;
+                numMiddlePixels = double(i->second);
                 break;
             default:
-                ROS_ERROR("Unexpected variable: " + String(i->second));
+                ROS_ERROR("Unexpected variable: " + string(i->second));
             }
         }
-        ROS_INFO("Loaded parameter: " + String(i->first) + " " + String(i->second));
+        ROS_INFO("Loaded parameter: " + string(i->first) + " " + string(i->second));
     }
 
     ros::NodeHandle Cornea;                                                                // publisher
