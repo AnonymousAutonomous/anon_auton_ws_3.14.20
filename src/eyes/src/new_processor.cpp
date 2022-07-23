@@ -72,7 +72,7 @@ int main(int argc, char **argv)
         for (auto i = variables_in.begin(); i != variables_in.end(); i++)
         {
             ROS_ERROR("%s", i->first.c_str());
-            ROS_ERROR("%s", i->second.c_str());
+            ROS_ERROR("%s", to_string(i->second).c_str());
             switch (CAMERA_VARIABLE_STRING_TO_ENUM[i->first])
             {
             case TOP_BAND_WIDTH:
@@ -100,7 +100,7 @@ int main(int argc, char **argv)
                 numMiddlePixels = i->second;
                 break;
             default:
-                std::string infostr = "Unexpected variable: " + to_string(i->second);
+                std::string infostr = "Unexpected variable: " + i->first;
                 ROS_ERROR("%s", infostr.c_str());
             }
 
