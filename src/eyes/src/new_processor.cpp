@@ -41,7 +41,7 @@ void chatterCallBack(const sensor_msgs::Image &view);
 void pauseCallback(const std_msgs::Empty empty_msg);
 
 std::map<std::string, std::string> commands_in;
-std::map<std::string, std::string> variables_in;
+std::map<std::string, std::double> variables_in;
 std::unordered_map<AutonomousCmd, std::string> commands;
 
 int main(int argc, char **argv)
@@ -67,45 +67,44 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    ros::NodeHandle nh; // subscriber
-    if (nh.getParam("/camera", variables_in))
+    if (Iris.getParam("/camera", variables_in))
     {
-        for (auto i = commands_in.begin(); i != commands_in.end(); i++)
+        for (auto i = variables_in.begin(); i != variables_in.end(); i++)
         {
             ROS_ERROR("%s", i->first.c_str());
             ROS_ERROR("%s", i->second.c_str());
             switch (CAMERA_VARIABLE_STRING_TO_ENUM[i->first])
             {
             case TOP_BAND_WIDTH:
-                topBandWidth = std::stoi(std::string(i->second));
+                topBandWidth = int(i->second);
                 break;
             case SIDE_BAND_WIDTH:
-                sideBandWidth = std::stoi(std::string(i->second));
+                sideBandWidth = int(i->second);
                 break;
             case IMAGE_WIDTH:
-                imageWidth = std::stoi(std::string(i->second));
+                imageWidth = int(i->second);
                 break;
             case IMAGE_HEIGHT:
-                imageHeight = std::stoi(std::string(i->second));
+                imageHeight = int(i->second);
                 break;
             case BRIGHTNESS_THRESHOLD:
-                brightnessThreshold = std::stoi(std::string(i->second));
+                brightnessThreshold = int(i->second);
                 break;
             case SIDE_PERCENT_THRESHOLD:
-                sidePercentThreshold = std::stof(std::string(i->second));
+                sidePercentThreshold = i->second;
                 break;
             case TOP_PERCENT_THRESHOLD:
-                topPercentThreshold = std::stof(std::string(i->second));
+                topPercentThreshold = i->second;
                 break;
             case NUM_MIDDLE_PIXELS:
-                numMiddlePixels = std::stof(std::string(i->second));
+                numMiddlePixels = i->second;
                 break;
             default:
-                std::string infostr = "Unexpected variable: " + i->second;
+                std::string infostr = "Unexpected variable: " + to_string(i->second);
                 ROS_ERROR("%s", infostr.c_str());
             }
 
-            std::string infostr = "Loaded parameter: " + i->first + " - " + i->second;
+            std::string infostr = "Loaded parameter: " + i->first + " - " + to_string(i->second);
             ROS_ERROR("%s", infostr.c_str());
         }
     }

@@ -1,12 +1,12 @@
 camera:
   {
-    "topBandWidth": "120",
-    "sideBandWidth": "180",
-    "imageWidth": "640",
-    "imageHeight": "480",
-    "brightnessThreshold": "175",
-    "sidePercentThreshold": "0.20",
-    "topPercentThreshold": "0.20",
-    "numMiddlePixels": "100800",
-    "test": "500",
+    "topBandWidth": 120,
+    "sideBandWidth": 180,
+    "imageWidth": 640,
+    "imageHeight": 480,
+    "brightnessThreshold": 175,
+    "sidePercentThreshold": 0.20,
+    "topPercentThreshold": 0.20,
+    "numMiddlePixels": 100800,
+    "test": 500,
   }
