@@ -111,7 +111,7 @@ int main(int argc, char **argv)
 
             // delay_rate.sleep(); // need this?
         }
-        std::cout << "THRESHOLD: " << std::to_string(threshold) << std::endl;
+        std::cout << "THRESHOLD: " << std::to_string(brightnessThreshold) << std::endl;
         std::cout << "SIDE: " << std::to_string(sidePercentThreshold) << std::endl;
         std::cout << "TOP: " << std::to_string(topPercentThreshold) << std::endl;
 
