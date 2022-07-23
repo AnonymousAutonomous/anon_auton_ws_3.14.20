@@ -66,7 +66,9 @@ int main(int argc, char **argv)
         ROS_ERROR("You must load autonomous commands before using camera.");
         return 1;
     }
-    if (Iris.getParam("/camera", variables_in))
+
+    ros::NodeHandle nh; // subscriber
+    if (nh.getParam("/camera", variables_in))
     {
         for (auto i = commands_in.begin(); i != commands_in.end(); i++)
         {
