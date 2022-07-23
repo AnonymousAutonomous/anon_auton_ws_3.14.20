@@ -72,7 +72,7 @@ int main(int argc, char **argv)
         for (auto i = variables_in.begin(); i != variables_in.end(); i++)
         {
             ROS_ERROR("%s", i->first.c_str());
-            ROS_ERROR("%s", to_string(i->second).c_str());
+            ROS_ERROR("%s", std::to_string(i->second).c_str());
             switch (CAMERA_VARIABLE_STRING_TO_ENUM[i->first])
             {
             case TOP_BAND_WIDTH:
@@ -104,7 +104,7 @@ int main(int argc, char **argv)
                 ROS_ERROR("%s", infostr.c_str());
             }
 
-            std::string infostr = "Loaded parameter: " + i->first + " - " + to_string(i->second);
+            std::string infostr = "Loaded parameter: " + i->first + " - " + std::to_string(i->second);
             ROS_ERROR("%s", infostr.c_str());
         }
     }
