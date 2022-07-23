@@ -7,7 +7,6 @@
 #include "std_msgs/Char.h"
 #include "eyes/Generic.h"
 #include "../../../constants/choreos.h"
-#include "../../../constants/camera_variables.h"
 
 #include <ros/callback_queue.h>
 #include <ros/spinner.h>

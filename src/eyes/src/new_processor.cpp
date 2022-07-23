@@ -10,6 +10,7 @@
 #include "std_msgs/Empty.h"
 #include "std_msgs/UInt8.h"
 #include "../../../constants/str_cmds.h"
+#include "../../../constants/camera_variables.h"
 #include <string>
 #include <map>
 #include <unordered_map>
@@ -261,7 +262,7 @@ void chatterCallBack(const sensor_msgs::Image &view)
     d += " Middle: ";
     d += std::to_string(middleAverage);
     d += "\nThreshold: ";
-    d += std::to_string(threshold);
+    d += std::to_string(brightnessThreshold);
     d += " Top Threshold: ";
     d += std::to_string(topPercentThreshold);
     d += " Side Threshold: ";
