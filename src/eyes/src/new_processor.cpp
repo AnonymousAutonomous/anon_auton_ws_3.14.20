@@ -96,11 +96,11 @@ int main(int argc, char **argv)
                 break;
             default:
                 std::string infostr = "Unexpected variable: " + i->second;
-                ROS_INFO_STREAM(infostr);
+                ROS_ERROR("%s", infostr.cstr());
             }
 
             std::string infostr = "Loaded parameter: " + i->first + " - " + i->second;
-            ROS_INFO_STREAM(infostr);
+            ROS_INFO("%s", infostr.cstr());
         }
     }
 

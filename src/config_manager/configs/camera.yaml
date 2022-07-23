@@ -8,4 +8,5 @@ camera:
     "sidePercentThreshold": 0.20,
     "topPercentThreshold": 0.20,
     "numMiddlePixels": 100800,
+    "test": 500,
   }
