@@ -71,28 +71,28 @@ int main(int argc, char **argv)
             switch (CAMERA_VARIABLE_STRING_TO_ENUM[i->first])
             {
             case TOP_BAND_WIDTH:
-                topBandWidth = int(i->second);
+                topBandWidth = stoi(i->second);
                 break;
             case SIDE_BAND_WIDTH:
-                sideBandWidth = int(i->second);
+                sideBandWidth = stoi(i->second);
                 break;
             case IMAGE_WIDTH:
-                imageWidth = int(i->second);
+                imageWidth = stoi(i->second);
                 break;
             case IMAGE_HEIGHT:
-                imageHeight = int(i->second);
+                imageHeight = stoi(i->second);
                 break;
             case BRIGHTNESS_THRESHOLD:
-                brightnessThreshold = int(i->second);
+                brightnessThreshold = stoi(i->second);
                 break;
             case SIDE_PERCENT_THRESHOLD:
-                sidePercentThreshold = double(i->second);
+                sidePercentThreshold = stof(i->second);
                 break;
             case TOP_PERCENT_THRESHOLD:
-                topPercentThreshold = double(i->second);
+                topPercentThreshold = stof(i->second);
                 break;
             case NUM_MIDDLE_PIXELS:
-                numMiddlePixels = double(i->second);
+                numMiddlePixels = stof(i->second);
                 break;
             default:
                 ROS_ERROR("Unexpected variable: " + string(i->second));
