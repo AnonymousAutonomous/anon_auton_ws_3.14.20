@@ -65,6 +65,7 @@ int main(int argc, char **argv)
         ROS_ERROR("You must load autonomous commands before using camera.");
         return 1;
     }
+    commands_in.clear();
     if (Iris.getParam("/camera", commands_in))
     {
         for (auto i = commands_in.begin(); i != commands_in.end(); i++)
