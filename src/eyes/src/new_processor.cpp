@@ -41,7 +41,7 @@ void chatterCallBack(const sensor_msgs::Image &view);
 void pauseCallback(const std_msgs::Empty empty_msg);
 
 std::map<std::string, std::string> commands_in;
-std::map<std::string, std::double> variables_in;
+std::map<std::string, std::string> variables_in;
 std::unordered_map<AutonomousCmd, std::string> commands;
 
 int main(int argc, char **argv)
@@ -73,35 +73,35 @@ int main(int argc, char **argv)
             switch (CAMERA_VARIABLE_STRING_TO_ENUM[i->first])
             {
             case TOP_BAND_WIDTH:
-                topBandWidth = int(i->second);
+                topBandWidth = stoi(i->second);
                 break;
             case SIDE_BAND_WIDTH:
-                sideBandWidth = int(i->second);
+                sideBandWidth = stoi(i->second);
                 break;
             case IMAGE_WIDTH:
-                imageWidth = int(i->second);
+                imageWidth = stoi(i->second);
                 break;
             case IMAGE_HEIGHT:
-                imageHeight = int(i->second);
+                imageHeight = stoi(i->second);
                 break;
             case BRIGHTNESS_THRESHOLD:
-                brightnessThreshold = int(i->second);
+                brightnessThreshold = stoi(i->second);
                 break;
             case SIDE_PERCENT_THRESHOLD:
-                sidePercentThreshold = i->second;
+                sidePercentThreshold = stof(i->second);
                 break;
             case TOP_PERCENT_THRESHOLD:
-                topPercentThreshold = i->second;
+                topPercentThreshold = stof(i->second);
                 break;
             case NUM_MIDDLE_PIXELS:
-                numMiddlePixels = i->second;
+                numMiddlePixels = stof(i->second);
                 break;
             default:
-                std::string infostr = "Unexpected variable: " + std::string(i->second);
+                std::string infostr = "Unexpected variable: " + i->second;
                 ROS_ERROR("%s", infostr.c_str());
             }
 
-            std::string infostr = "Loaded parameter: " + i->first + " - " + std::string(i->second);
+            std::string infostr = "Loaded parameter: " + i->first + " - " + i->second;
             ROS_ERROR("%s", infostr.c_str());
         }
     }
