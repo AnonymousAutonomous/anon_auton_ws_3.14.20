@@ -95,10 +95,10 @@ int main(int argc, char **argv)
                 numMiddlePixels = stof(i->second);
                 break;
             default:
-                ROS_ERROR("Unexpected variable: " + string(i->second));
+                ROS_ERROR("Unexpected variable: " + i->second);
             }
         }
-        ROS_INFO("Loaded parameter: " + string(i->first) + " " + string(i->second));
+        ROS_INFO("Loaded parameter: " + i->first + " " + i->second);
     }
 
     ros::NodeHandle Cornea;                                                                // publisher
