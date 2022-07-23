@@ -73,28 +73,28 @@ int main(int argc, char **argv)
             switch (CAMERA_VARIABLE_STRING_TO_ENUM[i->first])
             {
             case TOP_BAND_WIDTH:
-                topBandWidth = stoi(i->second);
+                topBandWidth = std::stoi(i->second);
                 break;
             case SIDE_BAND_WIDTH:
-                sideBandWidth = stoi(i->second);
+                sideBandWidth = std::stoi(i->second);
                 break;
             case IMAGE_WIDTH:
-                imageWidth = stoi(i->second);
+                imageWidth = std::stoi(i->second);
                 break;
             case IMAGE_HEIGHT:
-                imageHeight = stoi(i->second);
+                imageHeight = std::stoi(i->second);
                 break;
             case BRIGHTNESS_THRESHOLD:
-                brightnessThreshold = stoi(i->second);
+                brightnessThreshold = std::stoi(i->second);
                 break;
             case SIDE_PERCENT_THRESHOLD:
-                sidePercentThreshold = stof(i->second);
+                sidePercentThreshold = std::stof(i->second);
                 break;
             case TOP_PERCENT_THRESHOLD:
-                topPercentThreshold = stof(i->second);
+                topPercentThreshold = std::stof(i->second);
                 break;
             case NUM_MIDDLE_PIXELS:
-                numMiddlePixels = stof(i->second);
+                numMiddlePixels = std::stof(i->second);
                 break;
             default:
                 std::string infostr = "Unexpected variable: " + i->second;
