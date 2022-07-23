@@ -45,7 +45,7 @@ std::unordered_map<AutonomousCmd, std::string> commands;
 
 int main(int argc, char **argv)
 {
-    ROS_INFO("INITING EVERYTHING");
+    ROS_ERROR("INITING EVERYTHING");
     ros::init(argc, argv, "camera_process");
 
     ros::AsyncSpinner spinner(0);
