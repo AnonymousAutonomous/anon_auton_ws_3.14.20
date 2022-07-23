@@ -87,7 +87,7 @@ int main(int argc, char **argv)
                 value += cmd[1];
                 value += cmd[2];
                 value += cmd[3];
-                threshold = std::stoi(value);
+                brightnessThreshold = std::stoi(value);
             }
             else if (cmd[0] == 'p')
             {
@@ -142,21 +142,21 @@ void chatterCallBack(const sensor_msgs::Image &view)
         if (inTop(i))
         {
             // command += "T";
-            topCount += (view.data[i] > threshold);
+            topCount += (view.data[i] > brightnessThreshold);
         }
         if (inLeft(i))
         {
             // command += "L";
-            leftCount += (view.data[i] > threshold);
+            leftCount += (view.data[i] > brightnessThreshold);
         }
         if (inRight(i))
         {
             // command += "R";
-            rightCount += (view.data[i] > threshold);
+            rightCount += (view.data[i] > brightnessThreshold);
         }
         if (inMiddle(i))
         {
-            middleCount += (view.data[i] > threshold);
+            middleCount += (view.data[i] > brightnessThreshold);
         }
 
         running_pixel_differences += (view.data[i] > old_data[i] ? view.data[i] - old_data[i] : old_data[i] - view.data[i]);
@@ -265,11 +265,11 @@ void chatterCallBack(const sensor_msgs::Image &view)
     d += std::to_string(running_pixel_differences);
     d += "\nThreshold: ";
     d += std::to_string(brightnessThreshold);
-    d += " Top Threshold: ";
+    d += " Top brightnessThreshold: ";
     d += std::to_string(topPercentThreshold);
-    d += " Side Threshold: ";
+    d += " Side brightnessThreshold: ";
     d += std::to_string(sidePercentThreshold);
-    d += " Not Stuck Threshold: ";
+    d += " Not Stuck brightnessThreshold: ";
     d += std::to_string(not_stuck_threshold);
 
     if (running_pixel_differences < not_stuck_threshold)
