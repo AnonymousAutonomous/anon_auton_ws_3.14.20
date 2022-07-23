@@ -105,6 +105,10 @@ int main(int argc, char **argv)
             ROS_ERROR("%s", infostr.c_str());
         }
     }
+    {
+        ROS_ERROR("Unable to load camera parameters.");
+        return 1;
+    }
 
     ros::NodeHandle Cornea;                                                                // publisher
     ros::Subscriber Handle = Iris.subscribe("/cv_camera/image_mono", 10, chatterCallBack); // 10 was 1000
