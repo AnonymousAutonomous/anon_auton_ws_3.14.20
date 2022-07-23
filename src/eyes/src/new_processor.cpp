@@ -95,13 +95,12 @@ int main(int argc, char **argv)
                 numMiddlePixels = stof(i->second);
                 break;
             default:
-                std::string amount = i->second;
-                ROS_ERROR("Unexpected variable: " + amount);
+                std::string infostr = "Unexpected variable: " + i->second;
+                ROS_ERROR(infostr);
             }
 
-            std::string parameter = i->first;
-            std::string amount = i->second;
-            ROS_INFO("Loaded parameter: " + parameter + " - " + amount);
+            std::string infostr = "Loaded parameter: " + i->first + " - " + i->second;
+            ROS_INFO(infostr);
         }
     }
 
