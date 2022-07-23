@@ -351,7 +351,7 @@ void isr_A(){
     countIntA = 0;
   }
 
-  if (readB != readA) {
+  if (digitalRead(ENCA) == digitalRead(STBYA)) {
     countL++;
   } else {
     countL--;
@@ -380,7 +380,7 @@ void isr_B(){
     countIntB = 0;
   }
 
-  if (readB == readA) {
+  if (digitalRead(ENCB) != digitalRead(STBYB)) {
     countR++;
   } else {
     countR--;
