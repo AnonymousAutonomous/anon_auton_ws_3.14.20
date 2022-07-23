@@ -67,30 +67,30 @@ int main(int argc, char **argv)
     {
         for (auto i = commands_in.begin(); i != commands_in.end(); i++)
         {
-            switch (i->first)
+            switch (CAMERA_VARIABLE_STRING_TO_ENUM[i->first])
             {
-            case "topBandWidth":
+            case CameraVariable.TOP_BAND_WIDTH:
                 topBandWidth = i->second;
                 break;
-            case "sideBandWidth":
+            case CameraVariable.SIDE_BAND_WIDTH:
                 sideBandWidth = i->second;
                 break;
-            case "imageWidth":
+            case CameraVariable.IMAGE_WIDTH:
                 imageWidth = i->second;
                 break;
-            case "imageHeight":
+            case CameraVariable.IMAGE_HEIGHT:
                 imageHeight = i->second;
                 break;
-            case "brightnessThreshold":
+            case CameraVariable.BRIGHTNESS_THRESHOLD:
                 brightnessThreshold = i->second;
                 break;
-            case "sidePercentThreshold":
+            case CameraVariable.SIDE_PERCENT_THRESHOLD:
                 sidePercentThreshold = i->second;
                 break;
-            case "topPercentThreshold":
+            case CameraVariable.TOP_PERCENT_THRESHOLD:
                 topPercentThreshold = i->second;
                 break;
-            case "numMiddlePixels":
+            case CameraVariable.NUM_MIDDLE_PIXELS:
                 numMiddlePixels = i->second;
                 break;
             default:
