@@ -58,7 +58,7 @@ int main(int argc, char **argv)
         {
             commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
         }
-        ROS_INFO("Autonomous commands have been loaded for camera.");
+        ROS_ERROR("Autonomous commands have been loaded for camera.");
     }
     else
     {
@@ -101,7 +101,7 @@ int main(int argc, char **argv)
             }
 
             std::string infostr = "Loaded parameter: " + i->first + " - " + i->second;
-            ROS_INFO("%s", infostr.c_str());
+            ROS_ERROR("%s", infostr.c_str());
         }
     }
 
