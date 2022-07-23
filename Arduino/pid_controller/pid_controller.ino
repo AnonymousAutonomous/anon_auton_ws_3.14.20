@@ -325,6 +325,8 @@ void loop() {
      int32_msg_L.data = countL;
      pubR.publish(&int32_msg_R);
      pubL.publish(&int32_msg_L);
+     info = String(countL) + ' ' + String(countR);
+     nh.loginfo(info.c_str());
      prevTime = nowTime;
    }
 
@@ -332,8 +334,6 @@ void loop() {
 //   // TODO: check if this will cause issues
    nh.spinOnce();
    delay(10);
-   info = String(countL) + ' ' + String(countR);
-   nh.loginfo(info.c_str());
  }
 
   
@@ -356,19 +356,6 @@ void isr_A(){
   } else {
     countL--;
   }
-//  if (digitalRead(ENCA) == HIGH) {
-//    if (digitalRead(STBYA) == LOW) {
-//      --countL;
-//    } else {
-//      ++countL;
-//    }
-//  } else {
-//    if (digitalRead(STBYA) == LOW) {
-//      ++countL;
-//    } else {
-//      --countL;
-//    }
-//  }
 }
 
 void isr_B(){
@@ -385,18 +372,4 @@ void isr_B(){
   } else {
     countR--;
   }
-
-//  if (digitalRead(ENCB) == HIGH) {
-//    if (digitalRead(STBYB) == LOW) {
-//      ++countR;
-//    } else {
-//      --countR;
-//    }
-//  } else {
-//    if (digitalRead(STBYB) == LOW) {
-//      --countR;
-//    } else {
-//      ++countR;
-//    }
-//  }
 }
