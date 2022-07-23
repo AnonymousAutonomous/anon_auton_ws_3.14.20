@@ -97,11 +97,11 @@ int main(int argc, char **argv)
                 numMiddlePixels = i->second;
                 break;
             default:
-                std::string infostr = "Unexpected variable: " + to_string(i->second);
+                std::string infostr = "Unexpected variable: " + std::string(i->second);
                 ROS_ERROR("%s", infostr.c_str());
             }
 
-            std::string infostr = "Loaded parameter: " + i->first + " - " + to_string(i->second);
+            std::string infostr = "Loaded parameter: " + i->first + " - " + std::string(i->second);
             ROS_ERROR("%s", infostr.c_str());
         }
     }
