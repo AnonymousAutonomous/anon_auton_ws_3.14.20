@@ -97,8 +97,9 @@ int main(int argc, char **argv)
             default:
                 ROS_ERROR("Unexpected variable: " + i->second);
             }
+
+            ROS_INFO("Loaded parameter: " + i->first + " " + i->second);
         }
-        ROS_INFO("Loaded parameter: " + i->first + " " + i->second);
     }
 
     ros::NodeHandle Cornea;                                                                // publisher
