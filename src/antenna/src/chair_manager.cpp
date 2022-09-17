@@ -8,11 +8,23 @@
 #include <vector>
 #include <string>
 
-char START[] = "start";
-char STOP[] = "stop";
-char LAUNCH[] = "launch";
-char SHUTDOWN[] = "shutdown";
-char HANDWRITTEN[] = "handwritten";
+enum Commands
+{
+	START,
+	STOP,
+	LAUNCH,
+	SHUTDOWN,
+	HANDWRITTEN
+}
+
+const static std::unordered_map<char[], int>
+	cmd_to_case{
+		{"start", Commands.START},
+		{"stop", Commands.STOP},
+		{"launch", Commands.LAUNCH},
+		{"shutdown", Commands.SHUTDOWN},
+		{"handwritten", Commands.HANDWRITTEN},
+	};
 
 char LAUNCH_AUTONOMOUS_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh";
 char LAUNCH_HANDWRITTEN_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_handwritten.sh";
@@ -54,7 +66,7 @@ void handle_shutdown()
 
 void handle_handwritten(char *handwritten_cmd)
 {
-	system("echo \"" + std::string(handwritten_cmd) + "\" > /tmp/handwritten-input");
+	system("echo \"".to_cstr() + handwritten_cmd + "\" > /tmp/handwritten-input".to_cstr());
 }
 
 void receive_callback(const std_msgs::String &msg)
@@ -65,21 +77,21 @@ void receive_callback(const std_msgs::String &msg)
 	const char *full_msg = msg.data.c_str();
 	char *cmd = strtok(full_msg, ' ');
 
-	switch (cmd)
+	switch (cmd_to_case(cmd))
 	{
-	case START:
+	case Commands.START:
 		handle_start();
 		break;
-	case STOP:
+	case Commands.STOP:
 		handle_stop();
 		break;
-	case LAUNCH:
+	case Commands.LAUNCH:
 		handle_launch();
 		break;
-	case SHUTDOWN:
+	case Commands.SHUTDOWN:
 		handle_shutdown();
 		break;
-	case HANDWRITTEN:
+	case Commands.HANDWRITTEN:
 		handle_handwritten(strtok(NULL, " ,.-"));
 		break;
 	case default:
