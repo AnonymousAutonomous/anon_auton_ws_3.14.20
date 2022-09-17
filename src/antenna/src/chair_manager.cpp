@@ -2,6 +2,7 @@
 #include "std_msgs/String.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <unordered_map>
 
 #include <ros/spinner.h>
 #include <queue>
@@ -18,7 +19,7 @@ enum Command
 }
 
 const std::unordered_map<char[], int>
-	g_cmd_to_case{
+	cmd_to_case{
 		{"start", Commands.START},
 		{"stop", Commands.STOP},
 		{"launch", Commands.LAUNCH},
@@ -77,7 +78,7 @@ void receive_callback(const std_msgs::String &msg)
 	const char *full_msg = msg.data.c_str();
 	char *cmd = strtok(full_msg, ' ');
 
-	Command command = g_cmd_to_case(cmd);
+	Command command = cmd_to_case(cmd);
 	switch (command)
 	{
 	case START:
