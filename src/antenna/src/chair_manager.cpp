@@ -18,7 +18,7 @@ enum Command
 	HANDWRITTEN
 }
 
-const std::unordered_map<char[], int>
+const std::unordered_map<std::string, int>
 	cmd_to_case{
 		{"start", Commands.START},
 		{"stop", Commands.STOP},
@@ -78,7 +78,7 @@ void receive_callback(const std_msgs::String &msg)
 	const char *full_msg = msg.data.c_str();
 	char *cmd = strtok(full_msg, ' ');
 
-	Command command = cmd_to_case(cmd);
+	Command command = cmd_to_case(std::string(cmd));
 	switch (command)
 	{
 	case START:
