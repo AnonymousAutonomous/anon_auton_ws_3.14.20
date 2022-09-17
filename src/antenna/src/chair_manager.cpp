@@ -54,7 +54,7 @@ void handle_shutdown()
 
 void handle_handwritten(char *handwritten_cmd)
 {
-	system("echo \"" + handwritten_cmd + "\" > /tmp/handwritten-input");
+	system("echo \"" + std::string(handwritten_cmd) + "\" > /tmp/handwritten-input");
 }
 
 void receive_callback(const std_msgs::String &msg)
@@ -62,8 +62,8 @@ void receive_callback(const std_msgs::String &msg)
 	// chair_manager_pub.publish(msg);
 	ROS_INFO("PUBLISHING %s", msg.data.c_str());
 
-	char *full_msg = msg.data.c_str();
-	char *cmd = strtok(&full_msg, ' ');
+	const char *full_msg = msg.data.c_str();
+	char *cmd = strtok(full_msg, ' ');
 
 	switch (cmd)
 	{
