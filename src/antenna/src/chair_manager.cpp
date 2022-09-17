@@ -8,7 +8,7 @@
 #include <vector>
 #include <string>
 
-enum Commands
+enum Command
 {
 	START,
 	STOP,
@@ -77,7 +77,8 @@ void receive_callback(const std_msgs::String &msg)
 	const char *full_msg = msg.data.c_str();
 	char *cmd = strtok(full_msg, ' ');
 
-	switch (cmd_to_case(cmd))
+	Command command = cmd_to_case(cmd);
+	switch (command)
 	{
 	case START:
 		handle_start();
