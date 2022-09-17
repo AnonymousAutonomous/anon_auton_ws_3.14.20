@@ -79,19 +79,19 @@ void receive_callback(const std_msgs::String &msg)
 
 	switch (cmd_to_case(cmd))
 	{
-	case Commands.START:
+	case START:
 		handle_start();
 		break;
-	case Commands.STOP:
+	case STOP:
 		handle_stop();
 		break;
-	case Commands.LAUNCH:
+	case LAUNCH:
 		handle_launch();
 		break;
-	case Commands.SHUTDOWN:
+	case SHUTDOWN:
 		handle_shutdown();
 		break;
-	case Commands.HANDWRITTEN:
+	case HANDWRITTEN:
 		handle_handwritten(strtok(NULL, " ,.-"));
 		break;
 	case default:
