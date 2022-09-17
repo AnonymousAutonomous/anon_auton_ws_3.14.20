@@ -14,9 +14,9 @@ char LAUNCH[] = "launch";
 char SHUTDOWN[] = "shutdown";
 char HANDWRITTEN[] = "handwritten";
 
-std::string LAUNCH_AUTONOMOUS_SCRIPT = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh";
-std::string LAUNCH_HANDWRITTEN_SCRIPT = "~/anon_auton_ws/src/launch_manager/launch/launch_handwritten.sh";
-std::string SHUTDOWN_SCRIPT = "~/anon_auton_ws/src/launch_manager/launch/stop.sh";
+char LAUNCH_AUTONOMOUS_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh";
+char LAUNCH_HANDWRITTEN_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_handwritten.sh";
+char SHUTDOWN_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/stop.sh";
 
 // probably not necessary
 // #define NUMBER_OF_CHAIRS 1
