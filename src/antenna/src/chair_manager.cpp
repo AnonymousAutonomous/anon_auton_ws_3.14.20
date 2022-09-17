@@ -1,10 +1,22 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 #include <ros/spinner.h>
 #include <queue>
 #include <vector>
 #include <string>
+
+char *START = "start";
+char *STOP = "stop";
+char *LAUNCH = "launch";
+char *SHUTDOWN = "shutdown";
+char *HANDWRITTEN = "handwritten";
+
+string LAUNCH_AUTONOMOUS_SCRIPT = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh";
+string LAUNCH_HANDWRITTEN_SCRIPT = "~/anon_auton_ws/src/launch_manager/launch/launch_handwritten.sh";
+string SHUTDOWN_SCRIPT = "~/anon_auton_ws/src/launch_manager/launch/stop.sh";
 
 // probably not necessary
 // #define NUMBER_OF_CHAIRS 1
@@ -17,12 +29,66 @@
 ros::Publisher chair_manager_pub;
 // ros::Publisher test_pub;
 
-void receive_callback(const std_msgs::String& msg) {
-	chair_manager_pub.publish(msg);
-	ROS_INFO("PUBLISHING %s", msg.data.c_str());
+void handle_start()
+{
+	system("echo \"toggle\" > /tmp/handwritten-input");
 }
 
-int main (int argc, char** argv) {
+void handle_stop()
+{
+	system("echo \"stop\" > /tmp/handwritten-input");
+}
+
+void handle_launch()
+{
+	system(LAUNCH_AUTONOMOUS_SCRIPT);
+	system(LAUNCH_HANDWRITTEN_SCRIPT);
+}
+
+void handle_shutdown()
+{
+	system("echo \"stop\" > /tmp/handwritten-input");
+	sleep(1);
+	system(SHUTDOWN_SCRIPT);
+}
+
+void handle_handwritten(String handwritten_cmd)
+{
+	system("echo \"" + handwritten_cmd + "\" > /tmp/handwritten-input");
+}
+
+void receive_callback(const std_msgs::String &msg)
+{
+	// chair_manager_pub.publish(msg);
+	ROS_INFO("PUBLISHING %s", msg.data.c_str());
+
+	char *cmd = strtok(msg.data.c_str(), ' ');
+
+	switch (cmd)
+	{
+	case START:
+		handle_start();
+		break;
+	case STOP:
+		handle_stop();
+		break;
+	case LAUNCH:
+		handle_launch();
+		break;
+	case SHUTDOWN:
+		handle_shutdown();
+		break;
+	case HANDWRITTEN:
+		handle_handwritten(strtok(NULL, " ,.-"));
+		break;
+	case default:
+		ROS_INFO("Invalid command:  %s", cmd);
+		break;
+	}
+}
+
+int main(int argc, char **argv)
+{
 	// initialize node and node handle
 	ros::init(argc, argv, "chair_manager");
 	ros::NodeHandle nh;
@@ -38,7 +104,8 @@ int main (int argc, char** argv) {
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
 	// test_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 
-	while (ros::ok()) {
+	while (ros::ok())
+	{
 		/*
 		std_msgs::String msg;
 		msg.data = "0B" + (char)(chair_broadcast_status::ready);
