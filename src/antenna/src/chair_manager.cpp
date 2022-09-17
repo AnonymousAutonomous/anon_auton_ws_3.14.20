@@ -2,17 +2,18 @@
 #include "std_msgs/String.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <ros/spinner.h>
 #include <queue>
 #include <vector>
 #include <string>
 
-char *START = "start";
-char *STOP = "stop";
-char *LAUNCH = "launch";
-char *SHUTDOWN = "shutdown";
-char *HANDWRITTEN = "handwritten";
+char START[] = "start";
+char STOP[] = "stop";
+char LAUNCH[] = "launch";
+char SHUTDOWN[] = "shutdown";
+char HANDWRITTEN[] = "handwritten";
 
 string LAUNCH_AUTONOMOUS_SCRIPT = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh";
 string LAUNCH_HANDWRITTEN_SCRIPT = "~/anon_auton_ws/src/launch_manager/launch/launch_handwritten.sh";
