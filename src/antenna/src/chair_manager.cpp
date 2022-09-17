@@ -2,7 +2,6 @@
 #include "std_msgs/String.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <ros/spinner.h>
 #include <queue>
@@ -15,9 +14,9 @@ char LAUNCH[] = "launch";
 char SHUTDOWN[] = "shutdown";
 char HANDWRITTEN[] = "handwritten";
 
-string LAUNCH_AUTONOMOUS_SCRIPT = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh";
-string LAUNCH_HANDWRITTEN_SCRIPT = "~/anon_auton_ws/src/launch_manager/launch/launch_handwritten.sh";
-string SHUTDOWN_SCRIPT = "~/anon_auton_ws/src/launch_manager/launch/stop.sh";
+std::string LAUNCH_AUTONOMOUS_SCRIPT = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh";
+std::string LAUNCH_HANDWRITTEN_SCRIPT = "~/anon_auton_ws/src/launch_manager/launch/launch_handwritten.sh";
+std::string SHUTDOWN_SCRIPT = "~/anon_auton_ws/src/launch_manager/launch/stop.sh";
 
 // probably not necessary
 // #define NUMBER_OF_CHAIRS 1
