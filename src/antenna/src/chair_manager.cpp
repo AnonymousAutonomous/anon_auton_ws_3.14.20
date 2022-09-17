@@ -17,7 +17,7 @@ enum Commands
 	HANDWRITTEN
 }
 
-const static std::unordered_map<char[], int>
+const std::unordered_map<char[], int>
 	cmd_to_case{
 		{"start", Commands.START},
 		{"stop", Commands.STOP},
