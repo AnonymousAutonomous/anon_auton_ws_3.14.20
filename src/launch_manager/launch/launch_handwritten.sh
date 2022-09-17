@@ -3,4 +3,9 @@
 cd ~/anon_auton_ws
 source devel/setup.bash
 
-roslaunch ~/anon_auton_ws/src/launch_manager/launch/handwritten.launch
+rm -rf /tmp/handwritten-input
+mkfifo /tmp/handwritten-input
+cat > /tmp/handwritten-input &
+echo $! > /tmp/handwritten-input-pid
+
+tail -f /tmp/handwritten-input | ./src/launch_manager/launch/launch_handwritten_ros.sh &

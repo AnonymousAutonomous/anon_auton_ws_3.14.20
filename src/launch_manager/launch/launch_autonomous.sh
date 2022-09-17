@@ -39,6 +39,15 @@ else
     echo "!!! NO LIDAR FOUND !!!"
 fi
 
+
+# Set up the fifo input for handwritten
+#rm -rf /tmp/handwritten-input
+#mkfifo /tmp/handwritten-input
+#cat > /tmp/handwritten-input &
+#echo $! > /tmp/handwritten-input-pid
+
+# Launch handwritten to read from the fifo
+#cat /tmp/handwritten-input | ../launch_handwritten.sh &
+
 # Launch the queue to start everything
-roslaunch --wait speaker.launch &
 roslaunch --wait queue.launch
