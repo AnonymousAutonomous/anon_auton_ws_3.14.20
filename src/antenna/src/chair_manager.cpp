@@ -81,7 +81,8 @@ void receive_callback(const std_msgs::String &msg)
 
 	char *cmd = strtok(msg_copy, " ");
 
-	Command command = cmd_to_case.find(std::string(cmd));
+	Command command = cmd_to_case.find(std::string(cmd))->second;
+
 	switch (command)
 	{
 	case START:
