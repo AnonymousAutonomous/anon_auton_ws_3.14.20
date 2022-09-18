@@ -64,7 +64,7 @@ void handle_shutdown()
 	system(SHUTDOWN_SCRIPT);
 }
 
-void handle_handwritten(char *handwritten_cmd)
+void handle_handwritten(char handwritten_cmd[])
 {
 	system("echo \"" + handwritten_cmd + "\" > /tmp/handwritten-input");
 }
