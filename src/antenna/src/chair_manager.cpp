@@ -66,7 +66,7 @@ void handle_shutdown()
 
 void handle_handwritten(char handwritten_cmd[])
 {
-	system("echo \"" handwritten_cmd "\" > /tmp/handwritten-input");
+	system(("echo \"" + handwritten_cmd) + "\" > /tmp/handwritten-input");
 }
 
 void receive_callback(const std_msgs::String &msg)
