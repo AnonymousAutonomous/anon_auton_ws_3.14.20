@@ -66,7 +66,7 @@ void handle_shutdown()
 
 void handle_handwritten(char *handwritten_cmd)
 {
-	system("echo \"".to_cstr() + handwritten_cmd + "\" > /tmp/handwritten-input".to_cstr());
+	system("echo \"" + handwritten_cmd + "\" > /tmp/handwritten-input");
 }
 
 void receive_callback(const std_msgs::String &msg)
@@ -75,7 +75,7 @@ void receive_callback(const std_msgs::String &msg)
 	ROS_INFO("PUBLISHING %s", msg.data.c_str());
 
 	const char *full_msg = msg.data.c_str();
-	char *cmd = strtok(full_msg, ' ');
+	char *cmd = strtok(full_msg, " ");
 
 	std::string str_cmd(cmd);
 
@@ -95,7 +95,7 @@ void receive_callback(const std_msgs::String &msg)
 		handle_shutdown();
 		break;
 	case HANDWRITTEN:
-		handle_handwritten(strtok(NULL, " ,.-"));
+		handle_handwritten(strtok(NULL, " "));
 		break;
 	default:
 		ROS_INFO("Invalid command:  %s", cmd);
