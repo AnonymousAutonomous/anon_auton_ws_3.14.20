@@ -16,7 +16,7 @@ enum Command
 	LAUNCH,
 	SHUTDOWN,
 	HANDWRITTEN
-}
+};
 
 const std::unordered_map<std::string, Command>
 	cmd_to_case{
@@ -24,8 +24,7 @@ const std::unordered_map<std::string, Command>
 		{"stop", STOP},
 		{"launch", LAUNCH},
 		{"shutdown", SHUTDOWN},
-		{"handwritten", HANDWRITTEN},
-	};
+		{"handwritten", HANDWRITTEN}};
 
 char LAUNCH_AUTONOMOUS_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh";
 char LAUNCH_HANDWRITTEN_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_handwritten.sh";
