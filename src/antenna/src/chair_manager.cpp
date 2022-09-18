@@ -76,8 +76,7 @@ void receive_callback(const std_msgs::String &msg)
 	// chair_manager_pub.publish(msg);
 	ROS_INFO("PUBLISHING %s", msg.data.c_str());
 
-	char *full_msg = msg.data.c_str();
-	char *cmd = strtok(full_msg, " ");
+	char *cmd = strtok(msg.data, " ");
 
 	std::string str_cmd(cmd);
 
