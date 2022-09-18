@@ -77,7 +77,9 @@ void receive_callback(const std_msgs::String &msg)
 	const char *full_msg = msg.data.c_str();
 	char *cmd = strtok(full_msg, ' ');
 
-	Command command = cmd_to_case(std::string(cmd));
+	std::string str_cmd(cmd);
+
+	Command command = cmd_to_case(str_cmd);
 	switch (command)
 	{
 	case START:
@@ -95,7 +97,7 @@ void receive_callback(const std_msgs::String &msg)
 	case HANDWRITTEN:
 		handle_handwritten(strtok(NULL, " ,.-"));
 		break;
-	case default:
+	default:
 		ROS_INFO("Invalid command:  %s", cmd);
 		break;
 	}
