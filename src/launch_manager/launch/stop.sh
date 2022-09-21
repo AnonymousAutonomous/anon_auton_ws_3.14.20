@@ -10,5 +10,3 @@ killall -9 roscore
 killall -9 rosmaster
 
 sleep 5
-
-shutdown
