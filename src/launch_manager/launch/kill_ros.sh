@@ -3,7 +3,7 @@
 cd ~/anon_auton_ws
 source devel/setup.bash
 
-rosnode kill -a
+rosnode kill -a &
 sleep 5
 
 rosnode list | while read -r nodeid ; do
