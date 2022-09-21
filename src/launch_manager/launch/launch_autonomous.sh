@@ -4,7 +4,9 @@ cd ~/anon_auton_ws
 # cd /Users/felichri/Documents/AnonAuton/anon_auton_ws
 source devel/setup.bash
 
-#/bin/bash ~/anon_auton_ws/src/launch_manager/launch/pre.sh
+# Start roscore if it's not already running
+roscore &
+/bin/bash ~/anon_auton_ws/src/launch_manager/launch/set_ports.sh
 
 # wait until roscore is running
 until rostopic list ; do sleep 1; done
@@ -13,7 +15,7 @@ cd ~/anon_auton_ws/src/launch_manager/launch/components
 
 if grep -iq "^antenna_port" ~/anon_auton_ws/src/config_manager/configs/ports/active.yaml; then
     echo "---------------- ANTENNA found ----------------"
-#    roslaunch --wait antenna_chair.launch &
+    roslaunch --wait antenna_chair.launch &
 else
     echo "!!! NO ANTENNA FOUND !!!"
 fi
