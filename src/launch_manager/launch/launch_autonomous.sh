@@ -15,7 +15,7 @@ cd ~/anon_auton_ws/src/launch_manager/launch/components
 
 if grep -iq "^antenna_port" ~/anon_auton_ws/src/config_manager/configs/ports/active.yaml; then
     echo "---------------- ANTENNA found ----------------"
-    roslaunch --wait antenna_chair.launch &
+    # roslaunch --wait antenna_chair.launch &
 else
     echo "!!! NO ANTENNA FOUND !!!"
 fi
