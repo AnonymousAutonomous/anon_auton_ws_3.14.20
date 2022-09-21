@@ -14,6 +14,7 @@ enum Command
 	START,
 	STOP,
 	LAUNCH,
+	RESET,
 	SHUTDOWN,
 	HANDWRITTEN
 };
@@ -23,12 +24,14 @@ const std::unordered_map<std::string, Command>
 		{"start", START},
 		{"stop", STOP},
 		{"launch", LAUNCH},
+		{"reset", RESET},
 		{"shutdown", SHUTDOWN},
 		{"handwritten", HANDWRITTEN}};
 
 char LAUNCH_AUTONOMOUS_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh &";
 char LAUNCH_HANDWRITTEN_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_handwritten.sh &";
-char SHUTDOWN_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/stop.sh &";
+char SHUTDOWN_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/shutdown.sh &";
+char RESET_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/shutdown.sh &";
 
 // probably not necessary
 // #define NUMBER_OF_CHAIRS 1
@@ -55,6 +58,11 @@ void handle_launch()
 {
 	system(LAUNCH_AUTONOMOUS_SCRIPT);
 	system(LAUNCH_HANDWRITTEN_SCRIPT);
+}
+
+void handle_reset()
+{
+	system(RESET_SCRIPT);
 }
 
 void handle_shutdown()
@@ -96,6 +104,9 @@ void receive_callback(const std_msgs::String &msg)
 		break;
 	case SHUTDOWN:
 		handle_shutdown();
+		break;
+	case RESET:
+		handle_reset();
 		break;
 	case HANDWRITTEN:
 		handle_handwritten(strtok(NULL, " "));
