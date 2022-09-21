@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 
 cd ~/anon_auton_ws
-# cd /Users/felichri/Documents/AnonAuton/anon_auton_ws
 source devel/setup.bash
 
 # Start roscore if it's not already running
-roscore &
-/bin/bash ~/anon_auton_ws/src/launch_manager/launch/set_ports.sh
+if rostopic list | grep "rosout"; then
+    echo "Roscore already running"
+else
+    roscore &
+    # wait until roscore is running
+    until rostopic list ; do sleep 1; done
+fi
 
-# wait until roscore is running
-until rostopic list ; do sleep 1; done
+# Set the ports
+/bin/bash ~/anon_auton_ws/src/launch_manager/launch/set_ports.sh
 
 cd ~/anon_auton_ws/src/launch_manager/launch/components
 
@@ -26,21 +30,33 @@ fi
 
 if grep -iq "^port" ~/anon_auton_ws/src/config_manager/configs/ports/active.yaml; then
     echo "---------------- ARDUINO found ----------------"
-    roslaunch --wait arduino.launch &
+    if rosnode list | grep "arduino"; then
+        echo "Arduino already running"
+    else
+        roslaunch --wait arduino.launch &
+    fi
 else
     echo "!!! NO ARDUINO FOUND !!!"
 fi
 
 if grep -iq "^device_path" ~/anon_auton_ws/src/config_manager/configs/ports/active.yaml; then
     echo "---------------- CAMERA found ----------------"
-    roslaunch --wait camera.launch &
+    if rosnode list | grep "eyes"; then
+        echo "Camera already running"
+    else
+        roslaunch --wait camera.launch &
+    fi
 else
     echo "!!! NO CAMERA FOUND !!!"
 fi
 
 if grep -iq "^serial_port" ~/anon_auton_ws/src/config_manager/configs/ports/active.yaml; then
     echo "---------------- LIDAR found ----------------"
-    roslaunch --wait lidar.launch &
+    if rosnode list | grep "tart"; then
+        echo "Lidar already running"
+    else
+        roslaunch --wait lidar.launch &
+    fi
 else
     echo "!!! NO LIDAR FOUND !!!"
 fi
@@ -56,4 +72,8 @@ fi
 #cat /tmp/handwritten-input | ../launch_handwritten.sh &
 
 # Launch the queue to start everything
-roslaunch --wait queue.launch
+if rosnode list | grep "queue"; then
+    echo "Queue already running"
+else
+    roslaunch --wait queue.launch &
+fi
