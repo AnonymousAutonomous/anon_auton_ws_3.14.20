@@ -15,7 +15,11 @@ cd ~/anon_auton_ws/src/launch_manager/launch/components
 
 if grep -iq "^antenna_port" ~/anon_auton_ws/src/config_manager/configs/ports/active.yaml; then
     echo "---------------- ANTENNA found ----------------"
-    # roslaunch --wait antenna_chair.launch &
+    if rosnode list | grep "chair_manager"; then
+        echo "Antenna already running"
+    else
+        roslaunch --wait antenna_chair.launch &
+    fi
 else
     echo "!!! NO ANTENNA FOUND !!!"
 fi
