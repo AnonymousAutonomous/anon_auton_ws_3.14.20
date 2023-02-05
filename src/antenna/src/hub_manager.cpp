@@ -154,20 +154,20 @@ int main (int argc, char** argv) {
 			{
 				if (a_chair_is_trapped()) {
 					std_msgs::String msg;
-					msg.data = "0Bf2.5r2.5t5";
+					msg.data = "00Bf2.5r2.5t5";
 					transmit_queue = std::queue<std_msgs::String>();
 					transmit_queue.push(msg);
 					transmit_queue.push(msg);
 					transmit_queue.push(msg);
 					transmit_queue.push(msg);
-					msg.data = "0Bend";
+					msg.data = "00Bend";
 					transmit_queue.push(msg);
 				}
 				if (!transmit_queue.empty()) {
 					mode = state::awaiting_confirmation;
 					// also transmit start of broadcast
 					std_msgs::String msg;
-					msg.data = "0Bstart";
+					msg.data = "00Bstart";
 					hub_manager_pub.publish(msg);
 				}
 				break;
@@ -182,7 +182,7 @@ int main (int argc, char** argv) {
 				ROS_INFO("ALL CHAIRS ARE READY");
 				mode = state::awaiting_status;
 				while (!transmit_queue.empty()) {
-					bool break_out = transmit_queue.front().data == "0Bend";
+					bool break_out = transmit_queue.front().data == "00Bend";
 					hub_manager_pub.publish(transmit_queue.front());
 					transmit_queue.pop();
 					if (break_out) break;
@@ -200,7 +200,7 @@ int main (int argc, char** argv) {
 				ROS_INFO("ALL CHAIRS ARE DONE");
 				mode = state::outside;
 				std_msgs::String msg;
-				msg.data = "0Bfinish";
+				msg.data = "00Bfinish";
 				hub_manager_pub.publish(msg);
 				ROS_INFO("BROADCAST IS FINISHED");
 				overwrite_trapped_chairs();
