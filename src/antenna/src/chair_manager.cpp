@@ -37,12 +37,12 @@ char RESET_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/shutdown.sh &";
 // #define NUMBER_OF_CHAIRS 1
 
 // for reference
-// enum class chair_broadcast_status : char {ready, success, failure};
+enum class chair_broadcast_status : char {ready ='r', exclude='e', success='s', failure='f'};
 // enum class chair_stuck_status : char {stuck, not_stuck};
 // enum class chair_trapped_status : char {trapped, not_trapped};
 
 ros::Publisher chair_manager_pub;
-// ros::Publisher test_pub;
+ros::Publisher test_pub;
 
 void handle_start()
 {
@@ -132,14 +132,12 @@ int main(int argc, char **argv)
 
 	// initialize publishers
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
-	// test_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
+	test_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 
 	while (ros::ok())
 	{
-		/*
 		std_msgs::String msg;
-		msg.data = "0B" + (char)(chair_broadcast_status::ready);
+		msg.data = (char)(chair_broadcast_status::ready);
 		test_pub.publish(msg);
-		*/
 	}
 }

@@ -7,7 +7,7 @@
 
 #define NUMBER_OF_CHAIRS 1
 
-enum class chair_broadcast_status : char {ready, exclude, success, failure};
+enum class chair_broadcast_status : char {ready ='r', exclude='e', success='s', failure='f'};
 enum class chair_stuck_status : char {stuck, not_stuck};
 enum class chair_trapped_status : char {trapped, not_trapped};
 
@@ -71,7 +71,7 @@ std::queue<std_msgs::String> transmit_queue;
 void receive_callback(const std_msgs::String& msg) {
 	// update chair status vector
 	// format of str msg is {chair number}{chair status indicator}{new value}
-	int chair_number = msg.data[0] - 48;
+	int chair_number = msg.data[0] - 48 - 1;
 	ROS_INFO("UPDATING STATUS OF CHAIR %d", chair_number);
 
 	char chair_property = msg.data[1];

@@ -43,7 +43,9 @@ outyaml = os.path.join(outfolder, 'active.yaml')
 if not os.path.exists(outfolder):
   os.makedirs(outfolder)
 
-
+# Find chair number
+chair_num = subprocess.check_output("whoami | cat $1 | tr -d '\n' | tail -c 1", shell=True)
+devices["chair_num"] = chair_num
 
 with open(outyaml, 'w+') as f:
      for dev, path  in devices.items():

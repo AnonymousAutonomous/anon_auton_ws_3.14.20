@@ -5,6 +5,7 @@ import serial
 from std_msgs.msg import String
 
 antenna_port = rospy.get_param('antenna_port')
+chair_num = rospy.get_param('chair_num')
 
 def chair_receiver():
     pub = rospy.Publisher("from_chair_receiver", String, queue_size=10)
