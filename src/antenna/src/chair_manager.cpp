@@ -89,31 +89,35 @@ void receive_callback(const std_msgs::String &msg)
 
 	char *cmd = strtok(msg_copy, " ");
 
-	Command command = cmd_to_case.find(std::string(cmd))->second;
+	auto command_ptr = cmd_to_case.find(std::string(cmd));
 
-	switch (command)
-	{
-	case START:
-		handle_start();
-		break;
-	case STOP:
-		handle_stop();
-		break;
-	case LAUNCH:
-		handle_launch();
-		break;
-	case SHUTDOWN:
-		handle_shutdown();
-		break;
-	case RESET:
-		handle_reset();
-		break;
-	case HANDWRITTEN:
-		handle_handwritten(strtok(NULL, " "));
-		break;
-	default:
+	if (command_ptr != cmd_to_case.end()) {
+		switch (command->second)
+		{
+		case START:
+			handle_start();
+			break;
+		case STOP:
+			handle_stop();
+			break;
+		case LAUNCH:
+			handle_launch();
+			break;
+		case SHUTDOWN:
+			handle_shutdown();
+			break;
+		case RESET:
+			handle_reset();
+			break;
+		case HANDWRITTEN:
+			handle_handwritten(strtok(NULL, " "));
+			break;
+		default:
+			ROS_INFO("Invalid command:  %s", cmd);
+			break;
+		}
+	} else {
 		ROS_INFO("Invalid command:  %s", cmd);
-		break;
 	}
 }
 
@@ -136,9 +140,8 @@ int main(int argc, char **argv)
 
 	while (ros::ok())
 	{
-		std_msgs::String msg;
-		msg.data = (char)(chair_broadcast_status::ready);
-		test_pub.publish(msg);
-		sleep(1);
+		// std_msgs::String msg;
+		// msg.data = (char)(chair_broadcast_status::ready);
+		// test_pub.publish(msg);
 	}
 }
