@@ -10,13 +10,14 @@
         <title>AnonAuton Hub GUI</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="./../static/index.css" type="text/css">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+        <script src="{{ url_for('static',filename='jquery-3.6.0.min.js') }}"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <p>AnonAuton Hub GUI</p>
+        <h1>AnonAuton Hub GUI</h1>
         <div class="statuses">
             <div class="status offline" id="1">Chair 1<br><br>Status<br><span id="status_str">OFFLINE</span></div>
             <div class="status registered" id="2">Chair 2<br><br>Status<br><span id="status_str">REGISTERED</span></div>
@@ -27,9 +28,13 @@
             <label for="message">Message</label>
             <input id="message" name="message" type="text">
             <label for="chair_num">Chair Number</label>
-            <input id="chair_num" name="chair_num" type="radio">
-            <label for="all_chairs">Send to all chairs?</label>
-            <input id="all_chairs" name="all_chairs" type="checkbox">
+            <select name="chair_num" id="chair_num">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="4">ALL</option>
+            </select>
             <input type="submit">
         </form>
 
@@ -42,6 +47,46 @@
             <input id="all_chairs" name="all_chairs" type="checkbox">
             <input type="submit">
         </form>
+
+        <div class="monitoring">
+            <div class="chair_monitor_container">
+                <div class="chair_monitor" id="1">
+                    <h2>1</h2>
+                    <button onclick="">STOP</button>
+                </div>
+                <div class="chair_monitor" id="2">
+                    <h2>2</h2>
+                    <button>STOP</button>
+                </div>
+                <div class="chair_monitor" id="3">
+                    <h2>3</h2>
+                    <button>STOP</button>
+                </div>
+                <div class="chair_monitor backup" id="backup">
+                    <h2>backup</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert" id="battery-alert">
+        <h2>Please change all batteries!</h2>
+        <h3>
+            <a href="https://google.com">How to change the battery</a>
+        </h3>
+        <form>
+        <label for="1">1</label>
+        <input id="1" name="1" type="checkbox">
+
+        <label for="2">2</label>
+        <input id="2" name="2" type="checkbox">
+
+        <label for="3">3</label>
+        <input id="3" name="3" type="checkbox">
+
+    </form>
+    <button id="battery-alert-close">Close</button>
+
+</div>
 
         <!-- <button type=""></button> -->
         
