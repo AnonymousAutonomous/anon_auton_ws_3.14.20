@@ -7,4 +7,4 @@ source devel/setup.bash
 
 sleep 5
 
-roslaunch ~/anon_auton_ws/src/launch_manager/launch/antenna_hub.launch
+roslaunch ~/anon_auton_ws/src/launch_manager/launch/components/antenna_hub.launch
