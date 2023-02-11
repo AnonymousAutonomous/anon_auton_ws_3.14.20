@@ -1,0 +1,34 @@
+.statuses {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+}
+
+.status {
+    flex: 1;
+    background-color: cyan;
+    text-align: center;
+    border: 1px black solid;
+    border-radius: 3px;
+    margin: 2px;
+}
+
+.ghost {
+    border: dashed;
+}
+
+.offline {
+    background-color: rgb(255, 99, 99);
+}
+
+.ghost.offline {
+    background-color: lightgray;
+}
+
+.stuck {
+    background-color: orange;
+}
+
+.registered {
+    background-color: lightblue;
+}

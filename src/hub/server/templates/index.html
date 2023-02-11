@@ -10,13 +10,19 @@
         <title>AnonAuton Hub GUI</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        <link rel="stylesheet" href="./../static/index.css" type="text/css">
     </head>
     <body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <p>AnonAuton Hub GUI</p>
+        <div class="statuses">
+            <div class="status offline" id="1">Chair 1<br><br>Status<br><span id="status_str">OFFLINE</span></div>
+            <div class="status registered" id="2">Chair 2<br><br>Status<br><span id="status_str">REGISTERED</span></div>
+            <div class="status stuck" id="3">Chair 3<br><br>Status<br><span id="status_str">STUCK</span></div>
+            <div class="status ghost offline" id="4">Chair 4 (backup)<br><br>Status<br><span id="status_str">OFFLINE</span></div>
+        </div>
         <form action="/transmit" method="post">
             <label for="message">Message</label>
             <input id="message" name="message" type="text">
