@@ -22,7 +22,7 @@ const int AIN2 = REVERSE_A ? AIN1_tmp : AIN2_tmp;
 
 
 #define ENCA 3 // yellow, INTERRUPT
-#define STBYA 4 // white
+#define STBYA 6 // white
 
 //define motor 2 related pins (left)
 #define BIN1_tmp 7
@@ -43,6 +43,7 @@ const int BIN2 = REVERSE_B ? BIN1_tmp : BIN2_tmp;
 #define ANALOG_WRITE_BITS 8
 #define MAX_PWM pow(2, ANALOG_WRITE_BITS)-1
 #define MIN_PWM 0    // Let motors stop
+
 
 
 /***********************************************************

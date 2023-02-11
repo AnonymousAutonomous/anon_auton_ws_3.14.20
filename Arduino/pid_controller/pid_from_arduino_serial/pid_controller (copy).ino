@@ -1,11 +1,7 @@
 #include "motors_and_pins.h"
 #include "pid_serial.h"
-#include "ros_serial.h"
+//#include "ros_serial.h"
 #include <PID_v1.h>
-#include <ros.h>
-#include <std_msgs/String.h>
-#include <std_msgs/Int32.h>
-#include <eyes/Generic.h>
 
 boolean DEBUG = true;
 
@@ -34,7 +30,7 @@ int a_adjust = 0;
 
 double inputB = 0;              // input is inches / second
 double outputB = 0;             // output is PWM to motors
-int FEEDFWDB = FEEDFWDA;
+int FEEDFWDB = 60;
 int b_adjust = 0;
 
 double KpA = 10.0, KiA = 25.0, KdA = 0.0;
@@ -43,68 +39,11 @@ PID motorA(&inputA, &outputA, setpointA, KpA, KiA, KdA, DIRECT);
 PID motorB(&inputB, &outputB, setpointB, KpB, KiB, KdB, DIRECT);
 double storeB = 0;               // used for debug print
 
-unsigned long prevTime = 0;       // updated on every loop
-
-volatile long countR = 0;
-volatile long countL = 0;
-
-
-boolean CONNECTED_TO_ROS = true;
-
-ros::NodeHandle nh;
-
-// init to zero and update with each encoder tick
-std_msgs::Int32 int32_msg_R;
-std_msgs::Int32 int32_msg_L;
-ros::Publisher pubR("encoder_value_R", &int32_msg_R);
-ros::Publisher pubL("encoder_value_L", &int32_msg_L);
-
-
-void generic_callback(const eyes::Generic& generic_msg) {
-  char left_dir = FWD;
-  char right_dir = FWD;
-  
-   if (generic_msg.left_forward) {
-     left_dir = FWD;
-   }
-   else {
-     left_dir = BWD;
-   }
-   if (generic_msg.right_forward) {
-     right_dir = FWD;
-   }
-   else {
-     right_dir = BWD;
-   }
-   if (generic_msg.left_speed < 0.001) {
-    left_dir = STOP;
-   }
-   if (generic_msg.right_speed < 0.001) {
-    right_dir = STOP;
-   }
-    setNewSetpointMotorA(generic_msg.left_speed, left_dir);
-    setNewSetpointMotorB(generic_msg.right_speed, right_dir);
-       analogWrite(LEFT_MOTOR, generic_msg.left_speed);
-   analogWrite(RIGHT_MOTOR, generic_msg.right_speed);
-
-
-   return;
-};
-
-ros::Subscriber<eyes::Generic> generic_sub("generic_feed", &generic_callback);
-
-
-void initROSSerial() {
-  nh.initNode();
-  nh.advertise(pubR);
-  nh.advertise(pubL);
-  nh.subscribe(generic_sub);
-};
-
+boolean CONNECTED_TO_ROS = false;
 
 void initEncoders(){
-  pinMode(ENCA, INPUT_PULLUP);
-  pinMode(ENCB, INPUT_PULLUP);
+  pinMode(ENCA, INPUT);
+  pinMode(ENCB, INPUT);
   attachInterrupt(ENCA == 2 ? 0 : 1, isr_A, CHANGE);  // TODO: fix this for the updated arduino board
   attachInterrupt(ENCB == 2 ? 0 : 1, isr_B, CHANGE);
 };
@@ -122,41 +61,29 @@ void initPWM(){
   setNewSetpointMotorB(setpointB, FWD);
 };
 
-bool AreSame(double a, double b) {
-  return fabs(a - b) < 0.001;
-}
-
 
 void setNewSetpointMotorA(float setpoint, char dir) {
-   float signed_setpoint = dir == BWD ? -1 * setpoint : setpoint;
-
-  if (setpoint < 0.001 || dir == STOP) {
+  if (dir == STOP) {
     a_adjust = 0;
   }
   else {
     a_adjust = FEEDFWDA;
   }
-  if (!AreSame(signed_setpoint, setpointA)) {
-      setpointA = signed_setpoint;
-      motorA.SetSetpoint(setpoint);
-      setADir(dir);
-    } 
+  setpointA = setpoint;
+  motorA.SetSetpoint(setpoint);
+  setADir(dir);
 }
 
 void setNewSetpointMotorB(float setpoint, char dir) {
-    float signed_setpoint = dir == BWD ? -1 * setpoint : setpoint;
-
-  if (setpoint < 0.001 || dir == STOP) {
+  if (dir == STOP) {
     b_adjust = 0;
   }
   else {
     b_adjust = FEEDFWDB;
   }
-    if (!AreSame(signed_setpoint, setpointB)) {
-      setpointB = signed_setpoint;
-      motorB.SetSetpoint(setpoint);
-      setBDir(dir);
-    }  
+  setpointB = setpoint;
+  motorB.SetSetpoint(setpoint);
+  setBDir(dir);
 }
 
 void processIncomingByte(const byte inByte) {
@@ -249,12 +176,10 @@ void parseNewSetpoints(String setpointsIn) {
 /***********************************************************
  * SETUP & LOOP                                            *
  ***********************************************************/
-
+ 
 void setup() {
   if (CONNECTED_TO_ROS) {
-    Serial.begin(57600);
-    nh.getHardware()->setBaud(57600);
-    initROSSerial();
+//    initROSSerial();
   } else {
     initPIDSerial();
   }
@@ -273,22 +198,13 @@ void setup() {
      printPIDHeader();
      printPID(KpB, KiB, KdB, setpointB, FEEDFWDB, b_adjust);
   }
-
+    
 }
 
-String info = "";
 void loop() {
   nowTime = millis();
   motorA.Compute();
   motorB.Compute();
-
-  if (nowTime - startTimeA > 250) {
-    inputA = 0;
-  }
-
-  if (nowTime - startTimeB > 250) {
-    inputB = 0;
-  }
 
   moveA(max(0, min(255, (int)outputA + a_adjust)));
   moveB(max(0, min(255, (int)outputB + b_adjust)));
@@ -307,32 +223,14 @@ void loop() {
     }
   }
 
-//   int32_msg_R.data = int(setpointA * 100);
-//   int32_msg_L.data = int(setpointB * 100);
-//   pubR.publish(&int32_msg_R);
-//   pubL.publish(&int32_msg_L);
-//   nh.spinOnce();
-//   delay(1000);
-   
  if (CONNECTED_TO_ROS) {
-//   int32_msg_R.data = int(setpointA * 100);
-//   int32_msg_L.data = int(setpointB * 100);
+//   int32_msg_R.data = countR;
+//   int32_msg_L.data = countL;
 //   pubR.publish(&int32_msg_R);
 //   pubL.publish(&int32_msg_L);
-
-   if (nowTime - prevTime >= 200) {
-     int32_msg_R.data = countR;
-     int32_msg_L.data = countL;
-     pubR.publish(&int32_msg_R);
-     pubL.publish(&int32_msg_L);
-     info = String(countL) + ' ' + String(countR);
-     nh.loginfo(info.c_str());
-     prevTime = nowTime;
-   }
-
 //
 //   // TODO: check if this will cause issues
-   nh.spinOnce();
+//   nh.spinOnce();
    delay(10);
  }
 
@@ -350,12 +248,6 @@ void isr_A(){
     startTimeA = nowTime;
     countIntA = 0;
   }
-
-  if (digitalRead(ENCA) == digitalRead(STBYA)) {
-    countL++;
-  } else {
-    countL--;
-  }
 }
 
 void isr_B(){
@@ -365,11 +257,5 @@ void isr_B(){
     inputB = (float) ENCODER_CONVERSION * (1.0 / (float)(nowTime - startTimeB));
     startTimeB = nowTime;
     countIntB = 0;
-  }
-
-  if (digitalRead(ENCB) != digitalRead(STBYB)) {
-    countR++;
-  } else {
-    countR--;
   }
 }
