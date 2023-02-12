@@ -43,8 +43,8 @@ const std::unordered_map<std::string, Command>
 		{"fwd", FWD},
 		{"bwd", BWD},
 		{"fbwd", FBWD},
-		{"left", VEERL},
-		{"right", VEERR},
+		{"veerl", VEERL},
+		{"veerr", VEERR},
 		{"pivotl", PIVOTL},
 		{"pivotr", PIVOTR},
 		{"handwritten", HANDWRITTEN}};
