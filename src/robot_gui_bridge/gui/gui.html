@@ -46,12 +46,41 @@
     hub_dir_listener.publish(dir);
   }
 
-  stop = function(id) {
-    console.log("STOPPING");
-    var dir = new ROSLIB.Message({
-      data: "stop" + id
+  formatMsg = function(id, msg) {
+    return new ROSLIB.Message({
+      data: id + msg
     });
-    hub_dir_listener.publish(dir);
+  }
+
+  stop = function(id) {
+    hub_dir_listener.publish(formatMsg(id, "stop"));
+  }
+  start = function(id) {
+    hub_dir_listener.publish(formatMsg(id, "start"));
+  }
+  fwd = function(id) {
+    hub_dir_listener.publish(formatMsg(id, "fwd"));
+  }
+  ffwd = function(id) {
+    hub_dir_listener.publish(formatMsg(id, "ffwd"));
+  }
+  bwd = function(id) {
+    hub_dir_listener.publish(formatMsg(id, "bwd"));
+  }
+  fbwd = function(id) {
+    hub_dir_listener.publish(formatMsg(id, "fbwd"));
+  }
+  left = function(id) {
+    hub_dir_listener.publish(formatMsg(id, "left"));
+  }
+  right = function(id) {
+    hub_dir_listener.publish(formatMsg(id, "right"));
+  }
+  pivotl = function(id) {
+    hub_dir_listener.publish(formatMsg(id, "pivotl"));
+  }
+  pivotr = function(id) {
+    hub_dir_listener.publish(formatMsg(id, "pivotr"));
   }
 
 </script>
@@ -85,21 +114,22 @@
         <div class="chair_control">
           <div class="directions">
             <button class="go">GO</button>
-            <button>⤊</button>
-            <button>↑</button>
+            <button id="2" onclick="ffwd(this.id)">⤊</button>
+            <button id="2" onclick="fwd(this.id)">↑</button>
             <div>
-              <button>⟲</button>
-              <button>⬉</button>
+              <button id="2" onclick="pivotl(this.id)">⟲</button>
+              <button id="2" onclick="left(this.id)">⬉</button>
               <button id="2" onclick="stop(this.id)">🛑</button>
-              <button>⬈</button>
-              <button>⟳</button>
+              <button id="2" onclick="right(this.id)">⬈</button>
+              <button id="2" onclick="pivotr(this.id)">⟳</button>
             </div>
-            <button>↓</button>
-            <button>⤋</button>
+            <button id="2" onclick="bwd(this.id)">↓</button>
+            <button id="2" onclick="fbwd(this.id)">⤋</button>
           </div>
           <br>
           <button>START</button>
           <button>STOP</button>
+          <button>AUTO</button>
           <br>
         </div>
       </div>
