@@ -3,11 +3,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unordered_map>
+#include "../../../constants/str_cmds.h"
 
 #include <ros/spinner.h>
 #include <queue>
 #include <vector>
 #include <string>
+
+// All available autonomous commands
+std::map<std::string, std::string> commands_in;
+std::unordered_map<AutonomousCmd, std::string> commands;
 
 enum Command
 {
@@ -16,7 +21,15 @@ enum Command
 	LAUNCH,
 	RESET,
 	SHUTDOWN,
-	HANDWRITTEN
+	HANDWRITTEN,
+	FFWD,
+	FWD,
+	BWD,
+	FBWD,
+	PIVOTL,
+	PIVOTR,
+	VEERL,
+	VEERR,
 };
 
 const std::unordered_map<std::string, Command>
@@ -26,6 +39,14 @@ const std::unordered_map<std::string, Command>
 		{"launch", LAUNCH},
 		{"reset", RESET},
 		{"shutdown", SHUTDOWN},
+		{"ffwd", FFWD},
+		{"fwd", FWD},
+		{"bwd", BWD},
+		{"fbwd", FBWD},
+		{"veerl", VEERL},
+		{"veerr", VEERR},
+		{"pivotl", PIVOTL},
+		{"pivotr", PIVOTR},
 		{"handwritten", HANDWRITTEN}};
 
 char LAUNCH_AUTONOMOUS_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh &";
@@ -37,12 +58,18 @@ char RESET_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/shutdown.sh &";
 // #define NUMBER_OF_CHAIRS 1
 
 // for reference
-// enum class chair_broadcast_status : char {ready, success, failure};
+enum class chair_broadcast_status : char
+{
+	ready = 'r',
+	exclude = 'e',
+	success = 's',
+	failure = 'f'
+};
 // enum class chair_stuck_status : char {stuck, not_stuck};
 // enum class chair_trapped_status : char {trapped, not_trapped};
 
 ros::Publisher chair_manager_pub;
-// ros::Publisher test_pub;
+ros::Publisher test_pub;
 
 void handle_start()
 {
@@ -72,12 +99,27 @@ void handle_shutdown()
 	system(SHUTDOWN_SCRIPT);
 }
 
+// TODO: handle custom handwritten vs. from the standard set
 void handle_handwritten(char handwritten_cmd[])
 {
 	std::string prefix = "echo \"";
 	char suffix[] = "\" > /tmp/handwritten-input";
 	system((prefix + handwritten_cmd + suffix).c_str());
 }
+
+void send_as_handwritten(AutonomousCmd cmd)
+{
+	std::string prefix = "echo \"";
+	char suffix[] = "\" > /tmp/handwritten-input";
+	system((prefix + commands[cmd] + suffix).c_str());
+}
+
+/* Message format:
+   #cmd
+   where
+   # = number of the chair the command is for. If # is 0, it's for all chairs.
+   cmd = either one of the cmds above, or one of the handwritten commands.
+*/
 
 void receive_callback(const std_msgs::String &msg)
 {
@@ -89,31 +131,62 @@ void receive_callback(const std_msgs::String &msg)
 
 	char *cmd = strtok(msg_copy, " ");
 
-	Command command = cmd_to_case.find(std::string(cmd))->second;
+	auto command_ptr = cmd_to_case.find(std::string(cmd));
 
-	switch (command)
+	if (command_ptr != cmd_to_case.end())
 	{
-	case START:
-		handle_start();
-		break;
-	case STOP:
-		handle_stop();
-		break;
-	case LAUNCH:
-		handle_launch();
-		break;
-	case SHUTDOWN:
-		handle_shutdown();
-		break;
-	case RESET:
-		handle_reset();
-		break;
-	case HANDWRITTEN:
-		handle_handwritten(strtok(NULL, " "));
-		break;
-	default:
+		switch (command_ptr->second)
+		{
+		case START:
+			handle_start();
+			break;
+		case STOP:
+			handle_stop();
+			break;
+		case LAUNCH:
+			handle_launch();
+			break;
+		case SHUTDOWN:
+			handle_shutdown();
+			break;
+		case RESET:
+			handle_reset();
+			break;
+		case HANDWRITTEN:
+			handle_handwritten(strtok(NULL, " "));
+			break;
+		case FWD:
+			send_as_handwritten(AutonomousCmd.FWD);
+			break;
+		case BWD:
+			send_as_handwritten(AutonomousCmd.BWD);
+			break;
+		case FFWD:
+			send_as_handwritten(AutonomousCmd.FFWD);
+			break;
+		case FBWD:
+			send_as_handwritten(AutonomousCmd.FBWD);
+			break;
+		case PIVOTL:
+			send_as_handwritten(AutonomousCmd.PIVOTL);
+			break;
+		case PIVOTR:
+			send_as_handwritten(AutonomousCmd.PIVOTR);
+			break;
+		case VEERL:
+			send_as_handwritten(AutonomousCmd.VEERL);
+			break;
+		case VEERR:
+			send_as_handwritten(AutonomousCmd.VEERR);
+			break;
+		default:
+			ROS_INFO("Invalid command:  %s", cmd);
+			break;
+		}
+	}
+	else
+	{
 		ROS_INFO("Invalid command:  %s", cmd);
-		break;
 	}
 }
 
@@ -122,6 +195,22 @@ int main(int argc, char **argv)
 	// initialize node and node handle
 	ros::init(argc, argv, "chair_manager");
 	ros::NodeHandle nh;
+
+	// load speeds
+	ros::NodeHandle nh;
+	if (nh.getParam("/autonomous", commands_in))
+	{
+		for (auto i = commands_in.begin(); i != commands_in.end(); i++)
+		{
+			commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
+		}
+		ROS_INFO("Autonomous commands have been loaded for new director.");
+	}
+	else
+	{
+		ROS_INFO("You must load autonomous commands before using new director.");
+		return 1;
+	}
 
 	// initialize spinner
 	ros::AsyncSpinner spinner(0);
@@ -132,14 +221,12 @@ int main(int argc, char **argv)
 
 	// initialize publishers
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
-	// test_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
+	test_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 
 	while (ros::ok())
 	{
-		/*
-		std_msgs::String msg;
-		msg.data = "0B" + (char)(chair_broadcast_status::ready);
-		test_pub.publish(msg);
-		*/
+		// std_msgs::String msg;
+		// msg.data = (char)(chair_broadcast_status::ready);
+		// test_pub.publish(msg);
 	}
 }
