@@ -3,11 +3,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unordered_map>
+#include "../../../constants/str_cmds.h"
 
 #include <ros/spinner.h>
 #include <queue>
 #include <vector>
 #include <string>
+
+// All available autonomous commands
+std::map<std::string, std::string> commands_in;
+std::unordered_map<AutonomousCmd, std::string> commands;
 
 enum Command
 {
@@ -16,7 +21,15 @@ enum Command
 	LAUNCH,
 	RESET,
 	SHUTDOWN,
-	HANDWRITTEN
+	HANDWRITTEN,
+	FFWD,
+	FWD,
+	BWD,
+	FBWD,
+	PIVOTL,
+	PIVOTR,
+	VEERL,
+	VEERR,
 };
 
 const std::unordered_map<std::string, Command>
@@ -26,6 +39,14 @@ const std::unordered_map<std::string, Command>
 		{"launch", LAUNCH},
 		{"reset", RESET},
 		{"shutdown", SHUTDOWN},
+		{"ffwd", FFWD},
+		{"fwd", FWD},
+		{"bwd", BWD},
+		{"fbwd", FBWD},
+		{"left", VEERL},
+		{"right", VEERR},
+		{"pivotl", PIVOTL},
+		{"pivotr", PIVOTR},
 		{"handwritten", HANDWRITTEN}};
 
 char LAUNCH_AUTONOMOUS_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh &";
@@ -86,6 +107,13 @@ void handle_handwritten(char handwritten_cmd[])
 	system((prefix + handwritten_cmd + suffix).c_str());
 }
 
+void send_as_handwritten(AutonomousCmd cmd)
+{
+	std::string prefix = "echo \"";
+	char suffix[] = "\" > /tmp/handwritten-input";
+	system((prefix + commands[cmd] + suffix).c_str());
+}
+
 /* Message format:
    #cmd
    where
@@ -127,6 +155,30 @@ void receive_callback(const std_msgs::String &msg)
 		case HANDWRITTEN:
 			handle_handwritten(strtok(NULL, " "));
 			break;
+		case FWD:
+			send_as_handwritten(AutonomousCmd.FWD);
+			break;
+		case BWD:
+			send_as_handwritten(AutonomousCmd.BWD);
+			break;
+		case FFWD:
+			send_as_handwritten(AutonomousCmd.FFWD);
+			break;
+		case FBWD:
+			send_as_handwritten(AutonomousCmd.FBWD);
+			break;
+		case PIVOTL:
+			send_as_handwritten(AutonomousCmd.PIVOTL);
+			break;
+		case PIVOTR:
+			send_as_handwritten(AutonomousCmd.PIVOTR);
+			break;
+		case VEERL:
+			send_as_handwritten(AutonomousCmd.VEERL);
+			break;
+		case VEERR:
+			send_as_handwritten(AutonomousCmd.VEERR);
+			break;
 		default:
 			ROS_INFO("Invalid command:  %s", cmd);
 			break;
@@ -143,6 +195,22 @@ int main(int argc, char **argv)
 	// initialize node and node handle
 	ros::init(argc, argv, "chair_manager");
 	ros::NodeHandle nh;
+
+	// load speeds
+	ros::NodeHandle nh;
+	if (nh.getParam("/autonomous", commands_in))
+	{
+		for (auto i = commands_in.begin(); i != commands_in.end(); i++)
+		{
+			commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
+		}
+		ROS_INFO("Autonomous commands have been loaded for new director.");
+	}
+	else
+	{
+		ROS_INFO("You must load autonomous commands before using new director.");
+		return 1;
+	}
 
 	// initialize spinner
 	ros::AsyncSpinner spinner(0);
