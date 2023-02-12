@@ -107,7 +107,7 @@ void receive_callback(const std_msgs::String &msg)
 
 	if (command_ptr != cmd_to_case.end())
 	{
-		switch (command->second)
+		switch (command_ptr->second)
 		{
 		case START:
 			handle_start();
