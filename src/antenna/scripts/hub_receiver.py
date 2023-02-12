@@ -13,7 +13,7 @@ def hub_receiver():
     while not rospy.is_shutdown():
         str_msg = ser.readline()[:-1]
         rospy.loginfo(str_msg)
-        pub.publish(str_msg)
+        pub.publish(str_msg[1:])
 
 if __name__ == '__main__':
     try:
