@@ -1,0 +1,51 @@
+.statuses {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+}
+
+.chair_monitor {
+    flex: 1;
+    background-color: cyan;
+    text-align: center;
+    border: 1px black solid;
+    border-radius: 3px;
+    margin: 2px;
+}
+
+.ghost {
+    border: dashed;
+}
+
+.chair_monitor .offline {
+    background-color: rgb(255, 99, 99);
+}
+
+.ghost.offline {
+    background-color: lightgray;
+}
+
+.stuck {
+    background-color: orange;
+}
+
+.registered {
+    background-color: lightblue;
+}
+
+.chair_control {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
+.directions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.go {
+    background-color: lime;
+}

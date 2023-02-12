@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 
 <script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+<link rel= "stylesheet" type= "text/css" href= "./index.css">
 
 <script type="text/javascript" type="text/javascript">
   var ros = new ROSLIB.Ros({
@@ -31,6 +32,28 @@
   txt_listener.subscribe(function(m) {
     document.getElementById("msg").innerHTML = m.data;
   });
+
+  hub_dir_listener = new ROSLIB.Topic({
+    ros : ros,
+    name : "/hub_dir",
+    messageType : 'std_msgs/String'
+  });
+
+  move = function () {
+    var dir = new ROSLIB.Message({
+      data: "hello"
+    });
+    hub_dir_listener.publish(dir);
+  }
+
+  stop = function(id) {
+    console.log("STOPPING");
+    var dir = new ROSLIB.Message({
+      data: "stop" + id
+    });
+    hub_dir_listener.publish(dir);
+  }
+
 </script>
 </head>
 
@@ -38,5 +61,67 @@
   <h1>Simple ROS User Interface</h1>
   <p>Connection status: <span id="status"></span></p>
   <p>Last /txt_msg received: <span id="msg"></span></p>
+  <div class="statuses">
+      <div class="chair_monitor" id="1">
+          <h2>Chair 1</h2>
+          <div class="status offline">
+            OFFLINE
+        </div>
+        <br>
+        <div class="chair_control">
+          <button>START</button>
+          <br>
+          <button>STOP</button>
+          <br>
+        </div>
+          
+      </div>
+      <div class="chair_monitor" id="2">
+          <h2>Chair 2</h2>
+          <div class="status offline">
+            OFFLINE
+        </div>
+        <br>
+        <div class="chair_control">
+          <div class="directions">
+            <button class="go">GO</button>
+            <button>⤊</button>
+            <button>↑</button>
+            <div>
+              <button>⟲</button>
+              <button>⬉</button>
+              <button id="2" onclick="stop(this.id)">🛑</button>
+              <button>⬈</button>
+              <button>⟳</button>
+            </div>
+            <button>↓</button>
+            <button>⤋</button>
+          </div>
+          <br>
+          <button>START</button>
+          <button>STOP</button>
+          <br>
+        </div>
+      </div>
+      <div class="chair_monitor" id="3">
+          <h2>Chair 3</h2>
+          <div class="status offline">
+              OFFLINE
+          </div>
+          <br>
+          <div class="chair_control">
+            <button>START</button>
+            <br>
+            <button>STOP</button>
+            <br>
+          </div>
+      </div>
+      <div class="chair_monitor backup" id="backup">
+          <h2>Chair 4 (backup)</h2>
+          <div class="status offline">
+            OFFLINE
+        </div>
+      </div>
+  </div>
 </body>
 </html>
