@@ -101,9 +101,7 @@ void receive_callback(const std_msgs::String &msg)
 	char msg_copy[30];
 	strcpy(msg_copy, msg.data.c_str());
 
-	char chair_num = msg_copy[0];
-	if (chair_num !=)
-		char *cmd = strtok(msg_copy, " ");
+	char *cmd = strtok(msg_copy, " ");
 
 	auto command_ptr = cmd_to_case.find(std::string(cmd));
 
