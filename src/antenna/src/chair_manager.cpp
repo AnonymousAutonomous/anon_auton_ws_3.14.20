@@ -197,7 +197,6 @@ int main(int argc, char **argv)
 	ros::NodeHandle nh;
 
 	// load speeds
-	ros::NodeHandle nh;
 	if (nh.getParam("/autonomous", commands_in))
 	{
 		for (auto i = commands_in.begin(); i != commands_in.end(); i++)
