@@ -35,7 +35,7 @@
 
   hub_dir_listener = new ROSLIB.Topic({
     ros : ros,
-    name : "/hub_dir",
+    name : "/from_hub",
     messageType : 'std_msgs/String'
   });
 
@@ -70,11 +70,11 @@
   fbwd = function(id) {
     hub_dir_listener.publish(formatMsg(id, "fbwd"));
   }
-  left = function(id) {
-    hub_dir_listener.publish(formatMsg(id, "left"));
+  veerl = function(id) {
+    hub_dir_listener.publish(formatMsg(id, "veerl"));
   }
-  right = function(id) {
-    hub_dir_listener.publish(formatMsg(id, "right"));
+  veerr = function(id) {
+    hub_dir_listener.publish(formatMsg(id, "veerr"));
   }
   pivotl = function(id) {
     hub_dir_listener.publish(formatMsg(id, "pivotl"));
@@ -114,17 +114,17 @@
         <div class="chair_control">
           <div class="directions">
             <button class="go">GO</button>
-            <button id="2" onclick="ffwd(this.id)">⤊</button>
-            <button id="2" onclick="fwd(this.id)">↑</button>
+            <button id="4" onclick="ffwd(this.id)">⤊</button>
+            <button id="4" onclick="fwd(this.id)">↑</button>
             <div>
-              <button id="2" onclick="pivotl(this.id)">⟲</button>
-              <button id="2" onclick="left(this.id)">⬉</button>
-              <button id="2" onclick="stop(this.id)">🛑</button>
-              <button id="2" onclick="right(this.id)">⬈</button>
-              <button id="2" onclick="pivotr(this.id)">⟳</button>
+              <button id="4" onclick="pivotl(this.id)">⟲</button>
+              <button id="4" onclick="veerl(this.id)">⬉</button>
+              <button id="4" onclick="stop(this.id)">🛑</button>
+              <button id="4" onclick="veerr(this.id)">⬈</button>
+              <button id="4" onclick="pivotr(this.id)">⟳</button>
             </div>
-            <button id="2" onclick="bwd(this.id)">↓</button>
-            <button id="2" onclick="fbwd(this.id)">⤋</button>
+            <button id="4" onclick="bwd(this.id)">↓</button>
+            <button id="4" onclick="fbwd(this.id)">⤋</button>
           </div>
           <br>
           <button>START</button>
