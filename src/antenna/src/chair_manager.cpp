@@ -16,20 +16,20 @@ std::unordered_map<AutonomousCmd, std::string> commands;
 
 enum Command
 {
-	START,
-	STOP,
-	LAUNCH,
-	RESET,
-	SHUTDOWN,
-	HANDWRITTEN,
-	FFWD,
-	FWD,
-	BWD,
-	FBWD,
-	PIVOTL,
-	PIVOTR,
-	VEERL,
-	VEERR,
+	ANTENNA_START,
+	ANTENNA_STOP,
+	ANTENNA_LAUNCH,
+	ANTENNA_RESET,
+	ANTENNA_SHUTDOWN,
+	ANTENNA_HANDWRITTEN,
+	ANTENNA_FFWD,
+	ANTENNA_FWD,
+	ANTENNA_BWD,
+	ANTENNA_FBWD,
+	ANTENNA_PIVOTL,
+	ANTENNA_PIVOTR,
+	ANTENNA_VEERL,
+	ANTENNA_VEERR,
 };
 
 const std::unordered_map<std::string, Command>
@@ -137,47 +137,47 @@ void receive_callback(const std_msgs::String &msg)
 	{
 		switch (command_ptr->second)
 		{
-		case START:
+		case ANTENNA_START:
 			handle_start();
 			break;
-		case STOP:
+		case ANTENNA_STOP:
 			handle_stop();
 			break;
-		case LAUNCH:
+		case ANTENNA_LAUNCH:
 			handle_launch();
 			break;
-		case SHUTDOWN:
+		case ANTENNA_SHUTDOWN:
 			handle_shutdown();
 			break;
-		case RESET:
+		case ANTENNA_RESET:
 			handle_reset();
 			break;
-		case HANDWRITTEN:
+		case ANTENNA_HANDWRITTEN:
 			handle_handwritten(strtok(NULL, " "));
 			break;
-		case FWD:
-			send_as_handwritten(AutonomousCmd.FWD);
+		case ANTENNA_FWD:
+			send_as_handwritten(FWD);
 			break;
-		case BWD:
-			send_as_handwritten(AutonomousCmd.BWD);
+		case ANTENNA_BWD:
+			send_as_handwritten(BWD);
 			break;
-		case FFWD:
-			send_as_handwritten(AutonomousCmd.FFWD);
+		case ANTENNA_FFWD:
+			send_as_handwritten(FFWD);
 			break;
-		case FBWD:
-			send_as_handwritten(AutonomousCmd.FBWD);
+		case ANTENNA_FBWD:
+			send_as_handwritten(FBWD);
 			break;
-		case PIVOTL:
-			send_as_handwritten(AutonomousCmd.PIVOTL);
+		case ANTENNA_PIVOTL:
+			send_as_handwritten(PIVOTL);
 			break;
-		case PIVOTR:
-			send_as_handwritten(AutonomousCmd.PIVOTR);
+		case ANTENNA_PIVOTR:
+			send_as_handwritten(PIVOTR);
 			break;
-		case VEERL:
-			send_as_handwritten(AutonomousCmd.VEERL);
+		case ANTENNA_VEERL:
+			send_as_handwritten(VEERL);
 			break;
-		case VEERR:
-			send_as_handwritten(AutonomousCmd.VEERR);
+		case ANTENNA_VEERR:
+			send_as_handwritten(VEERR);
 			break;
 		default:
 			ROS_INFO("Invalid command:  %s", cmd);
