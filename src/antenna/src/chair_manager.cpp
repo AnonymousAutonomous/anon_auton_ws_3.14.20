@@ -37,7 +37,13 @@ char RESET_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/shutdown.sh &";
 // #define NUMBER_OF_CHAIRS 1
 
 // for reference
-enum class chair_broadcast_status : char {ready ='r', exclude='e', success='s', failure='f'};
+enum class chair_broadcast_status : char
+{
+	ready = 'r',
+	exclude = 'e',
+	success = 's',
+	failure = 'f'
+};
 // enum class chair_stuck_status : char {stuck, not_stuck};
 // enum class chair_trapped_status : char {trapped, not_trapped};
 
@@ -72,12 +78,20 @@ void handle_shutdown()
 	system(SHUTDOWN_SCRIPT);
 }
 
+// TODO: handle custom handwritten vs. from the standard set
 void handle_handwritten(char handwritten_cmd[])
 {
 	std::string prefix = "echo \"";
 	char suffix[] = "\" > /tmp/handwritten-input";
 	system((prefix + handwritten_cmd + suffix).c_str());
 }
+
+/* Message format:
+   #cmd
+   where
+   # = number of the chair the command is for. If # is 0, it's for all chairs.
+   cmd = either one of the cmds above, or one of the handwritten commands.
+*/
 
 void receive_callback(const std_msgs::String &msg)
 {
@@ -87,11 +101,14 @@ void receive_callback(const std_msgs::String &msg)
 	char msg_copy[30];
 	strcpy(msg_copy, msg.data.c_str());
 
-	char *cmd = strtok(msg_copy, " ");
+	char chair_num = msg_copy[0];
+	if (chair_num !=)
+		char *cmd = strtok(msg_copy, " ");
 
 	auto command_ptr = cmd_to_case.find(std::string(cmd));
 
-	if (command_ptr != cmd_to_case.end()) {
+	if (command_ptr != cmd_to_case.end())
+	{
 		switch (command->second)
 		{
 		case START:
@@ -116,7 +133,9 @@ void receive_callback(const std_msgs::String &msg)
 			ROS_INFO("Invalid command:  %s", cmd);
 			break;
 		}
-	} else {
+	}
+	else
+	{
 		ROS_INFO("Invalid command:  %s", cmd);
 	}
 }
