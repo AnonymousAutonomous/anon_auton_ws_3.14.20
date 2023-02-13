@@ -7,4 +7,5 @@ source devel/setup.bash
 
 sleep 5
 
+roslaunch ~/anon_auton_ws/src/robot_gui_bridge/launch/websocket.launch &
 roslaunch ~/anon_auton_ws/src/launch_manager/launch/components/antenna_hub.launch
