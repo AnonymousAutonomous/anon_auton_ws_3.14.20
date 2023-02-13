@@ -226,5 +226,6 @@ int main(int argc, char **argv)
 		std_msgs::String msg;
 		msg.data = (char)(chair_broadcast_status::ready);
 		test_pub.publish(msg);
+		spinner.spin();
 	}
 }
