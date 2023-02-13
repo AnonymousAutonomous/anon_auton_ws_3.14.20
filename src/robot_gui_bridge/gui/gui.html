@@ -60,7 +60,7 @@
       document.getElementById(m.data[0] + "status").classList.add(m.data[1]);
     });
 
-    const interval = setInterval(function() {
+    function checkStatus() {
       for (let [key, value] of live_status) {
         console.log(key, value);
         if (value == null) {
@@ -68,7 +68,10 @@
         }
         live_status[key] = null;
       }
-    }, 5000);
+      setTimeout(checkStatus, 5000);
+    };
+
+    checkStatus();
 
     hub_dir_listener = new ROSLIB.Topic({
       ros: ros,
