@@ -10,7 +10,7 @@ ser = serial.Serial(antenna_port, 57600)
 
 def callback(data):
     rospy.loginfo(data.data)
-    ser.write("0B" + chair_num + data.data + '\n')
+    ser.write(chair_num + data.data + '\n')
 
 
 def chair_transmitter():
