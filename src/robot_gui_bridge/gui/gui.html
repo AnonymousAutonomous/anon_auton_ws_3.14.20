@@ -99,12 +99,25 @@
       </div>
       <br>
       <div class="chair_control">
-        <button>START</button>
+        <div class="directions">
+          <button class="auto">AUTO</button>
+          <button id="1" onclick="ffwd(this.id)">⤊</button>
+          <button id="1" onclick="fwd(this.id)">↑</button>
+          <div>
+            <button id="1" onclick="pivotl(this.id)">⟲</button>
+            <button id="1" onclick="veerl(this.id)">⬉</button>
+            <button id="1" onclick="stop(this.id)">🛑</button>
+            <button id="1" onclick="veerr(this.id)">⬈</button>
+            <button id="1" onclick="pivotr(this.id)">⟳</button>
+          </div>
+          <button id="1" onclick="bwd(this.id)">↓</button>
+          <button id="1" onclick="fbwd(this.id)">⤋</button>
+        </div>
         <br>
+        <button>START</button>
         <button>STOP</button>
         <br>
       </div>
-
     </div>
     <div class="chair_monitor" id="2">
       <h2>Chair 2</h2>
@@ -114,7 +127,34 @@
       <br>
       <div class="chair_control">
         <div class="directions">
-          <button class="go">GO</button>
+          <button class="auto">AUTO</button>
+          <button id="2" onclick="ffwd(this.id)">⤊</button>
+          <button id="2" onclick="fwd(this.id)">↑</button>
+          <div>
+            <button id="2" onclick="pivotl(this.id)">⟲</button>
+            <button id="2" onclick="veerl(this.id)">⬉</button>
+            <button id="2" onclick="stop(this.id)">🛑</button>
+            <button id="2" onclick="veerr(this.id)">⬈</button>
+            <button id="2" onclick="pivotr(this.id)">⟳</button>
+          </div>
+          <button id="2" onclick="bwd(this.id)">↓</button>
+          <button id="2" onclick="fbwd(this.id)">⤋</button>
+        </div>
+        <br>
+        <button>START</button>
+        <button>STOP</button>
+        <br>
+      </div>
+    </div>
+    <div class="chair_monitor" id="3">
+      <h2>Chair 3</h2>
+      <div class="status offline">
+        OFFLINE
+      </div>
+      <br>
+      <div class="chair_control">
+        <div class="directions">
+          <button class="auto">AUTO</button>
           <button id="4" onclick="ffwd(this.id)">⤊</button>
           <button id="4" onclick="fwd(this.id)">↑</button>
           <div>
@@ -130,29 +170,15 @@
         <br>
         <button>START</button>
         <button>STOP</button>
-        <button>AUTO</button>
         <br>
       </div>
     </div>
-    <div class="chair_monitor" id="3">
-      <h2>Chair 3</h2>
-      <div class="status offline">
-        OFFLINE
-      </div>
-      <br>
-      <div class="chair_control">
-        <button>START</button>
-        <br>
-        <button>STOP</button>
-        <br>
-      </div>
-    </div>
-    <div class="chair_monitor backup" id="backup">
+    <!-- <div class="chair_monitor backup" id="backup">
       <h2>Chair 4 (backup)</h2>
       <div class="status offline">
         OFFLINE
       </div>
-    </div>
+    </div> -->
   </div>
 </body>
 
