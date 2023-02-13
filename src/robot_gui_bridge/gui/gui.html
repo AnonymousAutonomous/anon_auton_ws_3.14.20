@@ -54,7 +54,7 @@
     }
 
     txt_listener.subscribe(function (m) {
-      live_status[m.data[0]] = m.data[1];
+      live_status.set(m.data[0], m.data[1]);
       document.getElementById("msg").innerHTML = m.data;
       document.getElementById(m.data[0] + "status").innerHTML = getTextForStatus(m.data[1])
       document.getElementById(m.data[0] + "status").classList.add(m.data[1]);
