@@ -26,7 +26,7 @@
 
     var txt_listener = new ROSLIB.Topic({
       ros: ros,
-      name: '/txt_msg',
+      name: '/from_hub_receiver',
       messageType: 'std_msgs/String'
     });
 
@@ -101,6 +101,7 @@
       <div class="chair_control">
         <div class="directions">
           <button class="auto">AUTO</button>
+          <br>
           <button id="1" onclick="ffwd(this.id)">⤊</button>
           <button id="1" onclick="fwd(this.id)">↑</button>
           <div>
@@ -128,6 +129,7 @@
       <div class="chair_control">
         <div class="directions">
           <button class="auto">AUTO</button>
+          <br>
           <button id="2" onclick="ffwd(this.id)">⤊</button>
           <button id="2" onclick="fwd(this.id)">↑</button>
           <div>
@@ -155,6 +157,7 @@
       <div class="chair_control">
         <div class="directions">
           <button class="auto">AUTO</button>
+          <br>
           <button id="4" onclick="ffwd(this.id)">⤊</button>
           <button id="4" onclick="fwd(this.id)">↑</button>
           <div>

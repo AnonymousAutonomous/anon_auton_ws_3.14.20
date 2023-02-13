@@ -1,7 +1,7 @@
 .statuses {
     display: flex;
     flex-direction: row;
-    width: 100vw;
+    width: 100%;
 }
 
 .chair_monitor {
@@ -46,6 +46,6 @@
     align-items: center;
 }
 
-.go {
+.auto {
     background-color: lime;
 }

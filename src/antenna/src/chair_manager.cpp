@@ -46,8 +46,7 @@ const std::unordered_map<std::string, Command> cmd_to_case = {
 	{"veerr", ANTENNA_VEERR},
 	{"pivotl", ANTENNA_PIVOTL},
 	{"pivotr", ANTENNA_PIVOTR},
-	{"handwritten", ANTENNA_HANDWRITTEN}
-};
+	{"handwritten", ANTENNA_HANDWRITTEN}};
 
 char LAUNCH_AUTONOMOUS_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh &";
 char LAUNCH_HANDWRITTEN_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_handwritten.sh &";
@@ -224,8 +223,8 @@ int main(int argc, char **argv)
 
 	while (ros::ok())
 	{
-		// std_msgs::String msg;
-		// msg.data = (char)(chair_broadcast_status::ready);
-		// test_pub.publish(msg);
+		std_msgs::String msg;
+		msg.data = (char)(chair_broadcast_status::ready);
+		test_pub.publish(msg);
 	}
 }
