@@ -10,9 +10,9 @@
 #include <vector>
 #include <string>
 
-// All available autonomous commands
-std::map<std::string, std::string> commands_in;
-std::unordered_map<AutonomousCmd, std::string> commands;
+// All available autonomous hand_cmds
+std::map<std::string, std::string> hand_cmds_in;
+std::unordered_map<AutonomousCmd, std::string> hand_cmds;
 
 enum Command
 {
@@ -32,22 +32,22 @@ enum Command
 	ANTENNA_VEERR,
 };
 
-const std::unordered_map<std::string, Command>
-	cmd_to_case{
-		{"start", START},
-		{"stop", STOP},
-		{"launch", LAUNCH},
-		{"reset", RESET},
-		{"shutdown", SHUTDOWN},
-		{"ffwd", FFWD},
-		{"fwd", FWD},
-		{"bwd", BWD},
-		{"fbwd", FBWD},
-		{"veerl", VEERL},
-		{"veerr", VEERR},
-		{"pivotl", PIVOTL},
-		{"pivotr", PIVOTR},
-		{"handwritten", HANDWRITTEN}};
+const std::unordered_map<std::string, Command> cmd_to_case = {
+	{"start", ANTENNA_START},
+	{"stop", ANTENNA_STOP},
+	{"launch", ANTENNA_LAUNCH},
+	{"reset", ANTENNA_RESET},
+	{"shutdown", ANTENNA_SHUTDOWN},
+	{"ffwd", ANTENNA_FFWD},
+	{"fwd", ANTENNA_FWD},
+	{"bwd", ANTENNA_BWD},
+	{"fbwd", ANTENNA_FBWD},
+	{"veerl", ANTENNA_VEERL},
+	{"veerr", ANTENNA_VEERR},
+	{"pivotl", ANTENNA_PIVOTL},
+	{"pivotr", ANTENNA_PIVOTR},
+	{"handwritten", ANTENNA_HANDWRITTEN}
+};
 
 char LAUNCH_AUTONOMOUS_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh &";
 char LAUNCH_HANDWRITTEN_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_handwritten.sh &";
@@ -111,14 +111,14 @@ void send_as_handwritten(AutonomousCmd cmd)
 {
 	std::string prefix = "echo \"";
 	char suffix[] = "\" > /tmp/handwritten-input";
-	system((prefix + commands[cmd] + suffix).c_str());
+	system((prefix + hand_cmds[cmd] + suffix).c_str());
 }
 
 /* Message format:
    #cmd
    where
    # = number of the chair the command is for. If # is 0, it's for all chairs.
-   cmd = either one of the cmds above, or one of the handwritten commands.
+   cmd = either one of the cmds above, or one of the handwritten hand_cmds.
 */
 
 void receive_callback(const std_msgs::String &msg)
@@ -197,17 +197,17 @@ int main(int argc, char **argv)
 	ros::NodeHandle nh;
 
 	// load speeds
-	if (nh.getParam("/autonomous", commands_in))
+	if (nh.getParam("/handwritten", hand_cmds_in))
 	{
-		for (auto i = commands_in.begin(); i != commands_in.end(); i++)
+		for (auto i = hand_cmds_in.begin(); i != hand_cmds_in.end(); i++)
 		{
-			commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
+			hand_cmds[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
 		}
-		ROS_INFO("Autonomous commands have been loaded for new director.");
+		ROS_INFO("Handwritten hand_cmds have been loaded for chair manager.");
 	}
 	else
 	{
-		ROS_INFO("You must load autonomous commands before using new director.");
+		ROS_INFO("You must load handwritten hand_cmds before using chair manager.");
 		return 1;
 	}
 
