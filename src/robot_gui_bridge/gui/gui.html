@@ -55,7 +55,6 @@
       document.getElementById("msg").innerHTML = m.data;
       document.getElementById(m.data[0] + "status").innerHTML = getTextForStatus(m.data[1])
       document.getElementById(m.data[0] + "status").classList.add(m.data[1]);
-
     });
 
     hub_dir_listener = new ROSLIB.Topic({
@@ -63,6 +62,20 @@
       name: "/from_hub",
       messageType: 'std_msgs/String'
     });
+
+    submitForm = function(e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const formProps = Object.fromEntries(formData);
+      
+      const cmd = formProps.custom_handwritten;
+
+      if (cmd.length != 8) {
+        alert("Custom commands must be 8 characters: [f/r][#.#][f/r][#.#]\nExample: f1.0f1.0")
+      }
+      hub_dir_listener.publish(formatMsg(e.target.id[0], formProps.custom_handwritten));
+      document.getElementById(e.target.id).reset();
+    }
 
     move = function () {
       var dir = new ROSLIB.Message({
@@ -77,6 +90,9 @@
       });
     }
 
+    toggle = function (id) {
+      hub_dir_listener.publish(formatMsg(id, "toggle"));
+    }
     stop = function (id) {
       hub_dir_listener.publish(formatMsg(id, "stop"));
     }
@@ -116,6 +132,8 @@
   <p>Connection status: <span id="status">NOT CONNECTED</span></p>
   <p>Last /txt_msg received: <span id="msg"></span></p>
   <button onclick="stop('0')">STOP ALL</button>
+  <button onclick="toggle('0')">AUTO ALL</button>
+
   <div class="statuses">
     <div class="chair_monitor" id="1">
       <h2>Chair 1</h2>
@@ -125,7 +143,7 @@
       <br>
       <div class="chair_control">
         <div class="directions">
-          <button class="auto">AUTO</button>
+          <button class="auto" id="1" onclick="toggle(this.id)">AUTO</button>
           <br>
           <button id="1" onclick="ffwd(this.id)">⤊</button>
           <button id="1" onclick="fwd(this.id)">↑</button>
@@ -140,9 +158,14 @@
           <button id="1" onclick="fbwd(this.id)">⤋</button>
         </div>
         <br>
-        <button>START</button>
-        <button>STOP</button>
+        <button id="1" onclick="start(this.id)">START</button>
+        <button id="1" onclick="stop(this.id)">STOP</button>
         <br>
+        <form id="1custom_handwritten" onsubmit="return submitForm(event);">
+          <label for="custom_handwritten">Custom: </label>
+            <input type="text" id="custom_handwritten" name="custom_handwritten">
+            <button type="submit">Send</button>
+          </form>
       </div>
     </div>
     <div class="chair_monitor" id="2">
@@ -153,7 +176,7 @@
       <br>
       <div class="chair_control">
         <div class="directions">
-          <button class="auto">AUTO</button>
+          <button class="auto" id="2" onclick="toggle(this.id)">AUTO</button>
           <br>
           <button id="2" onclick="ffwd(this.id)">⤊</button>
           <button id="2" onclick="fwd(this.id)">↑</button>
@@ -168,8 +191,8 @@
           <button id="2" onclick="fbwd(this.id)">⤋</button>
         </div>
         <br>
-        <button>START</button>
-        <button>STOP</button>
+        <button id="2" onclick="start(this.id)">START</button>
+        <button id="2" onclick="stop(this.id)">STOP</button>
         <br>
       </div>
     </div>
@@ -181,7 +204,7 @@
       <br>
       <div class="chair_control">
         <div class="directions">
-          <button class="auto">AUTO</button>
+          <button class="auto" id="4" onclick="toggle(this.id)">AUTO</button>
           <br>
           <button id="4" onclick="ffwd(this.id)">⤊</button>
           <button id="4" onclick="fwd(this.id)">↑</button>
@@ -196,8 +219,8 @@
           <button id="4" onclick="fbwd(this.id)">⤋</button>
         </div>
         <br>
-        <button>START</button>
-        <button>STOP</button>
+        <button id="4" onclick="start(this.id)">START</button>
+        <button id="4" onclick="stop(this.id)">STOP</button>
         <br>
       </div>
     </div>
