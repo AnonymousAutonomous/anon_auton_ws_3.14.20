@@ -30,8 +30,32 @@
       messageType: 'std_msgs/String'
     });
 
+    getTextForStatus = function(status) {
+      if (status == 'r') {
+        return "READY";
+      }
+      else if (status == 'e') {
+        return "EXCLUDE";
+      }
+      else if (status == 's') {
+        return "SUCCESS";
+      }
+      else if (status == 'f') {
+        return "FAILURE";
+      }
+      else if (status == 'o') {
+        return "OFFLINE";
+      }
+      else {
+        return "ERROR";
+      }
+    }
+
     txt_listener.subscribe(function (m) {
       document.getElementById("msg").innerHTML = m.data;
+      document.getElementById(m.data[0] + "status").innerHTML = getTextForStatus(m.data[1])
+      document.getElementById(m.data[0] + "status").classList.add(m.data[1]);
+
     });
 
     hub_dir_listener = new ROSLIB.Topic({
@@ -94,7 +118,7 @@
   <div class="statuses">
     <div class="chair_monitor" id="1">
       <h2>Chair 1</h2>
-      <div class="status offline">
+      <div class="status offline" id="1status">
         OFFLINE
       </div>
       <br>
@@ -122,7 +146,7 @@
     </div>
     <div class="chair_monitor" id="2">
       <h2>Chair 2</h2>
-      <div class="status offline">
+      <div class="status offline" id="2status">
         OFFLINE
       </div>
       <br>
@@ -148,9 +172,9 @@
         <br>
       </div>
     </div>
-    <div class="chair_monitor" id="3">
-      <h2>Chair 3</h2>
-      <div class="status offline">
+    <div class="chair_monitor" id="4">
+      <h2>Chair 4</h2>
+      <div class="status offline" id="4status">
         OFFLINE
       </div>
       <br>
