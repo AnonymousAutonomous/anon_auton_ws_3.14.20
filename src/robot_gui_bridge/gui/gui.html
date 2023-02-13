@@ -63,7 +63,7 @@
     function checkStatus() {
       for (let [key, value] of live_status) {
         if (value == null) {
-          document.getElementById(key + "status").innerHTML = getTextForStatus("o")
+          document.getElementById(key + "status").innerHTML = getTextForStatus('o')
         }
         live_status.set(key, null);
       }
