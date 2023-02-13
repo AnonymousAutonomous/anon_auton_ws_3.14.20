@@ -12,7 +12,7 @@
       url: 'ws://localhost:9090'
     });
 
-    var live_status = {}
+    var live_status = new Map();
 
     ros.on('connection', function () {
       document.getElementById("status").innerHTML = "Connected";
@@ -62,8 +62,9 @@
 
     const interval = setInterval(function() {
       for (let [key, value] of live_status) {
+        console.log(key, value);
         if (value == null) {
-          document.getElementById(m.data[0] + "status").innerHTML = getTextForStatus("o")
+          document.getElementById(key + "status").innerHTML = getTextForStatus("o")
         }
         live_status[key] = null;
       }
