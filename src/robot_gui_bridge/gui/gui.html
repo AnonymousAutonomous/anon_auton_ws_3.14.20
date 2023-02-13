@@ -65,7 +65,7 @@
         if (value == null) {
           document.getElementById(key + "status").innerHTML = getTextForStatus("o")
         }
-        live_status[key] = null;
+        live_status.set(key, null);
       }
       setTimeout(checkStatus, 5000);
     };
