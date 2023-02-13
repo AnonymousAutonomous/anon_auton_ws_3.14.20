@@ -10,44 +10,43 @@
 #include <vector>
 #include <string>
 
-// All available autonomous commands
-std::map<std::string, std::string> commands_in;
-std::unordered_map<AutonomousCmd, std::string> commands;
+// All available autonomous hand_cmds
+std::map<std::string, std::string> hand_cmds_in;
+std::unordered_map<AutonomousCmd, std::string> hand_cmds;
 
 enum Command
 {
-	START,
-	STOP,
-	LAUNCH,
-	RESET,
-	SHUTDOWN,
-	HANDWRITTEN,
-	FFWD,
-	FWD,
-	BWD,
-	FBWD,
-	PIVOTL,
-	PIVOTR,
-	VEERL,
-	VEERR,
+	ANTENNA_START,
+	ANTENNA_STOP,
+	ANTENNA_LAUNCH,
+	ANTENNA_RESET,
+	ANTENNA_SHUTDOWN,
+	ANTENNA_HANDWRITTEN,
+	ANTENNA_FFWD,
+	ANTENNA_FWD,
+	ANTENNA_BWD,
+	ANTENNA_FBWD,
+	ANTENNA_PIVOTL,
+	ANTENNA_PIVOTR,
+	ANTENNA_VEERL,
+	ANTENNA_VEERR,
 };
 
-const std::unordered_map<std::string, Command>
-	cmd_to_case{
-		{"start", START},
-		{"stop", STOP},
-		{"launch", LAUNCH},
-		{"reset", RESET},
-		{"shutdown", SHUTDOWN},
-		{"ffwd", FFWD},
-		{"fwd", FWD},
-		{"bwd", BWD},
-		{"fbwd", FBWD},
-		{"veerl", VEERL},
-		{"veerr", VEERR},
-		{"pivotl", PIVOTL},
-		{"pivotr", PIVOTR},
-		{"handwritten", HANDWRITTEN}};
+const std::unordered_map<std::string, Command> cmd_to_case = {
+	{"start", ANTENNA_START},
+	{"stop", ANTENNA_STOP},
+	{"launch", ANTENNA_LAUNCH},
+	{"reset", ANTENNA_RESET},
+	{"shutdown", ANTENNA_SHUTDOWN},
+	{"ffwd", ANTENNA_FFWD},
+	{"fwd", ANTENNA_FWD},
+	{"bwd", ANTENNA_BWD},
+	{"fbwd", ANTENNA_FBWD},
+	{"veerl", ANTENNA_VEERL},
+	{"veerr", ANTENNA_VEERR},
+	{"pivotl", ANTENNA_PIVOTL},
+	{"pivotr", ANTENNA_PIVOTR},
+	{"handwritten", ANTENNA_HANDWRITTEN}};
 
 char LAUNCH_AUTONOMOUS_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh &";
 char LAUNCH_HANDWRITTEN_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_handwritten.sh &";
@@ -111,14 +110,14 @@ void send_as_handwritten(AutonomousCmd cmd)
 {
 	std::string prefix = "echo \"";
 	char suffix[] = "\" > /tmp/handwritten-input";
-	system((prefix + commands[cmd] + suffix).c_str());
+	system((prefix + hand_cmds[cmd] + suffix).c_str());
 }
 
 /* Message format:
    #cmd
    where
    # = number of the chair the command is for. If # is 0, it's for all chairs.
-   cmd = either one of the cmds above, or one of the handwritten commands.
+   cmd = either one of the cmds above, or one of the handwritten hand_cmds.
 */
 
 void receive_callback(const std_msgs::String &msg)
@@ -137,47 +136,47 @@ void receive_callback(const std_msgs::String &msg)
 	{
 		switch (command_ptr->second)
 		{
-		case START:
+		case ANTENNA_START:
 			handle_start();
 			break;
-		case STOP:
+		case ANTENNA_STOP:
 			handle_stop();
 			break;
-		case LAUNCH:
+		case ANTENNA_LAUNCH:
 			handle_launch();
 			break;
-		case SHUTDOWN:
+		case ANTENNA_SHUTDOWN:
 			handle_shutdown();
 			break;
-		case RESET:
+		case ANTENNA_RESET:
 			handle_reset();
 			break;
-		case HANDWRITTEN:
+		case ANTENNA_HANDWRITTEN:
 			handle_handwritten(strtok(NULL, " "));
 			break;
-		case FWD:
-			send_as_handwritten(AutonomousCmd.FWD);
+		case ANTENNA_FWD:
+			send_as_handwritten(FWD);
 			break;
-		case BWD:
-			send_as_handwritten(AutonomousCmd.BWD);
+		case ANTENNA_BWD:
+			send_as_handwritten(BWD);
 			break;
-		case FFWD:
-			send_as_handwritten(AutonomousCmd.FFWD);
+		case ANTENNA_FFWD:
+			send_as_handwritten(FFWD);
 			break;
-		case FBWD:
-			send_as_handwritten(AutonomousCmd.FBWD);
+		case ANTENNA_FBWD:
+			send_as_handwritten(FBWD);
 			break;
-		case PIVOTL:
-			send_as_handwritten(AutonomousCmd.PIVOTL);
+		case ANTENNA_PIVOTL:
+			send_as_handwritten(PIVOTL);
 			break;
-		case PIVOTR:
-			send_as_handwritten(AutonomousCmd.PIVOTR);
+		case ANTENNA_PIVOTR:
+			send_as_handwritten(PIVOTR);
 			break;
-		case VEERL:
-			send_as_handwritten(AutonomousCmd.VEERL);
+		case ANTENNA_VEERL:
+			send_as_handwritten(VEERL);
 			break;
-		case VEERR:
-			send_as_handwritten(AutonomousCmd.VEERR);
+		case ANTENNA_VEERR:
+			send_as_handwritten(VEERR);
 			break;
 		default:
 			ROS_INFO("Invalid command:  %s", cmd);
@@ -197,18 +196,17 @@ int main(int argc, char **argv)
 	ros::NodeHandle nh;
 
 	// load speeds
-	ros::NodeHandle nh;
-	if (nh.getParam("/autonomous", commands_in))
+	if (nh.getParam("/handwritten", hand_cmds_in))
 	{
-		for (auto i = commands_in.begin(); i != commands_in.end(); i++)
+		for (auto i = hand_cmds_in.begin(); i != hand_cmds_in.end(); i++)
 		{
-			commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
+			hand_cmds[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
 		}
-		ROS_INFO("Autonomous commands have been loaded for new director.");
+		ROS_INFO("Handwritten hand_cmds have been loaded for chair manager.");
 	}
 	else
 	{
-		ROS_INFO("You must load autonomous commands before using new director.");
+		ROS_INFO("You must load handwritten hand_cmds before using chair manager.");
 		return 1;
 	}
 
@@ -223,10 +221,12 @@ int main(int argc, char **argv)
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
 	test_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 
+	ros::Rate delay_rate(5);
+
 	while (ros::ok())
 	{
-		// std_msgs::String msg;
-		// msg.data = (char)(chair_broadcast_status::ready);
-		// test_pub.publish(msg);
+		std_msgs::String msg;
+		msg.data = (char)(chair_broadcast_status::ready);
+		test_pub.publish(msg);
 	}
 }
