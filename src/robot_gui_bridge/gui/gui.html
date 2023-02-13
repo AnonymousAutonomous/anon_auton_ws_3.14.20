@@ -12,6 +12,8 @@
       url: 'ws://localhost:9090'
     });
 
+    var live_status = {}
+
     ros.on('connection', function () {
       document.getElementById("status").innerHTML = "Connected";
     });
@@ -52,10 +54,20 @@
     }
 
     txt_listener.subscribe(function (m) {
+      live_status[m.data[0]] = m.data[1];
       document.getElementById("msg").innerHTML = m.data;
       document.getElementById(m.data[0] + "status").innerHTML = getTextForStatus(m.data[1])
       document.getElementById(m.data[0] + "status").classList.add(m.data[1]);
     });
+
+    const interval = setInterval(function() {
+      for (let [key, value] of live_status) {
+        if (value == null) {
+          document.getElementById(m.data[0] + "status").innerHTML = getTextForStatus("o")
+        }
+        live_status[key] = null;
+      }
+    }, 5000);
 
     hub_dir_listener = new ROSLIB.Topic({
       ros: ros,
