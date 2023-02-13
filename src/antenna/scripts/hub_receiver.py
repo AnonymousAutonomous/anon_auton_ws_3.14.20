@@ -12,9 +12,9 @@ def hub_receiver():
     rospy.init_node("hub_receiver", anonymous=True)
     ser = serial.Serial(antenna_port, 57600)
     while not rospy.is_shutdown():
-        str_msg = ser.readline()[:-1]
+        str_msg = ser.readline()[2:].decode("utf-8").strip()
         rospy.loginfo(str_msg)
-        pub.publish(str_msg[:])
+        pub.publish(str_msg)
 
 
 if __name__ == '__main__':
