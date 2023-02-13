@@ -131,8 +131,8 @@
   <h1>Simple ROS User Interface</h1>
   <p>Connection status: <span id="status">NOT CONNECTED</span></p>
   <p>Last /txt_msg received: <span id="msg"></span></p>
-  <button onclick="stop('0')">STOP ALL</button>
-  <button onclick="toggle('0')">AUTO ALL</button>
+  <button onclick="stop('0')" class="stop">STOP ALL</button>
+  <button onclick="toggle('0')" class="auto">AUTO ALL</button>
 
   <div class="statuses">
     <div class="chair_monitor" id="1">
@@ -159,12 +159,12 @@
         </div>
         <br>
         <button id="1" onclick="start(this.id)">START</button>
-        <button id="1" onclick="stop(this.id)">STOP</button>
+        <button id="1" onclick="stop(this.id)" class="stop">STOP</button>
         <br>
-        <form id="1custom_handwritten" onsubmit="return submitForm(event);">
+        <form id="1custom_handwritten" class="handwritten_form" onsubmit="return submitForm(event);">
           <label for="custom_handwritten">Custom: </label>
             <input type="text" id="custom_handwritten" name="custom_handwritten">
-            <button type="submit">Send</button>
+            <button type="submit" class="submit_button">Send</button>
           </form>
       </div>
     </div>
@@ -192,8 +192,13 @@
         </div>
         <br>
         <button id="2" onclick="start(this.id)">START</button>
-        <button id="2" onclick="stop(this.id)">STOP</button>
+        <button id="2" onclick="stop(this.id)" class="stop">STOP</button>
         <br>
+        <form id="2custom_handwritten" class="handwritten_form" onsubmit="return submitForm(event);">
+          <label for="custom_handwritten">Custom: </label>
+            <input type="text" id="custom_handwritten" name="custom_handwritten">
+            <button type="submit" class="submit_button">Send</button>
+          </form>
       </div>
     </div>
     <div class="chair_monitor" id="4">
@@ -220,8 +225,13 @@
         </div>
         <br>
         <button id="4" onclick="start(this.id)">START</button>
-        <button id="4" onclick="stop(this.id)">STOP</button>
+        <button id="4" onclick="stop(this.id)" class="stop">STOP</button>
         <br>
+        <form id="4custom_handwritten" class="handwritten_form" onsubmit="return submitForm(event);">
+          <label for="custom_handwritten">Custom: </label>
+            <input type="text" id="custom_handwritten" name="custom_handwritten">
+            <button type="submit" class="submit_button">Send</button>
+          </form>
       </div>
     </div>
     <!-- <div class="chair_monitor backup" id="backup">

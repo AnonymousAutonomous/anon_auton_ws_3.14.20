@@ -46,6 +46,10 @@
     background-color: lime;
 }
 
+.stop {
+    background-color: orangered;
+}
+
 .r {
     background-color: turquoise;
 }
@@ -64,4 +68,25 @@
 
 .o {
     background-color: gray;
+}
+
+.handwritten_form {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+    justify-content: center;
+}
+
+.input {
+    width: 50%;
+    line-height: normal;
+}
+
+.submit_button {
+    margin: 5px;
+}
+
+label {
+    margin: 5px;
 }
