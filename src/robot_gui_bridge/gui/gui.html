@@ -53,17 +53,21 @@
       }
     }
 
+    function updateChairStatus(key, status) {
+        document.getElementById(key + "status").innerHTML = getTextForStatus(status)
+        document.getElementById(key + "status").classList = ["status", status];
+    };
+
     txt_listener.subscribe(function (m) {
       live_status.set(m.data[0], m.data[1]);
       document.getElementById("msg").innerHTML = m.data;
-      document.getElementById(m.data[0] + "status").innerHTML = getTextForStatus(m.data[1])
-      document.getElementById(m.data[0] + "status").classList.add(m.data[1]);
+      updateChairStatus(m.data[0], m.data[1]);
     });
 
     function checkStatus() {
       for (let [key, value] of live_status) {
         if (value == null) {
-          document.getElementById(key + "status").innerHTML = getTextForStatus('o')
+          updateChairStatus(key, 'o');
         }
         live_status.set(key, null);
       }
@@ -152,7 +156,7 @@
   <div class="statuses">
     <div class="chair_monitor" id="1">
       <h2>Chair 1</h2>
-      <div class="status offline" id="1status">
+      <div class="status o" id="1status">
         OFFLINE
       </div>
       <br>
@@ -185,7 +189,7 @@
     </div>
     <div class="chair_monitor" id="2">
       <h2>Chair 2</h2>
-      <div class="status offline" id="2status">
+      <div class="status o" id="2status">
         OFFLINE
       </div>
       <br>
@@ -218,7 +222,7 @@
     </div>
     <div class="chair_monitor" id="4">
       <h2>Chair 4</h2>
-      <div class="status offline" id="4status">
+      <div class="status o" id="4status">
         OFFLINE
       </div>
       <br>
