@@ -14,7 +14,7 @@
 
     var chairs = ['1', '3', '4']
     var live_status = new Map();
-    chairs.map(chair => live_status[chair] = null)
+    chairs.map(chair => live_status.set(chair, null))
     console.log(live_status)
 
     ros.on('connection', function () {
