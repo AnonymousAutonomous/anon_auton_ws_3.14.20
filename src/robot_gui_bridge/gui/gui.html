@@ -57,9 +57,11 @@
     }
 
     function updateChairStatus(key, status) {
-        if (document.getElementById(key + "status")) {
-          document.getElementById(key + "status").innerHTML = getTextForStatus(status)
-          document.getElementById(key + "status").classList = ["status", status];
+      let element = document.getElementById(key + "status");
+        if (element) {
+          element.innerHTML = getTextForStatus(status)
+          element.classList.remove(...element.classList);
+          element.classList.add("status", status);
         }
     };
 
