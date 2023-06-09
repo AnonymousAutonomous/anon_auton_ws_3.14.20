@@ -12,7 +12,11 @@
       url: 'ws://localhost:9090'
     });
 
+    var chairs = ['1', '3', '4']
+
     var live_status = new Map();
+    live_status.push(chairs)
+    print(live_status)
 
     ros.on('connection', function () {
       document.getElementById("status").innerHTML = "Connected";
@@ -59,9 +63,11 @@
     };
 
     txt_listener.subscribe(function (m) {
-      live_status.set(m.data[0], m.data[1]);
-      document.getElementById("msg").innerHTML = m.data;
-      updateChairStatus(m.data[0], m.data[1]);
+      if (m.length == 2 && chairs.includes(data[0])) {
+        live_status.set(m.data[0], m.data[1]);
+        document.getElementById("msg").innerHTML = m.data;
+        updateChairStatus(m.data[0], m.data[1]);
+      }
     });
 
     function checkStatus() {
