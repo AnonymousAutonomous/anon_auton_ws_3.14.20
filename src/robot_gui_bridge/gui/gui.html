@@ -48,7 +48,7 @@
       else if (status == 'f') {
         return "FAILURE";
       }
-      else if (status == 'o') {
+      else if (status == 'o' || status == null) {
         return "OFFLINE";
       }
       else {
@@ -57,8 +57,10 @@
     }
 
     function updateChairStatus(key, status) {
-        document.getElementById(key + "status").innerHTML = getTextForStatus(status)
-        document.getElementById(key + "status").classList = ["status", status];
+        if (document.getElementById(key + "status")) {
+          document.getElementById(key + "status").innerHTML = getTextForStatus(status)
+          document.getElementById(key + "status").classList = ["status", status];
+        }
     };
 
     txt_listener.subscribe(function (m) {
