@@ -13,10 +13,9 @@
     });
 
     var chairs = ['1', '3', '4']
-
     var live_status = new Map();
-    live_status.push(chairs)
-    print(live_status)
+    chairs.map(chair => live_status[chair] = null)
+    console.log(live_status)
 
     ros.on('connection', function () {
       document.getElementById("status").innerHTML = "Connected";
