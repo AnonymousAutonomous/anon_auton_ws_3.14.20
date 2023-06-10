@@ -16,18 +16,11 @@ def chair_receiver():
 
     ser = serial.Serial(antenna_port, 57600)
     while not rospy.is_shutdown():
-        try:
-            str_msg = ser.readline()[:-1]
-            rospy.loginfo(str_msg)
-            debug_pub.publish(str_msg)
-            if str_msg[0] == chair_num or str_msg[0] == "0":
-                pub.publish(str_msg[1:])
-        except serial.SerialException as e:
-            ROS_INFO("Chair receiver is sad %s", e)
-            # ser.close()
-            # rospy.signal_shutdown("Antenna disconnected.")
-
-
+        str_msg = ser.readline()[:-1]
+        rospy.loginfo(str_msg)
+        debug_pub.publish(str_msg)
+        if str_msg[0] == chair_num or str_msg[0] == "0":
+            pub.publish(str_msg[1:])
 
 
 if __name__ == '__main__':
