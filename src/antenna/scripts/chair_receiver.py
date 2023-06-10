@@ -23,6 +23,7 @@ def chair_receiver():
             if str_msg[0] == chair_num or str_msg[0] == "0":
                 pub.publish(str_msg[1:])
         except serial.SerialException as e:
+            print(e)
             ser.close()
             rospy.signal_shutdown("Antenna disconnected.")
 
