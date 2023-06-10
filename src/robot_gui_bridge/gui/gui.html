@@ -238,7 +238,7 @@
       saveAs(blob, filename);
     }
 
-    sendYaml = function(e) {
+    sendYaml = function() {
       const textToSend = document.getElementById("ymlTextArea").innerHTML
       hub_dir_listener.publish(formatMsg('0', textToSend));
     }
@@ -387,8 +387,9 @@
   <form id="saveYamlForm" onsubmit="return saveYaml(event);">
     <textarea id="ymlTextArea"></textarea>
   <button type="submit">Save</button>
-  <button id="sendYaml" onclick="return sendYaml(event);">Send</button>
 </form>
+<button id="sendYaml" onclick="return sendYaml();">Send</button>
+
 
   <button onclick="switchscreen('live')" class="switchscreen" id="toLiveScreen">switch to live mode</button>
 
