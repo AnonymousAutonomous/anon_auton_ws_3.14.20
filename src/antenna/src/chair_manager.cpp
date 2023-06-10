@@ -231,9 +231,9 @@ int main(int argc, char **argv)
 			msg.data = (char)(chair_broadcast_status::ready);
 			test_pub.publish(msg);
 		}
-		catch (e)
+		catch (...)
 		{
-			ROS_INFO("Shutting down because error: %s", e);
+			ROS_INFO("Shutting down because of an error");
 			ros::shutdown();
 		}
 	}
