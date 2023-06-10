@@ -24,8 +24,8 @@ def chair_receiver():
                 pub.publish(str_msg[1:])
         except serial.SerialException as e:
             print(e)
-            ser.close()
-            rospy.signal_shutdown("Antenna disconnected.")
+            # ser.close()
+            # rospy.signal_shutdown("Antenna disconnected.")
 
 
 
