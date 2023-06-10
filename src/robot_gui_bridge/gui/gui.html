@@ -99,7 +99,16 @@
       
       const cmd = formProps.custom_handwritten;
 
-      if (cmd.length != 8) {
+      if (cmd.length != 8 ||
+         (cmd[0] != 'f' || cmd[0] != 'r') || 
+         (!isdigit(cmd[1])) ||
+         (cmd[2] != '.') ||
+         (!isdigit(cmd[3])) ||
+         (cmd[4] != 'f' || cmd[4] != 'r') ||
+         (!isdigit(cmd[5])) ||
+         (cmd[6] != '.') || 
+         (!isdigit(cmd[7]))
+         ) {
         alert("Custom commands must be 8 characters: [f/r][#.#][f/r][#.#]\nExample: f1.0f1.0")
       }
       hub_dir_listener.publish(formatMsg(e.target.id[0], formProps.custom_handwritten));
