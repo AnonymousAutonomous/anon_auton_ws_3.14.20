@@ -100,11 +100,11 @@
       const cmd = formProps.custom_handwritten;
 
       if (cmd.length != 8 ||
-         (cmd[0] != 'f' || cmd[0] != 'r') || 
+         !(cmd[0] == 'f' || cmd[0] == 'r') || 
          (!isdigit(cmd[1])) ||
          (cmd[2] != '.') ||
          (!isdigit(cmd[3])) ||
-         (cmd[4] != 'f' || cmd[4] != 'r') ||
+         !(cmd[4] == 'f' || cmd[4] == 'r') || 
          (!isdigit(cmd[5])) ||
          (cmd[6] != '.') || 
          (!isdigit(cmd[7]))
