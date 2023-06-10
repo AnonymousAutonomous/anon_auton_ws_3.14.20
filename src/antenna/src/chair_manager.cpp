@@ -234,7 +234,7 @@ int main(int argc, char **argv)
 		catch (e)
 		{
 			ROS_INFO("Shutting down because error: %s", e);
-			ros::shutdown()
+			ros::shutdown();
 		}
 	}
 }
