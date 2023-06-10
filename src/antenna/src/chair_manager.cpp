@@ -122,79 +122,72 @@ void send_as_handwritten(AutonomousCmd cmd)
 
 void receive_callback(const std_msgs::String &msg)
 {
-	try
+	// chair_manager_pub.publish(msg);
+	ROS_INFO("PUBLISHING %s", msg.data.c_str());
+
+	char msg_copy[30];
+	strcpy(msg_copy, msg.data.c_str());
+
+	char *cmd = strtok(msg_copy, " ");
+
+	auto command_ptr = cmd_to_case.find(std::string(cmd));
+
+	if (command_ptr != cmd_to_case.end())
 	{
-		// chair_manager_pub.publish(msg);
-		ROS_INFO("PUBLISHING %s", msg.data.c_str());
-
-		char msg_copy[30];
-		strcpy(msg_copy, msg.data.c_str());
-
-		char *cmd = strtok(msg_copy, " ");
-
-		auto command_ptr = cmd_to_case.find(std::string(cmd));
-
-		if (command_ptr != cmd_to_case.end())
+		switch (command_ptr->second)
 		{
-			switch (command_ptr->second)
-			{
-			case ANTENNA_START:
-				handle_start();
-				break;
-			case ANTENNA_STOP:
-				handle_stop();
-				break;
-			case ANTENNA_LAUNCH:
-				handle_launch();
-				break;
-			case ANTENNA_SHUTDOWN:
-				handle_shutdown();
-				break;
-			case ANTENNA_RESET:
-				handle_reset();
-				break;
-			case ANTENNA_HANDWRITTEN:
-				handle_handwritten(strtok(NULL, " "));
-				break;
-			case ANTENNA_FWD:
-				send_as_handwritten(FWD);
-				break;
-			case ANTENNA_BWD:
-				send_as_handwritten(BWD);
-				break;
-			case ANTENNA_FFWD:
-				send_as_handwritten(FFWD);
-				break;
-			case ANTENNA_FBWD:
-				send_as_handwritten(FBWD);
-				break;
-			case ANTENNA_PIVOTL:
-				send_as_handwritten(PIVOTL);
-				break;
-			case ANTENNA_PIVOTR:
-				send_as_handwritten(PIVOTR);
-				break;
-			case ANTENNA_VEERL:
-				send_as_handwritten(VEERL);
-				break;
-			case ANTENNA_VEERR:
-				send_as_handwritten(VEERR);
-				break;
-			default:
-				ROS_INFO("Invalid command:  %s", cmd);
-				break;
-			}
-		}
-		else
-		{
+		case ANTENNA_START:
+			handle_start();
+			break;
+		case ANTENNA_STOP:
+			handle_stop();
+			break;
+		case ANTENNA_LAUNCH:
+			handle_launch();
+			break;
+		case ANTENNA_SHUTDOWN:
+			handle_shutdown();
+			break;
+		case ANTENNA_RESET:
+			handle_reset();
+			break;
+		case ANTENNA_HANDWRITTEN:
+			handle_handwritten(strtok(NULL, " "));
+			break;
+		case ANTENNA_FWD:
+			send_as_handwritten(FWD);
+			break;
+		case ANTENNA_BWD:
+			send_as_handwritten(BWD);
+			break;
+		case ANTENNA_FFWD:
+			send_as_handwritten(FFWD);
+			break;
+		case ANTENNA_FBWD:
+			send_as_handwritten(FBWD);
+			break;
+		case ANTENNA_PIVOTL:
+			send_as_handwritten(PIVOTL);
+			break;
+		case ANTENNA_PIVOTR:
+			send_as_handwritten(PIVOTR);
+			break;
+		case ANTENNA_VEERL:
+			send_as_handwritten(VEERL);
+			break;
+		case ANTENNA_VEERR:
+			send_as_handwritten(VEERR);
+			break;
+		default:
 			ROS_INFO("Invalid command:  %s", cmd);
+			break;
 		}
 	}
-	catch (...)
+	else
 	{
-		ROS_INFO("Shutting down because of an error");
-		ros::shutdown();
+		ROS_INFO("Invalid command:  %s", cmd);
 	}
+}
 }
 
 int main(int argc, char **argv)
