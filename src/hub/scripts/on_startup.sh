@@ -19,5 +19,6 @@ else
 		sleep 5
 	done
 	notify-send "Antenna is connected."
+	roslaunch --wait src/robot_gui_bridge/launch/websocket.launch &
 	roslaunch --wait src/launch_manager/launch/components/antenna_hub.launch &
 fi
