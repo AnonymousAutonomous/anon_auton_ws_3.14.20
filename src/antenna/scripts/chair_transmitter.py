@@ -24,6 +24,7 @@ def callback(data):
 def chair_transmitter():
     rospy.init_node('chair_transmitter', anonymous=True)
     rospy.Subscriber('from_chair', String, callback)
+    delay(0.5)
     rospy.spin()
 
 
