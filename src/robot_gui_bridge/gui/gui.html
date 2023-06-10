@@ -110,6 +110,7 @@
          (!isdigit(cmd[7]))
          ) {
         alert("Custom commands must be 8 characters: [f/r][#.#][f/r][#.#]\nExample: f1.0f1.0")
+        return;
       }
       hub_dir_listener.publish(formatMsg(e.target.id[0], formProps.custom_handwritten));
       document.getElementById(e.target.id).reset();
