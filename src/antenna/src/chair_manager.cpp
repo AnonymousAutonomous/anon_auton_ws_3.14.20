@@ -188,7 +188,6 @@ void receive_callback(const std_msgs::String &msg)
 		ROS_INFO("Invalid command:  %s", cmd);
 	}
 }
-}
 
 int main(int argc, char **argv)
 {
