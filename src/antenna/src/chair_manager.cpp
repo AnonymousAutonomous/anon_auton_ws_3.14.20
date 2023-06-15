@@ -102,10 +102,10 @@ void handle_shutdown()
 
 void update_config(const std_msgs::String &msg)
 {
-	auto ptr = msg.find(' ');
-	std::string filename = msg.substr(0, ptr);
+	std::string stringmsg = std::string(msg.data.c_str()) auto ptr = stringmsg.find(' ');
+	std::string filename = stringmsg.substr(0, ptr);
 	std::string fullpath = "~/anon_auton_ws/src/config_manager/configs/test/" + filename;
-	std::string config = msg.substr(ptr + 1, msg.find(' ', ptr + 1));
+	std::string config = stringmsg.substr(ptr + 1, stringmsg.find(' ', ptr + 1));
 
 	ROS_INFO("FILENAME %s", filename);
 	ROS_INFO("CONFIG %s", config);
@@ -194,7 +194,7 @@ void receive_callback(const std_msgs::String &msg)
 			send_as_handwritten(VEERR);
 			break;
 		case ANTENNA_CONFIG:
-			update_config(msg.data);
+			update_config(msg);
 			break;
 		default:
 			ROS_INFO("Invalid command:  %s", cmd);
