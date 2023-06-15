@@ -239,7 +239,8 @@
     }
 
     sendYaml = function() {
-      const textToSend = document.getElementById("ymlTextArea").innerHTML
+      const filename = document.getElementById("configFile").files.item(0).name;
+      const textToSend = "config " + filename + " " + document.getElementById("ymlTextArea").innerHTML
       hub_dir_listener.publish(formatMsg('0', textToSend));
     }
 
