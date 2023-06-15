@@ -30,6 +30,7 @@ enum Command
 	ANTENNA_PIVOTR,
 	ANTENNA_VEERL,
 	ANTENNA_VEERR,
+	ANTENNA_CONFIG,
 };
 
 const std::unordered_map<std::string, Command> cmd_to_case = {
@@ -46,7 +47,8 @@ const std::unordered_map<std::string, Command> cmd_to_case = {
 	{"veerr", ANTENNA_VEERR},
 	{"pivotl", ANTENNA_PIVOTL},
 	{"pivotr", ANTENNA_PIVOTR},
-	{"handwritten", ANTENNA_HANDWRITTEN}};
+	{"handwritten", ANTENNA_HANDWRITTEN},
+	{"config", ANTENNA_CONFIG}};
 
 char LAUNCH_AUTONOMOUS_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh &";
 char LAUNCH_HANDWRITTEN_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_handwritten.sh &";
@@ -96,6 +98,14 @@ void handle_shutdown()
 	system("echo \"stop\" > /tmp/handwritten-input");
 	sleep(1);
 	system(SHUTDOWN_SCRIPT);
+}
+
+void update_config(const std_msgs::String &msg)
+{
+	String &filename = msg.substr(0, msg.find(' '));
+	String &config = msg.substr(0, msg.find(' '));
+	ROS_INFO("FILENAME %s", filename);
+	ROS_INFO("CONFIG %s", config);
 }
 
 // TODO: handle custom handwritten vs. from the standard set
@@ -177,6 +187,9 @@ void receive_callback(const std_msgs::String &msg)
 			break;
 		case ANTENNA_VEERR:
 			send_as_handwritten(VEERR);
+			break;
+		case ANTENNA_CONFIG:
+			update_config(msg.data);
 			break;
 		default:
 			ROS_INFO("Invalid command:  %s", cmd);
