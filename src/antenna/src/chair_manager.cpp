@@ -115,7 +115,7 @@ void update_config(const std_msgs::String &msg)
 	ROS_INFO("FILENAME %s", filename);
 	ROS_INFO("CONFIG %s", config);
 
-	system(("mkdir " + root + " & echo '" + config + "' > " + ugly_fullpath + " & yq " + ugly_fullpath + " > " + fullpath + " & rm " + ugly_fullpath).c_str());
+	system(("mkdir " + root + " & echo '" + config + "' > " + ugly_fullpath + " & yq " + ugly_fullpath + " > " + fullpath).c_str());
 }
 
 // TODO: handle custom handwritten vs. from the standard set
