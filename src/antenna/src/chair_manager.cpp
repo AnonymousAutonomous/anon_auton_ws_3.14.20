@@ -103,10 +103,12 @@ void handle_shutdown()
 void update_config(const std_msgs::String &msg)
 {
 	std::string stringmsg = std::string(msg.data.c_str());
+
 	auto end_of_cmd = stringmsg.find(' ');
 	auto end_of_path = stringmsg.find(' ', end_of_cmd + 1);
 	std::string filename = stringmsg.substr(end_of_cmd + 1, end_of_path - end_of_cmd - 1);
 	std::string config = stringmsg.substr(end_of_path + 1);
+	std::string fullpath = "~/anon_auton_ws/src/config_manager/configs/test/" + filename;
 
 	ROS_INFO("FILENAME %s", filename);
 	ROS_INFO("CONFIG %s", config);
