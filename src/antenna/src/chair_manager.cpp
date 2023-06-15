@@ -108,12 +108,14 @@ void update_config(const std_msgs::String &msg)
 	auto end_of_path = stringmsg.find(' ', end_of_cmd + 1);
 	std::string filename = stringmsg.substr(end_of_cmd + 1, end_of_path - end_of_cmd - 1);
 	std::string config = stringmsg.substr(end_of_path + 1);
-	std::string fullpath = "~/anon_auton_ws/src/config_manager/configs/test/" + filename;
+	std::string root = "~/anon_auton_ws/src/config_manager/configs/live/";
+	std::string fullpath = root + filename;
 
 	ROS_INFO("FILENAME %s", filename);
 	ROS_INFO("CONFIG %s", config);
 
-	system(("touch " + fullpath + " & echo '" + config + "' >" + fullpath).c_str());
+	system(("mkdir root & touch " + fullpath + " & echo '" + config + "' >" + fullpath).c_str());
+	system(("yq -j -I4 " + fullpath + " > " + fullpath).c_str());
 }
 
 // TODO: handle custom handwritten vs. from the standard set
