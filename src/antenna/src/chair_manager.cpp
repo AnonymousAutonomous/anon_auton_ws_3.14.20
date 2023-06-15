@@ -102,10 +102,15 @@ void handle_shutdown()
 
 void update_config(const std_msgs::String &msg)
 {
-	String &filename = msg.substr(0, msg.find(' '));
-	String &config = msg.substr(0, msg.find(' '));
+	auto ptr = msg.find(' ');
+	std::string filename = msg.substr(0, ptr);
+	std::string fullpath = "~/anon_auton_ws/src/config_manager/configs/test/" + filename;
+	std::string config = msg.substr(ptr + 1, msg.find(' ', ptr + 1));
+
 	ROS_INFO("FILENAME %s", filename);
 	ROS_INFO("CONFIG %s", config);
+
+	system(("touch " + fullpath + " & echo '" + config + "' >" + fullpath).c_str());
 }
 
 // TODO: handle custom handwritten vs. from the standard set
