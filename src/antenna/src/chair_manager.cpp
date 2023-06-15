@@ -103,6 +103,7 @@ void handle_shutdown()
 void update_config(const std_msgs::String &msg)
 {
 	std::string stringmsg = std::string(msg.data.c_str());
+	stringmsg = stringmsg.substr(0, stringmsg.find(' '));
 	auto ptr = stringmsg.find(' ');
 	std::string filename = stringmsg.substr(0, ptr);
 	std::string fullpath = "~/anon_auton_ws/src/config_manager/configs/test/" + filename;
