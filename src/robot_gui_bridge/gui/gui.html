@@ -4,7 +4,9 @@
 <head>
   <meta charset="utf-8" />
 
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/roslib@1/build/roslib.min.js"></script>
+  <script type="text/javascript" src="roslib.min.js"></script>
+  <script type="text/javascript" src="js-yaml.min.js"></script>
+  <script type="text/javascript" src="FileSaver.js"></script>
   <link rel="stylesheet" type="text/css" href="./index.css">
 
   <script type="text/javascript" type="text/javascript">
@@ -165,13 +167,91 @@
       hub_dir_listener.publish(formatMsg(id, "pivotr"));
     }
 
+
+    function switchscreen(newScreenId) {
+  var liveScreen = document.getElementById('live');
+  var configScreen = document.getElementById('config');
+  if (newScreenId == 'live') {
+    configScreen.style.display = "none";
+    liveScreen.style.display = "block";
+  } else {
+    liveScreen.style.display = "none";
+    configScreen.style.display = "block";
+  }
+    }
+
+    function renderJSON(obj) {
+    'use strict';
+    var keys = [],
+        retValue = "";
+    for (var key in obj) {
+        if (typeof obj[key] === 'object') {
+            retValue += "<div class='tree'>" + key;
+            retValue += renderJSON(obj[key]);
+            retValue += "</div>";
+        } else {
+            retValue += "<div class='tree'>" + key + " = " + obj[key] + "</div>";
+        }
+
+        keys.push(key);
+    }
+    console.log(retValue);
+    return retValue;
+}
+
+
+    openYaml = function(e) {
+      console.log("OPENING YAML");
+      e.preventDefault();
+      console.log(e.target);
+      const formData = new FormData(e.target);
+      const formProps = Object.fromEntries(formData);
+      
+      const file = formProps.configFile;
+      let ymlcontents = null;
+
+      const reader = new FileReader();
+      reader.addEventListener('load', (event) => {
+        // event.target.result;
+        ymlcontents = event.target.result.replace(/\r/g, "\n");
+        // alert(ymlcontents);
+        console.log(ymlcontents);
+
+        document.getElementById("ymlTextArea").innerHTML = ymlcontents;
+        
+        const doc = jsyaml.load(ymlcontents);
+        console.log(doc);
+
+        // document.getElementById('ymlContainer').insertAdjacentHTML('beforeend', renderJSON(doc));
+      });
+      reader.readAsText(file);
+    }
+
+    saveYaml = function(e) {
+      console.log("SAVING YAML");
+      e.preventDefault();
+
+      const textToSave = document.getElementById("ymlTextArea").innerHTML
+      const filename = document.getElementById("configFile").files.item(0).name;
+
+      var blob = new Blob([textToSave], {type: "text/plain;charset=utf-8"});
+      saveAs(blob, filename);
+    }
+
+    sendYaml = function() {
+      const filename = document.getElementById("configFile").files.item(0).name;
+      const textToSend = "config " + filename + " " + document.getElementById("ymlTextArea").innerHTML
+      hub_dir_listener.publish(formatMsg('0', textToSend));
+    }
+
   </script>
 </head>
 
 <body>
-  <h1>Simple ROS User Interface</h1>
+  <h1>Anonymous Autonomous</h1>
   <p>Connection status: <span id="status">NOT CONNECTED</span></p>
-  <p>Last /txt_msg received: <span id="msg"></span></p>
+  <p>Last chair status received: <span id="msg"></span></p>
+  <div class="screen" id="live">
   <button onclick="stop('0')" class="stop">STOP ALL</button>
   <button onclick="toggle('0')" class="auto">AUTO ALL</button>
 
@@ -187,24 +267,26 @@
           <button class="auto" id="1" onclick="toggle(this.id)">AUTO</button>
           <br>
           <button id="1" onclick="ffwd(this.id)">⤊</button>
-          <button id="1" onclick="fwd(this.id)">↑</button>
+          <div>
+            <button id="1" onclick="veerl(this.id)">⬉</button>
+            <button id="1" onclick="fwd(this.id)">↑</button>
+            <button id="1" onclick="veerr(this.id)">⬈</button>
+          </div>
           <div>
             <button id="1" onclick="pivotl(this.id)">⟲</button>
-            <button id="1" onclick="veerl(this.id)">⬉</button>
             <button id="1" onclick="stop(this.id)">🛑</button>
-            <button id="1" onclick="veerr(this.id)">⬈</button>
             <button id="1" onclick="pivotr(this.id)">⟳</button>
           </div>
           <button id="1" onclick="bwd(this.id)">↓</button>
           <button id="1" onclick="fbwd(this.id)">⤋</button>
         </div>
         <br>
-        <button id="1" onclick="start(this.id)">START</button>
-        <button id="1" onclick="stop(this.id)" class="stop">STOP</button>
+        <!-- <button id="1" onclick="start(this.id)">START</button>
+        <button id="1" onclick="stop(this.id)" class="stop">STOP</button> -->
         <br>
         <form id="1custom_handwritten" class="handwritten_form" onsubmit="return submitForm(event);">
           <label for="custom_handwritten">Custom: </label>
-            <input type="text" id="custom_handwritten" name="custom_handwritten">
+            <input type="text" id="custom_handwritten" name="custom_handwritten" size="10">
             <button type="submit" class="submit_button">Send</button>
           </form>
       </div>
@@ -220,24 +302,26 @@
           <button class="auto" id="3" onclick="toggle(this.id)">AUTO</button>
           <br>
           <button id="3" onclick="ffwd(this.id)">⤊</button>
-          <button id="3" onclick="fwd(this.id)">↑</button>
+          <div>
+            <button id="3" onclick="veerl(this.id)">⬉</button>
+            <button id="3" onclick="fwd(this.id)">↑</button>
+            <button id="3" onclick="veerr(this.id)">⬈</button>
+          </div>
           <div>
             <button id="3" onclick="pivotl(this.id)">⟲</button>
-            <button id="3" onclick="veerl(this.id)">⬉</button>
             <button id="3" onclick="stop(this.id)">🛑</button>
-            <button id="3" onclick="veerr(this.id)">⬈</button>
             <button id="3" onclick="pivotr(this.id)">⟳</button>
           </div>
           <button id="3" onclick="bwd(this.id)">↓</button>
           <button id="3" onclick="fbwd(this.id)">⤋</button>
         </div>
         <br>
-        <button id="3" onclick="start(this.id)">START</button>
-        <button id="3" onclick="stop(this.id)" class="stop">STOP</button>
+        <!-- <button id="3" onclick="start(this.id)">START</button>
+        <button id="3" onclick="stop(this.id)" class="stop">STOP</button> -->
         <br>
         <form id="3custom_handwritten" class="handwritten_form" onsubmit="return submitForm(event);">
           <label for="custom_handwritten">Custom: </label>
-            <input type="text" id="custom_handwritten" name="custom_handwritten">
+            <input type="text" id="custom_handwritten" name="custom_handwritten" size="10">
             <button type="submit" class="submit_button">Send</button>
           </form>
       </div>
@@ -253,24 +337,26 @@
           <button class="auto" id="4" onclick="toggle(this.id)">AUTO</button>
           <br>
           <button id="4" onclick="ffwd(this.id)">⤊</button>
-          <button id="4" onclick="fwd(this.id)">↑</button>
+          <div>
+            <button id="4" onclick="veerl(this.id)">⬉</button>
+            <button id="4" onclick="fwd(this.id)">↑</button>
+            <button id="4" onclick="veerr(this.id)">⬈</button>
+          </div>
           <div>
             <button id="4" onclick="pivotl(this.id)">⟲</button>
-            <button id="4" onclick="veerl(this.id)">⬉</button>
             <button id="4" onclick="stop(this.id)">🛑</button>
-            <button id="4" onclick="veerr(this.id)">⬈</button>
             <button id="4" onclick="pivotr(this.id)">⟳</button>
           </div>
           <button id="4" onclick="bwd(this.id)">↓</button>
           <button id="4" onclick="fbwd(this.id)">⤋</button>
         </div>
         <br>
-        <button id="4" onclick="start(this.id)">START</button>
-        <button id="4" onclick="stop(this.id)" class="stop">STOP</button>
+        <!-- <button id="4" onclick="start(this.id)">START</button>
+        <button id="4" onclick="stop(this.id)" class="stop">STOP</button> -->
         <br>
         <form id="4custom_handwritten" class="handwritten_form" onsubmit="return submitForm(event);">
           <label for="custom_handwritten">Custom: </label>
-            <input type="text" id="custom_handwritten" name="custom_handwritten">
+            <input type="text" id="custom_handwritten" name="custom_handwritten" size="10">
             <button type="submit" class="submit_button">Send</button>
           </form>
       </div>
@@ -282,6 +368,35 @@
       </div>
     </div> -->
   </div>
+  <button onclick="switchscreen('config')" class="switchscreen" id="toConfigScreen">switch to configuration mode</button>
+
+</div>
+<div class="screen" id="config" style="display:none">
+
+  <div>
+    <form id="openYaml" onsubmit="return openYaml(event);">
+
+  <label for="configFile">Select config file:</label>
+  <input type="file"
+       id="configFile" name="configFile"
+       accept=".yaml">
+       <button type="submit">Open</button>
+      </form>
+    
+  </div>
+  <div id="ymlContainer"></div>
+  <form id="saveYamlForm" onsubmit="return saveYaml(event);">
+    <textarea id="ymlTextArea"></textarea>
+  <button type="submit">Save</button>
+</form>
+<button id="sendYaml" onclick="return sendYaml();">Send</button>
+
+
+  <button onclick="switchscreen('live')" class="switchscreen" id="toLiveScreen">switch to live mode</button>
+
+</div>
+
+</div>
 </body>
 
 </html>

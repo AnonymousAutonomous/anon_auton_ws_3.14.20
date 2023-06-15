@@ -1,7 +1,7 @@
 <launch>
-  <rosparam command="load" file="$(find config_manager)/configs/commands/active.yaml"/>
+  <rosparam command="load" file="$(find config_manager)/configs/live/active.yaml"/>
   <rosparam command="load" file="$(find config_manager)/configs/ports/active.yaml"/>
-  <rosparam command="load" file="$(find config_manager)/configs/camera.yaml"/>
+  <rosparam command="load" file="$(find config_manager)/configs/live/camera.yaml"/>
 
   <node name="cv_camera" pkg="cv_camera" type="cv_camera_node"  >
     <rosparam command="load" file="$(find config_manager)/configs/ports/active.yaml"/>

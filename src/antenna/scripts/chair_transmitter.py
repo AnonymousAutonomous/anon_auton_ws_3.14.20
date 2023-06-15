@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import rospy
 import serial
+import time
 from std_msgs.msg import String
 
 antenna_port = rospy.get_param('antenna_port')
@@ -24,6 +25,7 @@ def callback(data):
 def chair_transmitter():
     rospy.init_node('chair_transmitter', anonymous=True)
     rospy.Subscriber('from_chair', String, callback)
+    time.sleep(0.5)
     rospy.spin()
 
 

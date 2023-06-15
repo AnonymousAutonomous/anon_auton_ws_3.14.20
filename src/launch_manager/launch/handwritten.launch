@@ -1,5 +1,5 @@
 <launch>
-  <rosparam command="load" file="$(find config_manager)/configs/commands/active.yaml"/>
+  <rosparam command="load" file="$(find config_manager)/configs/live/active.yaml"/>
 
   <node name="new_trigger" pkg="simple_motors" type="new_trigger">
   </node>

@@ -1,5 +1,5 @@
 <launch>
-  <rosparam command="load" file="$(find config_manager)/configs/commands/active.yaml"/>
+  <rosparam command="load" file="$(find config_manager)/configs/live/active.yaml"/>
   <rosparam command="load" file="$(find config_manager)/configs/ports/active.yaml"/>
 
   <include file="$(find obstacle_detector)/launch/myNodes3_debug.launch"/>
