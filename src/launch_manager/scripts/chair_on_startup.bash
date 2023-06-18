@@ -23,9 +23,6 @@ else
 fi
 
 
-until rostopic list | grep 'chair_transmitter'; do sleep 1; done
-    rostopic pub -1 /from_chair std_msgs/String "chair registered"
-
 if grep -iq "^port" ~/anon_auton_ws/src/config_manager/configs/ports/active.yaml; then
     echo "---------------- ARDUINO found ----------------"
     if rosnode list | grep "arduino"; then
