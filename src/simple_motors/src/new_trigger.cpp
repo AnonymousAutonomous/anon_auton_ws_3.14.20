@@ -33,7 +33,7 @@ int main(int argc, char **argv)
   {
     std_msgs::String msg;
 
-    ROS_ERROR("Command: %s, length: %i", std::string(cmd), cmd.length());
+    ROS_ERROR("Command: %s, length: %i", cmd, cmd.length());
 
     if (commands.find(cmd) != commands.end())
     {
