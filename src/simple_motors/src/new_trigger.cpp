@@ -32,14 +32,15 @@ int main(int argc, char **argv)
   while (ros::ok() && std::cin >> cmd && cmd != "exit")
   {
     std_msgs::String msg;
+
+    ROS_ERROR("Command: %s, length: %i", cmd, cmd.length());
+
     if (commands.find(cmd) != commands.end())
     {
       msg.data = commands[cmd];
     }
     else
     {
-      ROS_INFO("Custom: %s, length: %i", cmd, cmd.length());
-
       if (cmd.length() == 8 &&
           (cmd[0] == 'f' || cmd[0] == 'r') &&
           (std::isdigit(cmd[1])) &&
