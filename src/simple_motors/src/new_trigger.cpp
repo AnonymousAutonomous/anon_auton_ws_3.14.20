@@ -38,7 +38,7 @@ int main(int argc, char **argv)
     }
     else
     {
-      ROS_INFO("Custom: " + cmd + " " + ('0' + cmd.length()));
+      ROS_INFO(("Custom: " + cmd + " " + ('0' + cmd.length())).to_cstr());
 
       if (cmd.length() == 8 &&
           (cmd[0] == 'f' || cmd[0] == 'r') &&
