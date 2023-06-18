@@ -47,7 +47,7 @@ int main(int argc, char **argv)
           (std::isdigit(cmd[1])) &&
           (cmd[2] == '.') &&
           (std::isdigit(cmd[3])) &&
-          (cmd[4] == 'f' || cmd[0] == 'r') &&
+          (cmd[4] == 'f' || cmd[4] == 'r') &&
           (std::isdigit(cmd[5])) &&
           (cmd[6] == '.') &&
           (std::isdigit(cmd[7])))
