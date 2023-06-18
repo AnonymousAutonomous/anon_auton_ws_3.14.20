@@ -25,3 +25,49 @@ fi
 
 until rostopic list | grep 'chair_transmitter'; do sleep 1; done
     rostopic pub -1 /from_chair std_msgs/String "chair registered"
+
+if grep -iq "^port" ~/anon_auton_ws/src/config_manager/configs/ports/active.yaml; then
+    echo "---------------- ARDUINO found ----------------"
+    if rosnode list | grep "arduino"; then
+        echo "Arduino already running"
+    else
+        roslaunch --wait arduino.launch &
+    fi
+else
+    echo "!!! NO ARDUINO FOUND !!!"
+fi
+
+if grep -iq "^device_path" ~/anon_auton_ws/src/config_manager/configs/ports/active.yaml; then
+    echo "---------------- CAMERA found ----------------"
+    if rosnode list | grep "eyes"; then
+        echo "Camera already running"
+    else
+        roslaunch --wait camera.launch &
+    fi
+else
+    echo "!!! NO CAMERA FOUND !!!"
+fi
+
+if grep -iq "^serial_port" ~/anon_auton_ws/src/config_manager/configs/ports/active.yaml; then
+    echo "---------------- LIDAR found ----------------"
+    if rosnode list | grep "tart"; then
+        echo "Lidar already running"
+    else
+        roslaunch --wait lidar.launch &
+    fi
+else
+    echo "!!! NO LIDAR FOUND !!!"
+fi
+
+if rosnode list | grep "queue"; then
+    echo "Queue already running"
+else
+    roslaunch --wait queue.launch &
+fi
+
+rm -rf /tmp/handwritten-input
+mkfifo /tmp/handwritten-input
+cat > /tmp/handwritten-input &
+echo $! > /tmp/handwritten-input-pid
+
+tail -f /tmp/handwritten-input | ./src/launch_manager/launch/launch_handwritten_ros.sh &
