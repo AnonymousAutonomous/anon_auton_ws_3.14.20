@@ -7,7 +7,7 @@
     <rosparam command="load" file="$(find config_manager)/configs/ports/active.yaml"/>
   </node>
 
-  <node name="image_proc" pkg="image_proc" type="image_proc" ns="cv_camera" respawn="true" output="log">
+  <node name="image_proc" pkg="image_proc" type="image_proc" ns="cv_camera" output="log">
   </node>
 
   <node name="eyes" pkg="eyes" type="new_processor"  >
