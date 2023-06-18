@@ -111,7 +111,7 @@
          (cmd[6] = '.') &&
          (cmd[7] >= '0' && cmd[7] <= '9')
          ) {
-          hub_dir_listener.publish(formatMsg(e.target.id[0], formProps.custom_handwritten));
+          hub_dir_listener.publish(formatMsg(e.target.id[0], "hand " + formProps.custom_handwritten));
           document.getElementById(e.target.id).reset();
       }
       else {
