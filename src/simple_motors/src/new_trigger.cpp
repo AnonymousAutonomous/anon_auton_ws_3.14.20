@@ -38,6 +38,8 @@ int main(int argc, char **argv)
     }
     else
     {
+      ROS_INFO("Custom: " + cmd + " " + cmd.length());
+
       if (cmd.length() == 8 &&
           (cmd[0] == 'f' || cmd[0] == 'r') &&
           (std::isdigit(cmd[1])) &&
