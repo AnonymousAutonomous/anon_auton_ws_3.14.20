@@ -9,7 +9,7 @@
   <script type="text/javascript" src="FileSaver.js"></script>
   <link rel="stylesheet" type="text/css" href="./index.css">
 
-  <script type="text/javascript" type="text/javascript">
+  <script type="text/javascript" type="text/javascript" defer>
     var ros = new ROSLIB.Ros({
       url: 'ws://localhost:9090'
     });
@@ -244,6 +244,109 @@
       hub_dir_listener.publish(formatMsg('0', textToSend));
     }
 
+    const getColorIndicesForCoord = (x, y, width) => {
+      const red = y * (width * 4) + x * 4;
+      return [red, red + 1, red + 2, red + 3];
+};
+
+function setPixel(imageData, x, y, r, g, b, a) {
+    index = (x + y * imageData.width) * 4;
+    imageData.data[index+0] = r;
+    imageData.data[index+1] = g;
+    imageData.data[index+2] = b;
+    imageData.data[index+3] = a;
+}
+
+
+    window.onload = function () {
+      const sideWidth = 180;
+      const topWidth = 120;
+      const canvas = document.getElementById("canvas");
+      canvas.width = 640;
+      canvas.height = 480;
+      console.log("width:", canvas.width);
+      console.log("height:", canvas.height);
+
+      
+      const ctx = canvas.getContext("2d");
+
+
+
+      const brightnessThreshold = 125;
+      const sidePercentThreshold = 0.2;
+      const topPercentThreshold = 0.2;
+
+      const bottomCanvas = document.getElementById("bottomCanvas");
+      const imgctx = bottomCanvas.getContext('2d');
+
+      var background = new Image();
+      background.src = "./images/test.jpg";
+
+// Make sure the image is loaded first otherwise nothing will draw.
+background.onload = function(){
+    imgctx.drawImage(background,0,0);   
+
+    // var idt = imgctx.getImageData(0,0,bottomCanvas.width,bottomCanvas.height);
+
+    newImage = ctx.createImageData(canvas.width, canvas.height);
+
+var camImage = imgctx.getImageData(0, 0, canvas.width, canvas.height);
+var data = camImage.data
+
+for (var i = 0; i < data.length; i += 4) {
+  // console.log(data[i], data[i + 1], data[i + 2]);
+  var brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
+  if (brightness >= brightnessThreshold) {
+    console.log("BRIGHT");
+    newImage[i] = 255;
+    newImage[i + 1] = 0;
+    newImage[i + 2] = 255;
+    newImage[i + 3] = 255;
+  } else {
+    newImage[i] = data[i];
+    newImage[i + 1] = data[i + 1];
+    newImage[i + 2] = data[i + 2];
+    newImage[i + 3] = 255;
+  }
+}
+
+// console.log(idt);
+//   for(let i = 0; i < canvas.width; ++i) {
+//   for(let j = 0; j < canvas.height; ++j) {
+//     const data = pxl.data;
+//     console.log(data);
+
+//     if (((data[0] + data[1] + data[2]) / 3) >= brightnessThreshold) {
+//       setPixel(newImage, i, j, 255, 0, 255, 255);
+//     }
+//   }
+// }
+ctx.putImageData(newImage, 0, 0);
+
+ctx.strokeStyle = 'red';
+ctx.lineWidth = 3;
+
+// draw a red line
+ctx.beginPath();
+ctx.moveTo(sideWidth, 0);
+ctx.lineTo(sideWidth, canvas.height);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(canvas.width - sideWidth, 0);
+ctx.lineTo(canvas.width - sideWidth, canvas.height);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(0, topWidth);
+ctx.lineTo(canvas.width, topWidth);
+ctx.stroke();
+}
+
+      
+
+  };
+    
   </script>
 </head>
 
@@ -251,7 +354,7 @@
   <h1>Anonymous Autonomous</h1>
   <p>Connection status: <span id="status">NOT CONNECTED</span></p>
   <p>Last chair status received: <span id="msg"></span></p>
-  <div class="screen" id="live">
+  <div class="screen" id="live" style="display:none;">
   <button onclick="stop('0')" class="stop">STOP ALL</button>
   <button onclick="toggle('0')" class="auto">AUTO ALL</button>
 
@@ -371,8 +474,15 @@
   <button onclick="switchscreen('config')" class="switchscreen" id="toConfigScreen">switch to configuration mode</button>
 
 </div>
-<div class="screen" id="config" style="display:none">
-
+<div class="screen" id="config">
+   <!-- style="display:none"> -->
+  <div id="cameraConfig">
+    <h3>Camera</h3>
+    <div class="wrapper">
+      <canvas id="bottomCanvas"></canvas>
+      <canvas id="canvas"></canvas>
+    </div>
+  </div>
   <div>
     <form id="openYaml" onsubmit="return openYaml(event);">
 

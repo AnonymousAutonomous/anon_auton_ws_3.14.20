@@ -1,6 +1,6 @@
 <launch>
   <rosparam command="load" file="$(find config_manager)/configs/ports/active.yaml"/>
-  <rosparam command="load" file="$(find config_manager)/configs/commands/active.yaml"/>
+  <rosparam command="load" file="$(find config_manager)/configs/live/active.yaml"/>
 
   <node name="arduino" pkg="rosserial_python" type="serial_node.py">
     <param name="baud" value="57600"/>
