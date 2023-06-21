@@ -154,11 +154,17 @@
     fbwd = function (id) {
       hub_dir_listener.publish(formatMsg(id, "fbwd"));
     }
-    veerl = function (id) {
-      hub_dir_listener.publish(formatMsg(id, "veerl"));
+    fwdl = function (id) {
+      hub_dir_listener.publish(formatMsg(id, "fwdl"));
     }
-    veerr = function (id) {
-      hub_dir_listener.publish(formatMsg(id, "veerr"));
+    fwdr = function (id) {
+      hub_dir_listener.publish(formatMsg(id, "fwdr"));
+    }
+    bwdl = function (id) {
+      hub_dir_listener.publish(formatMsg(id, "bwdl"));
+    }
+    bwdr = function (id) {
+      hub_dir_listener.publish(formatMsg(id, "bwdr"));
     }
     pivotl = function (id) {
       hub_dir_listener.publish(formatMsg(id, "pivotl"));
@@ -371,16 +377,20 @@ ctx.stroke();
           <br>
           <button id="1" onclick="ffwd(this.id)">⤊</button>
           <div>
-            <button id="1" onclick="veerl(this.id)">⬉</button>
+            <button id="1" onclick="fwdl(this.id)">⬉</button>
             <button id="1" onclick="fwd(this.id)">↑</button>
-            <button id="1" onclick="veerr(this.id)">⬈</button>
+            <button id="1" onclick="fwdr(this.id)">⬈</button>
           </div>
           <div>
             <button id="1" onclick="pivotl(this.id)">⟲</button>
             <button id="1" onclick="stop(this.id)">🛑</button>
             <button id="1" onclick="pivotr(this.id)">⟳</button>
           </div>
+          <div>
+          <button id="1" onclick="bwdl(this.id)">⬋</button>
           <button id="1" onclick="bwd(this.id)">↓</button>
+          <button id="1" onclick="bwdr(this.id)">⬊</button>
+        </div>
           <button id="1" onclick="fbwd(this.id)">⤋</button>
         </div>
         <br>
@@ -406,16 +416,20 @@ ctx.stroke();
           <br>
           <button id="3" onclick="ffwd(this.id)">⤊</button>
           <div>
-            <button id="3" onclick="veerl(this.id)">⬉</button>
+            <button id="3" onclick="fwdl(this.id)">⬉</button>
             <button id="3" onclick="fwd(this.id)">↑</button>
-            <button id="3" onclick="veerr(this.id)">⬈</button>
+            <button id="3" onclick="fwdr(this.id)">⬈</button>
           </div>
           <div>
             <button id="3" onclick="pivotl(this.id)">⟲</button>
             <button id="3" onclick="stop(this.id)">🛑</button>
             <button id="3" onclick="pivotr(this.id)">⟳</button>
           </div>
-          <button id="3" onclick="bwd(this.id)">↓</button>
+          <div>
+            <button id="3" onclick="bwdl(this.id)">⬋</button>
+            <button id="3" onclick="bwd(this.id)">↓</button>
+            <button id="3" onclick="bwdr(this.id)">⬊</button>
+          </div>         
           <button id="3" onclick="fbwd(this.id)">⤋</button>
         </div>
         <br>
@@ -441,16 +455,20 @@ ctx.stroke();
           <br>
           <button id="4" onclick="ffwd(this.id)">⤊</button>
           <div>
-            <button id="4" onclick="veerl(this.id)">⬉</button>
+            <button id="4" onclick="fwdl(this.id)">⬉</button>
             <button id="4" onclick="fwd(this.id)">↑</button>
-            <button id="4" onclick="veerr(this.id)">⬈</button>
+            <button id="4" onclick="fwdr(this.id)">⬈</button>
           </div>
           <div>
             <button id="4" onclick="pivotl(this.id)">⟲</button>
             <button id="4" onclick="stop(this.id)">🛑</button>
             <button id="4" onclick="pivotr(this.id)">⟳</button>
           </div>
-          <button id="4" onclick="bwd(this.id)">↓</button>
+          <div>
+            <button id="4" onclick="bwdl(this.id)">⬋</button>
+            <button id="4" onclick="bwd(this.id)">↓</button>
+            <button id="4" onclick="bwdr(this.id)">⬊</button>
+          </div>
           <button id="4" onclick="fbwd(this.id)">⤋</button>
         </div>
         <br>
