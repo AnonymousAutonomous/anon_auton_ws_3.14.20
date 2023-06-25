@@ -22,8 +22,10 @@ enum Command
 	ANTENNA_FWD,
 	ANTENNA_BWD,
 	ANTENNA_FBWD,
-	ANTENNA_VEERL,
-	ANTENNA_VEERR,
+	ANTENNA_FWDL,
+	ANTENNA_FWDR,
+	ANTENNA_BWDL,
+	ANTENNA_BWDR,
 	ANTENNA_PIVOTL,
 	ANTENNA_PIVOTR,
 	ANTENNA_HANDWRITTEN,
@@ -43,8 +45,10 @@ const std::unordered_map<std::string, Command> cmd_to_case = {
 	{"fwd", ANTENNA_FWD},
 	{"bwd", ANTENNA_BWD},
 	{"fbwd", ANTENNA_FBWD},
-	{"veerl", ANTENNA_VEERL},
-	{"veerr", ANTENNA_VEERR},
+	{"fwdl", ANTENNA_FWDL},
+	{"fwdr", ANTENNA_FWDR},
+	{"bwdl", ANTENNA_BWDL},
+	{"bwdr", ANTENNA_BWDR},
 	{"pivotl", ANTENNA_PIVOTL},
 	{"pivotr", ANTENNA_PIVOTR},
 	// for custom handwritten commands
@@ -170,8 +174,10 @@ void receive_callback(const std_msgs::String &msg)
 		case ANTENNA_FBWD:
 		case ANTENNA_PIVOTL:
 		case ANTENNA_PIVOTR:
-		case ANTENNA_VEERL:
-		case ANTENNA_VEERR:
+		case ANTENNA_FWDL:
+		case ANTENNA_FWDR:
+		case ANTENNA_BWDL:
+		case ANTENNA_BWDR:
 			handle_handwritten(cmd);
 			break;
 		case ANTENNA_HANDWRITTEN:
