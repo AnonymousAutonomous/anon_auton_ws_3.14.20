@@ -6,7 +6,8 @@
 #include "std_msgs/Int32.h"
 #include "std_msgs/Char.h"
 #include "eyes/Generic.h"
-#include "../../../constants/choreos.h"
+// #include "../../../constants/choreos.h"
+#include "../../../constants/str_cmds.h"
 
 #include <ros/callback_queue.h>
 #include <ros/spinner.h>
@@ -280,6 +281,10 @@ ros::Publisher update_hub_pub;
 ros::Publisher audio_pub;
 ros::Publisher notify_lidar;
 
+std::map<std::string, std::vector<std::map<std::string, std::string>>> commands_in;
+std::map<std::string, double> variables_in;
+std::unordered_map<ChoreoCmd, std::vector<eyes::Generic>> commands;
+
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "queue_five");
@@ -287,6 +292,20 @@ int main(int argc, char **argv)
 
 	ros::AsyncSpinner spinner(0);
 	spinner.start();
+
+	if (nh.getParam("/choreo", commands_in))
+	{
+		for (auto i = commands_in.begin(); i != commands_in.end(); i++)
+		{
+			commands[CHOREO_CMD_TO_ENUM[i->first]] = i->second;
+		}
+		ROS_ERROR("Choreo commands have been loaded for queue.");
+	}
+	else
+	{
+		ROS_ERROR("You must load choreo commands before using queue.");
+		return 1;
+	}
 
 	ros::Subscriber sub = nh.subscribe("driver_output", 1000, callback);
 	ros::Subscriber sub_R = nh.subscribe("encoder_value_R", 10, update_encoder_values_R);
