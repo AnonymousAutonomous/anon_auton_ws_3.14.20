@@ -15,11 +15,8 @@ def encode(str):
 
 def callback(data):
     rospy.loginfo(data.data)
-    try:
-        ser.write(encode(chair_num + data.data + '\n'))
-    except serial.SerialException as e:
-        ser.close()
-        rospy.signal_shutdown("Antenna disconnected.")
+    ser.write(encode(chair_num + data.data + '\n'))
+
 
 
 def chair_transmitter():
