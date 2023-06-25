@@ -5,6 +5,5 @@ devel/*
 
 *.pyc
 
-active.yaml
 *.pdf
 *.csv
