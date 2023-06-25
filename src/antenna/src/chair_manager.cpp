@@ -10,35 +10,35 @@
 #include <vector>
 #include <string>
 
-// All available autonomous hand_cmds
-std::map<std::string, std::string> hand_cmds_in;
-std::unordered_map<AutonomousCmd, std::string> hand_cmds;
-
 enum Command
 {
-	ANTENNA_START,
-	ANTENNA_STOP,
 	ANTENNA_LAUNCH,
 	ANTENNA_RESET,
 	ANTENNA_SHUTDOWN,
-	ANTENNA_HANDWRITTEN,
+	ANTENNA_START,
+	ANTENNA_TOGGLE,
+	ANTENNA_STOP,
 	ANTENNA_FFWD,
 	ANTENNA_FWD,
 	ANTENNA_BWD,
 	ANTENNA_FBWD,
-	ANTENNA_PIVOTL,
-	ANTENNA_PIVOTR,
 	ANTENNA_VEERL,
 	ANTENNA_VEERR,
+	ANTENNA_PIVOTL,
+	ANTENNA_PIVOTR,
+	ANTENNA_HANDWRITTEN,
 	ANTENNA_CONFIG,
 };
 
 const std::unordered_map<std::string, Command> cmd_to_case = {
-	{"start", ANTENNA_START},
-	{"stop", ANTENNA_STOP},
+	// launching entire chair
 	{"launch", ANTENNA_LAUNCH},
 	{"reset", ANTENNA_RESET},
 	{"shutdown", ANTENNA_SHUTDOWN},
+	{"start", ANTENNA_START},
+	// handwritten
+	{"toggle", ANTENNA_TOGGLE},
+	{"stop", ANTENNA_STOP},
 	{"ffwd", ANTENNA_FFWD},
 	{"fwd", ANTENNA_FWD},
 	{"bwd", ANTENNA_BWD},
@@ -47,7 +47,9 @@ const std::unordered_map<std::string, Command> cmd_to_case = {
 	{"veerr", ANTENNA_VEERR},
 	{"pivotl", ANTENNA_PIVOTL},
 	{"pivotr", ANTENNA_PIVOTR},
-	{"handwritten", ANTENNA_HANDWRITTEN},
+	// for custom handwritten commands
+	{"hand", ANTENNA_HANDWRITTEN},
+	// config
 	{"config", ANTENNA_CONFIG}};
 
 char LAUNCH_AUTONOMOUS_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh &";
@@ -125,13 +127,6 @@ void handle_handwritten(char handwritten_cmd[])
 	system((prefix + handwritten_cmd + suffix).c_str());
 }
 
-void send_as_handwritten(AutonomousCmd cmd)
-{
-	std::string prefix = "echo \"";
-	char suffix[] = "\" > /tmp/handwritten-input";
-	system((prefix + hand_cmds[cmd] + suffix).c_str());
-}
-
 /* Message format:
    #cmd
    where
@@ -155,12 +150,6 @@ void receive_callback(const std_msgs::String &msg)
 	{
 		switch (command_ptr->second)
 		{
-		case ANTENNA_START:
-			handle_start();
-			break;
-		case ANTENNA_STOP:
-			handle_stop();
-			break;
 		case ANTENNA_LAUNCH:
 			handle_launch();
 			break;
@@ -170,32 +159,23 @@ void receive_callback(const std_msgs::String &msg)
 		case ANTENNA_RESET:
 			handle_reset();
 			break;
+		case ANTENNA_START:
+			handle_start();
+			break;
+		case ANTENNA_TOGGLE:
+		case ANTENNA_STOP:
+		case ANTENNA_FWD:
+		case ANTENNA_BWD:
+		case ANTENNA_FFWD:
+		case ANTENNA_FBWD:
+		case ANTENNA_PIVOTL:
+		case ANTENNA_PIVOTR:
+		case ANTENNA_VEERL:
+		case ANTENNA_VEERR:
+			handle_handwritten(cmd);
+			break;
 		case ANTENNA_HANDWRITTEN:
 			handle_handwritten(strtok(NULL, " "));
-			break;
-		case ANTENNA_FWD:
-			send_as_handwritten(FWD);
-			break;
-		case ANTENNA_BWD:
-			send_as_handwritten(BWD);
-			break;
-		case ANTENNA_FFWD:
-			send_as_handwritten(FFWD);
-			break;
-		case ANTENNA_FBWD:
-			send_as_handwritten(FBWD);
-			break;
-		case ANTENNA_PIVOTL:
-			send_as_handwritten(PIVOTL);
-			break;
-		case ANTENNA_PIVOTR:
-			send_as_handwritten(PIVOTR);
-			break;
-		case ANTENNA_VEERL:
-			send_as_handwritten(VEERL);
-			break;
-		case ANTENNA_VEERR:
-			send_as_handwritten(VEERR);
 			break;
 		case ANTENNA_CONFIG:
 			update_config(msg);
@@ -216,21 +196,6 @@ int main(int argc, char **argv)
 	// initialize node and node handle
 	ros::init(argc, argv, "chair_manager");
 	ros::NodeHandle nh;
-
-	// load speeds
-	if (nh.getParam("/handwritten", hand_cmds_in))
-	{
-		for (auto i = hand_cmds_in.begin(); i != hand_cmds_in.end(); i++)
-		{
-			hand_cmds[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
-		}
-		ROS_INFO("Handwritten hand_cmds have been loaded for chair manager.");
-	}
-	else
-	{
-		ROS_INFO("You must load handwritten hand_cmds before using chair manager.");
-		return 1;
-	}
 
 	// initialize spinner
 	ros::AsyncSpinner spinner(0);
