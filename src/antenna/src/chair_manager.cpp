@@ -141,7 +141,7 @@ void handle_handwritten(char handwritten_cmd[])
 void receive_callback(const std_msgs::String &msg)
 {
 	// chair_manager_pub.publish(msg);
-	ROS_INFO("PUBLISHING %s", msg.data.c_str());
+	ROS_ERROR("PUBLISHING %s", msg.data.c_str());
 
 	char msg_copy[30];
 	strcpy(msg_copy, msg.data.c_str());
@@ -187,13 +187,13 @@ void receive_callback(const std_msgs::String &msg)
 			update_config(msg);
 			break;
 		default:
-			ROS_INFO("Invalid command:  %s", cmd);
+			ROS_ERROR("Invalid command:  %s", cmd);
 			break;
 		}
 	}
 	else
 	{
-		ROS_INFO("Invalid command:  %s", cmd);
+		ROS_ERROR("Invalid command:  %s", cmd);
 	}
 }
 

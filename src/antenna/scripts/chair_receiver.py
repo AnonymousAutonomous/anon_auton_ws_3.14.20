@@ -21,6 +21,7 @@ def chair_receiver():
         debug_pub.publish(str_msg)
         if str_msg[0] == chair_num or str_msg[0] == "0":
             pub.publish(str_msg[1:])
+        
 
 
 if __name__ == '__main__':
