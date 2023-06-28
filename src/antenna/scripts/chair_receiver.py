@@ -26,5 +26,5 @@ def chair_receiver():
 if __name__ == '__main__':
     try:
         chair_receiver()
-    except rospy.ROSInterruptException:
-        pass
+    except rospy.ROSInterruptException as err:
+        rospy.logerror(err)
