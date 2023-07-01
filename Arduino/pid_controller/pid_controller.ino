@@ -310,6 +310,7 @@ String info = "";
 void loop()
 {
   nowTime = millis();
+
   motorA.Compute();
   motorB.Compute();
 
