@@ -364,7 +364,7 @@ void loop()
       int32_msg_L.data = countL;
       pubR.publish(&int32_msg_R);
       pubL.publish(&int32_msg_L);
-      info = String(countL) + ' ' + String(countR);
+      info = String(countL) + ' ' + String(countR) + ' ' + String(int(setpointA * 100)) + ' ' + String(int(inputA * 100)) + ' ' + String(int(outputA * 100));
       nh.loginfo(info.c_str());
       prevTime = nowTime;
     }
