@@ -314,15 +314,15 @@ void loop()
   motorA.Compute();
   motorB.Compute();
 
-  if (nowTime - startTimeA > 250)
-  {
-    inputA = 0;
-  }
+  // if (nowTime - startTimeA > 250)
+  // {
+  //   countIntA = 1;
+  // }
 
-  if (nowTime - startTimeB > 250)
-  {
-    inputB = 0;
-  }
+  // if (nowTime - startTimeB > 250)
+  // {
+  //   countIntB = 1;
+  // }
 
   moveA(max(0, min(255, (int)outputA + a_adjust)));
   moveB(max(0, min(255, (int)outputB + b_adjust)));
