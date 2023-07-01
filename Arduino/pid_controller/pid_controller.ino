@@ -8,6 +8,7 @@
 #include <eyes/Generic.h>
 
 boolean DEBUG = true;
+boolean aComputed = false;
 
 // Motor timing
 unsigned long nowTime = 0;    // updated on every loop
@@ -311,7 +312,7 @@ void loop()
 {
   nowTime = millis();
 
-  motorA.Compute();
+  aComputed = motorA.Compute();
   motorB.Compute();
 
   // if (nowTime - startTimeA > 250)
@@ -364,7 +365,7 @@ void loop()
       int32_msg_L.data = countL;
       pubR.publish(&int32_msg_R);
       pubL.publish(&int32_msg_L);
-      info = String(countL) + ' ' + String(countR) + ' ' + String(int(setpointA * 100)) + ' ' + String(int(inputA * 100)) + ' ' + String(int(outputA * 100));
+      info = String(aComputed) + ' ' + String(countL) + ' ' + String(countR) + ' ' + String(int(setpointA * 100)) + ' ' + String(int(inputA * 100)) + ' ' + String(int(outputA * 100));
       nh.loginfo(info.c_str());
       prevTime = nowTime;
     }
