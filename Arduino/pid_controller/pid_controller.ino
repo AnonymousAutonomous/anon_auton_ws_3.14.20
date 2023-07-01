@@ -9,6 +9,7 @@
 
 boolean DEBUG = true;
 boolean aComputed = false;
+boolean bComputed = false;
 
 // Motor timing
 unsigned long nowTime = 0;    // updated on every loop
@@ -313,17 +314,21 @@ void loop()
   nowTime = millis();
 
   aComputed = motorA.Compute();
-  motorB.Compute();
+  bComputed = motorB.Compute();
 
-  // if (nowTime - startTimeA > 250)
-  // {
-  //   countIntA = 1;
-  // }
+  if (nowTime - startTimeA > 250)
+  {
+    inputA = 0;
+    startTimeA = nowTime;
+    countIntA = 0;
+  }
 
-  // if (nowTime - startTimeB > 250)
-  // {
-  //   countIntB = 1;
-  // }
+  if (nowTime - startTimeB > 250)
+  {
+    inputB = 0;
+    startTimeB = nowTime;
+    countIntB = 0;
+  }
 
   moveA(max(0, min(255, (int)outputA + a_adjust)));
   moveB(max(0, min(255, (int)outputB + b_adjust)));
@@ -365,7 +370,7 @@ void loop()
       int32_msg_L.data = countL;
       pubR.publish(&int32_msg_R);
       pubL.publish(&int32_msg_L);
-      info = String(aComputed) + ' ' + String(countL) + ' ' + String(countR) + ' ' + String(int(setpointA * 100)) + ' ' + String(int(inputA * 100)) + ' ' + String(int(outputA * 100));
+      info = String(aComputed) + ' ' + String(bComputed) + ' ' + String(countL) + ' ' + String(countR) + ' ' + String(int(setpointA * 100)) + ' ' + String(int(inputA * 100)) + ' ' + String(int(outputA * 100)) + ' ' + String(int(setpointB * 100)) + ' ' + String(int(inputB * 100)) + ' ' + String(int(outputB * 100));
       nh.loginfo(info.c_str());
       prevTime = nowTime;
     }
