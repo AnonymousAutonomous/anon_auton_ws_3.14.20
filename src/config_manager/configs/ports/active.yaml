@@ -1,3 +1,2 @@
-antenna_port: '/dev/ttyUSB0'
 chair_num: '0'
-port: '/dev/ttyACM0'
+port: '/dev/ttyACM3'
