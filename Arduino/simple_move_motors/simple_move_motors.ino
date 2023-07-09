@@ -48,11 +48,28 @@ void setup()
 
   moveA(0);
   moveB(0);
-  delay(5000);
+  delay(2000);
 
   moveA(255);
   moveB(255);
   delay(5000);
+  
+  moveA(0);
+  moveB(0);
+  delay(2000);
+
+  moveA(255);
+  moveB(255);
+  delay(5000);
+  
+  moveA(0);
+  moveB(0);
+  delay(2000);
+
+  moveA(255);
+  moveB(255);
+  delay(5000);
+
 }
 
 String info = "";
@@ -64,7 +81,7 @@ void loop()
 
   moveA(0);
   moveB(0);
-  delay(5000);
+  delay(2000);
 
   moveA(255);
   moveB(255);
@@ -72,7 +89,7 @@ void loop()
 
   moveA(0);
   moveB(0);
-  delay(5000);
+  delay(2000);
 }
 
 /***********************************************************

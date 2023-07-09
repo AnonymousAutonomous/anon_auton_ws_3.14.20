@@ -10,8 +10,8 @@
 #define BWD 'r'
 #define STOP 's'
 
-#define REVERSE_A true
-#define REVERSE_B true
+#define REVERSE_A false
+#define REVERSE_B false
 
 //define motor 1 related pins (right)
 #define AIN1_tmp 8
