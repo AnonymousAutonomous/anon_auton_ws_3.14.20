@@ -2,6 +2,7 @@
 .vscode
 build/*
 devel/*
+src/config_manager/configs/ports/active.yaml
 
 *.pyc
 
