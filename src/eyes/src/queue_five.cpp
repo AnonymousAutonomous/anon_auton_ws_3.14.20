@@ -355,7 +355,7 @@ int main(int argc, char **argv)
 			}
 			if (flag_H)
 			{
-				ROS_ERROR("IN CHOREO with Flag T");
+				ROS_ERROR("IN CHOREO with Flag H");
 			}
 
 			if (flag_T || flag_H)
