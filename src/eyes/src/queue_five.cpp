@@ -321,6 +321,7 @@ int main(int argc, char **argv)
 			if (flag_H)
 			{
 				flag_EOC = true;
+				flag_D = true; // <-- exit case, resetting flag_D for next time
 				ROS_INFO("END OF CHOREO");
 				std_msgs::Empty empty_msg;
 				eoc_pub.publish(empty_msg);
