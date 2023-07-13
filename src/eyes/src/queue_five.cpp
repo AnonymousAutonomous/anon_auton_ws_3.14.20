@@ -358,7 +358,7 @@ int main(int argc, char **argv)
 				ROS_ERROR("IN CHOREO with Flag H");
 			}
 
-			if (flag_T || flag_H)
+			if (flag_H)
 			{
 				flag_EOC = true;
 				flag_D = true; // <-- exit case, resetting flag_D for next time
@@ -368,8 +368,9 @@ int main(int argc, char **argv)
 				eoc_pub.publish(empty_msg);
 				choreo_queue = std::queue<eyes::Generic>();
 
-				// switch back to autonomous
-				mode = state::autonomous;
+				// switch to custom
+				mode = state::custom;
+				return;
 			}
 
 			if (choreo_queue.front().identifier == 'e')
