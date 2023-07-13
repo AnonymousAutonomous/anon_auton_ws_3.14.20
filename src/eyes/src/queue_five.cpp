@@ -370,7 +370,7 @@ int main(int argc, char **argv)
 
 				// switch to custom
 				mode = state::custom;
-				return;
+				break;
 			}
 
 			if (choreo_queue.front().identifier == 'e')
