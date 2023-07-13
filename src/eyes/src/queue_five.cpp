@@ -319,7 +319,14 @@ int main(int argc, char **argv)
 
 			// state transition logic (WIP)
 			if (flag_H)
-			{	
+			{
+				flag_EOC = true;
+				flag_D = true; // <-- exit case, resetting flag_D for next time
+				ROS_INFO("END OF CHOREO");
+				std_msgs::Empty empty_msg;
+				eoc_pub.publish(empty_msg);
+				choreo_queue = std::queue<eyes::Generic>();
+				
 				mode = state::custom;
 				flag_T = false;
 				// flag_SOB = false;
@@ -343,17 +350,7 @@ int main(int argc, char **argv)
 			queue_to_lidar_msg.data = 'C';
 			notify_lidar.publish(queue_to_lidar_msg);
 
-			if(flag_T) {
-				flag_EOC = true;
-				flag_D = true; // <-- exit case, resetting flag_D for next time
-				ROS_INFO("END OF CHOREO");
-				std_msgs::Empty empty_msg;
-				eoc_pub.publish(empty_msg);
-				choreo_queue = std::queue<eyes::Generic>();
-				mode = state::autonomous;
-			}
-
-			else if (choreo_queue.front().identifier == 'e')
+			if (choreo_queue.front().identifier == 'e')
 			{
 				flag_EOC = true;
 				ROS_INFO("END OF CHOREO");
@@ -489,12 +486,6 @@ int main(int argc, char **argv)
 			std_msgs::Char queue_to_lidar_msg;
 			queue_to_lidar_msg.data = 'H';
 			notify_lidar.publish(queue_to_lidar_msg);
-			flag_EOC = true;
-			flag_D = true; // <-- exit case, resetting flag_D for next time
-			ROS_INFO("END OF CHOREO");
-			std_msgs::Empty empty_msg;
-			eoc_pub.publish(empty_msg);
-			choreo_queue = std::queue<eyes::Generic>();
 
 			if (flag_SOB)
 			{
