@@ -107,7 +107,7 @@ void callback(const std_msgs::String &command)
 			flag_T = true;
 		}
 		else
-		{	
+		{
 			eyes::Generic generic_message;
 			generic_message.identifier = 'h';
 			generic_message.timed = false; // inconsequential
@@ -326,7 +326,7 @@ int main(int argc, char **argv)
 				std_msgs::Empty empty_msg;
 				eoc_pub.publish(empty_msg);
 				choreo_queue = std::queue<eyes::Generic>();
-				
+
 				mode = state::custom;
 				flag_T = false;
 				// flag_SOB = false;
@@ -349,8 +349,12 @@ int main(int argc, char **argv)
 			std_msgs::Char queue_to_lidar_msg;
 			queue_to_lidar_msg.data = 'C';
 			notify_lidar.publish(queue_to_lidar_msg);
+			ROS_ERROR("IN CHOREO");
+			ROS_ERROR(flag_T ? "flag T ON" : "");
+			ROS_ERROR(flag_H ? "flag H ON" : "");
 
-			if (flag_T || flag_H) {
+			if (flag_T || flag_H)
+			{
 				flag_EOC = true;
 				flag_D = true; // <-- exit case, resetting flag_D for next time
 				flag_T = false;
