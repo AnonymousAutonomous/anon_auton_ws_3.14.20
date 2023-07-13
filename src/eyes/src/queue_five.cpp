@@ -108,6 +108,12 @@ void callback(const std_msgs::String &command)
 		}
 		else
 		{
+			// if lidar is doing choreo, stop it
+			flag_EOC = true;
+			ROS_INFO("END OF CHOREO");
+			std_msgs::Empty empty_msg;
+			eoc_pub.publish(empty_msg);
+			
 			eyes::Generic generic_message;
 			generic_message.identifier = 'h';
 			generic_message.timed = false; // inconsequential
