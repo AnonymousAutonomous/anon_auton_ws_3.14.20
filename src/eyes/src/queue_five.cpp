@@ -107,13 +107,7 @@ void callback(const std_msgs::String &command)
 			flag_T = true;
 		}
 		else
-		{
-			// if lidar is doing choreo, stop it
-			flag_EOC = true;
-			ROS_INFO("END OF CHOREO");
-			std_msgs::Empty empty_msg;
-			eoc_pub.publish(empty_msg);
-			
+		{	
 			eyes::Generic generic_message;
 			generic_message.identifier = 'h';
 			generic_message.timed = false; // inconsequential
@@ -326,6 +320,12 @@ int main(int argc, char **argv)
 			// state transition logic (WIP)
 			if (flag_H)
 			{
+				flag_EOC = true;
+				ROS_INFO("END OF CHOREO");
+				std_msgs::Empty empty_msg;
+				eoc_pub.publish(empty_msg);
+				choreo_queue = std::queue<eyes::Generic>();
+				
 				mode = state::custom;
 				flag_T = false;
 				// flag_SOB = false;
