@@ -349,9 +349,14 @@ int main(int argc, char **argv)
 			std_msgs::Char queue_to_lidar_msg;
 			queue_to_lidar_msg.data = 'C';
 			notify_lidar.publish(queue_to_lidar_msg);
-			ROS_ERROR("IN CHOREO");
-			ROS_ERROR(flag_T ? "flag T ON" : "");
-			ROS_ERROR(flag_H ? "flag H ON" : "");
+			if (flag_T)
+			{
+				ROS_ERROR("IN CHOREO with Flag T");
+			}
+			if (flag_H)
+			{
+				ROS_ERROR("IN CHOREO with Flag T");
+			}
 
 			if (flag_T || flag_H)
 			{
