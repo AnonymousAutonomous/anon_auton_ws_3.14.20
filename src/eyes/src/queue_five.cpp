@@ -350,6 +350,19 @@ int main(int argc, char **argv)
 			queue_to_lidar_msg.data = 'C';
 			notify_lidar.publish(queue_to_lidar_msg);
 
+			if (flag_T || flag_H) {
+				flag_EOC = true;
+				flag_D = true; // <-- exit case, resetting flag_D for next time
+				flag_T = false;
+				ROS_INFO("END OF CHOREO");
+				std_msgs::Empty empty_msg;
+				eoc_pub.publish(empty_msg);
+				choreo_queue = std::queue<eyes::Generic>();
+
+				// switch back to autonomous
+				mode = state::autonomous;
+			}
+
 			if (choreo_queue.front().identifier == 'e')
 			{
 				flag_EOC = true;
