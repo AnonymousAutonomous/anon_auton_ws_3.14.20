@@ -1,569 +1,643 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
 
-<head>
-  <meta charset="utf-8" />
+    <script type="text/javascript" src="roslib.min.js"></script>
+    <script type="text/javascript" src="js-yaml.min.js"></script>
+    <script type="text/javascript" src="FileSaver.js"></script>
+    <link rel="stylesheet" type="text/css" href="./index.css" />
 
-  <script type="text/javascript" src="roslib.min.js"></script>
-  <script type="text/javascript" src="js-yaml.min.js"></script>
-  <script type="text/javascript" src="FileSaver.js"></script>
-  <link rel="stylesheet" type="text/css" href="./index.css">
+    <script type="text/javascript" type="text/javascript" defer>
+      var ros = new ROSLIB.Ros({
+        url: "ws://localhost:9090",
+      });
 
-  <script type="text/javascript" type="text/javascript" defer>
-    var ros = new ROSLIB.Ros({
-      url: 'ws://localhost:9090'
-    });
+      var chairs = ["1", "2", "3", "4"];
+      var live_status = new Map();
+      chairs.map((chair) => live_status.set(chair, null));
+      console.log(live_status);
 
-    var chairs = ['1', '2', '3', '4']
-    var live_status = new Map();
-    chairs.map(chair => live_status.set(chair, null))
-    console.log(live_status)
+      ros.on("connection", function () {
+        document.getElementById("status").innerHTML = "Connected";
+      });
 
-    ros.on('connection', function () {
-      document.getElementById("status").innerHTML = "Connected";
-    });
+      ros.on("error", function (error) {
+        document.getElementById("status").innerHTML = "Error";
+      });
 
-    ros.on('error', function (error) {
-      document.getElementById("status").innerHTML = "Error";
-    });
+      ros.on("close", function () {
+        document.getElementById("status").innerHTML = "Closed";
+      });
 
-    ros.on('close', function () {
-      document.getElementById("status").innerHTML = "Closed";
-    });
+      var txt_listener = new ROSLIB.Topic({
+        ros: ros,
+        name: "/from_hub_receiver",
+        messageType: "std_msgs/String",
+      });
 
-    var txt_listener = new ROSLIB.Topic({
-      ros: ros,
-      name: '/from_hub_receiver',
-      messageType: 'std_msgs/String'
-    });
+      getTextForStatus = function (status) {
+        if (status == "r") {
+          return "READY";
+        } else if (status == "e") {
+          return "EXCLUDE";
+        } else if (status == "s") {
+          return "SUCCESS";
+        } else if (status == "f") {
+          return "FAILURE";
+        } else if (status == "o" || status == null) {
+          return "OFFLINE";
+        } else {
+          return "ERROR: " + status;
+        }
+      };
 
-    getTextForStatus = function(status) {
-      if (status == 'r') {
-        return "READY";
-      }
-      else if (status == 'e') {
-        return "EXCLUDE";
-      }
-      else if (status == 's') {
-        return "SUCCESS";
-      }
-      else if (status == 'f') {
-        return "FAILURE";
-      }
-      else if (status == 'o' || status == null) {
-        return "OFFLINE";
-      }
-      else {
-        return "ERROR: " + status;
-      }
-    }
-
-    function updateChairStatus(key, status) {
-      let element = document.getElementById(key + "status");
+      function updateChairStatus(key, status) {
+        let element = document.getElementById(key + "status");
         if (element) {
-          element.innerHTML = getTextForStatus(status)
+          element.innerHTML = getTextForStatus(status);
           element.classList.remove(...element.classList);
           element.classList.add("status", status);
         }
-    };
-
-    txt_listener.subscribe(function (m) {
-      // console.log(m, m.length, chairs.includes(m.data[0]));
-      if (m.data.length == 2 && chairs.includes(m.data[0])) {
-        live_status.set(m.data[0], m.data[1]);
-        document.getElementById("msg").innerHTML = m.data;
-        updateChairStatus(m.data[0], m.data[1]);
       }
-    });
 
-    function checkStatus() {
-      for (let [key, value] of live_status) {
-        if (value == null) {
-          updateChairStatus(key, 'o');
+      txt_listener.subscribe(function (m) {
+        // console.log(m, m.length, chairs.includes(m.data[0]));
+        if (m.data.length == 2 && chairs.includes(m.data[0])) {
+          live_status.set(m.data[0], m.data[1]);
+          document.getElementById("msg").innerHTML = m.data;
+          updateChairStatus(m.data[0], m.data[1]);
         }
-        live_status.set(key, null);
+      });
+
+      function checkStatus() {
+        for (let [key, value] of live_status) {
+          if (value == null) {
+            updateChairStatus(key, "o");
+          }
+          live_status.set(key, null);
+        }
+        setTimeout(checkStatus, 5000);
       }
-      setTimeout(checkStatus, 5000);
-    };
 
-    checkStatus();
+      checkStatus();
 
-    hub_dir_listener = new ROSLIB.Topic({
-      ros: ros,
-      name: "/from_hub",
-      messageType: 'std_msgs/String'
-    });
+      hub_dir_listener = new ROSLIB.Topic({
+        ros: ros,
+        name: "/from_hub",
+        messageType: "std_msgs/String",
+      });
 
-    submitForm = function(e) {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const formProps = Object.fromEntries(formData);
-      
-      const cmd = formProps.custom_handwritten;
+      submitForm = function (e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const formProps = Object.fromEntries(formData);
 
-      if (cmd.length == 8 &&
-         (cmd[0] == 'f' || cmd[0] == 'r') &&
-         (cmd[1] >= '0' && cmd[1] <= '9') &&
-         (cmd[2] == '.') &&
-         (cmd[3] >= '0' && cmd[3] <= '9') &&
-         (cmd[4] == 'f' || cmd[4] == 'r') &&
-         (cmd[5] >= '0' && cmd[5] <= '9') &&
-         (cmd[6] = '.') &&
-         (cmd[7] >= '0' && cmd[7] <= '9')
-         ) {
-          hub_dir_listener.publish(formatMsg(e.target.id[0], "hand " + formProps.custom_handwritten));
+        const cmd = formProps.custom_handwritten;
+
+        if (
+          cmd.length == 8 &&
+          (cmd[0] == "f" || cmd[0] == "r") &&
+          cmd[1] >= "0" &&
+          cmd[1] <= "9" &&
+          cmd[2] == "." &&
+          cmd[3] >= "0" &&
+          cmd[3] <= "9" &&
+          (cmd[4] == "f" || cmd[4] == "r") &&
+          cmd[5] >= "0" &&
+          cmd[5] <= "9" &&
+          (cmd[6] = ".") &&
+          cmd[7] >= "0" &&
+          cmd[7] <= "9"
+        ) {
+          hub_dir_listener.publish(
+            formatMsg(e.target.id[0], "hand " + formProps.custom_handwritten)
+          );
           document.getElementById(e.target.id).reset();
+        } else {
+          alert(
+            "Custom commands must be 8 characters: [f/r][#.#][f/r][#.#]\nExample: f1.0f1.0"
+          );
+        }
+      };
+
+      move = function () {
+        var dir = new ROSLIB.Message({
+          data: "hello",
+        });
+        hub_dir_listener.publish(dir);
+      };
+
+      formatMsg = function (id, msg) {
+        return new ROSLIB.Message({
+          data: id + msg,
+        });
+      };
+
+      toggle = function (id) {
+        hub_dir_listener.publish(formatMsg(id, "toggle"));
+      };
+      stop = function (id) {
+        hub_dir_listener.publish(formatMsg(id, "stop"));
+      };
+      start = function (id) {
+        hub_dir_listener.publish(formatMsg(id, "start"));
+      };
+      fwd = function (id) {
+        hub_dir_listener.publish(formatMsg(id, "fwd"));
+      };
+      ffwd = function (id) {
+        hub_dir_listener.publish(formatMsg(id, "ffwd"));
+      };
+      bwd = function (id) {
+        hub_dir_listener.publish(formatMsg(id, "bwd"));
+      };
+      fbwd = function (id) {
+        hub_dir_listener.publish(formatMsg(id, "fbwd"));
+      };
+      fwdl = function (id) {
+        hub_dir_listener.publish(formatMsg(id, "fwdl"));
+      };
+      fwdr = function (id) {
+        hub_dir_listener.publish(formatMsg(id, "fwdr"));
+      };
+      bwdl = function (id) {
+        hub_dir_listener.publish(formatMsg(id, "bwdl"));
+      };
+      bwdr = function (id) {
+        hub_dir_listener.publish(formatMsg(id, "bwdr"));
+      };
+      pivotl = function (id) {
+        hub_dir_listener.publish(formatMsg(id, "pivotl"));
+      };
+      pivotr = function (id) {
+        hub_dir_listener.publish(formatMsg(id, "pivotr"));
+      };
+
+      function switchscreen(newScreenId) {
+        var liveScreen = document.getElementById("live");
+        var configScreen = document.getElementById("config");
+        if (newScreenId == "live") {
+          configScreen.style.display = "none";
+          liveScreen.style.display = "block";
+        } else {
+          liveScreen.style.display = "none";
+          configScreen.style.display = "block";
+        }
       }
-      else {
-        alert("Custom commands must be 8 characters: [f/r][#.#][f/r][#.#]\nExample: f1.0f1.0")
-      }
 
-    }
-
-    move = function () {
-      var dir = new ROSLIB.Message({
-        data: "hello"
-      });
-      hub_dir_listener.publish(dir);
-    }
-
-    formatMsg = function (id, msg) {
-      return new ROSLIB.Message({
-        data: id + msg
-      });
-    }
-
-    toggle = function (id) {
-      hub_dir_listener.publish(formatMsg(id, "toggle"));
-    }
-    stop = function (id) {
-      hub_dir_listener.publish(formatMsg(id, "stop"));
-    }
-    start = function (id) {
-      hub_dir_listener.publish(formatMsg(id, "start"));
-    }
-    fwd = function (id) {
-      hub_dir_listener.publish(formatMsg(id, "fwd"));
-    }
-    ffwd = function (id) {
-      hub_dir_listener.publish(formatMsg(id, "ffwd"));
-    }
-    bwd = function (id) {
-      hub_dir_listener.publish(formatMsg(id, "bwd"));
-    }
-    fbwd = function (id) {
-      hub_dir_listener.publish(formatMsg(id, "fbwd"));
-    }
-    fwdl = function (id) {
-      hub_dir_listener.publish(formatMsg(id, "fwdl"));
-    }
-    fwdr = function (id) {
-      hub_dir_listener.publish(formatMsg(id, "fwdr"));
-    }
-    bwdl = function (id) {
-      hub_dir_listener.publish(formatMsg(id, "bwdl"));
-    }
-    bwdr = function (id) {
-      hub_dir_listener.publish(formatMsg(id, "bwdr"));
-    }
-    pivotl = function (id) {
-      hub_dir_listener.publish(formatMsg(id, "pivotl"));
-    }
-    pivotr = function (id) {
-      hub_dir_listener.publish(formatMsg(id, "pivotr"));
-    }
-
-
-    function switchscreen(newScreenId) {
-  var liveScreen = document.getElementById('live');
-  var configScreen = document.getElementById('config');
-  if (newScreenId == 'live') {
-    configScreen.style.display = "none";
-    liveScreen.style.display = "block";
-  } else {
-    liveScreen.style.display = "none";
-    configScreen.style.display = "block";
-  }
-    }
-
-    function renderJSON(obj) {
-    'use strict';
-    var keys = [],
-        retValue = "";
-    for (var key in obj) {
-        if (typeof obj[key] === 'object') {
+      function renderJSON(obj) {
+        "use strict";
+        var keys = [],
+          retValue = "";
+        for (var key in obj) {
+          if (typeof obj[key] === "object") {
             retValue += "<div class='tree'>" + key;
             retValue += renderJSON(obj[key]);
             retValue += "</div>";
-        } else {
-            retValue += "<div class='tree'>" + key + " = " + obj[key] + "</div>";
+          } else {
+            retValue +=
+              "<div class='tree'>" + key + " = " + obj[key] + "</div>";
+          }
+
+          keys.push(key);
         }
+        console.log(retValue);
+        return retValue;
+      }
 
-        keys.push(key);
-    }
-    console.log(retValue);
-    return retValue;
-}
+      openYaml = function (e) {
+        console.log("OPENING YAML");
+        e.preventDefault();
+        console.log(e.target);
+        const formData = new FormData(e.target);
+        const formProps = Object.fromEntries(formData);
 
+        const file = formProps.configFile;
+        let ymlcontents = null;
 
-    openYaml = function(e) {
-      console.log("OPENING YAML");
-      e.preventDefault();
-      console.log(e.target);
-      const formData = new FormData(e.target);
-      const formProps = Object.fromEntries(formData);
-      
-      const file = formProps.configFile;
-      let ymlcontents = null;
+        const reader = new FileReader();
+        reader.addEventListener("load", (event) => {
+          // event.target.result;
+          ymlcontents = event.target.result.replace(/\r/g, "\n");
+          // alert(ymlcontents);
+          console.log(ymlcontents);
 
-      const reader = new FileReader();
-      reader.addEventListener('load', (event) => {
-        // event.target.result;
-        ymlcontents = event.target.result.replace(/\r/g, "\n");
-        // alert(ymlcontents);
-        console.log(ymlcontents);
+          document.getElementById("ymlTextArea").innerHTML = ymlcontents;
 
-        document.getElementById("ymlTextArea").innerHTML = ymlcontents;
-        
-        const doc = jsyaml.load(ymlcontents);
-        console.log(doc);
+          const doc = jsyaml.load(ymlcontents);
+          console.log(doc);
 
-        // document.getElementById('ymlContainer').insertAdjacentHTML('beforeend', renderJSON(doc));
-      });
-      reader.readAsText(file);
-    }
+          // document.getElementById('ymlContainer').insertAdjacentHTML('beforeend', renderJSON(doc));
+        });
+        reader.readAsText(file);
+      };
 
-    saveYaml = function(e) {
-      console.log("SAVING YAML");
-      e.preventDefault();
+      saveYaml = function (e) {
+        console.log("SAVING YAML");
+        e.preventDefault();
 
-      const textToSave = document.getElementById("ymlTextArea").innerHTML
-      const filename = document.getElementById("configFile").files.item(0).name;
+        const textToSave = document.getElementById("ymlTextArea").innerHTML;
+        const filename = document
+          .getElementById("configFile")
+          .files.item(0).name;
 
-      var blob = new Blob([textToSave], {type: "text/plain;charset=utf-8"});
-      saveAs(blob, filename);
-    }
+        var blob = new Blob([textToSave], { type: "text/plain;charset=utf-8" });
+        saveAs(blob, filename);
+      };
 
-    sendYaml = function() {
-      const filename = document.getElementById("configFile").files.item(0).name;
-      const textToSend = "config " + filename + " " + document.getElementById("ymlTextArea").innerHTML
-      hub_dir_listener.publish(formatMsg('0', textToSend));
-    }
+      sendYaml = function () {
+        const filename = document
+          .getElementById("configFile")
+          .files.item(0).name;
+        const textToSend =
+          "config " +
+          filename +
+          " " +
+          document.getElementById("ymlTextArea").innerHTML;
+        hub_dir_listener.publish(formatMsg("0", textToSend));
+      };
 
-    const getColorIndicesForCoord = (x, y, width) => {
-      const red = y * (width * 4) + x * 4;
-      return [red, red + 1, red + 2, red + 3];
-};
+      const getColorIndicesForCoord = (x, y, width) => {
+        const red = y * (width * 4) + x * 4;
+        return [red, red + 1, red + 2, red + 3];
+      };
 
-function setPixel(imageData, x, y, r, g, b, a) {
-    index = (x + y * imageData.width) * 4;
-    imageData.data[index+0] = r;
-    imageData.data[index+1] = g;
-    imageData.data[index+2] = b;
-    imageData.data[index+3] = a;
-}
+      function setPixel(imageData, x, y, r, g, b, a) {
+        index = (x + y * imageData.width) * 4;
+        imageData.data[index + 0] = r;
+        imageData.data[index + 1] = g;
+        imageData.data[index + 2] = b;
+        imageData.data[index + 3] = a;
+      }
 
+      function setBrightnessThreshold(newValue) {
+        brightnessLabel.value = newValue;
+        drawImageBrightness(newValue);
+      }
 
-    window.onload = function () {
-      const sideWidth = 180;
-      const topWidth = 120;
-      const canvas = document.getElementById("canvas");
-      canvas.width = 640;
-      canvas.height = 480;
-      console.log("width:", canvas.width);
-      console.log("height:", canvas.height);
+      function drawImageScaled(img, ctx, brightnessThreshold) {
+        var canvas = ctx.canvas;
+        var hRatio = canvas.width / img.width;
+        var vRatio = canvas.height / img.height;
+        var ratio = Math.min(hRatio, vRatio);
+        var centerShift_x = (canvas.width - img.width * ratio) / 2;
+        var centerShift_y = (canvas.height - img.height * ratio) / 2;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(
+          img,
+          0,
+          0,
+          img.width,
+          img.height,
+          centerShift_x,
+          centerShift_y,
+          img.width * ratio,
+          img.height * ratio
+        );
+      }
 
-      
-      const ctx = canvas.getContext("2d");
+      function drawImageBrightness(brightnessThreshold) {
+        const sideWidth = 180;
+        const topWidth = 120;
 
+        const ctx = document.getElementById("canvas").getContext("2d");
+        const imgctx = document.getElementById("bottomCanvas").getContext("2d");
 
+        var camImage = imgctx.getImageData(0, 0, canvas.width, canvas.height);
+        var data = camImage.data;
+        newImage = ctx.createImageData(canvas.width, canvas.height);
 
-      const brightnessThreshold = 125;
-      const sidePercentThreshold = 0.2;
-      const topPercentThreshold = 0.2;
+        for (var i = 0; i < data.length; i += 4) {
+          var brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
+          if (brightness >= brightnessThreshold) {
+            newImage.data[i] = 255;
+            newImage.data[i + 1] = 0;
+            newImage.data[i + 2] = 255;
+            newImage.data[i + 3] = 255;
+          } else {
+            newImage.data[i] = data[i];
+            newImage.data[i + 1] = data[i + 1];
+            newImage.data[i + 2] = data[i + 2];
+            newImage.data[i + 3] = 0;
+          }
+        }
+        ctx.putImageData(newImage, 0, 0);
 
-      const bottomCanvas = document.getElementById("bottomCanvas");
-      const imgctx = bottomCanvas.getContext('2d');
+        // draw a red line
+        ctx.strokeStyle = "lime";
+        ctx.lineWidth = 3;
 
-      var background = new Image();
-      background.src = "./images/test.jpg";
+        ctx.beginPath();
+        ctx.moveTo(sideWidth, 0);
+        ctx.lineTo(sideWidth, canvas.height);
+        ctx.stroke();
 
-// Make sure the image is loaded first otherwise nothing will draw.
-background.onload = function(){
-    imgctx.drawImage(background,0,0);   
+        ctx.beginPath();
+        ctx.moveTo(canvas.width - sideWidth, 0);
+        ctx.lineTo(canvas.width - sideWidth, canvas.height);
+        ctx.stroke();
 
-    // var idt = imgctx.getImageData(0,0,bottomCanvas.width,bottomCanvas.height);
+        ctx.beginPath();
+        ctx.moveTo(0, topWidth);
+        ctx.lineTo(canvas.width, topWidth);
+        ctx.stroke();
+      }
 
-    newImage = ctx.createImageData(canvas.width, canvas.height);
+      window.onload = function () {
+        const sideWidth = 180;
+        const topWidth = 120;
+        const canvas = document.getElementById("canvas");
+        canvas.width = 640;
+        canvas.height = 480;
 
-var camImage = imgctx.getImageData(0, 0, canvas.width, canvas.height);
-var data = camImage.data
+        console.log("width:", canvas.width);
+        console.log("height:", canvas.height);
 
-for (var i = 0; i < data.length; i += 4) {
-  // console.log(data[i], data[i + 1], data[i + 2]);
-  var brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
-  if (brightness >= brightnessThreshold) {
-    console.log("BRIGHT");
-    newImage[i] = 255;
-    newImage[i + 1] = 0;
-    newImage[i + 2] = 255;
-    newImage[i + 3] = 255;
-  } else {
-    newImage[i] = data[i];
-    newImage[i + 1] = data[i + 1];
-    newImage[i + 2] = data[i + 2];
-    newImage[i + 3] = 255;
-  }
-}
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
-// console.log(idt);
-//   for(let i = 0; i < canvas.width; ++i) {
-//   for(let j = 0; j < canvas.height; ++j) {
-//     const data = pxl.data;
-//     console.log(data);
+        const brightnessLabel = document.getElementById("brightnessLabel");
+        const brightnessThreshold = brightnessLabel.value;
+        const sidePercentThreshold = 0.2;
+        const topPercentThreshold = 0.2;
 
-//     if (((data[0] + data[1] + data[2]) / 3) >= brightnessThreshold) {
-//       setPixel(newImage, i, j, 255, 0, 255, 255);
-//     }
-//   }
-// }
-ctx.putImageData(newImage, 0, 0);
+        const bottomCanvas = document.getElementById("bottomCanvas");
+        bottomCanvas.width = 640;
+        bottomCanvas.height = 480;
+        const imgctx = bottomCanvas.getContext("2d", {
+          willReadFrequently: true,
+        });
 
-ctx.strokeStyle = 'red';
-ctx.lineWidth = 3;
+        var background = new Image();
+        background.crossOrigin = "Anonymous";
+        background.src = "./images/test.jpg";
 
-// draw a red line
-ctx.beginPath();
-ctx.moveTo(sideWidth, 0);
-ctx.lineTo(sideWidth, canvas.height);
-ctx.stroke();
+        background.onload = function (event) {
+          drawImageScaled(background, imgctx, ctx, brightnessThreshold);
+          setBrightnessThreshold(brightnessThreshold);
+        };
+      };
+    </script>
+  </head>
 
-ctx.beginPath();
-ctx.moveTo(canvas.width - sideWidth, 0);
-ctx.lineTo(canvas.width - sideWidth, canvas.height);
-ctx.stroke();
+  <body>
+    <h1>Anonymous Autonomous</h1>
+    <p>Connection status: <span id="status">NOT CONNECTED</span></p>
+    <p>Last chair status received: <span id="msg"></span></p>
+    <div class="screen" id="live" style="display: none">
+      <button onclick="stop('0')" class="stop">STOP ALL</button>
+      <button onclick="toggle('0')" class="auto">AUTO ALL</button>
 
-ctx.beginPath();
-ctx.moveTo(0, topWidth);
-ctx.lineTo(canvas.width, topWidth);
-ctx.stroke();
-}
-
-      
-
-  };
-    
-  </script>
-</head>
-
-<body>
-  <h1>Anonymous Autonomous</h1>
-  <p>Connection status: <span id="status">NOT CONNECTED</span></p>
-  <p>Last chair status received: <span id="msg"></span></p>
-  <div class="screen" id="live" style="display:none;">
-  <button onclick="stop('0')" class="stop">STOP ALL</button>
-  <button onclick="toggle('0')" class="auto">AUTO ALL</button>
-
-  <div class="statuses">
-    <div class="chair_monitor" id="1">
-      <h2>Chair 1</h2>
-      <div class="status o" id="1status">
-        OFFLINE
-      </div>
-      <br>
-      <div class="chair_control">
-        <div class="directions">
-          <button class="auto" id="1" onclick="toggle(this.id)">AUTO</button>
-          <br>
-          <button id="1" onclick="ffwd(this.id)">⤊</button>
-          <div>
-            <button id="1" onclick="fwdl(this.id)">⬉</button>
-            <button id="1" onclick="fwd(this.id)">↑</button>
-            <button id="1" onclick="fwdr(this.id)">⬈</button>
-          </div>
-          <div>
-            <button id="1" onclick="pivotl(this.id)">⟲</button>
-            <button id="1" onclick="stop(this.id)">🛑</button>
-            <button id="1" onclick="pivotr(this.id)">⟳</button>
-          </div>
-          <div>
-          <button id="1" onclick="bwdl(this.id)">⬋</button>
-          <button id="1" onclick="bwd(this.id)">↓</button>
-          <button id="1" onclick="bwdr(this.id)">⬊</button>
-        </div>
-          <button id="1" onclick="fbwd(this.id)">⤋</button>
-        </div>
-        <br>
-        <!-- <button id="1" onclick="start(this.id)">START</button>
+      <div class="statuses">
+        <div class="chair_monitor" id="1">
+          <h2>Chair 1</h2>
+          <div class="status o" id="1status">OFFLINE</div>
+          <br />
+          <div class="chair_control">
+            <div class="directions">
+              <button class="auto" id="1" onclick="toggle(this.id)">
+                AUTO
+              </button>
+              <br />
+              <button id="1" onclick="ffwd(this.id)">⤊</button>
+              <div>
+                <button id="1" onclick="fwdl(this.id)">⬉</button>
+                <button id="1" onclick="fwd(this.id)">↑</button>
+                <button id="1" onclick="fwdr(this.id)">⬈</button>
+              </div>
+              <div>
+                <button id="1" onclick="pivotl(this.id)">⟲</button>
+                <button id="1" onclick="stop(this.id)">🛑</button>
+                <button id="1" onclick="pivotr(this.id)">⟳</button>
+              </div>
+              <div>
+                <button id="1" onclick="bwdl(this.id)">⬋</button>
+                <button id="1" onclick="bwd(this.id)">↓</button>
+                <button id="1" onclick="bwdr(this.id)">⬊</button>
+              </div>
+              <button id="1" onclick="fbwd(this.id)">⤋</button>
+            </div>
+            <br />
+            <!-- <button id="1" onclick="start(this.id)">START</button>
         <button id="1" onclick="stop(this.id)" class="stop">STOP</button> -->
-        <br>
-        <form id="1custom_handwritten" class="handwritten_form" onsubmit="return submitForm(event);">
-          <label for="custom_handwritten">Custom: </label>
-            <input type="text" id="custom_handwritten" name="custom_handwritten" size="10">
-            <button type="submit" class="submit_button">Send</button>
-          </form>
-      </div>
-    </div>
-    <div class="chair_monitor" id="2">
-      <h2>Chair 2</h2>
-      <div class="status o" id="2status">
-        OFFLINE
-      </div>
-      <br>
-      <div class="chair_control">
-        <div class="directions">
-          <button class="auto" id="2" onclick="toggle(this.id)">AUTO</button>
-          <br>
-          <button id="2" onclick="ffwd(this.id)">⤊</button>
-          <div>
-            <button id="2" onclick="fwdl(this.id)">⬉</button>
-            <button id="2" onclick="fwd(this.id)">↑</button>
-            <button id="2" onclick="fwdr(this.id)">⬈</button>
+            <br />
+            <form
+              id="1custom_handwritten"
+              class="handwritten_form"
+              onsubmit="return submitForm(event);"
+            >
+              <label for="custom_handwritten">Custom: </label>
+              <input
+                type="text"
+                id="custom_handwritten"
+                name="custom_handwritten"
+                size="10"
+              />
+              <button type="submit" class="submit_button">Send</button>
+            </form>
           </div>
-          <div>
-            <button id="2" onclick="pivotl(this.id)">⟲</button>
-            <button id="2" onclick="stop(this.id)">🛑</button>
-            <button id="2" onclick="pivotr(this.id)">⟳</button>
-          </div>
-          <div>
-          <button id="2" onclick="bwdl(this.id)">⬋</button>
-          <button id="2" onclick="bwd(this.id)">↓</button>
-          <button id="2" onclick="bwdr(this.id)">⬊</button>
         </div>
-          <button id="2" onclick="fbwd(this.id)">⤋</button>
-        </div>
-        <br>
-        <!-- <button id="2" onclick="start(this.id)">START</button>
+        <div class="chair_monitor" id="2">
+          <h2>Chair 2</h2>
+          <div class="status o" id="2status">OFFLINE</div>
+          <br />
+          <div class="chair_control">
+            <div class="directions">
+              <button class="auto" id="2" onclick="toggle(this.id)">
+                AUTO
+              </button>
+              <br />
+              <button id="2" onclick="ffwd(this.id)">⤊</button>
+              <div>
+                <button id="2" onclick="fwdl(this.id)">⬉</button>
+                <button id="2" onclick="fwd(this.id)">↑</button>
+                <button id="2" onclick="fwdr(this.id)">⬈</button>
+              </div>
+              <div>
+                <button id="2" onclick="pivotl(this.id)">⟲</button>
+                <button id="2" onclick="stop(this.id)">🛑</button>
+                <button id="2" onclick="pivotr(this.id)">⟳</button>
+              </div>
+              <div>
+                <button id="2" onclick="bwdl(this.id)">⬋</button>
+                <button id="2" onclick="bwd(this.id)">↓</button>
+                <button id="2" onclick="bwdr(this.id)">⬊</button>
+              </div>
+              <button id="2" onclick="fbwd(this.id)">⤋</button>
+            </div>
+            <br />
+            <!-- <button id="2" onclick="start(this.id)">START</button>
         <button id="2" onclick="stop(this.id)" class="stop">STOP</button> -->
-        <br>
-        <form id="2custom_handwritten" class="handwritten_form" onsubmit="return submitForm(event);">
-          <label for="custom_handwritten">Custom: </label>
-            <input type="text" id="custom_handwritten" name="custom_handwritten" size="10">
-            <button type="submit" class="submit_button">Send</button>
-          </form>
-      </div>
-    </div>
-    <div class="chair_monitor" id="3">
-      <h2>Chair 3</h2>
-      <div class="status o" id="3status">
-        OFFLINE
-      </div>
-      <br>
-      <div class="chair_control">
-        <div class="directions">
-          <button class="auto" id="3" onclick="toggle(this.id)">AUTO</button>
-          <br>
-          <button id="3" onclick="ffwd(this.id)">⤊</button>
-          <div>
-            <button id="3" onclick="fwdl(this.id)">⬉</button>
-            <button id="3" onclick="fwd(this.id)">↑</button>
-            <button id="3" onclick="fwdr(this.id)">⬈</button>
+            <br />
+            <form
+              id="2custom_handwritten"
+              class="handwritten_form"
+              onsubmit="return submitForm(event);"
+            >
+              <label for="custom_handwritten">Custom: </label>
+              <input
+                type="text"
+                id="custom_handwritten"
+                name="custom_handwritten"
+                size="10"
+              />
+              <button type="submit" class="submit_button">Send</button>
+            </form>
           </div>
-          <div>
-            <button id="3" onclick="pivotl(this.id)">⟲</button>
-            <button id="3" onclick="stop(this.id)">🛑</button>
-            <button id="3" onclick="pivotr(this.id)">⟳</button>
-          </div>
-          <div>
-            <button id="3" onclick="bwdl(this.id)">⬋</button>
-            <button id="3" onclick="bwd(this.id)">↓</button>
-            <button id="3" onclick="bwdr(this.id)">⬊</button>
-          </div>         
-          <button id="3" onclick="fbwd(this.id)">⤋</button>
         </div>
-        <br>
-        <!-- <button id="3" onclick="start(this.id)">START</button>
+        <div class="chair_monitor" id="3">
+          <h2>Chair 3</h2>
+          <div class="status o" id="3status">OFFLINE</div>
+          <br />
+          <div class="chair_control">
+            <div class="directions">
+              <button class="auto" id="3" onclick="toggle(this.id)">
+                AUTO
+              </button>
+              <br />
+              <button id="3" onclick="ffwd(this.id)">⤊</button>
+              <div>
+                <button id="3" onclick="fwdl(this.id)">⬉</button>
+                <button id="3" onclick="fwd(this.id)">↑</button>
+                <button id="3" onclick="fwdr(this.id)">⬈</button>
+              </div>
+              <div>
+                <button id="3" onclick="pivotl(this.id)">⟲</button>
+                <button id="3" onclick="stop(this.id)">🛑</button>
+                <button id="3" onclick="pivotr(this.id)">⟳</button>
+              </div>
+              <div>
+                <button id="3" onclick="bwdl(this.id)">⬋</button>
+                <button id="3" onclick="bwd(this.id)">↓</button>
+                <button id="3" onclick="bwdr(this.id)">⬊</button>
+              </div>
+              <button id="3" onclick="fbwd(this.id)">⤋</button>
+            </div>
+            <br />
+            <!-- <button id="3" onclick="start(this.id)">START</button>
         <button id="3" onclick="stop(this.id)" class="stop">STOP</button> -->
-        <br>
-        <form id="3custom_handwritten" class="handwritten_form" onsubmit="return submitForm(event);">
-          <label for="custom_handwritten">Custom: </label>
-            <input type="text" id="custom_handwritten" name="custom_handwritten" size="10">
-            <button type="submit" class="submit_button">Send</button>
-          </form>
-      </div>
-    </div>
-    <div class="chair_monitor" id="4">
-      <h2>Chair 4</h2>
-      <div class="status o" id="4status">
-        OFFLINE
-      </div>
-      <br>
-      <div class="chair_control">
-        <div class="directions">
-          <button class="auto" id="4" onclick="toggle(this.id)">AUTO</button>
-          <br>
-          <button id="4" onclick="ffwd(this.id)">⤊</button>
-          <div>
-            <button id="4" onclick="fwdl(this.id)">⬉</button>
-            <button id="4" onclick="fwd(this.id)">↑</button>
-            <button id="4" onclick="fwdr(this.id)">⬈</button>
+            <br />
+            <form
+              id="3custom_handwritten"
+              class="handwritten_form"
+              onsubmit="return submitForm(event);"
+            >
+              <label for="custom_handwritten">Custom: </label>
+              <input
+                type="text"
+                id="custom_handwritten"
+                name="custom_handwritten"
+                size="10"
+              />
+              <button type="submit" class="submit_button">Send</button>
+            </form>
           </div>
-          <div>
-            <button id="4" onclick="pivotl(this.id)">⟲</button>
-            <button id="4" onclick="stop(this.id)">🛑</button>
-            <button id="4" onclick="pivotr(this.id)">⟳</button>
-          </div>
-          <div>
-            <button id="4" onclick="bwdl(this.id)">⬋</button>
-            <button id="4" onclick="bwd(this.id)">↓</button>
-            <button id="4" onclick="bwdr(this.id)">⬊</button>
-          </div>
-          <button id="4" onclick="fbwd(this.id)">⤋</button>
         </div>
-        <br>
-        <!-- <button id="4" onclick="start(this.id)">START</button>
+        <div class="chair_monitor" id="4">
+          <h2>Chair 4</h2>
+          <div class="status o" id="4status">OFFLINE</div>
+          <br />
+          <div class="chair_control">
+            <div class="directions">
+              <button class="auto" id="4" onclick="toggle(this.id)">
+                AUTO
+              </button>
+              <br />
+              <button id="4" onclick="ffwd(this.id)">⤊</button>
+              <div>
+                <button id="4" onclick="fwdl(this.id)">⬉</button>
+                <button id="4" onclick="fwd(this.id)">↑</button>
+                <button id="4" onclick="fwdr(this.id)">⬈</button>
+              </div>
+              <div>
+                <button id="4" onclick="pivotl(this.id)">⟲</button>
+                <button id="4" onclick="stop(this.id)">🛑</button>
+                <button id="4" onclick="pivotr(this.id)">⟳</button>
+              </div>
+              <div>
+                <button id="4" onclick="bwdl(this.id)">⬋</button>
+                <button id="4" onclick="bwd(this.id)">↓</button>
+                <button id="4" onclick="bwdr(this.id)">⬊</button>
+              </div>
+              <button id="4" onclick="fbwd(this.id)">⤋</button>
+            </div>
+            <br />
+            <!-- <button id="4" onclick="start(this.id)">START</button>
         <button id="4" onclick="stop(this.id)" class="stop">STOP</button> -->
-        <br>
-        <form id="4custom_handwritten" class="handwritten_form" onsubmit="return submitForm(event);">
-          <label for="custom_handwritten">Custom: </label>
-            <input type="text" id="custom_handwritten" name="custom_handwritten" size="10">
-            <button type="submit" class="submit_button">Send</button>
-          </form>
-      </div>
-    </div>
-    <!-- <div class="chair_monitor backup" id="backup">
+            <br />
+            <form
+              id="4custom_handwritten"
+              class="handwritten_form"
+              onsubmit="return submitForm(event);"
+            >
+              <label for="custom_handwritten">Custom: </label>
+              <input
+                type="text"
+                id="custom_handwritten"
+                name="custom_handwritten"
+                size="10"
+              />
+              <button type="submit" class="submit_button">Send</button>
+            </form>
+          </div>
+        </div>
+        <!-- <div class="chair_monitor backup" id="backup">
       <h2>Chair 4 (backup)</h2>
       <div class="status offline">
         OFFLINE
       </div>
     </div> -->
-  </div>
-  <button onclick="switchscreen('config')" class="switchscreen" id="toConfigScreen">switch to configuration mode</button>
-
-</div>
-<div class="screen" id="config">
-   <!-- style="display:none"> -->
-  <div id="cameraConfig">
-    <h3>Camera</h3>
-    <div class="wrapper">
-      <canvas id="bottomCanvas"></canvas>
-      <canvas id="canvas"></canvas>
+      </div>
+      <button
+        onclick="switchscreen('config')"
+        class="switchscreen"
+        id="toConfigScreen"
+      >
+        switch to configuration mode
+      </button>
     </div>
-  </div>
-  <div>
-    <form id="openYaml" onsubmit="return openYaml(event);">
-
-  <label for="configFile">Select config file:</label>
-  <input type="file"
-       id="configFile" name="configFile"
-       accept=".yaml">
-       <button type="submit">Open</button>
+    <div class="screen" id="config">
+      <!-- style="display:none"> -->
+      <div id="cameraConfig">
+        <h3>Camera</h3>
+        <form>
+          <input
+            type="range"
+            min="0"
+            max="255"
+            value="125"
+            class="slider"
+            id="brightnessSlider"
+            oninput="return setBrightnessThreshold(this.value);"
+          />
+          <output id="brightnessLabel">125</output>
+        </form>
+        <div class="wrapper">
+          <canvas id="bottomCanvas"></canvas>
+          <canvas id="canvas"></canvas>
+        </div>
+      </div>
+      <div>
+        <form id="openYaml" onsubmit="return openYaml(event);">
+          <label for="configFile">Select config file:</label>
+          <input type="file" id="configFile" name="configFile" accept=".yaml" />
+          <button type="submit">Open</button>
+        </form>
+      </div>
+      <div id="ymlContainer"></div>
+      <form id="saveYamlForm" onsubmit="return saveYaml(event);">
+        <textarea id="ymlTextArea"></textarea>
+        <button type="submit">Save</button>
       </form>
-    
-  </div>
-  <div id="ymlContainer"></div>
-  <form id="saveYamlForm" onsubmit="return saveYaml(event);">
-    <textarea id="ymlTextArea"></textarea>
-  <button type="submit">Save</button>
-</form>
-<button id="sendYaml" onclick="return sendYaml();">Send</button>
+      <button id="sendYaml" onclick="return sendYaml();">Send</button>
 
-
-  <button onclick="switchscreen('live')" class="switchscreen" id="toLiveScreen">switch to live mode</button>
-
-</div>
-
-</div>
-</body>
-
+      <button
+        onclick="switchscreen('live')"
+        class="switchscreen"
+        id="toLiveScreen"
+      >
+        switch to live mode
+      </button>
+    </div>
+  </body>
 </html>

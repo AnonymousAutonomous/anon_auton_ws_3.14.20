@@ -110,10 +110,13 @@ textarea {
 #bottomCanvas {
     background-size: 100% 100%;
     filter: grayscale(100%);
+    border: black solid 3px;
 }
 
 #canvas {
     z-index: 2;
+    border: black solid 3px;
+
 }
 
 .wrapper {
