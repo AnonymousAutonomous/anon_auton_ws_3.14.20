@@ -30,7 +30,10 @@ enum Command
 	ANTENNA_PIVOTR,
 	ANTENNA_HANDWRITTEN,
 	ANTENNA_CONFIG,
+	ANTENNA_SEND_IMAGE,
 };
+
+const std_msgs::Empty empty_msg;
 
 const std::unordered_map<std::string, Command> cmd_to_case = {
 	// launching entire chair
@@ -54,7 +57,9 @@ const std::unordered_map<std::string, Command> cmd_to_case = {
 	// for custom handwritten commands
 	{"hand", ANTENNA_HANDWRITTEN},
 	// config
-	{"config", ANTENNA_CONFIG}};
+	{"config", ANTENNA_CONFIG},
+	{"send_image", ANTENNA_SEND_IMAGE},
+};
 
 char LAUNCH_AUTONOMOUS_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh &";
 char LAUNCH_HANDWRITTEN_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_handwritten.sh &";
@@ -77,6 +82,7 @@ enum class chair_broadcast_status : char
 
 ros::Publisher chair_manager_pub;
 ros::Publisher test_pub;
+ros::Publisher request_image_pub;
 
 void handle_start()
 {
@@ -129,6 +135,16 @@ void handle_handwritten(char handwritten_cmd[])
 	std::string prefix = "echo \"";
 	char suffix[] = "\" > /tmp/handwritten-input";
 	system((prefix + handwritten_cmd + suffix).c_str());
+}
+
+void handle_send_image()
+{
+	request_image_pub.publish(empty_msg);
+}
+
+void receive_image_callback(const sensor_msgs::Image &view)
+{
+	test_pub.publish("image " + view);
 }
 
 /* Message format:
@@ -186,6 +202,9 @@ void receive_callback(const std_msgs::String &msg)
 		case ANTENNA_CONFIG:
 			update_config(msg);
 			break;
+		case ANTENNA_SEND_IMAGE:
+			handle_send_image();
+			break;
 		default:
 			ROS_ERROR("Invalid command:  %s", cmd);
 			break;
@@ -209,9 +228,11 @@ int main(int argc, char **argv)
 
 	// initialize subscribers
 	ros::Subscriber sub = nh.subscribe("from_chair_receiver", 1000, receive_callback);
+	ros::Subscriber image_sub = nh.subscribe("sample_image", 1000, receive_image_callback);
 
 	// initialize publishers
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
+	request_image_pub = nh.advertise<std_msgs::Empty>("send_image", 1000);
 	test_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 
 	ros::Rate delay_rate(5);
