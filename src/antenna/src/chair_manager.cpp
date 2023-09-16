@@ -149,7 +149,10 @@ void receive_image_callback(const sensor_msgs::Image &view)
 	std::string prefix = "image " + std::to_string(view.height) + " " + std::to_string(view.width) + " ";
 	std::string data_str(view.data.begin(), view.data.end());
 
-	test_pub.publish(prefix + data_str);
+	std_msgs::String msg;
+	msg.data = prefix + data_str;
+
+	request_image_pub.publish(msg);
 }
 
 /* Message format:
@@ -237,7 +240,7 @@ int main(int argc, char **argv)
 
 	// initialize publishers
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
-	request_image_pub = nh.advertise<std_msgs::Empty>("send_image", 1000);
+	request_image_pub = nh.advertise<std_msgs::String>("send_image", 1000);
 	test_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 
 	ros::Rate delay_rate(5);
