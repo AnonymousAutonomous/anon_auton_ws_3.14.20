@@ -132,3 +132,8 @@ textarea {
     width: 640px;
     height: 480px;
 }
+
+#cameraSliders {
+    display: flex; 
+    flex-direction: column;
+}

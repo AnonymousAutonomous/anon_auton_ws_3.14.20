@@ -271,9 +271,42 @@
         imageData.data[index + 3] = a;
       }
 
+      var brightnessThreshold = 0;
+      var sideWidth = 0;
+      var topWidth = 0;
+      var sidePercent = 0;
+      var topPercent = 0;
+      const imageWidth = 640;
+      const imageHeight = 480;
+
       function setBrightnessThreshold(newValue) {
         brightnessLabel.value = newValue;
-        drawImageBrightness(newValue);
+        brightnessThreshold = newValue;
+        drawImageBrightness();
+      }
+
+      function setSideWidth(newValue) {
+        sideWidthLabel.value = newValue;
+        sideWidth = newValue;
+        drawImageBrightness();
+      }
+
+      function setTopWidth(newValue) {
+        topWidthLabel.value = newValue;
+        topWidth = newValue;
+        drawImageBrightness();
+      }
+
+      function setSidePercent(newValue) {
+        sidePercentLabel.value = newValue;
+        sidePercent = newValue;
+        drawImageBrightness();
+      }
+
+      function setTopPercent(newValue) {
+        topPercentLabel.value = newValue;
+        topPercent = newValue;
+        drawImageBrightness();
       }
 
       function drawImageScaled(img, ctx, brightnessThreshold) {
@@ -297,9 +330,33 @@
         );
       }
 
-      function drawImageBrightness(brightnessThreshold) {
-        const sideWidth = 180;
-        const topWidth = 120;
+      function inTop(counter) {
+        return counter < imageWidth * topWidth;
+      }
+
+      function inLeft(counter) {
+        return counter % imageWidth < sideWidth;
+      }
+
+      function inRight(counter) {
+        return counter % imageWidth > imageWidth - sideWidth;
+      }
+
+      function inMiddle(counter) {
+        return !(
+          inTop(counter, imageWidth, topWidth) ||
+          inLeft(counter, imageWidth, sideWidth) ||
+          inRight(counter, imageWidth, sideWidth)
+        );
+      }
+
+      function drawImageBrightness() {
+        var topCount = 0;
+        var leftCount = 0;
+        var rightCount = 0;
+        var middleCount = 0;
+
+        console.log(sidePercent, topPercent);
 
         const ctx = document.getElementById("canvas").getContext("2d");
         const imgctx = document.getElementById("bottomCanvas").getContext("2d");
@@ -310,6 +367,19 @@
 
         for (var i = 0; i < data.length; i += 4) {
           var brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
+          const count = Math.floor(i / 4);
+          if (inTop(count)) {
+            topCount += brightness >= brightnessThreshold;
+          }
+          if (inLeft(count)) {
+            leftCount += brightness >= brightnessThreshold;
+          }
+          if (inRight(count)) {
+            rightCount += brightness >= brightnessThreshold;
+          }
+          if (inMiddle(count)) {
+            middleCount += brightness >= brightnessThreshold;
+          }
           if (brightness >= brightnessThreshold) {
             newImage.data[i] = 255;
             newImage.data[i + 1] = 0;
@@ -321,6 +391,9 @@
             newImage.data[i + 2] = data[i + 2];
             newImage.data[i + 3] = 0;
           }
+          if (i % 4 > 307000) {
+            console.log(i);
+          }
         }
         ctx.putImageData(newImage, 0, 0);
 
@@ -328,16 +401,28 @@
         ctx.strokeStyle = "lime";
         ctx.lineWidth = 3;
 
+        const leftAverage = leftCount / (canvas.height * sideWidth);
+        const rightAverage = rightCount / (canvas.height * sideWidth);
+        const topAverage = topCount / (canvas.width * topWidth);
+
+        console.log(leftAverage, rightAverage, topAverage);
+
+        // left
+        ctx.strokeStyle = leftAverage > sidePercent ? "red" : "lime";
         ctx.beginPath();
         ctx.moveTo(sideWidth, 0);
         ctx.lineTo(sideWidth, canvas.height);
         ctx.stroke();
 
+        // right
+        ctx.strokeStyle = rightAverage > sidePercent ? "red" : "lime";
         ctx.beginPath();
         ctx.moveTo(canvas.width - sideWidth, 0);
         ctx.lineTo(canvas.width - sideWidth, canvas.height);
         ctx.stroke();
 
+        // top
+        ctx.strokeStyle = topAverage > topPercent ? "red" : "lime";
         ctx.beginPath();
         ctx.moveTo(0, topWidth);
         ctx.lineTo(canvas.width, topWidth);
@@ -345,8 +430,6 @@
       }
 
       window.onload = function () {
-        const sideWidth = 180;
-        const topWidth = 120;
         const canvas = document.getElementById("canvas");
         canvas.width = 640;
         canvas.height = 480;
@@ -357,9 +440,16 @@
         const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
         const brightnessLabel = document.getElementById("brightnessLabel");
-        const brightnessThreshold = brightnessLabel.value;
-        const sidePercentThreshold = 0.2;
-        const topPercentThreshold = 0.2;
+        brightnessThreshold = brightnessLabel.value;
+        const sideWidthLabel = document.getElementById("sideWidthLabel");
+        sideWidth = sideWidthLabel.value;
+        const topWidthLabel = document.getElementById("topWidthLabel");
+        topWidth = topWidthLabel.value;
+        const sidePercentLabel = document.getElementById("sidePercentLabel");
+        sidePercent = sidePercentLabel.value;
+        const topPercentLabel = document.getElementById("topPercentLabel");
+        topPercent = topPercentLabel.value;
+        console.log(sidePercent, topPercent);
 
         const bottomCanvas = document.getElementById("bottomCanvas");
         bottomCanvas.width = 640;
@@ -375,6 +465,8 @@
         background.onload = function (event) {
           drawImageScaled(background, imgctx, ctx, brightnessThreshold);
           setBrightnessThreshold(brightnessThreshold);
+          setSideWidth(sideWidth);
+          setTopWidth(topWidth);
         };
       };
     </script>
@@ -600,17 +692,72 @@
       <!-- style="display:none"> -->
       <div id="cameraConfig">
         <h3>Camera</h3>
-        <form>
-          <input
-            type="range"
-            min="0"
-            max="255"
-            value="125"
-            class="slider"
-            id="brightnessSlider"
-            oninput="return setBrightnessThreshold(this.value);"
-          />
-          <output id="brightnessLabel">125</output>
+        <form id="cameraSliders">
+          <div>
+            <label>Brightness</label>
+            <input
+              type="range"
+              min="0"
+              max="255"
+              value="125"
+              class="slider"
+              id="brightnessSlider"
+              oninput="return setBrightnessThreshold(this.value);"
+            />
+            <output id="brightnessLabel">125</output>
+          </div>
+          <div>
+            <label>Side Width</label>
+            <input
+              type="range"
+              min="0"
+              max="255"
+              value="180"
+              class="slider"
+              id="sideWidthSlider"
+              oninput="return setSideWidth(this.value);"
+            />
+            <output id="sideWidthLabel">180</output>
+          </div>
+          <div>
+            <label>Top Width</label>
+            <input
+              type="range"
+              min="0"
+              max="255"
+              value="120"
+              class="slider"
+              id="topWidthSlider"
+              oninput="return setTopWidth(this.value);"
+            />
+            <output id="topWidthLabel">120</output>
+          </div>
+          <div>
+            <label>Side Percentage</label>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value="20"
+              class="slider"
+              id="sidePercentSlider"
+              oninput="return setSidePercent(this.value / 100.0);"
+            />
+            <output id="sidePercentLabel">0.2</output>
+          </div>
+          <div>
+            <label>Top Percentage</label>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value="20"
+              class="slider"
+              id="topPercentSlider"
+              oninput="return setTopPercent(this.value / 100.0);"
+            />
+            <output id="topPercentLabel">0.2</output>
+          </div>
         </form>
         <div class="wrapper">
           <canvas id="bottomCanvas"></canvas>
