@@ -41,6 +41,7 @@ bool send_image = false;
 
 void chatterCallBack(const sensor_msgs::Image &view);
 void pauseCallback(const std_msgs::Empty empty_msg);
+void sendImageCallback(const std_msgs::Empty empty_msg);
 
 std::map<std::string, std::string> commands_in;
 std::map<std::string, double> variables_in;
