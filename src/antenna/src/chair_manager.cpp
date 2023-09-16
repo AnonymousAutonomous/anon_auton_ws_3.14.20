@@ -146,7 +146,7 @@ void handle_send_image()
 
 void receive_image_callback(const sensor_msgs::Image &view)
 {
-	test_pub.publish("image " + view);
+	test_pub.publish("image " + view.height + " " + view.width + " " + view.data);
 }
 
 /* Message format:
