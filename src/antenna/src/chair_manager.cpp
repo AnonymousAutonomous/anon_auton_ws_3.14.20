@@ -1,6 +1,7 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "std_msgs/Empty.h"
+#include "sensor_msgs/Image.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unordered_map>
