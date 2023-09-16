@@ -147,7 +147,9 @@ void handle_send_image()
 void receive_image_callback(const sensor_msgs::Image &view)
 {
 	std::string prefix = "image " + std::to_string(view.height) + " " + std::to_string(view.width) + " ";
-	test_pub.publish(prefix + std::string(view.data, sizeof(view.data)));
+	std::string data_str(view.data.begin(), view.data.end());
+
+	test_pub.publish(prefix + data_str);
 }
 
 /* Message format:
