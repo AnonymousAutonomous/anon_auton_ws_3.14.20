@@ -258,6 +258,30 @@
         hub_dir_listener.publish(formatMsg("0", textToSend));
       };
 
+      sendCameraConfig = function (e) {
+        e.preventDefault();
+
+        const config = {
+          camera: {
+            topBandWidth: topWidth,
+            sideBandWidth: sideWidth,
+            imageWidth: imageWidth,
+            imageHeight: imageHeight,
+            brightnessThreshold: brightnessThreshold,
+            sidePercentThreshold: sidePercent,
+            topPercentThreshold: topPercent,
+            numMiddlePixels:
+              imageWidth * imageHeight -
+              topWidth * imageWidth -
+              2 * sideWidth * imageHeight +
+              2 * topWidth * sideWidth,
+          },
+        };
+        const textToSend = "config camera.yaml " + JSON.stringify(config);
+        console.log(textToSend);
+        hub_dir_listener.publish(formatMsg("0", textToSend));
+      };
+
       const getColorIndicesForCoord = (x, y, width) => {
         const red = y * (width * 4) + x * 4;
         return [red, red + 1, red + 2, red + 3];
@@ -440,15 +464,15 @@
         const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
         const brightnessLabel = document.getElementById("brightnessLabel");
-        brightnessThreshold = brightnessLabel.value;
+        brightnessThreshold = parseFloat(brightnessLabel.value);
         const sideWidthLabel = document.getElementById("sideWidthLabel");
-        sideWidth = sideWidthLabel.value;
+        sideWidth = parseFloat(sideWidthLabel.value);
         const topWidthLabel = document.getElementById("topWidthLabel");
-        topWidth = topWidthLabel.value;
+        topWidth = parseFloat(topWidthLabel.value);
         const sidePercentLabel = document.getElementById("sidePercentLabel");
-        sidePercent = sidePercentLabel.value;
+        sidePercent = parseFloat(sidePercentLabel.value);
         const topPercentLabel = document.getElementById("topPercentLabel");
-        topPercent = topPercentLabel.value;
+        topPercent = parseFloat(topPercentLabel.value);
         console.log(sidePercent, topPercent);
 
         const bottomCanvas = document.getElementById("bottomCanvas");
@@ -759,6 +783,9 @@
             <output id="topPercentLabel">0.2</output>
           </div>
         </form>
+        <button id="sendCameraConfig" onclick="return sendCameraConfig(event);">
+          Send Camera Config
+        </button>
         <div class="wrapper">
           <canvas id="bottomCanvas"></canvas>
           <canvas id="canvas"></canvas>
