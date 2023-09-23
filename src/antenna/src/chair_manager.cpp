@@ -147,7 +147,7 @@ void receive_image_callback(const sensor_msgs::Image &view)
 	std_msgs::String msg_debug;
 	msg_debug.data = "received image callback";
 
-	chair_manager_pub.publish(msg_debug);
+	chair_manager_pub.publish(msg_debug + " " + std::to_string(view.height) + " " + std::to_string(view.width) + " " + view.encoding);
 
 	std::string prefix = "image " + std::to_string(view.height) + " " + std::to_string(view.width) + " ";
 	// std::string data_str(view.data, sizeof(view.data));
