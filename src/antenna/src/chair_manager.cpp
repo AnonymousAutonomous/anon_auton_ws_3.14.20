@@ -159,7 +159,7 @@ void receive_image_callback(const sensor_msgs::Image &view)
 	msg.data = data_str;
 	// msg.data = prefix + data_str;
 
-	chair_manager_pub.publish(msg);
+	chair_manager_pub.publish(prefix + msg);
 
 	// send to "from_chair"
 	test_pub.publish(msg);
