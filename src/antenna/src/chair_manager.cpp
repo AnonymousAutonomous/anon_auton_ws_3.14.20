@@ -152,10 +152,10 @@ void receive_image_callback(const sensor_msgs::Image &view)
 	std::string prefix = "image " + std::to_string(view.height) + " " + std::to_string(view.width) + " ";
 	// std::string data_str(view.data, sizeof(view.data));
 
-	std::string data_str = reinterpret_cast<char *>(view.data);
+	// std::string data_str = reinterpret_cast<char *>(&view.data);
 
 	std_msgs::String msg;
-	msg.data = data_str;
+	msg.data = view.serialize();
 	// msg.data = prefix + data_str;
 
 	chair_manager_pub.publish(msg);
