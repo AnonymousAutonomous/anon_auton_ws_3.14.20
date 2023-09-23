@@ -9,13 +9,13 @@ chair_num = rospy.get_param('chair_num')
 ser = serial.Serial(antenna_port, 57600)
 
 
-def encode(str):
-    return str.encode('unicode')
+# def encode(str):
+#     return str.encode('unicode')
 
 
 def callback(data):
     rospy.loginfo(data.data)
-    ser.write(encode(chair_num + data.data + '\n'))
+    ser.write(str(chair_num) + data.data + "\n")
 
 
 def chair_transmitter():
