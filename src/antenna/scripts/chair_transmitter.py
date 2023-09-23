@@ -10,7 +10,7 @@ ser = serial.Serial(antenna_port, 57600)
 
 
 def encode(str):
-    return str.encode('ascii')
+    return str.encode('unicode')
 
 
 def callback(data):
