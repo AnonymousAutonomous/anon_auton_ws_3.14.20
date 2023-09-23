@@ -2,6 +2,7 @@
 import rospy
 import serial
 import time
+import base64
 from std_msgs.msg import String
 
 antenna_port = rospy.get_param('antenna_port')
@@ -15,7 +16,7 @@ ser = serial.Serial(antenna_port, 57600)
 
 def callback(data):
     rospy.loginfo(data.data)
-    ser.write(str(chair_num) + data.data + "\n")
+    ser.write(base64.encodestring(str(chair_num) + data.data))
 
 
 def chair_transmitter():
