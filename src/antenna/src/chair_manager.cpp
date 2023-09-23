@@ -158,11 +158,12 @@ void receive_image_callback(const sensor_msgs::Image &view)
 	std_msgs::String msg;
 	msg.data = prefix + data_str;
 	// msg.data = prefix + data_str;
+	test_pub.publish(msg);
 
 	chair_manager_pub.publish(msg);
 
 	// send to "from_chair"
-	test_pub.publish(msg);
+	// test_pub.publish(msg);
 }
 
 /* Message format:
