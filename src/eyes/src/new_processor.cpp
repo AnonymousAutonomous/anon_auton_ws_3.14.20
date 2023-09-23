@@ -18,7 +18,6 @@
 ros::Publisher george; // the variable formerly known as signal
 ros::Publisher debug;
 ros::Publisher notify_lidar;
-ros::Publisher send_sample_image;
 
 bool data_read = false;
 
@@ -37,11 +36,9 @@ bool favorRight = false;
 double numMiddlePixels = 100800;
 
 bool listening = true;
-bool send_image = false;
 
 void chatterCallBack(const sensor_msgs::Image &view);
 void pauseCallback(const std_msgs::Empty empty_msg);
-void sendImageCallback(const std_msgs::Empty empty_msg);
 
 std::map<std::string, std::string> commands_in;
 std::map<std::string, double> variables_in;
@@ -119,13 +116,11 @@ int main(int argc, char **argv)
     ros::NodeHandle Cornea;                                                                // publisher
     ros::Subscriber Handle = Iris.subscribe("/cv_camera/image_mono", 10, chatterCallBack); // 10 was 1000
     ros::Subscriber eoc_sub = Iris.subscribe("end_of_choreo", 1000, pauseCallback);
-    ros::Subscriber send_image_sub = Iris.subscribe("send_image", 1000, sendImageCallback);
     // george = Cornea.advertise<std_msgs::String>("cameron", 1000);
     george = Iris.advertise<std_msgs::String>("cameron", 10); // 10 was 1000
     // ros::spin();
     debug = Iris.advertise<std_msgs::String>("cam_debug", 10);
     notify_lidar = Iris.advertise<std_msgs::UInt8>("camera_to_lidar", 1000);
-    send_sample_image = Iris.advertise<sensor_msgs::Image>("sample_image", 1000);
 
     // Fee copied over from simple_motors trigger
     ros::Rate delay_rate(5);
@@ -140,19 +135,8 @@ void pauseCallback(const std_msgs::Empty empty_msg)
     listening = true;
 }
 
-void sendImageCallback(const std_msgs::Empty empty_msg)
-{
-    send_image = true;
-}
-
 void chatterCallBack(const sensor_msgs::Image &view)
 {
-    if (send_image)
-    {
-        send_sample_image.publish(view);
-        send_image = false;
-    }
-
     double topCount = 0;
     double leftCount = 0;
     double rightCount = 0;
