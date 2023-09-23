@@ -35,8 +35,6 @@ enum Command
 	ANTENNA_SEND_IMAGE,
 };
 
-const std_msgs::Empty empty_msg;
-
 const std::unordered_map<std::string, Command> cmd_to_case = {
 	// launching entire chair
 	{"launch", ANTENNA_LAUNCH},
@@ -60,8 +58,7 @@ const std::unordered_map<std::string, Command> cmd_to_case = {
 	{"hand", ANTENNA_HANDWRITTEN},
 	// config
 	{"config", ANTENNA_CONFIG},
-	{"send_image", ANTENNA_SEND_IMAGE},
-};
+	{"send_image", ANTENNA_SEND_IMAGE}};
 
 char LAUNCH_AUTONOMOUS_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh &";
 char LAUNCH_HANDWRITTEN_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_handwritten.sh &";
@@ -141,6 +138,7 @@ void handle_handwritten(char handwritten_cmd[])
 
 void handle_send_image()
 {
+	std_msgs::Empty empty_msg;
 	request_image_pub.publish(empty_msg);
 }
 
