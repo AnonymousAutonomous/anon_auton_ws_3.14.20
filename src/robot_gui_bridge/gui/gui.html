@@ -68,6 +68,10 @@
           document.getElementById("msg").innerHTML = m.data;
           updateChairStatus(m.data[0], m.data[1]);
         }
+        // image
+        if (m.data[1] == "i") {
+          console.log(m.data);
+        }
       });
 
       function checkStatus() {
