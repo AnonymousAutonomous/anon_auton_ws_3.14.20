@@ -145,12 +145,10 @@ void handle_send_image()
 void receive_image_callback(const sensor_msgs::Image &view)
 {
 	std_msgs::String msg_debug;
-	msg_debug.data = "received image callback";
-	std::string encoding_str(view.encoding);
+	msg_debug.data = "received image callback " + std::to_string(view.height) + " " + std::to_string(view.width) + " " + view.encoding;
 
-	chair_manager_pub.publish(msg_debug + " " + std::to_string(view.height) + " " + std::to_string(view.width) + " " + encoding_str);
-
-	std::string prefix = "image " + std::to_string(view.height) + " " + std::to_string(view.width) + " ";
+	chair_manager_pub.publish(msg_debug)
+		std::string prefix = "image " + std::to_string(view.height) + " " + std::to_string(view.width) + " ";
 	// std::string data_str(view.data, sizeof(view.data));
 
 	// std::string data_str = reinterpret_cast<char *>(&view.data);
