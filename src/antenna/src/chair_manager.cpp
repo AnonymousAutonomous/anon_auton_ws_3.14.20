@@ -232,6 +232,6 @@ int main(int argc, char **argv)
 		std::string content = "B";
 		content += (char)(chair_broadcast_status::ready);
 		msg.data = content;
-		test_pub.publish(msg);
+		// test_pub.publish(msg);
 	}
 }
