@@ -143,9 +143,8 @@ void receive_callback(const std_msgs::String &msg)
 	// Broadcast
 	if (msg.data[0] == 'B')
 	{
-		std::string prefix = "0";
-		prefix += msg.data.c_str();
-		chair_manager_pub.publish(prefix);
+		std::string datastr = msg.data.c_str();
+		chair_manager_pub.publish("0" + datastr);
 	}
 
 	ROS_ERROR("PUBLISHING %s", msg.data.c_str());
