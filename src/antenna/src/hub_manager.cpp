@@ -237,6 +237,7 @@ int main(int argc, char **argv)
 			while (!transmit_queue.empty())
 			{
 				bool break_out = transmit_queue.front().data == "00Bend";
+				ROS_INFO("Sending: %s", transmit_queue.front().data.c_str());
 				hub_manager_pub.publish(transmit_queue.front());
 				transmit_queue.pop();
 				if (break_out)
