@@ -3,14 +3,16 @@
 
 #include <string>
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
 	ROS_INFO("START OF PROGRAM...");
 
 	ros::init(argc, argv, "test_broadcast_transmitter");
 	ros::NodeHandle nh;
 	ros::Publisher test_pub = nh.advertise<std_msgs::String>("to_hub_manager", 1000);
 
-	while (!test_pub.getNumSubscribers()) {
+	while (!test_pub.getNumSubscribers())
+	{
 		// pass
 	}
 
