@@ -203,16 +203,16 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "chair_manager");
 	ros::NodeHandle nh;
 
-	// initialize spinner
-	ros::AsyncSpinner spinner(0);
-	spinner.start();
-
 	// initialize subscribers
 	ros::Subscriber sub = nh.subscribe("from_chair_receiver", 1000, receive_callback);
 
 	// initialize publishers
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
 	test_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
+
+	// initialize spinner
+	ros::AsyncSpinner spinner(0);
+	spinner.start();
 
 	ros::Rate delay_rate(5);
 
