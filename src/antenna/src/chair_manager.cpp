@@ -219,7 +219,7 @@ int main(int argc, char **argv)
 	while (ros::ok())
 	{
 		std_msgs::String msg;
-		msg.data = (char)(chair_broadcast_status::ready);
+		msg.data = "B" + (char)(chair_broadcast_status::ready);
 		test_pub.publish(msg);
 	}
 }
