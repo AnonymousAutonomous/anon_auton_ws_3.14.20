@@ -105,7 +105,7 @@ std::queue<std_msgs::String> transmit_queue;
 
 void receive_callback(const std_msgs::String &msg)
 {
-	if (len(msg.data) < 3)
+	if (msg.data.length() < 3)
 	{
 		return;
 	}
