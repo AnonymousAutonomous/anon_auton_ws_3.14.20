@@ -140,17 +140,17 @@ void handle_handwritten(char handwritten_cmd[])
 
 void receive_callback(const std_msgs::String &msg)
 {
-	// Broadcast
-	if (msg.data[0] == 'B')
-	{
-		std::string datastr = std::string(msg.data.c_str());
-		chair_manager_pub.publish("0" + datastr);
-	}
-
 	ROS_ERROR("PUBLISHING %s", msg.data.c_str());
 
 	char msg_copy[30];
 	strcpy(msg_copy, msg.data.c_str());
+
+	// Broadcast
+	if (msg.data[0] == 'B')
+	{
+		chair_manager_pub.publish("0" + std::string(msg_copy));
+		return;
+	}
 
 	char *cmd = strtok(msg_copy, " ");
 
