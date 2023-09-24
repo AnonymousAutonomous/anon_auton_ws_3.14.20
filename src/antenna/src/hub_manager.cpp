@@ -105,6 +105,10 @@ std::queue<std_msgs::String> transmit_queue;
 
 void receive_callback(const std_msgs::String &msg)
 {
+	if (len(msg.data) < 3)
+	{
+		return;
+	}
 	// update chair status vector
 	// format of str msg is {chair number}{chair status indicator}{new value}
 	int chair_number = msg.data[0] - 48 - 1;
