@@ -3,39 +3,41 @@
 
 #include <string>
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
 	ROS_INFO("START OF PROGRAM...");
 
 	ros::init(argc, argv, "test_broadcast_transmitter");
 	ros::NodeHandle nh;
 	ros::Publisher test_pub = nh.advertise<std_msgs::String>("to_hub_manager", 1000);
 
-	while (!test_pub.getNumSubscribers()) {
+	while (!test_pub.getNumSubscribers())
+	{
 		// pass
 	}
 
 	std_msgs::String msg;
-	msg.data = "0Bf2.0f2.0t5";
+	msg.data = "00Bf2.0f2.0t5";
 	test_pub.publish(msg);
-	msg.data = "0BAp";
+	msg.data = "00BAp";
 	test_pub.publish(msg);
-	msg.data = "0Bf0.0f0.0t5";
+	msg.data = "00Bf0.0f0.0t5";
 	test_pub.publish(msg);
-	msg.data = "0Bf0.0f0.0t5";
+	msg.data = "00Bf0.0f0.0t5";
 	test_pub.publish(msg);
-	msg.data = "0BAk";
+	msg.data = "00BAk";
 	test_pub.publish(msg);
-	msg.data = "0Br2.0r2.0t5";
+	msg.data = "00Br2.0r2.0t5";
 	test_pub.publish(msg);
-	msg.data = "0Br2.0r2.0t5";
+	msg.data = "00Br2.0r2.0t5";
 	test_pub.publish(msg);
-	msg.data = "0BAt";
+	msg.data = "00BAt";
 	test_pub.publish(msg);
-	msg.data = "0Bf0.0f0.0t5";
+	msg.data = "00Bf0.0f0.0t5";
 	test_pub.publish(msg);
-	msg.data = "0Bf0.0f0.0t5";
+	msg.data = "00Bf0.0f0.0t5";
 	test_pub.publish(msg);
-	msg.data = "0Bend";
+	msg.data = "00Bend";
 	test_pub.publish(msg);
 
 	// std_msgs::String msg;
