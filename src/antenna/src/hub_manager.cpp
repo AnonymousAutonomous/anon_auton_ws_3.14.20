@@ -201,6 +201,7 @@ int main(int argc, char **argv)
 		{
 		case state::outside:
 		{
+			// TODO: check if this will CONTINUE to push these messages
 			if (a_chair_is_trapped())
 			{
 				std_msgs::String msg;
