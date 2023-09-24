@@ -143,7 +143,7 @@ void receive_callback(const std_msgs::String &msg)
 	// Broadcast
 	if (msg.data[0] == 'B')
 	{
-		chair_manager_pub.publish("0" + msg);
+		chair_manager_pub.publish("0" + msg.data.c_str());
 	}
 
 	ROS_ERROR("PUBLISHING %s", msg.data.c_str());
