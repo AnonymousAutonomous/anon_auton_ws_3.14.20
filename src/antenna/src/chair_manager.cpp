@@ -148,7 +148,9 @@ void receive_callback(const std_msgs::String &msg)
 	// Broadcast
 	if (msg.data[0] == 'B')
 	{
-		chair_manager_pub.publish("0" + std::string(msg_copy));
+		std_msgs::String sendmsg;
+		sendmsg.data = "0" + std::string(msg_copy);
+		chair_manager_pub.publish(sendmsg);
 		return;
 	}
 
