@@ -197,14 +197,11 @@ int main(int argc, char **argv)
 	mode = state::outside;
 	while (ros::ok())
 	{
-		std::string debug = "STATE: ";
-		debug += (char)mode;
-		ROS_INFO(debug);
-
 		switch (mode)
 		{
 		case state::outside:
 		{
+			ROS_INFO("outside");
 			// TODO: check if this will CONTINUE to push these messages
 			if (a_chair_is_trapped())
 			{
@@ -230,6 +227,8 @@ int main(int argc, char **argv)
 		}
 		case state::awaiting_confirmation:
 		{
+			ROS_INFO("awaiting confirmation");
+
 			// wait until cbs is ready for all chairs
 			// then transmit until end of broadcast stage
 			while (!all_chairs_are_ready())
@@ -251,6 +250,8 @@ int main(int argc, char **argv)
 		}
 		case state::awaiting_status:
 		{
+			ROS_INFO("awaiting status");
+
 			// wait until cbs is success / failure for all chairs
 			// change state to outside
 			// transmit end of broadcast message
