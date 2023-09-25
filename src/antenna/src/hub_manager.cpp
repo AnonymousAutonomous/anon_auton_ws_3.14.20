@@ -217,11 +217,15 @@ int main(int argc, char **argv)
 			}
 			if (!transmit_queue.empty())
 			{
-				mode = state::awaiting_confirmation;
-				// also transmit start of broadcast
-				std_msgs::String msg;
-				msg.data = "00Bstart";
-				hub_manager_pub.publish(msg);
+				// Wait until entire broadcast is in the queue
+				if (transmit_queue.back() == "00Bend")
+				{
+					mode = state::awaiting_confirmation;
+					// also transmit start of broadcast
+					std_msgs::String msg;
+					msg.data = "00Bstart";
+					hub_manager_pub.publish(msg);
+				}
 			}
 			break;
 		}
@@ -236,7 +240,6 @@ int main(int argc, char **argv)
 				// pass
 			}
 			ROS_INFO("ALL CHAIRS ARE READY");
-			mode = state::awaiting_status;
 			while (!transmit_queue.empty())
 			{
 				bool break_out = transmit_queue.front().data == "00Bend";
@@ -244,7 +247,10 @@ int main(int argc, char **argv)
 				hub_manager_pub.publish(transmit_queue.front());
 				transmit_queue.pop();
 				if (break_out)
+				{
+					mode = state::awaiting_status;
 					break;
+				}
 			}
 			break;
 		}
