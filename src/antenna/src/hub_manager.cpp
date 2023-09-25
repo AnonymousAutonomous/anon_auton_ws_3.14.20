@@ -195,6 +195,7 @@ int main(int argc, char **argv)
 	hub_manager_pub = nh.advertise<std_msgs::String>("from_hub", 1000);
 
 	mode = state::outside;
+	ROS_INFO("MODE: %s", (char)mode)
 	while (ros::ok())
 	{
 		switch (mode)
