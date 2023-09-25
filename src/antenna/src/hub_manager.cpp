@@ -197,7 +197,9 @@ int main(int argc, char **argv)
 	mode = state::outside;
 	while (ros::ok())
 	{
-		ROS_INFO(mode);
+		std::string debug = "STATE: ";
+		debug += mode;
+		ROS_INFO(debug);
 
 		switch (mode)
 		{
