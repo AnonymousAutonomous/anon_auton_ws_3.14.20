@@ -222,10 +222,6 @@ int main(int argc, char **argv)
 				// Wait until entire broadcast is in the queue
 				if (transmit_queue.back().data == "00Bend")
 				{
-					// also transmit start of broadcast
-					std_msgs::String msg;
-					msg.data = "00Bstart";
-					hub_manager_pub.publish(msg);
 					mode = state::awaiting_confirmation;
 				}
 			}
@@ -235,6 +231,10 @@ int main(int argc, char **argv)
 		{
 			ROS_INFO("awaiting confirmation");
 
+			// also transmit start of broadcast
+			std_msgs::String msg;
+			msg.data = "00Bstart";
+			hub_manager_pub.publish(msg);
 			// wait until cbs is ready for all chairs
 			// then transmit until end of broadcast stage
 			while (!all_chairs_are_ready())
