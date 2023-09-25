@@ -11,10 +11,10 @@ int main(int argc, char **argv)
 	ros::NodeHandle nh;
 	ros::Publisher test_pub = nh.advertise<std_msgs::String>("to_hub_manager", 1000);
 
-	while (!test_pub.getNumSubscribers())
-	{
-		// pass
-	}
+	// while (!test_pub.getNumSubscribers())
+	// {
+	// 	// pass
+	// }
 
 	std_msgs::String msg;
 	msg.data = "00Bf2.0f2.0t5";
