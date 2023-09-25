@@ -95,9 +95,9 @@ bool a_chair_is_trapped()
 
 enum class state : char
 {
-	outside,
-	awaiting_confirmation,
-	awaiting_status
+	outside = 'o',
+	awaiting_confirmation = 'c',
+	awaiting_status = 's'
 };
 state mode = state::outside;
 
@@ -195,7 +195,7 @@ int main(int argc, char **argv)
 	hub_manager_pub = nh.advertise<std_msgs::String>("from_hub", 1000);
 
 	mode = state::outside;
-	ROS_INFO("MODE: %s", (char)mode)
+	ROS_INFO("MODE: %s", (char)mode);
 	while (ros::ok())
 	{
 		switch (mode)
