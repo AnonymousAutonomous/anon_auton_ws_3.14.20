@@ -222,11 +222,11 @@ int main(int argc, char **argv)
 				// Wait until entire broadcast is in the queue
 				if (transmit_queue.back().data == "00Bend")
 				{
-					mode = state::awaiting_confirmation;
 					// also transmit start of broadcast
 					std_msgs::String msg;
 					msg.data = "00Bstart";
 					hub_manager_pub.publish(msg);
+					mode = state::awaiting_confirmation;
 				}
 			}
 			break;
