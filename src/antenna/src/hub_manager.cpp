@@ -172,6 +172,7 @@ void receive_callback(const std_msgs::String &msg)
 
 void broadcast_callback(const std_msgs::String &msg)
 {
+	ROS_INFO("ADDING TO QUEUE: %s", msg.data);
 	transmit_queue.push(msg);
 }
 
@@ -201,7 +202,7 @@ int main(int argc, char **argv)
 		{
 		case state::outside:
 		{
-			ROS_INFO("outside");
+			// ROS_INFO("outside");
 			// TODO: check if this will CONTINUE to push these messages
 			if (a_chair_is_trapped())
 			{
