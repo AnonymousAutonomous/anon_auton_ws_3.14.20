@@ -218,7 +218,7 @@ int main(int argc, char **argv)
 			if (!transmit_queue.empty())
 			{
 				// Wait until entire broadcast is in the queue
-				if (transmit_queue.back() == "00Bend")
+				if (transmit_queue.back().data == "00Bend")
 				{
 					mode = state::awaiting_confirmation;
 					// also transmit start of broadcast
