@@ -217,10 +217,10 @@ void callback(const std_msgs::String &command)
 		if (command.data == "0Bstart")
 		{
 			ROS_INFO("START OF BROADCAST");
-			std_msgs::String start_confirmation;
-			start_confirmation.data = "B";
-			start_confirmation.data.push_back(static_cast<char>(chair_broadcast_status::ready));
-			update_hub_pub.publish(start_confirmation);
+			// std_msgs::String start_confirmation;
+			// start_confirmation.data = "B";
+			// start_confirmation.data.push_back(static_cast<char>(chair_broadcast_status::ready));
+			// update_hub_pub.publish(start_confirmation);
 			flag_SOB = true;
 		}
 		else if (command.data == "0Bfinish")
@@ -240,10 +240,10 @@ void callback(const std_msgs::String &command)
 			generic_message.timed = true;
 			generic_message.duration = 0;
 			broadcast_queue.push(generic_message);
-			std_msgs::String end_confirmation;
-			end_confirmation.data = "B";
-			end_confirmation.data.push_back(static_cast<char>(chair_broadcast_status::success));
-			update_hub_pub.publish(end_confirmation);
+			// std_msgs::String end_confirmation;
+			// end_confirmation.data = "B";
+			// end_confirmation.data.push_back(static_cast<char>(chair_broadcast_status::success));
+			// update_hub_pub.publish(end_confirmation);
 		}
 		else if (command.data[2] == 'A')
 		{
