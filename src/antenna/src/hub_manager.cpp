@@ -217,7 +217,7 @@ int main(int argc, char **argv)
 			}
 			if (!transmit_queue.empty())
 			{
-				ROS_INFO(transmit_queue.size())
+				ROS_INFO(transmit_queue.size());
 				// Wait until entire broadcast is in the queue
 				if (transmit_queue.back().data == "00Bend")
 				{
