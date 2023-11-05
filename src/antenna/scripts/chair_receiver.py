@@ -10,6 +10,7 @@ chair_num = rospy.get_param('chair_num')
 
 def close_callback(data, ser):
     ser.close()
+    rospy.loginfo("SHUTTING DOWN!")
     rospy.signal_shutdown("Received shutdown ")
 
 
