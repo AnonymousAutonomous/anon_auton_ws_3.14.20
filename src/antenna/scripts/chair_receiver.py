@@ -15,7 +15,7 @@ ser = serial.Serial(antenna_port, 57600)
 
 
 def close_serial():
-    rospy.logerror("SHUTTING DOWN ANTENNA RECEIVER")
+    rospy.logerr("SHUTTING DOWN ANTENNA RECEIVER")
     ser.close()
 
 def chair_receiver():
