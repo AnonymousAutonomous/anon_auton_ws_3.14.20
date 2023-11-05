@@ -2,7 +2,7 @@
 import rospy
 import serial
 import time
-from std_msgs.msg import String
+from std_msgs.msg import String, Empty
 
 antenna_port = rospy.get_param('antenna_port')
 chair_num = rospy.get_param('chair_num')
@@ -26,6 +26,7 @@ def close_callback(data):
 def chair_transmitter():
     rospy.init_node('chair_transmitter', anonymous=False)
     rospy.Subscriber('from_chair', String, callback)
+    rospy.Subscriber('shutdown_ros', Empty, close_callback)
     time.sleep(0.5)
     rospy.spin()
 

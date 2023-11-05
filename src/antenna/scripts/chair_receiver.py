@@ -2,19 +2,24 @@
 
 import rospy
 import serial
-from std_msgs.msg import String
+from std_msgs.msg import String, Empty
 
 antenna_port = rospy.get_param('antenna_port')
 chair_num = rospy.get_param('chair_num')
 
 
+
 def chair_receiver():
+    ser = serial.Serial(antenna_port, 57600)
+
+    def close_callback(data):
+        ser.close()
+
     pub = rospy.Publisher("from_chair_receiver", String, queue_size=10)
     debug_pub = rospy.Publisher("chair_receiver_debug", String, queue_size=10)
-
+    rospy.Subscriber('shutdown_ros', Empty, close_callback)
     rospy.init_node("chair_receiver", anonymous=False)
 
-    ser = serial.Serial(antenna_port, 57600)
     while not rospy.is_shutdown():
         str_msg = ser.readline().strip()
         rospy.loginfo(str_msg)
