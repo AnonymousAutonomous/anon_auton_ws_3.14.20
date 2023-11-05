@@ -18,9 +18,13 @@ def callback(data):
     ser.write(encode(chair_num + data.data + '\n'))
 
 
+def close_callback(data):
+    ser.close()
+
+
 
 def chair_transmitter():
-    rospy.init_node('chair_transmitter', anonymous=True)
+    rospy.init_node('chair_transmitter', anonymous=False)
     rospy.Subscriber('from_chair', String, callback)
     time.sleep(0.5)
     rospy.spin()

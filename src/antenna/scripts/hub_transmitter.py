@@ -12,7 +12,7 @@ def callback(data):
     ser.write(data.data.replace('\n', '') + '\n')
 
 def hub_transmitter():
-    rospy.init_node('hub_transmitter', anonymous=True)
+    rospy.init_node('hub_transmitter', anonymous=False)
     rospy.Subscriber('from_hub', String, callback)
     rospy.spin()
 

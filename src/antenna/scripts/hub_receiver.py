@@ -9,7 +9,7 @@ antenna_port = rospy.get_param('antenna_port')
 
 def hub_receiver():
     pub = rospy.Publisher("from_hub_receiver", String, queue_size=10)
-    rospy.init_node("hub_receiver", anonymous=True)
+    rospy.init_node("hub_receiver", anonymous=False)
     ser = serial.Serial(antenna_port, 57600)
     while not rospy.is_shutdown():
         str_msg = ser.readline().strip()

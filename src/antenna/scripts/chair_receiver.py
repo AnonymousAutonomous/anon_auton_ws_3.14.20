@@ -12,7 +12,7 @@ def chair_receiver():
     pub = rospy.Publisher("from_chair_receiver", String, queue_size=10)
     debug_pub = rospy.Publisher("chair_receiver_debug", String, queue_size=10)
 
-    rospy.init_node("chair_receiver", anonymous=True)
+    rospy.init_node("chair_receiver", anonymous=False)
 
     ser = serial.Serial(antenna_port, 57600)
     while not rospy.is_shutdown():
