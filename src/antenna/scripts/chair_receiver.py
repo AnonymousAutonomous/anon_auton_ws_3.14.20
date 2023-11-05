@@ -21,7 +21,6 @@ def close_serial():
 def chair_receiver():
     pub = rospy.Publisher("from_chair_receiver", String, queue_size=10)
     debug_pub = rospy.Publisher("chair_receiver_debug", String, queue_size=10)
-    # rospy.Subscriber('shutdown_ros', Empty, close_callback, (ser))
     rospy.init_node("chair_receiver", anonymous=False)
 
     rospy.on_shutdown(close_serial)

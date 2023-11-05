@@ -3,8 +3,6 @@
 cd ~/anon_auton_ws
 source devel/setup.bash
 
-rostopic pub -1 /shutdown_ros std_msgs/Empty
-
 rosnode kill -a &
 sleep 5
 

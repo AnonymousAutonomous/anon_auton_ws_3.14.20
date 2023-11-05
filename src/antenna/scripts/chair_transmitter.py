@@ -18,15 +18,15 @@ def callback(data):
     ser.write(encode(chair_num + data.data + '\n'))
 
 
-def close_callback(data):
+def close_serial():
+    rospy.logerr("SHUTTING DOWN CHAIR TRANSMITTER")
     ser.close()
-
 
 
 def chair_transmitter():
     rospy.init_node('chair_transmitter', anonymous=False)
     rospy.Subscriber('from_chair', String, callback)
-    rospy.Subscriber('shutdown_ros', Empty, close_callback)
+    rospy.on_shutdown(close_serial)
     time.sleep(0.5)
     rospy.spin()
 
