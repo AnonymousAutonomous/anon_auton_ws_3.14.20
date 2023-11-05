@@ -8,18 +8,22 @@ antenna_port = rospy.get_param('antenna_port')
 chair_num = rospy.get_param('chair_num')
 
 
-def close_callback(data, ser):
-    ser.close()
-    rospy.loginfo("SHUTTING DOWN!")
-    rospy.signal_shutdown("Received shutdown ")
+# def close_callback(data, ser):
+#     rospy.loginfo("SHUTTING DOWN!")
+#     rospy.signal_shutdown("Received shutdown ")
 
+
+def close_serial(ser):
+    ser.close()
 
 def chair_receiver():
     ser = serial.Serial(antenna_port, 57600)
     pub = rospy.Publisher("from_chair_receiver", String, queue_size=10)
     debug_pub = rospy.Publisher("chair_receiver_debug", String, queue_size=10)
-    rospy.Subscriber('shutdown_ros', Empty, close_callback, (ser))
-    rospy.init_node("chair_receiver", anonymous=False, disable_signals=True)
+    # rospy.Subscriber('shutdown_ros', Empty, close_callback, (ser))
+    rospy.init_node("chair_receiver", anonymous=False)
+
+    rospy.on_shutdown(close_serial, (ser))
 
     while not rospy.is_shutdown():
         str_msg = ser.readline().strip()
