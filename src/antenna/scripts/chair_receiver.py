@@ -14,6 +14,7 @@ chair_num = rospy.get_param('chair_num')
 
 
 def close_serial(ser):
+    rospy.logerror("SHUTTING DOWN ANTENNA RECEIVER")
     ser.close()
 
 def chair_receiver():
