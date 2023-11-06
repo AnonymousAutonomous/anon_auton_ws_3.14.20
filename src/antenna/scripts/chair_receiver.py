@@ -6,15 +6,20 @@ from std_msgs.msg import String
 
 antenna_port = rospy.get_param('antenna_port')
 chair_num = rospy.get_param('chair_num')
+ser = serial.Serial(antenna_port, 57600)
 
+
+def close_serial():
+    rospy.logerr("SHUTTING DOWN ANTENNA RECEIVER")
+    ser.close()
 
 def chair_receiver():
     pub = rospy.Publisher("from_chair_receiver", String, queue_size=10)
     debug_pub = rospy.Publisher("chair_receiver_debug", String, queue_size=10)
+    rospy.init_node("chair_receiver", anonymous=False)
 
-    rospy.init_node("chair_receiver", anonymous=True)
+    rospy.on_shutdown(close_serial)
 
-    ser = serial.Serial(antenna_port, 57600)
     while not rospy.is_shutdown():
         str_msg = ser.readline().strip()
         rospy.loginfo(str_msg)
