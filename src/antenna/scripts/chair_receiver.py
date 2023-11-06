@@ -2,16 +2,11 @@
 
 import rospy
 import serial
-from std_msgs.msg import String, Empty
+from std_msgs.msg import String
 
 antenna_port = rospy.get_param('antenna_port')
 chair_num = rospy.get_param('chair_num')
 ser = serial.Serial(antenna_port, 57600)
-
-
-# def close_callback(data, ser):
-#     rospy.loginfo("SHUTTING DOWN!")
-#     rospy.signal_shutdown("Received shutdown ")
 
 
 def close_serial():
