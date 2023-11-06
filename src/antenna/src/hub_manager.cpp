@@ -95,9 +95,9 @@ bool a_chair_is_trapped()
 
 enum class state : char
 {
-	outside = 'o',
-	awaiting_confirmation = 'c',
-	awaiting_status = 's'
+	outside,
+	awaiting_confirmation,
+	awaiting_status
 };
 state mode = state::outside;
 
@@ -172,7 +172,6 @@ void receive_callback(const std_msgs::String &msg)
 
 void broadcast_callback(const std_msgs::String &msg)
 {
-	ROS_INFO("ADDING TO QUEUE: %s", msg.data);
 	transmit_queue.push(msg);
 }
 
@@ -202,8 +201,6 @@ int main(int argc, char **argv)
 		{
 		case state::outside:
 		{
-			// ROS_INFO("outside");
-			// TODO: check if this will CONTINUE to push these messages
 			if (a_chair_is_trapped())
 			{
 				std_msgs::String msg;
@@ -218,23 +215,16 @@ int main(int argc, char **argv)
 			}
 			if (!transmit_queue.empty())
 			{
-				ROS_INFO("NUM COMMANDS: %d", transmit_queue.size());
-				// Wait until entire broadcast is in the queue
-				if (transmit_queue.back().data == "00Bend")
-				{
-					mode = state::awaiting_confirmation;
-				}
+				mode = state::awaiting_confirmation;
+				// also transmit start of broadcast
+				std_msgs::String msg;
+				msg.data = "00Bstart";
+				hub_manager_pub.publish(msg);
 			}
 			break;
 		}
 		case state::awaiting_confirmation:
 		{
-			ROS_INFO("awaiting confirmation");
-
-			// also transmit start of broadcast
-			std_msgs::String msg;
-			msg.data = "00Bstart";
-			hub_manager_pub.publish(msg);
 			// wait until cbs is ready for all chairs
 			// then transmit until end of broadcast stage
 			while (!all_chairs_are_ready())
@@ -242,24 +232,19 @@ int main(int argc, char **argv)
 				// pass
 			}
 			ROS_INFO("ALL CHAIRS ARE READY");
+			mode = state::awaiting_status;
 			while (!transmit_queue.empty())
 			{
 				bool break_out = transmit_queue.front().data == "00Bend";
-				ROS_INFO("Sending: %s", transmit_queue.front().data.c_str());
 				hub_manager_pub.publish(transmit_queue.front());
 				transmit_queue.pop();
 				if (break_out)
-				{
-					mode = state::awaiting_status;
 					break;
-				}
 			}
 			break;
 		}
 		case state::awaiting_status:
 		{
-			ROS_INFO("awaiting status");
-
 			// wait until cbs is success / failure for all chairs
 			// change state to outside
 			// transmit end of broadcast message

@@ -140,21 +140,11 @@ void handle_handwritten(char handwritten_cmd[])
 
 void receive_callback(const std_msgs::String &msg)
 {
+	// chair_manager_pub.publish(msg);
 	ROS_ERROR("PUBLISHING %s", msg.data.c_str());
 
 	char msg_copy[30];
 	strcpy(msg_copy, msg.data.c_str());
-
-	// Broadcast = send along to the queue
-	if (strlen(msg.data.c_str()) > 2 && msg.data[1] == 'B')
-	{
-		chair_manager_pub.publish(msg);
-
-		// std_msgs::String sendmsg;
-		// sendmsg.data = "0" + std::string(msg_copy);
-		// chair_manager_pub.publish(sendmsg);
-		return;
-	}
 
 	char *cmd = strtok(msg_copy, " ");
 
@@ -229,9 +219,7 @@ int main(int argc, char **argv)
 	while (ros::ok())
 	{
 		std_msgs::String msg;
-		std::string content = "B";
-		content += (char)(chair_broadcast_status::ready);
-		msg.data = content;
-		// test_pub.publish(msg);
+		msg.data = (char)(chair_broadcast_status::ready);
+		test_pub.publish(msg);
 	}
 }
