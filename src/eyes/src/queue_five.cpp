@@ -717,6 +717,8 @@ int main(int argc, char **argv)
 				custom_queue = std::queue<eyes::Generic>();
 				broadcast_queue = std::queue<eyes::Generic>();
 				ROS_INFO("RESUMING AUTONOMOUS BEHAVIOR");
+				std_msgs::Empty empty_msg;
+				eoc_pub.publish(empty_msg);
 				flag_SOB = false;
 				flag_EOB = false;
 				flag_EOC = true; // If chair was previously in choreo, reset
