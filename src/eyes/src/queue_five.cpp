@@ -18,10 +18,10 @@
 
 enum class state : char
 {
-	autonomous,
-	choreo,
-	custom,
-	broadcast
+	autonomous = 'a',
+	choreo = 'c',
+	custom = 'h',
+	broadcast = 'b'
 };
 state mode = state::autonomous;
 
@@ -302,6 +302,7 @@ int main(int argc, char **argv)
 	mode = state::autonomous;
 	while (ros::ok())
 	{
+		ROS_ERROR("mode: %s", static_cast<char>(mode))
 		switch (mode)
 		{
 		case state::autonomous: // matches FSM
@@ -682,7 +683,7 @@ int main(int argc, char **argv)
 			}
 			default:
 			{
-				ROS_INFO("How did we get here? Broadcast edition");
+				ROS_ERROR("How did we get here? Broadcast edition");
 				break;
 			}
 			}
@@ -721,7 +722,7 @@ int main(int argc, char **argv)
 		}
 		default:
 		{
-			ROS_INFO("How did we get here?");
+			ROS_ERROR("How did we get here?");
 			break;
 		}
 		}
