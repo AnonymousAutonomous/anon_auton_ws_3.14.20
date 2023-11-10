@@ -223,10 +223,6 @@ void callback(const std_msgs::String &command)
 		else if (command.data == "0Bfinish")
 		{
 			ROS_ERROR("FINISHED BROADCAST");
-			mode = state::autonomous;
-			choreo_queue = std::queue<eyes::Generic>();
-			flag_T = false;
-			flag_EOC = true;
 			flag_EOB = true;
 		}
 		else if (command.data == "0Bend")
