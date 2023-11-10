@@ -217,17 +217,17 @@ void callback(const std_msgs::String &command)
 		// parse broadcast command here (PLACEHOLDER), need end of broadcast somehow
 		if (command.data == "0Bstart")
 		{
-			ROS_INFO("START OF BROADCAST");
+			ROS_ERROR("START OF BROADCAST");
 			flag_SOB = true;
 		}
 		else if (command.data == "0Bfinish")
 		{
-			ROS_INFO("FINISHED BROADCAST");
+			ROS_ERROR("FINISHED BROADCAST");
 			flag_EOB = true;
 		}
 		else if (command.data == "0Bend")
 		{
-			// ROS_INFO("END OF BROADCAST");
+			ROS_ERROR("END OF BROADCAST");
 			eyes::Generic generic_message;
 			generic_message.identifier = 'e';
 			generic_message.left_forward = true;
@@ -514,7 +514,7 @@ int main(int argc, char **argv)
 			if (flag_SOB)
 			{
 				std_msgs::String to_hub;
-				to_hub.data = "0B";
+				to_hub.data = "B";
 				to_hub.data.push_back(static_cast<char>(chair_broadcast_status::exclude));
 				update_hub_pub.publish(to_hub);
 				ROS_INFO("CHAIR 0 IS EXCLUDED FROM BROADCAST");
@@ -546,12 +546,12 @@ int main(int argc, char **argv)
 			queue_to_lidar_msg.data = 'B';
 			notify_lidar.publish(queue_to_lidar_msg);
 
-			// ROS_INFO("IN BROADCAST STATE");
+			ROS_ERROR("IN BROADCAST STATE");
 			switch (broadcast_mode)
 			{
 			case broadcast_state::outside:
 			{
-				// ROS_INFO("ARRIVED IN BROADCAST STATE");
+				ROS_ERROR("ARRIVED IN BROADCAST STATE");
 				broadcast_mode = broadcast_state::ready;
 				eyes::Generic stop;
 				stop.identifier = 'b';
@@ -565,7 +565,7 @@ int main(int argc, char **argv)
 				// generic_pub.publish(stop);
 				// TODO: PUBLISH INDICATION THAT CHAIR IS READY TO GO TO INFORM HUB
 				std_msgs::String to_hub;
-				to_hub.data = "0B";
+				to_hub.data = "B";
 				to_hub.data.push_back(static_cast<char>(chair_broadcast_status::ready));
 				update_hub_pub.publish(to_hub);
 				ROS_INFO("CHAIR 0 IS READY");
@@ -586,7 +586,7 @@ int main(int argc, char **argv)
 						broadcast_queue = std::queue<eyes::Generic>();
 						// TODO: PUBLISH INDICATION THAT CHAIR COMPLETED BROADCAST SUCCESSFULLY
 						std_msgs::String to_hub;
-						to_hub.data = "0B";
+						to_hub.data = "B";
 						to_hub.data.push_back(static_cast<char>(chair_broadcast_status::success));
 						update_hub_pub.publish(to_hub);
 						ROS_INFO("CHAIR 0 SUCCESSFULLY COMPLETED BROADCAST");
@@ -697,7 +697,7 @@ int main(int argc, char **argv)
 				flag_EOB = false;
 				flag_D = true; // <-- exit case, resetting flag_D for next time
 				std_msgs::String to_hub;
-				to_hub.data = "0B";
+				to_hub.data = "B";
 				to_hub.data.push_back(static_cast<char>(chair_broadcast_status::exclude));
 				update_hub_pub.publish(to_hub);
 				ROS_INFO("CHAIR 0 IS YANKED FROM BROADCAST");
