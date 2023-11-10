@@ -302,7 +302,7 @@ int main(int argc, char **argv)
 	mode = state::autonomous;
 	while (ros::ok())
 	{
-		ROS_ERROR("mode: %s", static_cast<char>(mode))
+		ROS_ERROR("mode: %s", static_cast<char>(mode));
 		switch (mode)
 		{
 		case state::autonomous: // matches FSM
