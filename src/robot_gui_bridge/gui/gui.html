@@ -556,7 +556,9 @@
     <div class="screen" id="live" style="display: none">
       <button onclick="stop('0')" class="stop">STOP ALL</button>
       <button onclick="toggle('0')" class="auto">AUTO ALL</button>
-
+      <button class="test_choreo" id="1" onclick="send_test_choreo()">
+        TEST CHOREO
+      </button>
       <div class="statuses">
         <div class="chair_monitor" id="1">
           <h2>Chair 1</h2>
@@ -587,9 +589,6 @@
               <button id="1" onclick="fbwd(this.id)">⤋</button>
             </div>
             <br />
-            <button class="test_choreo" id="1" onclick="send_test_choreo()">
-              TEST CHOREO
-            </button>
             <!-- <button id="1" onclick="start(this.id)">START</button>
         <button id="1" onclick="stop(this.id)" class="stop">STOP</button> -->
             <br />
