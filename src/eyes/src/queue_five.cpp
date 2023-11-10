@@ -714,7 +714,8 @@ int main(int argc, char **argv)
 				ROS_INFO("RESUMING AUTONOMOUS BEHAVIOR");
 				flag_SOB = false;
 				flag_EOB = false;
-				flag_D = true; // <-- exit case, resetting flag_D for next time
+				flag_EOC = true; // If chair was previously in choreo, reset
+				flag_D = true;	 // <-- exit case, resetting flag_D for next time
 			}
 			break;
 		}
