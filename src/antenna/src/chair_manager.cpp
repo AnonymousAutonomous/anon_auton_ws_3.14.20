@@ -146,6 +146,17 @@ void receive_callback(const std_msgs::String &msg)
 	char msg_copy[30];
 	strcpy(msg_copy, msg.data.c_str());
 
+	// Broadcast = send along to the queue
+	if (strlen(msg.data.c_str()) > 2 && msg.data[1] == 'B')
+	{
+		chair_manager_pub.publish(msg);
+
+		// std_msgs::String sendmsg;
+		// sendmsg.data = "0" + std::string(msg_copy);
+		// chair_manager_pub.publish(sendmsg);
+		return;
+	}
+
 	char *cmd = strtok(msg_copy, " ");
 
 	auto command_ptr = cmd_to_case.find(std::string(cmd));
