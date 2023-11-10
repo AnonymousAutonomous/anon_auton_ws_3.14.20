@@ -302,11 +302,12 @@ int main(int argc, char **argv)
 	mode = state::autonomous;
 	while (ros::ok())
 	{
-		ROS_ERROR("ROS OK");
+		// ROS_ERROR("ROS OK");
 		switch (mode)
 		{
 		case state::autonomous: // matches FSM
 		{
+			ROS_ERROR("AUTONOMOUS");
 			std_msgs::Char queue_to_lidar_msg;
 			queue_to_lidar_msg.data = 'A';
 			notify_lidar.publish(queue_to_lidar_msg);
@@ -348,6 +349,7 @@ int main(int argc, char **argv)
 		}
 		case state::choreo: // potential issue if choreo queue is empty, only possible if choreo stages are not received fast enough following transition from autonomous state
 		{
+			ROS_ERROR("CHOREO");
 			std_msgs::Char queue_to_lidar_msg;
 			queue_to_lidar_msg.data = 'C';
 			notify_lidar.publish(queue_to_lidar_msg);
@@ -508,6 +510,7 @@ int main(int argc, char **argv)
 		}
 		case state::custom:
 		{
+			ROS_ERROR("CUSTOM");
 			std_msgs::Char queue_to_lidar_msg;
 			queue_to_lidar_msg.data = 'H';
 			notify_lidar.publish(queue_to_lidar_msg);
@@ -543,11 +546,12 @@ int main(int argc, char **argv)
 		}
 		case state::broadcast:
 		{
+			ROS_ERROR("BROADCAST");
+
 			std_msgs::Char queue_to_lidar_msg;
 			queue_to_lidar_msg.data = 'B';
 			notify_lidar.publish(queue_to_lidar_msg);
 
-			ROS_ERROR("IN BROADCAST STATE");
 			switch (broadcast_mode)
 			{
 			case broadcast_state::outside:
