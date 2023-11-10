@@ -584,6 +584,7 @@ int main(int argc, char **argv)
 				// ROS_ERROR("AWAITING BROADCAST");
 				if (flag_B)
 				{
+					// TODO: check if this is actually true -- or if it is just finished?
 					if (broadcast_queue.front().identifier == 'e')
 					{
 						ROS_ERROR("LAST STAGE OF BROADCAST");
