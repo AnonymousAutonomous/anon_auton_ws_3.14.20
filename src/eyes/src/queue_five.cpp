@@ -223,6 +223,9 @@ void callback(const std_msgs::String &command)
 		else if (command.data == "0Bfinish")
 		{
 			ROS_ERROR("FINISHED BROADCAST");
+			std_msgs::Empty empty_msg;
+			eoc_pub.publish(empty_msg);
+			choreo_queue = std::queue<eyes::Generic>();
 			flag_EOB = true;
 		}
 		else if (command.data == "0Bend")
@@ -710,7 +713,6 @@ int main(int argc, char **argv)
 			// TODO: ADD CHECK FOR flag_SOB TO ENABLE SEQUENTIAL BROADCASTS?
 			else if (flag_EOB)
 			{
-				mode = state::autonomous;
 				broadcast_mode = broadcast_state::outside;
 				autonomous_queue = std::queue<eyes::Generic>();
 				choreo_queue = std::queue<eyes::Generic>();
@@ -723,6 +725,7 @@ int main(int argc, char **argv)
 				flag_EOB = false;
 				flag_EOC = true; // If chair was previously in choreo, reset
 				flag_D = true;	 // <-- exit case, resetting flag_D for next time
+				mode = state::autonomous;
 			}
 			break;
 		}
