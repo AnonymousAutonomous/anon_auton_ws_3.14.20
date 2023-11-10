@@ -226,7 +226,7 @@ void callback(const std_msgs::String &command)
 			mode = state::autonomous;
 			choreo_queue = std::queue<eyes::Generic>();
 			flag_T = false;
-			flag_E0C = true;
+			flag_EOC = true;
 			flag_EOB = true;
 		}
 		else if (command.data == "0Bend")
