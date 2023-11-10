@@ -100,6 +100,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
+ln -s ~/anon_auton_ws/dotfiles/.bash_aliases ~/.bash_aliases
 
 if [ -L ~/.bash_aliases ]; then
     . ~/.bash_aliases
@@ -116,3 +117,5 @@ if ! shopt -oq posix; then
   fi
 fi
 source /opt/ros/melodic/setup.bash
+
+setup
