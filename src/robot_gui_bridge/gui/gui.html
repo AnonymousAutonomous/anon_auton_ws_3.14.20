@@ -18,6 +18,20 @@
       chairs.map((chair) => live_status.set(chair, null));
       console.log(live_status);
 
+      var test_choreo = [
+        "00Bf2.0f2.0t5",
+        "00BAp",
+        "00Bf0.0f0.0t5",
+        "00Bf0.0f0.0t5",
+        "00BAk",
+        "00Br2.0r2.0t5",
+        "00Br2.0r2.0t5",
+        "00BAt",
+        "00Bf0.0f0.0t5",
+        "00Bf0.0f0.0t5",
+        "00Bend",
+      ];
+
       ros.on("connection", function () {
         document.getElementById("status").innerHTML = "Connected";
       });
@@ -33,6 +47,12 @@
       var txt_listener = new ROSLIB.Topic({
         ros: ros,
         name: "/from_hub_receiver",
+        messageType: "std_msgs/String",
+      });
+
+      var to_hub_manager_pub = new ROSLIB.Topic({
+        ros: ros,
+        name: "/to_hub_manager",
         messageType: "std_msgs/String",
       });
 
@@ -176,6 +196,15 @@
       };
       pivotr = function (id) {
         hub_dir_listener.publish(formatMsg(id, "pivotr"));
+      };
+
+      send_test_choreo = function () {
+        test_choreo.forEach((msg) => {
+          var dir = new ROSLIB.Message({
+            data: msg,
+          });
+          to_hub_manager_pub.publish(dir);
+        });
       };
 
       function switchscreen(newScreenId) {
@@ -457,7 +486,23 @@
         ctx.stroke();
       }
 
+      function toDataURL(url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          var reader = new FileReader();
+          reader.onloadend = function () {
+            callback(reader.result);
+          };
+          reader.readAsDataURL(xhr.response);
+        };
+        xhr.open("GET", url);
+        xhr.responseType = "blob";
+        xhr.send();
+      }
+
       window.onload = function () {
+        switchscreen("live");
+
         const canvas = document.getElementById("canvas");
         canvas.width = 640;
         canvas.height = 480;
@@ -489,6 +534,10 @@
         var background = new Image();
         background.crossOrigin = "Anonymous";
         background.src = "./images/test.jpg";
+
+        toDataURL("./images/test.jpg", function (dataUrl) {
+          console.log("RESULT:", dataUrl);
+        });
 
         background.onload = function (event) {
           drawImageScaled(background, imgctx, ctx, brightnessThreshold);
@@ -538,6 +587,9 @@
               <button id="1" onclick="fbwd(this.id)">⤋</button>
             </div>
             <br />
+            <button class="test_choreo" id="1" onclick="send_test_choreo()">
+              TEST CHOREO
+            </button>
             <!-- <button id="1" onclick="start(this.id)">START</button>
         <button id="1" onclick="stop(this.id)" class="stop">STOP</button> -->
             <br />
