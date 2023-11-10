@@ -36,10 +36,10 @@ broadcast_state broadcast_mode = broadcast_state::outside;
 // mirror chair status enums in hub manager
 enum class chair_broadcast_status : char
 {
-	ready,
-	exclude,
-	success,
-	failure
+	ready = 'r',
+	exclude = 'e',
+	success = 's',
+	failure = 'f'
 };
 enum class chair_stuck_status : char
 {
