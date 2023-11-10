@@ -96,7 +96,7 @@ void callback(const std_msgs::String &command)
 	// code coming soon
 	// think sorting hat from Harry Potter
 	char identifier = command.data[1];
-	ROS_ERROR(command.data);
+	ROS_ERROR("COMMAND: %s", command.data);
 	switch (identifier)
 	{
 	case 'H':
