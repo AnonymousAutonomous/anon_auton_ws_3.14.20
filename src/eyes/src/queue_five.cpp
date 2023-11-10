@@ -223,9 +223,9 @@ void callback(const std_msgs::String &command)
 		else if (command.data == "0Bfinish")
 		{
 			ROS_ERROR("FINISHED BROADCAST");
-			std_msgs::Empty empty_msg;
-			eoc_pub.publish(empty_msg);
-			choreo_queue = std::queue<eyes::Generic>();
+			// std_msgs::Empty empty_msg;
+			// eoc_pub.publish(empty_msg);
+			// choreo_queue = std::queue<eyes::Generic>();
 			flag_EOB = true;
 		}
 		else if (command.data == "0Bend")
