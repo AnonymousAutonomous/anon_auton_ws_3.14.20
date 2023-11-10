@@ -521,7 +521,7 @@ int main(int argc, char **argv)
 			if (flag_SOB)
 			{
 				std_msgs::String to_hub;
-				to_hub.data = "B";
+				to_hub.data = "0B";
 				to_hub.data.push_back(static_cast<char>(chair_broadcast_status::exclude));
 				update_hub_pub.publish(to_hub);
 				ROS_INFO("CHAIR 0 IS EXCLUDED FROM BROADCAST");
@@ -572,7 +572,7 @@ int main(int argc, char **argv)
 				// generic_pub.publish(stop);
 				// TODO: PUBLISH INDICATION THAT CHAIR IS READY TO GO TO INFORM HUB
 				std_msgs::String to_hub;
-				to_hub.data = "B";
+				to_hub.data = "0B";
 				to_hub.data.push_back(static_cast<char>(chair_broadcast_status::ready));
 				update_hub_pub.publish(to_hub);
 				ROS_INFO("CHAIR 0 IS READY");
@@ -593,7 +593,7 @@ int main(int argc, char **argv)
 						broadcast_queue = std::queue<eyes::Generic>();
 						// TODO: PUBLISH INDICATION THAT CHAIR COMPLETED BROADCAST SUCCESSFULLY
 						std_msgs::String to_hub;
-						to_hub.data = "B";
+						to_hub.data = "0B";
 						to_hub.data.push_back(static_cast<char>(chair_broadcast_status::success));
 						update_hub_pub.publish(to_hub);
 						ROS_INFO("CHAIR 0 SUCCESSFULLY COMPLETED BROADCAST");
@@ -704,7 +704,7 @@ int main(int argc, char **argv)
 				flag_EOB = false;
 				flag_D = true; // <-- exit case, resetting flag_D for next time
 				std_msgs::String to_hub;
-				to_hub.data = "B";
+				to_hub.data = "0B";
 				to_hub.data.push_back(static_cast<char>(chair_broadcast_status::exclude));
 				update_hub_pub.publish(to_hub);
 				ROS_INFO("CHAIR 0 IS YANKED FROM BROADCAST");
