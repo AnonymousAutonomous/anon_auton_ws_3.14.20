@@ -5,7 +5,7 @@
 #include <queue>
 #include <vector>
 
-#define NUMBER_OF_CHAIRS 2
+#define NUMBER_OF_CHAIRS 1
 
 enum class chair_broadcast_status : char
 {
