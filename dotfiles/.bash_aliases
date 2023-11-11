@@ -3,7 +3,7 @@
 
 alias setup="cd ~/anon_auton_ws && source devel/setup.bash"
 alias chair="~/anon_auton_ws/src/launch_manager/scripts/chair_on_startup.bash"
-alias kill="~/anon_auton_ws/src/launch_manager/launch/kill_ros.sh"
+alias killros="~/anon_auton_ws/src/launch_manager/launch/kill_ros.sh"
 alias pre="~/anon_auton_ws/src/launch_manager/launch/pre.sh"
 alias antenna="setup && roslaunch --wait ~/anon_auton_ws/src/launch_manager/launch/components/antenna_chair.launch"
 alias arduino="setup && roslaunch --wait ~/anon_auton_ws/src/launch_manager/launch/components/arduino.launch"
