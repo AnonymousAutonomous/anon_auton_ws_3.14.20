@@ -144,8 +144,6 @@ void receive_callback(const std_msgs::String &msg)
 
 	char property_value = stringmsg[2];
 
-	ROS_ERROR("UPDATING STATUS OF CHAIR %d to %s %s", chair_number, chair_property, property_value);
-
 	switch (chair_property)
 	{
 	case 'B':
