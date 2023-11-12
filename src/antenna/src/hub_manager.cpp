@@ -163,6 +163,10 @@ void receive_callback(const std_msgs::String &msg)
 		}
 		break;
 	}
+	case 'h': // ignore heartbeats
+	{
+		break;
+	}
 	default:
 	{
 		ROS_ERROR("INVALID CHAIR PROPERTY");
