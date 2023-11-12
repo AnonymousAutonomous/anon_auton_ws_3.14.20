@@ -106,8 +106,8 @@ std::queue<std_msgs::String> transmit_queue;
 
 void receive_callback(const std_msgs::String &msg)
 {
-	// ignore malformed messages
-	if (msg.data.length != 3)
+	// ignore malformed messages and heartbeats
+	if (strlen(msg.data.c_str()) != 3)
 	{
 		return;
 	}
@@ -118,12 +118,6 @@ void receive_callback(const std_msgs::String &msg)
 
 	char chair_property = msg.data[1];
 	char property_value = msg.data[2];
-
-	// ignore heartbeat
-	if (chair_property == 'h')
-	{
-		return;
-	}
 
 	ROS_ERROR("UPDATING STATUS OF CHAIR %d", chair_number);
 
