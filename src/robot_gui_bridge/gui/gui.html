@@ -110,7 +110,7 @@
           // broadcast
           m.data.length == 3 &&
           chairs.includes(m.data[0]) &&
-          m.data[1] == "B"
+          (m.data[1] == "B" || m.data[1] == "T" || m.data[1] == "S")
         ) {
           live_status.set(m.data[0], m.data[2]);
           updateChairStatus(m.data[0], m.data[2]);
@@ -120,7 +120,8 @@
           chairs.includes(m.data[0]) &&
           m.data[1] == "h"
         ) {
-          updateChairStatus(m.data[0], m.data[1]);
+          // TODO: visible heartbeat
+          // updateChairStatus(m.data[0], m.data[1]);
         }
         // image
         if (m.data[1] == "i") {
