@@ -106,13 +106,26 @@ std::queue<std_msgs::String> transmit_queue;
 
 void receive_callback(const std_msgs::String &msg)
 {
+	// ignore malformed messages
+	if (msg.data.length != 3)
+	{
+		return;
+	}
+
 	// update chair status vector
 	// format of str msg is {chair number}{chair status indicator}{new value}
 	int chair_number = msg.data[0] - 48;
-	ROS_ERROR("UPDATING STATUS OF CHAIR %d", chair_number);
 
 	char chair_property = msg.data[1];
 	char property_value = msg.data[2];
+
+	// ignore heartbeat
+	if (chair_property == 'h')
+	{
+		return;
+	}
+
+	ROS_ERROR("UPDATING STATUS OF CHAIR %d", chair_number);
 
 	switch (chair_property)
 	{
@@ -161,10 +174,6 @@ void receive_callback(const std_msgs::String &msg)
 		{
 			ROS_ERROR("CHAIR %d IS NOT TRAPPED", chair_number);
 		}
-		break;
-	}
-	case 'h': // ignore heartbeats
-	{
 		break;
 	}
 	default:
