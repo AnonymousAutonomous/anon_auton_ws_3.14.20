@@ -127,6 +127,13 @@ void receive_callback(const std_msgs::String &msg)
 	}
 
 	char chair_property = msg.data[1];
+
+	// ignore malformed
+	(if !(chair_property == 'B' || chair_property == 'S' || chair_property == 'T'))
+	{
+		return;
+	}
+
 	char property_value = msg.data[2];
 
 	ROS_ERROR("UPDATING STATUS OF CHAIR %d to %s %s", chair_number, chair_property, property_value);
