@@ -208,7 +208,7 @@ void receive_callback(const std_msgs::String &msg)
 	}
 }
 
-void onHeartbeat()
+void onHeartbeat(const ros::TimerEvent &event)
 {
 	std_msgs::String msg;
 	msg.data = 'h'; // heartbeat!
@@ -228,7 +228,7 @@ int main(int argc, char **argv)
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
 	from_chair_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 
-	ros::Timer heartbeat = nh.createTimer(ros::Duration(0.1), onHeartbeat);
+	ros::Timer timer = nh.createTimer(ros::Duration(0.1), onHeartbeat);
 	// ros::Rate delay_rate(5); // 5 cycles per second
 
 	// initialize spinner
