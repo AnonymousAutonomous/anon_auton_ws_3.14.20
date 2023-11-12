@@ -30,7 +30,8 @@
         chairs = value.map((v) => String(v));
         chairs.map((chair) => live_status.set(chair, null));
 
-        document.getElementById("num_chairs").innerHTML = String(chairs.length);
+        document.getElementById("num_chairs").innerHTML =
+          String(chairs.length) + " chair" + (chairs.length != 1 ? "s" : "");
         document.getElementById("active_chair_list").innerHTML =
           chairs.toString();
       });
@@ -574,7 +575,7 @@
     <p>Connection status: <span id="status">NOT CONNECTED</span></p>
     <p>Last chair status received: <span id="msg"></span></p>
     <p>
-      <span id="num_chairs"></span> chairs active:
+      <span id="num_chairs">0 chairs</span> active:
       <span id="active_chair_list"></span>
     </p>
     <div class="screen" id="live" style="display: none">
