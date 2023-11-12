@@ -13,9 +13,9 @@
         url: "ws://localhost:9090",
       });
 
-      ros.getParams(function(params) {
-        console.log(params);
-      });
+      // ros.getParams(function(params) {
+      //   console.log(params);
+      // });
 
       var active_chair_nums = new ROSLIB.Param({
         ros: ros,
@@ -30,8 +30,9 @@
         chairs = value.map((v) => String(v));
         chairs.map((chair) => live_status.set(chair, null));
 
-        document.getElementById("num_chairs") = String(chairs.length);
-        document.getElementById("active_chair_list") = chairs.toString();
+        document.getElementById("num_chairs").innerHTML = String(chairs.length);
+        document.getElementById("active_chair_list").innerHTML =
+          chairs.toString();
       });
       // var chairs = ["1", "2", "3", "4"];
       console.log(live_status);
