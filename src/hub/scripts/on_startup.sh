@@ -8,6 +8,9 @@ python2 ~/anon_auton_ws/src/config_manager/scripts/set_ports.py
 killall -9 roscore
 killall -9 rosmaster
 
+# Clear out port we will be using
+kill $(lsof -t -i:9090)
+
 roscore &
 
 until rostopic list; do sleep 1; done
