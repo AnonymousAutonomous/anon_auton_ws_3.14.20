@@ -129,7 +129,7 @@ void receive_callback(const std_msgs::String &msg)
 	char chair_property = msg.data[1];
 
 	// ignore malformed
-	if !(chair_property == 'B' || chair_property == 'S' || chair_property == 'T')
+	if (!(chair_property == 'B' || chair_property == 'S' || chair_property == 'T'))
 	{
 		return;
 	}
