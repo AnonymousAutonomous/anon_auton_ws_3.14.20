@@ -148,6 +148,7 @@ void receive_callback(const std_msgs::String &msg)
 	{
 	case 'B':
 	{
+		// TODO: error handle here if it's not in the enum?
 		chair_status_map[chair_number].cbs = static_cast<chair_broadcast_status>(property_value);
 		if (chair_status_map[chair_number].cbs == chair_broadcast_status::ready)
 		{
