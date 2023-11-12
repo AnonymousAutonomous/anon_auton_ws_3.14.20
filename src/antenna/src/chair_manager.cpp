@@ -225,7 +225,6 @@ int main(int argc, char **argv)
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
 	test_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 
-	ros::waitForShutdown();
 	ros::Rate delay_rate(5); // 5 cycles per second
 
 	while (ros::ok())
