@@ -18,10 +18,10 @@
 
 enum class state : char
 {
-	autonomous,
-	choreo,
-	custom,
-	broadcast
+	autonomous = 'a',
+	choreo = 'c',
+	custom = 'h',
+	broadcast = 'b'
 };
 state mode = state::autonomous;
 
@@ -36,10 +36,10 @@ broadcast_state broadcast_mode = broadcast_state::outside;
 // mirror chair status enums in hub manager
 enum class chair_broadcast_status : char
 {
-	ready,
-	exclude,
-	success,
-	failure
+	ready = 'r',
+	exclude = 'e',
+	success = 's',
+	failure = 'f'
 };
 enum class chair_stuck_status : char
 {
@@ -82,13 +82,13 @@ int final_encoder_value;
 void update_encoder_values_R(const std_msgs::Int32 &int32_msg_R)
 {
 	encoder_count_R = int32_msg_R.data;
-	// ROS_INFO("RIGHT: %d", encoder_count_R);
+	// ROS_ERROR("RIGHT: %d", encoder_count_R);
 }
 
 void update_encoder_values_L(const std_msgs::Int32 &int32_msg_L)
 {
 	encoder_count_L = int32_msg_L.data;
-	// ROS_INFO("LEFT: %d", encoder_count_L);
+	// ROS_ERROR("LEFT: %d", encoder_count_L);
 }
 
 void callback(const std_msgs::String &command)
@@ -96,6 +96,7 @@ void callback(const std_msgs::String &command)
 	// code coming soon
 	// think sorting hat from Harry Potter
 	char identifier = command.data[1];
+	ROS_ERROR("COMMAND: %s", command.data.c_str());
 	switch (identifier)
 	{
 	case 'H':
@@ -103,7 +104,7 @@ void callback(const std_msgs::String &command)
 		// parse handwritten command here (PLACEHOLDER)
 		if (command.data == "0Htoggle")
 		{
-			ROS_INFO("SET TO TOGGLE");
+			ROS_ERROR("SET TO TOGGLE");
 			flag_T = true;
 		}
 		else
@@ -205,7 +206,7 @@ void callback(const std_msgs::String &command)
 		default:
 		{
 			// haha choreo go brrrr
-			ROS_INFO("INVALID CHOREO SHORTCODE");
+			ROS_ERROR("INVALID CHOREO SHORTCODE");
 			break;
 		}
 		}
@@ -216,17 +217,20 @@ void callback(const std_msgs::String &command)
 		// parse broadcast command here (PLACEHOLDER), need end of broadcast somehow
 		if (command.data == "0Bstart")
 		{
-			ROS_INFO("START OF BROADCAST");
+			ROS_ERROR("START OF BROADCAST");
 			flag_SOB = true;
 		}
 		else if (command.data == "0Bfinish")
 		{
-			ROS_INFO("FINISHED BROADCAST");
+			ROS_ERROR("FINISHED BROADCAST");
+			// std_msgs::Empty empty_msg;
+			// eoc_pub.publish(empty_msg);
+			// choreo_queue = std::queue<eyes::Generic>();
 			flag_EOB = true;
 		}
 		else if (command.data == "0Bend")
 		{
-			// ROS_INFO("END OF BROADCAST");
+			ROS_ERROR("END OF BROADCAST");
 			eyes::Generic generic_message;
 			generic_message.identifier = 'e';
 			generic_message.left_forward = true;
@@ -301,10 +305,12 @@ int main(int argc, char **argv)
 	mode = state::autonomous;
 	while (ros::ok())
 	{
+		// ROS_ERROR("ROS OK");
 		switch (mode)
 		{
 		case state::autonomous: // matches FSM
 		{
+			// ROS_ERROR("AUTONOMOUS");
 			std_msgs::Char queue_to_lidar_msg;
 			queue_to_lidar_msg.data = 'A';
 			notify_lidar.publish(queue_to_lidar_msg);
@@ -314,7 +320,7 @@ int main(int argc, char **argv)
 				generic_pub.publish(autonomous_queue.front());
 				// generic_pub.publish(autonomous_queue.front());
 				autonomous_queue.pop();
-				// ROS_INFO("PUBLISHING AUTONOMOUS COMMAND");
+				// ROS_ERROR("PUBLISHING AUTONOMOUS COMMAND");
 			}
 
 			// state transition logic (WIP)
@@ -322,7 +328,7 @@ int main(int argc, char **argv)
 			{
 				flag_EOC = true;
 				flag_D = true; // <-- exit case, resetting flag_D for next time
-				ROS_INFO("END OF CHOREO");
+				ROS_ERROR("END OF CHOREO");
 				std_msgs::Empty empty_msg;
 				eoc_pub.publish(empty_msg);
 				choreo_queue = std::queue<eyes::Generic>();
@@ -346,6 +352,7 @@ int main(int argc, char **argv)
 		}
 		case state::choreo: // potential issue if choreo queue is empty, only possible if choreo stages are not received fast enough following transition from autonomous state
 		{
+			// ROS_ERROR("CHOREO");
 			std_msgs::Char queue_to_lidar_msg;
 			queue_to_lidar_msg.data = 'C';
 			notify_lidar.publish(queue_to_lidar_msg);
@@ -363,7 +370,7 @@ int main(int argc, char **argv)
 				flag_EOC = true;
 				flag_D = true; // <-- exit case, resetting flag_D for next time
 				flag_T = false;
-				ROS_INFO("END OF CHOREO");
+				ROS_ERROR("END OF CHOREO");
 				std_msgs::Empty empty_msg;
 				eoc_pub.publish(empty_msg);
 				choreo_queue = std::queue<eyes::Generic>();
@@ -376,7 +383,7 @@ int main(int argc, char **argv)
 			if (choreo_queue.front().identifier == 'e')
 			{
 				flag_EOC = true;
-				ROS_INFO("END OF CHOREO");
+				ROS_ERROR("END OF CHOREO");
 				std_msgs::Empty empty_msg;
 				eoc_pub.publish(empty_msg);
 				choreo_queue = std::queue<eyes::Generic>();
@@ -388,7 +395,7 @@ int main(int argc, char **argv)
 				std_msgs::String str_msg;
 				str_msg.data = "beep";
 				audio_pub.publish(str_msg);
-				ROS_INFO("BEEP");
+				ROS_ERROR("BEEP");
 				// pop
 				// choreo_queue.pop();
 			}
@@ -399,7 +406,7 @@ int main(int argc, char **argv)
 				std_msgs::String str_msg;
 				str_msg.data = "honk";
 				audio_pub.publish(str_msg);
-				ROS_INFO("HONK");
+				ROS_ERROR("HONK");
 				// pop
 				// choreo_queue.pop();
 			}
@@ -410,7 +417,7 @@ int main(int argc, char **argv)
 				std_msgs::String str_msg;
 				str_msg.data = "batt";
 				audio_pub.publish(str_msg);
-				ROS_INFO("BATT");
+				ROS_ERROR("BATT");
 				// pop
 				// choreo_queue.pop();
 			}
@@ -418,7 +425,7 @@ int main(int argc, char **argv)
 			{
 				flag_EOC = false;
 				// generic_pub.publish(choreo_queue.front());
-				// ROS_INFO("PUBLISHING CHOREO COMMAND");
+				// ROS_ERROR("PUBLISHING CHOREO COMMAND");
 				// duration, replaces wait_for_notification();
 				// if choreo stage uses encoder motors
 				if (choreo_queue.front().timed == false)
@@ -430,16 +437,16 @@ int main(int argc, char **argv)
 						initial_encoder_value = encoder_count_R;
 						generic_pub.publish(choreo_queue.front());
 						// generic_pub.publish(choreo_queue.front());
-						ROS_INFO("STARTING (ENCODER)");
-						ROS_INFO("LEFT SPEED: %d", choreo_queue.front().left_speed);
-						ROS_INFO("RIGHT SPEED: %d", choreo_queue.front().right_speed);
-						ROS_INFO("DURATION: %d", choreo_queue.front().duration);
+						ROS_ERROR("STARTING (ENCODER)");
+						ROS_ERROR("LEFT SPEED: %d", choreo_queue.front().left_speed);
+						ROS_ERROR("RIGHT SPEED: %d", choreo_queue.front().right_speed);
+						ROS_ERROR("DURATION: %d", choreo_queue.front().duration);
 					}
 					else
 					{
 						final_encoder_value = encoder_count_R;
 						int difference = abs(final_encoder_value - initial_encoder_value);
-						// ROS_INFO("ENCODER DIF: %d", difference);
+						// ROS_ERROR("ENCODER DIF: %d", difference);
 						if (difference > choreo_queue.front().duration)
 							flag_D = true;
 					}
@@ -454,16 +461,16 @@ int main(int argc, char **argv)
 						time(&initial_time);
 						generic_pub.publish(choreo_queue.front());
 						// generic_pub.publish(choreo_queue.front());
-						ROS_INFO("STARTING (TIMER)");
-						ROS_INFO("LEFT SPEED: %d", choreo_queue.front().left_speed);
-						ROS_INFO("RIGHT SPEED: %d", choreo_queue.front().right_speed);
-						ROS_INFO("DURATION: %d", choreo_queue.front().duration);
+						ROS_ERROR("STARTING (TIMER)");
+						ROS_ERROR("LEFT SPEED: %d", choreo_queue.front().left_speed);
+						ROS_ERROR("RIGHT SPEED: %d", choreo_queue.front().right_speed);
+						ROS_ERROR("DURATION: %d", choreo_queue.front().duration);
 					}
 					else
 					{
 						time(&final_time);
 						int difference = difftime(final_time, initial_time);
-						// ROS_INFO("TIMER DIF: %f", difference);
+						// ROS_ERROR("TIMER DIF: %f", difference);
 						if (difference > choreo_queue.front().duration)
 							flag_D = true;
 					}
@@ -473,10 +480,10 @@ int main(int argc, char **argv)
 			// state transition logic (WIP)
 			if (flag_D && !flag_EOC)
 			{
-				// ROS_INFO("JUST FINISHED");
-				// ROS_INFO("RIGHT SPEED: %d", choreo_queue.front().right_speed);
+				// ROS_ERROR("JUST FINISHED");
+				// ROS_ERROR("RIGHT SPEED: %d", choreo_queue.front().right_speed);
 				choreo_queue.pop();
-				// ROS_INFO("POP!");
+				// ROS_ERROR("POP!");
 			}
 			if (flag_H)
 			{
@@ -506,6 +513,7 @@ int main(int argc, char **argv)
 		}
 		case state::custom:
 		{
+			// ROS_ERROR("CUSTOM");
 			std_msgs::Char queue_to_lidar_msg;
 			queue_to_lidar_msg.data = 'H';
 			notify_lidar.publish(queue_to_lidar_msg);
@@ -513,10 +521,10 @@ int main(int argc, char **argv)
 			if (flag_SOB)
 			{
 				std_msgs::String to_hub;
-				to_hub.data = "0B";
+				to_hub.data = "B";
 				to_hub.data.push_back(static_cast<char>(chair_broadcast_status::exclude));
 				update_hub_pub.publish(to_hub);
-				ROS_INFO("CHAIR 0 IS EXCLUDED FROM BROADCAST");
+				ROS_ERROR("CHAIR 0 IS EXCLUDED FROM BROADCAST");
 				flag_SOB = false;
 			}
 			if (flag_T)
@@ -526,7 +534,7 @@ int main(int argc, char **argv)
 				choreo_queue = std::queue<eyes::Generic>();
 				custom_queue = std::queue<eyes::Generic>();
 				broadcast_queue = std::queue<eyes::Generic>();
-				ROS_INFO("TOGGLE");
+				ROS_ERROR("TOGGLE");
 				flag_SOB = false;
 				flag_EOB = false;
 			}
@@ -535,22 +543,23 @@ int main(int argc, char **argv)
 				generic_pub.publish(custom_queue.front());
 				// generic_pub.publish(custom_queue.front());
 				custom_queue.pop();
-				ROS_INFO("PUBLISHING CUSTOM COMMAND");
+				ROS_ERROR("PUBLISHING CUSTOM COMMAND");
 			}
 			break;
 		}
 		case state::broadcast:
 		{
+			// ROS_ERROR("BROADCAST");
+
 			std_msgs::Char queue_to_lidar_msg;
 			queue_to_lidar_msg.data = 'B';
 			notify_lidar.publish(queue_to_lidar_msg);
 
-			// ROS_INFO("IN BROADCAST STATE");
 			switch (broadcast_mode)
 			{
 			case broadcast_state::outside:
 			{
-				// ROS_INFO("ARRIVED IN BROADCAST STATE");
+				ROS_ERROR("ARRIVED IN BROADCAST STATE");
 				broadcast_mode = broadcast_state::ready;
 				eyes::Generic stop;
 				stop.identifier = 'b';
@@ -564,20 +573,21 @@ int main(int argc, char **argv)
 				// generic_pub.publish(stop);
 				// TODO: PUBLISH INDICATION THAT CHAIR IS READY TO GO TO INFORM HUB
 				std_msgs::String to_hub;
-				to_hub.data = "0B";
+				to_hub.data = "B";
 				to_hub.data.push_back(static_cast<char>(chair_broadcast_status::ready));
 				update_hub_pub.publish(to_hub);
-				ROS_INFO("CHAIR 0 IS READY");
+				ROS_ERROR("CHAIR 0 IS READY");
 				break;
 			}
 			case broadcast_state::ready: // absorbed performing
 			{
-				// ROS_INFO("AWAITING BROADCAST");
+				// ROS_ERROR("AWAITING BROADCAST");
 				if (flag_B)
 				{
+					// TODO: check if this is actually true -- or if it is just finished?
 					if (broadcast_queue.front().identifier == 'e')
 					{
-						ROS_INFO("LAST STAGE OF BROADCAST");
+						ROS_ERROR("LAST STAGE OF BROADCAST");
 						broadcast_mode = broadcast_state::wait;
 						// safety stop
 						generic_pub.publish(broadcast_queue.front());
@@ -585,10 +595,14 @@ int main(int argc, char **argv)
 						broadcast_queue = std::queue<eyes::Generic>();
 						// TODO: PUBLISH INDICATION THAT CHAIR COMPLETED BROADCAST SUCCESSFULLY
 						std_msgs::String to_hub;
-						to_hub.data = "0B";
+						to_hub.data = "B";
 						to_hub.data.push_back(static_cast<char>(chair_broadcast_status::success));
 						update_hub_pub.publish(to_hub);
-						ROS_INFO("CHAIR 0 SUCCESSFULLY COMPLETED BROADCAST");
+						std_msgs::Empty empty_msg;
+						eoc_pub.publish(empty_msg);
+						flag_EOB = true;
+
+						ROS_ERROR("CHAIR 0 SUCCESSFULLY COMPLETED BROADCAST");
 					}
 					else if (broadcast_queue.front().identifier == 'p')
 					{
@@ -635,7 +649,7 @@ int main(int argc, char **argv)
 							{
 								final_encoder_value = encoder_count_R;
 								int difference = abs(final_encoder_value - initial_encoder_value);
-								ROS_INFO("ENCODER DIF: %d", difference);
+								ROS_ERROR("ENCODER DIF: %d", difference);
 								if (difference > broadcast_queue.front().duration)
 									flag_D = true;
 							}
@@ -650,14 +664,14 @@ int main(int argc, char **argv)
 								time(&initial_time);
 								generic_pub.publish(broadcast_queue.front());
 								// generic_pub.publish(broadcast_queue.front());
-								ROS_INFO("STARTING");
-								ROS_INFO("RIGHT SPEED: %d", broadcast_queue.front().right_speed);
+								ROS_ERROR("STARTING");
+								ROS_ERROR("RIGHT SPEED: %d", broadcast_queue.front().right_speed);
 							}
 							else
 							{
 								time(&final_time);
 								int difference = difftime(final_time, initial_time);
-								// ROS_INFO("TIMER DIF: %f", difference);
+								// ROS_ERROR("TIMER DIF: %f", difference);
 								if (difference > broadcast_queue.front().duration)
 									flag_D = true;
 							}
@@ -666,10 +680,10 @@ int main(int argc, char **argv)
 					// if block should never execute if broadcast_queue is empty
 					if (flag_D && broadcast_mode == broadcast_state::ready)
 					{
-						ROS_INFO("JUST FINISHED");
-						ROS_INFO("RIGHT SPEED: %d", broadcast_queue.front().right_speed);
+						ROS_ERROR("JUST FINISHED");
+						ROS_ERROR("RIGHT SPEED: %d", broadcast_queue.front().right_speed);
 						broadcast_queue.pop();
-						ROS_INFO("POP!");
+						ROS_ERROR("POP!");
 					}
 				}
 				break;
@@ -681,7 +695,7 @@ int main(int argc, char **argv)
 			}
 			default:
 			{
-				ROS_INFO("How did we get here? Broadcast edition");
+				ROS_ERROR("How did we get here? Broadcast edition");
 				break;
 			}
 			}
@@ -696,30 +710,33 @@ int main(int argc, char **argv)
 				flag_EOB = false;
 				flag_D = true; // <-- exit case, resetting flag_D for next time
 				std_msgs::String to_hub;
-				to_hub.data = "0B";
+				to_hub.data = "B";
 				to_hub.data.push_back(static_cast<char>(chair_broadcast_status::exclude));
 				update_hub_pub.publish(to_hub);
-				ROS_INFO("CHAIR 0 IS YANKED FROM BROADCAST");
+				ROS_ERROR("CHAIR 0 IS YANKED FROM BROADCAST");
 			}
 			// TODO: ADD CHECK FOR flag_SOB TO ENABLE SEQUENTIAL BROADCASTS?
 			else if (flag_EOB)
 			{
-				mode = state::autonomous;
 				broadcast_mode = broadcast_state::outside;
 				autonomous_queue = std::queue<eyes::Generic>();
 				choreo_queue = std::queue<eyes::Generic>();
 				custom_queue = std::queue<eyes::Generic>();
 				broadcast_queue = std::queue<eyes::Generic>();
-				ROS_INFO("RESUMING AUTONOMOUS BEHAVIOR");
+				ROS_ERROR("RESUMING AUTONOMOUS BEHAVIOR");
+				std_msgs::Empty empty_msg;
+				eoc_pub.publish(empty_msg);
 				flag_SOB = false;
 				flag_EOB = false;
-				flag_D = true; // <-- exit case, resetting flag_D for next time
+				flag_EOC = true; // If chair was previously in choreo, reset
+				flag_D = true;	 // <-- exit case, resetting flag_D for next time
+				mode = state::autonomous;
 			}
 			break;
 		}
 		default:
 		{
-			ROS_INFO("How did we get here?");
+			ROS_ERROR("How did we get here?");
 			break;
 		}
 		}

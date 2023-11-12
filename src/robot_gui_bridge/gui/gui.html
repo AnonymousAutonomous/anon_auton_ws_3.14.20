@@ -199,6 +199,7 @@
       };
 
       send_test_choreo = function () {
+        console.log("SENDING TEST CHOREO");
         test_choreo.forEach((msg) => {
           var dir = new ROSLIB.Message({
             data: msg,

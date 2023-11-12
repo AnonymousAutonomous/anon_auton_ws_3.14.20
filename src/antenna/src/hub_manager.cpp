@@ -5,7 +5,7 @@
 #include <queue>
 #include <vector>
 
-#define NUMBER_OF_CHAIRS 1
+#define NUMBER_OF_CHAIRS 2
 
 enum class chair_broadcast_status : char
 {
@@ -215,6 +215,12 @@ int main(int argc, char **argv)
 			}
 			if (!transmit_queue.empty())
 			{
+				// ROS_INFO("NUM COMMANDS: %d", transmit_queue.size());
+				// // Wait until entire broadcast is in the queue
+				// if (transmit_queue.back().data == "00Bend")
+				// {
+				// 	mode = state::awaiting_confirmation;
+				// }
 				mode = state::awaiting_confirmation;
 				// also transmit start of broadcast
 				std_msgs::String msg;
@@ -225,6 +231,12 @@ int main(int argc, char **argv)
 		}
 		case state::awaiting_confirmation:
 		{
+			// ROS_INFO("awaiting confirmation");
+
+			// // also transmit start of broadcast
+			// std_msgs::String msg;
+			// msg.data = "00Bstart";
+			// hub_manager_pub.publish(msg);
 			// wait until cbs is ready for all chairs
 			// then transmit until end of broadcast stage
 			while (!all_chairs_are_ready())
@@ -238,8 +250,11 @@ int main(int argc, char **argv)
 				bool break_out = transmit_queue.front().data == "00Bend";
 				hub_manager_pub.publish(transmit_queue.front());
 				transmit_queue.pop();
-				if (break_out)
-					break;
+				// if (break_out)
+				// {
+				// 	mode = state::awaiting_status;
+				// 	break;
+				// }
 			}
 			break;
 		}

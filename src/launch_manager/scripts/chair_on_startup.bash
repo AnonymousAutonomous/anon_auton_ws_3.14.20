@@ -14,6 +14,8 @@ roscore &
 
 until rostopic list; do sleep 1; done
 
+yes | rosclean purge 
+
 cd src/launch_manager/launch/components/
 
 if grep -iq "^antenna_port" ~/anon_auton_ws/src/config_manager/configs/ports/active.yaml; then
