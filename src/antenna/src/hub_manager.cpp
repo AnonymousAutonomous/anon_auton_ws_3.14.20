@@ -5,7 +5,7 @@
 #include <queue>
 #include <vector>
 
-#define NUMBER_OF_CHAIRS 2
+// active_chair_nums :
 
 enum class chair_broadcast_status : char
 {
@@ -33,13 +33,14 @@ struct chair_status
 	// being user-controlled? low battery? surrounded? current command? connection break?
 };
 
-std::vector<chair_status> chair_status_vector(NUMBER_OF_CHAIRS);
+std::vector<int> active_chair_nums;
+std::map<int, chair_status> chair_status_map;
 
 bool all_chairs_are_ready()
 {
-	for (chair_status &status : chair_status_vector)
+	for (const auto &p : chair_status_map)
 	{
-		if (status.cbs != chair_broadcast_status::ready && status.cbs != chair_broadcast_status::exclude)
+		if (p.second.cbs != chair_broadcast_status::ready && p.second.cbs != chair_broadcast_status::exclude)
 		{
 			return false;
 		}
@@ -49,31 +50,31 @@ bool all_chairs_are_ready()
 
 void overwrite_excluded_chairs()
 {
-	for (chair_status &status : chair_status_vector)
+	for (auto &p : chair_status_map)
 	{
-		if (status.cbs == chair_broadcast_status::exclude)
+		if (p.second.cbs == chair_broadcast_status::exclude)
 		{
-			status.cbs = chair_broadcast_status::failure;
+			p.second.cbs = chair_broadcast_status::failure;
 		}
 	}
 }
 
 void overwrite_trapped_chairs()
 {
-	for (chair_status &status : chair_status_vector)
+	for (auto &p : chair_status_map)
 	{
-		if (status.cts == chair_trapped_status::trapped)
+		if (p.second.cts == chair_trapped_status::trapped)
 		{
-			status.cts = chair_trapped_status::not_trapped;
+			p.second.cts = chair_trapped_status::not_trapped;
 		}
 	}
 }
 
 bool all_chairs_are_done()
 {
-	for (chair_status &status : chair_status_vector)
+	for (const auto &p : chair_status_map)
 	{
-		if (status.cbs == chair_broadcast_status::ready)
+		if (p.second.cbs == chair_broadcast_status::ready)
 		{
 			return false;
 		}
@@ -83,9 +84,9 @@ bool all_chairs_are_done()
 
 bool a_chair_is_trapped()
 {
-	for (chair_status &status : chair_status_vector)
+	for (const auto &p : chair_status_map)
 	{
-		if (status.cts == chair_trapped_status::trapped)
+		if (p.second.cts == chair_trapped_status::trapped)
 		{
 			return true;
 		}
@@ -107,8 +108,8 @@ void receive_callback(const std_msgs::String &msg)
 {
 	// update chair status vector
 	// format of str msg is {chair number}{chair status indicator}{new value}
-	int chair_number = msg.data[0] - 48 - 1;
-	ROS_INFO("UPDATING STATUS OF CHAIR %d", chair_number);
+	int chair_number = msg.data[0] - 48;
+	ROS_ERROR("UPDATING STATUS OF CHAIR %d", chair_number);
 
 	char chair_property = msg.data[1];
 	char property_value = msg.data[2];
@@ -117,54 +118,54 @@ void receive_callback(const std_msgs::String &msg)
 	{
 	case 'B':
 	{
-		chair_status_vector[chair_number].cbs = static_cast<chair_broadcast_status>(property_value);
-		if (chair_status_vector[chair_number].cbs == chair_broadcast_status::ready)
+		chair_status_map[chair_number].cbs = static_cast<chair_broadcast_status>(property_value);
+		if (chair_status_map[chair_number].cbs == chair_broadcast_status::ready)
 		{
-			ROS_INFO("CHAIR %d IS READY TO RECEIVE BROADCAST", chair_number);
+			ROS_ERROR("CHAIR %d IS READY TO RECEIVE BROADCAST", chair_number);
 		}
-		if (chair_status_vector[chair_number].cbs == chair_broadcast_status::exclude)
+		if (chair_status_map[chair_number].cbs == chair_broadcast_status::exclude)
 		{
-			ROS_INFO("CHAIR %d IS EXCLUDED FROM THIS BROADCAST", chair_number);
+			ROS_ERROR("CHAIR %d IS EXCLUDED FROM THIS BROADCAST", chair_number);
 		}
-		if (chair_status_vector[chair_number].cbs == chair_broadcast_status::success)
+		if (chair_status_map[chair_number].cbs == chair_broadcast_status::success)
 		{
-			ROS_INFO("CHAIR %d SUCCESSFULLY COMPLETED BROADCAST", chair_number);
+			ROS_ERROR("CHAIR %d SUCCESSFULLY COMPLETED BROADCAST", chair_number);
 		}
-		if (chair_status_vector[chair_number].cbs == chair_broadcast_status::failure)
+		if (chair_status_map[chair_number].cbs == chair_broadcast_status::failure)
 		{
-			ROS_INFO("CHAIR %d FAILED TO COMPLETE BROADCAST", chair_number);
+			ROS_ERROR("CHAIR %d FAILED TO COMPLETE BROADCAST", chair_number);
 		}
 		break;
 	}
 	case 'S':
 	{
-		chair_status_vector[chair_number].css = static_cast<chair_stuck_status>(property_value);
-		if (chair_status_vector[chair_number].css == chair_stuck_status::stuck)
+		chair_status_map[chair_number].css = static_cast<chair_stuck_status>(property_value);
+		if (chair_status_map[chair_number].css == chair_stuck_status::stuck)
 		{
-			ROS_INFO("CHAIR %d IS STUCK", chair_number);
+			ROS_ERROR("CHAIR %d IS STUCK", chair_number);
 		}
-		if (chair_status_vector[chair_number].css == chair_stuck_status::not_stuck)
+		if (chair_status_map[chair_number].css == chair_stuck_status::not_stuck)
 		{
-			ROS_INFO("CHAIR %d IS NOT STUCK", chair_number);
+			ROS_ERROR("CHAIR %d IS NOT STUCK", chair_number);
 		}
 		break;
 	}
 	case 'T':
 	{
-		chair_status_vector[chair_number].cts = static_cast<chair_trapped_status>(property_value);
-		if (chair_status_vector[chair_number].cts == chair_trapped_status::trapped)
+		chair_status_map[chair_number].cts = static_cast<chair_trapped_status>(property_value);
+		if (chair_status_map[chair_number].cts == chair_trapped_status::trapped)
 		{
-			ROS_INFO("CHAIR %d IS TRAPPED", chair_number);
+			ROS_ERROR("CHAIR %d IS TRAPPED", chair_number);
 		}
-		if (chair_status_vector[chair_number].cts == chair_trapped_status::not_trapped)
+		if (chair_status_map[chair_number].cts == chair_trapped_status::not_trapped)
 		{
-			ROS_INFO("CHAIR %d IS NOT TRAPPED", chair_number);
+			ROS_ERROR("CHAIR %d IS NOT TRAPPED", chair_number);
 		}
 		break;
 	}
 	default:
 	{
-		ROS_INFO("INVALID CHAIR PROPERTY");
+		ROS_ERROR("INVALID CHAIR PROPERTY");
 		break;
 	}
 	}
@@ -182,6 +183,14 @@ int main(int argc, char **argv)
 	// initialize node and node handle
 	ros::init(argc, argv, "hub_manager");
 	ros::NodeHandle nh;
+
+	// initialize chair map
+	nh.getParam("active_chair_nums", active_chair_nums);
+
+	for (int num : active_chair_nums)
+	{
+		chair_status_map[num] = chair_status();
+	}
 
 	// initialize spinner
 	ros::AsyncSpinner spinner(0);
@@ -215,7 +224,7 @@ int main(int argc, char **argv)
 			}
 			if (!transmit_queue.empty())
 			{
-				// ROS_INFO("NUM COMMANDS: %d", transmit_queue.size());
+				// ROS_ERROR("NUM COMMANDS: %d", transmit_queue.size());
 				// // Wait until entire broadcast is in the queue
 				// if (transmit_queue.back().data == "00Bend")
 				// {
@@ -231,7 +240,7 @@ int main(int argc, char **argv)
 		}
 		case state::awaiting_confirmation:
 		{
-			// ROS_INFO("awaiting confirmation");
+			// ROS_ERROR("awaiting confirmation");
 
 			// // also transmit start of broadcast
 			// std_msgs::String msg;
@@ -241,9 +250,11 @@ int main(int argc, char **argv)
 			// then transmit until end of broadcast stage
 			while (!all_chairs_are_ready())
 			{
-				// pass
+				// std_msgs::String msg;
+				// msg.data = "00Bstart";
+				// hub_manager_pub.publish(msg);
 			}
-			ROS_INFO("ALL CHAIRS ARE READY");
+			ROS_ERROR("ALL CHAIRS ARE READY");
 			mode = state::awaiting_status;
 			while (!transmit_queue.empty())
 			{
@@ -267,19 +278,19 @@ int main(int argc, char **argv)
 			{
 				// pass
 			}
-			ROS_INFO("ALL CHAIRS ARE DONE");
+			ROS_ERROR("ALL CHAIRS ARE DONE");
 			mode = state::outside;
 			std_msgs::String msg;
 			msg.data = "00Bfinish";
 			hub_manager_pub.publish(msg);
-			ROS_INFO("BROADCAST IS FINISHED");
+			ROS_ERROR("BROADCAST IS FINISHED");
 			overwrite_trapped_chairs();
 			overwrite_excluded_chairs();
 			break;
 		}
 		default:
 		{
-			ROS_INFO("How did we get here? Hub manager edition");
+			ROS_ERROR("How did we get here? Hub manager edition");
 			break;
 		}
 		}
