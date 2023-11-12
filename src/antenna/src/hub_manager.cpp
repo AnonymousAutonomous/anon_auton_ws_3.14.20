@@ -107,6 +107,8 @@ std::queue<std_msgs::String> transmit_queue;
 
 void receive_callback(const std_msgs::String &msg)
 {
+	ROS_ERROR("hub manager callback for: %s", msg.data.c_str());
+
 	// ignore malformed messages and heartbeats
 	if (strlen(msg.data.c_str()) != 3)
 	{
