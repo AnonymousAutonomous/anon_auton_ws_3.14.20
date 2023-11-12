@@ -5,7 +5,7 @@
 #include <queue>
 #include <vector>
 
-#define NUMBER_OF_CHAIRS 2
+// active_chair_nums :
 
 enum class chair_broadcast_status : char
 {
@@ -33,7 +33,8 @@ struct chair_status
 	// being user-controlled? low battery? surrounded? current command? connection break?
 };
 
-std::vector<chair_status> chair_status_vector(NUMBER_OF_CHAIRS);
+std::vector<int> active_chair_nums;
+std::map<int, chair_status> chair_status_vector;
 
 bool all_chairs_are_ready()
 {
@@ -182,6 +183,14 @@ int main(int argc, char **argv)
 	// initialize node and node handle
 	ros::init(argc, argv, "hub_manager");
 	ros::NodeHandle nh;
+
+	// initialize chair map
+	nh.getParam("active_chair_nums", active_chair_nums);
+
+	for (int num : active_chair_nums)
+	{
+		chair_status_vector[num] = chair_status();
+	}
 
 	// initialize spinner
 	ros::AsyncSpinner spinner(0);
