@@ -115,9 +115,11 @@ void receive_callback(const std_msgs::String &msg)
 		return;
 	}
 
+	std::string stringmsg = std::string(msg.data.c_str());
+
 	// update chair status vector
 	// format of str msg is {chair number}{chair status indicator}{new value}
-	int chair_number = msg.data[0] - 48;
+	int chair_number = stringmsg[0] - 48;
 
 	// return early if chair number isn't active
 	// TODO: should we instead just check that it is a real number?
@@ -126,7 +128,7 @@ void receive_callback(const std_msgs::String &msg)
 		return;
 	}
 
-	char chair_property = msg.data[1];
+	char chair_property = stringmsg[1];
 
 	// ignore malformed
 	if (!(chair_property == 'B' || chair_property == 'S' || chair_property == 'T'))
@@ -134,7 +136,7 @@ void receive_callback(const std_msgs::String &msg)
 		return;
 	}
 
-	char property_value = msg.data[2];
+	char property_value = stringmsg[2];
 
 	ROS_ERROR("UPDATING STATUS OF CHAIR %d to %s %s", chair_number, chair_property, property_value);
 
