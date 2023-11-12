@@ -250,9 +250,9 @@ int main(int argc, char **argv)
 			// then transmit until end of broadcast stage
 			while (!all_chairs_are_ready())
 			{
-				std_msgs::String msg;
-				msg.data = "00Bstart";
-				hub_manager_pub.publish(msg);
+				// std_msgs::String msg;
+				// msg.data = "00Bstart";
+				// hub_manager_pub.publish(msg);
 			}
 			ROS_ERROR("ALL CHAIRS ARE READY");
 			mode = state::awaiting_status;
