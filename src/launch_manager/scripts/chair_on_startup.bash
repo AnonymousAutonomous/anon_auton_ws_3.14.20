@@ -14,7 +14,7 @@ roscore &
 
 until rostopic list; do sleep 1; done
 
-rosclean purge 
+yes | rosclean purge 
 
 cd src/launch_manager/launch/components/
 
