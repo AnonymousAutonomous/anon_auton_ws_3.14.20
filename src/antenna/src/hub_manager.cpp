@@ -40,7 +40,7 @@ bool all_chairs_are_ready()
 {
 	for (const auto &p : chair_status_map)
 	{
-		if (p.second.status.cbs != chair_broadcast_status::ready && p.second.status.cbs != chair_broadcast_status::exclude)
+		if (p.second.cbs != chair_broadcast_status::ready && p.second.cbs != chair_broadcast_status::exclude)
 		{
 			return false;
 		}
@@ -52,9 +52,9 @@ void overwrite_excluded_chairs()
 {
 	for (const auto &p : chair_status_map)
 	{
-		if (p.second.status.cbs == chair_broadcast_status::exclude)
+		if (p.second.cbs == chair_broadcast_status::exclude)
 		{
-			p.second.status.cbs = chair_broadcast_status::failure;
+			p.second.cbs = chair_broadcast_status::failure;
 		}
 	}
 }
@@ -63,9 +63,9 @@ void overwrite_trapped_chairs()
 {
 	for (const auto &p : chair_status_map)
 	{
-		if (p.second.status.cts == chair_trapped_status::trapped)
+		if (p.second.cts == chair_trapped_status::trapped)
 		{
-			p.second.status.cts = chair_trapped_status::not_trapped;
+			p.second.cts = chair_trapped_status::not_trapped;
 		}
 	}
 }
@@ -74,7 +74,7 @@ bool all_chairs_are_done()
 {
 	for (const auto &p : chair_status_map)
 	{
-		if (p.second.status.cbs == chair_broadcast_status::ready)
+		if (p.second.cbs == chair_broadcast_status::ready)
 		{
 			return false;
 		}
@@ -86,7 +86,7 @@ bool a_chair_is_trapped()
 {
 	for (const auto &p : chair_status_map)
 	{
-		if (p.second.status.cts == chair_trapped_status::trapped)
+		if (p.second.cts == chair_trapped_status::trapped)
 		{
 			return true;
 		}
