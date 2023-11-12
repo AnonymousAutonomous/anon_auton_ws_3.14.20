@@ -13,9 +13,29 @@
         url: "ws://localhost:9090",
       });
 
-      var chairs = ["1", "2", "3", "4"];
+      // ros.getParams(function(params) {
+      //   console.log(params);
+      // });
+
+      var active_chair_nums = new ROSLIB.Param({
+        ros: ros,
+        name: "active_chair_nums",
+      });
+
+      var chairs = [];
       var live_status = new Map();
-      chairs.map((chair) => live_status.set(chair, null));
+
+      active_chair_nums.get(function (value) {
+        console.log("GETTING ACTIVE CHAIRS!", value);
+        chairs = value.map((v) => String(v));
+        chairs.map((chair) => live_status.set(chair, null));
+
+        document.getElementById("num_chairs").innerHTML =
+          String(chairs.length) + " chair" + (chairs.length != 1 ? "s" : "");
+        document.getElementById("active_chair_list").innerHTML =
+          chairs.toString();
+      });
+      // var chairs = ["1", "2", "3", "4"];
       console.log(live_status);
 
       var test_choreo = [
@@ -554,6 +574,10 @@
     <h1>Anonymous Autonomous</h1>
     <p>Connection status: <span id="status">NOT CONNECTED</span></p>
     <p>Last chair status received: <span id="msg"></span></p>
+    <p>
+      <span id="num_chairs">0 chairs</span> active:
+      <span id="active_chair_list"></span>
+    </p>
     <div class="screen" id="live" style="display: none">
       <button onclick="stop('0')" class="stop">STOP ALL</button>
       <button onclick="toggle('0')" class="auto">AUTO ALL</button>
