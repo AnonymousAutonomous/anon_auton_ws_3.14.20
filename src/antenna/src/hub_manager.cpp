@@ -172,7 +172,7 @@ void receive_callback(const std_msgs::String &msg)
 	}
 	default:
 	{
-		ROS_ERROR("INVALID CHAIR PROPERTY");
+		ROS_ERROR("INVALID CHAIR PROPERTY %s", chair_property);
 		break;
 	}
 	}
@@ -219,6 +219,7 @@ int main(int argc, char **argv)
 		{
 			if (a_chair_is_trapped())
 			{
+				ROS_ERROR("A chair is trapped!");
 				std_msgs::String msg;
 				msg.data = "00Bf2.5r2.5t5";
 				transmit_queue = std::queue<std_msgs::String>();
