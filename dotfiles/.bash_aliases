@@ -16,3 +16,7 @@ alias handwritten="setup && rm -rf /tmp/handwritten-input && mkfifo /tmp/handwri
 alias ready="setup && rostopic pub -1 from_chair std_msgs/String Br"
 alias success="setup && rostopic pub -1 from_chair std_msgs/String Bs"
 alias fail="setup && rostopic pub -1 from_chair std_msgs/String Bf"
+
+# Hub
+alias cutserver="kill $(lsof -t -i:9090)"
+alias hub="setup && ~/anon_auton_ws/src/hub/scripts/on_startup.sh"
