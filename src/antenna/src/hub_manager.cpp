@@ -34,13 +34,13 @@ struct chair_status
 };
 
 std::vector<int> active_chair_nums;
-std::map<int, chair_status> chair_status_vector;
+std::map<int, chair_status> chair_status_map;
 
 bool all_chairs_are_ready()
 {
-	for (chair_status &status : chair_status_vector)
+	for (const auto &p : chair_status_map)
 	{
-		if (status.cbs != chair_broadcast_status::ready && status.cbs != chair_broadcast_status::exclude)
+		if (p.second.status.cbs != chair_broadcast_status::ready && p.second.status.cbs != chair_broadcast_status::exclude)
 		{
 			return false;
 		}
@@ -50,31 +50,31 @@ bool all_chairs_are_ready()
 
 void overwrite_excluded_chairs()
 {
-	for (chair_status &status : chair_status_vector)
+	for (const auto &p : chair_status_map)
 	{
-		if (status.cbs == chair_broadcast_status::exclude)
+		if (p.second.status.cbs == chair_broadcast_status::exclude)
 		{
-			status.cbs = chair_broadcast_status::failure;
+			p.second.status.cbs = chair_broadcast_status::failure;
 		}
 	}
 }
 
 void overwrite_trapped_chairs()
 {
-	for (chair_status &status : chair_status_vector)
+	for (const auto &p : chair_status_map)
 	{
-		if (status.cts == chair_trapped_status::trapped)
+		if (p.second.status.cts == chair_trapped_status::trapped)
 		{
-			status.cts = chair_trapped_status::not_trapped;
+			p.second.status.cts = chair_trapped_status::not_trapped;
 		}
 	}
 }
 
 bool all_chairs_are_done()
 {
-	for (chair_status &status : chair_status_vector)
+	for (const auto &p : chair_status_map)
 	{
-		if (status.cbs == chair_broadcast_status::ready)
+		if (p.second.status.cbs == chair_broadcast_status::ready)
 		{
 			return false;
 		}
@@ -84,9 +84,9 @@ bool all_chairs_are_done()
 
 bool a_chair_is_trapped()
 {
-	for (chair_status &status : chair_status_vector)
+	for (const auto &p : chair_status_map)
 	{
-		if (status.cts == chair_trapped_status::trapped)
+		if (p.second.status.cts == chair_trapped_status::trapped)
 		{
 			return true;
 		}
@@ -118,20 +118,20 @@ void receive_callback(const std_msgs::String &msg)
 	{
 	case 'B':
 	{
-		chair_status_vector[chair_number].cbs = static_cast<chair_broadcast_status>(property_value);
-		if (chair_status_vector[chair_number].cbs == chair_broadcast_status::ready)
+		chair_status_map[chair_number].cbs = static_cast<chair_broadcast_status>(property_value);
+		if (chair_status_map[chair_number].cbs == chair_broadcast_status::ready)
 		{
 			ROS_INFO("CHAIR %d IS READY TO RECEIVE BROADCAST", chair_number);
 		}
-		if (chair_status_vector[chair_number].cbs == chair_broadcast_status::exclude)
+		if (chair_status_map[chair_number].cbs == chair_broadcast_status::exclude)
 		{
 			ROS_INFO("CHAIR %d IS EXCLUDED FROM THIS BROADCAST", chair_number);
 		}
-		if (chair_status_vector[chair_number].cbs == chair_broadcast_status::success)
+		if (chair_status_map[chair_number].cbs == chair_broadcast_status::success)
 		{
 			ROS_INFO("CHAIR %d SUCCESSFULLY COMPLETED BROADCAST", chair_number);
 		}
-		if (chair_status_vector[chair_number].cbs == chair_broadcast_status::failure)
+		if (chair_status_map[chair_number].cbs == chair_broadcast_status::failure)
 		{
 			ROS_INFO("CHAIR %d FAILED TO COMPLETE BROADCAST", chair_number);
 		}
@@ -139,12 +139,12 @@ void receive_callback(const std_msgs::String &msg)
 	}
 	case 'S':
 	{
-		chair_status_vector[chair_number].css = static_cast<chair_stuck_status>(property_value);
-		if (chair_status_vector[chair_number].css == chair_stuck_status::stuck)
+		chair_status_map[chair_number].css = static_cast<chair_stuck_status>(property_value);
+		if (chair_status_map[chair_number].css == chair_stuck_status::stuck)
 		{
 			ROS_INFO("CHAIR %d IS STUCK", chair_number);
 		}
-		if (chair_status_vector[chair_number].css == chair_stuck_status::not_stuck)
+		if (chair_status_map[chair_number].css == chair_stuck_status::not_stuck)
 		{
 			ROS_INFO("CHAIR %d IS NOT STUCK", chair_number);
 		}
@@ -152,12 +152,12 @@ void receive_callback(const std_msgs::String &msg)
 	}
 	case 'T':
 	{
-		chair_status_vector[chair_number].cts = static_cast<chair_trapped_status>(property_value);
-		if (chair_status_vector[chair_number].cts == chair_trapped_status::trapped)
+		chair_status_map[chair_number].cts = static_cast<chair_trapped_status>(property_value);
+		if (chair_status_map[chair_number].cts == chair_trapped_status::trapped)
 		{
 			ROS_INFO("CHAIR %d IS TRAPPED", chair_number);
 		}
-		if (chair_status_vector[chair_number].cts == chair_trapped_status::not_trapped)
+		if (chair_status_map[chair_number].cts == chair_trapped_status::not_trapped)
 		{
 			ROS_INFO("CHAIR %d IS NOT TRAPPED", chair_number);
 		}
@@ -189,7 +189,7 @@ int main(int argc, char **argv)
 
 	for (int num : active_chair_nums)
 	{
-		chair_status_vector[num] = chair_status();
+		chair_status_map[num] = chair_status();
 	}
 
 	// initialize spinner
