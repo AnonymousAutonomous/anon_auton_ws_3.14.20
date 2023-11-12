@@ -87,6 +87,10 @@
           return "SUCCESS";
         } else if (status == "f") {
           return "FAILURE";
+        } else if (status == "t") {
+          return "TRAPPED";
+        } else if (status == "u") {
+          return "STUCK";
         } else if (status == "o" || status == null) {
           return "OFFLINE";
         } else {

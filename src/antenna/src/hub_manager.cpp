@@ -17,7 +17,7 @@ enum class chair_broadcast_status : char
 };
 enum class chair_stuck_status : char
 {
-	stuck = 's',
+	stuck = 'u',
 	not_stuck = 'n'
 };
 enum class chair_trapped_status : char

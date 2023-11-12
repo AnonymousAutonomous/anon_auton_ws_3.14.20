@@ -74,6 +74,14 @@
     background-color: red;
 }
 
+.t {
+    background-color: orange;
+}
+
+.u {
+    background-color: magenta;
+}
+
 .handwritten_form {
     width: 100%;
     display: flex;
