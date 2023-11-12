@@ -4,6 +4,7 @@
 #include <ros/spinner.h>
 #include <queue>
 #include <vector>
+#include <algorithm>
 
 // active_chair_nums :
 
@@ -116,10 +117,17 @@ void receive_callback(const std_msgs::String &msg)
 	// format of str msg is {chair number}{chair status indicator}{new value}
 	int chair_number = msg.data[0] - 48;
 
+	// return early if chair number isn't active
+	// TODO: should we instead just check that it is a real number?
+	if (std::find(active_chair_nums.begin(), active_chair_nums.end(), chair_number) == active_chair_nums.end())
+	{
+		return;
+	}
+
 	char chair_property = msg.data[1];
 	char property_value = msg.data[2];
 
-	ROS_ERROR("UPDATING STATUS OF CHAIR %d", chair_number);
+	ROS_ERROR("UPDATING STATUS OF CHAIR %d to %s %s", chair_number, chair_property, property_value);
 
 	switch (chair_property)
 	{
