@@ -117,6 +117,8 @@ void receive_callback(const std_msgs::String &msg)
 
 	std::string stringmsg = std::string(msg.data.c_str());
 
+	ROS_ERROR("getting chair number");
+
 	// update chair status vector
 	// format of str msg is {chair number}{chair status indicator}{new value}
 	int chair_number = stringmsg[0] - 48;
@@ -128,6 +130,8 @@ void receive_callback(const std_msgs::String &msg)
 		return;
 	}
 
+	ROS_ERROR("getting chair property");
+
 	char chair_property = stringmsg[1];
 
 	// ignore malformed
@@ -135,6 +139,8 @@ void receive_callback(const std_msgs::String &msg)
 	{
 		return;
 	}
+
+	ROS_ERROR("getting property value");
 
 	char property_value = stringmsg[2];
 
