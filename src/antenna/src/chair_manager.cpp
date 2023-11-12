@@ -76,7 +76,7 @@ enum class chair_broadcast_status : char
 // enum class chair_trapped_status : char {trapped, not_trapped};
 
 ros::Publisher chair_manager_pub;
-ros::Publisher test_pub;
+ros::Publisher from_chair_pub;
 
 void handle_start()
 {
@@ -208,30 +208,40 @@ void receive_callback(const std_msgs::String &msg)
 	}
 }
 
+void onHeartbeat()
+{
+	std_msgs::String msg;
+	msg.data = 'h'; // heartbeat!
+	from_chair_pub.publish(msg);
+}
+
 int main(int argc, char **argv)
 {
 	// initialize node and node handle
 	ros::init(argc, argv, "chair_manager");
 	ros::NodeHandle nh;
 
-	// initialize spinner
-	ros::AsyncSpinner spinner(0);
-	spinner.start();
-
 	// initialize subscribers
 	ros::Subscriber sub = nh.subscribe("from_chair_receiver", 1000, receive_callback);
 
 	// initialize publishers
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
-	test_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
+	from_chair_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 
-	ros::Rate delay_rate(5); // 5 cycles per second
+	ros::Timer heartbeat = nh.createTimer(ros::Duration(0.1), onHeartbeat);
+	// ros::Rate delay_rate(5); // 5 cycles per second
 
-	while (ros::ok())
-	{
-		std_msgs::String msg;
-		msg.data = 'h'; // heartbeat!
-		test_pub.publish(msg);
-		delay_rate.sleep(); // runs out duration is remaining
-	}
+	// initialize spinner
+	ros::AsyncSpinner spinner(0);
+	spinner.start();
+	ros::waitForShutdown();
+
+	// while (ros::ok())
+	// {
+	// 	std_msgs::String msg;
+	// 	msg.data = 'h'; // heartbeat!
+	// 	from_chair_pub.publish(msg);
+	// 	delay_rate.sleep(); // runs out duration is remaining
+	// 	spin.once()
+	// }
 }
