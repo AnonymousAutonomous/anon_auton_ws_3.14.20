@@ -50,7 +50,7 @@ bool all_chairs_are_ready()
 
 void overwrite_excluded_chairs()
 {
-	for (const auto &p : chair_status_map)
+	for (auto &p : chair_status_map)
 	{
 		if (p.second.cbs == chair_broadcast_status::exclude)
 		{
@@ -61,7 +61,7 @@ void overwrite_excluded_chairs()
 
 void overwrite_trapped_chairs()
 {
-	for (const auto &p : chair_status_map)
+	for (auto &p : chair_status_map)
 	{
 		if (p.second.cts == chair_trapped_status::trapped)
 		{
