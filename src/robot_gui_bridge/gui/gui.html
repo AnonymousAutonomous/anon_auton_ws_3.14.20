@@ -107,12 +107,20 @@
         document.getElementById("msg").innerHTML = m.data;
         console.log(m);
         if (
+          // broadcast
           m.data.length == 3 &&
           chairs.includes(m.data[0]) &&
           m.data[1] == "B"
         ) {
           live_status.set(m.data[0], m.data[2]);
           updateChairStatus(m.data[0], m.data[2]);
+        } else if (
+          // heartbeat
+          m.data.length == 2 &&
+          chairs.includes(m.data[0]) &&
+          m.data[1] == "h"
+        ) {
+          updateChairStatus(m.data[0], m.data[1]);
         }
         // image
         if (m.data[1] == "i") {
