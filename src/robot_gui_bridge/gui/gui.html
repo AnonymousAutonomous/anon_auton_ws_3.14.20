@@ -79,6 +79,8 @@
       getTextForStatus = function (status) {
         if (status == "r") {
           return "READY";
+        } else if (status == "h") {
+          return "HEARTBEAT";
         } else if (status == "e") {
           return "EXCLUDE";
         } else if (status == "s") {
@@ -102,11 +104,15 @@
       }
 
       txt_listener.subscribe(function (m) {
+        document.getElementById("msg").innerHTML = m.data;
         // console.log(m, m.length, chairs.includes(m.data[0]));
-        if (m.data.length == 2 && chairs.includes(m.data[0])) {
-          live_status.set(m.data[0], m.data[1]);
-          document.getElementById("msg").innerHTML = m.data;
-          updateChairStatus(m.data[0], m.data[1]);
+        if (
+          m.data.length == 3 &&
+          chairs.includes(m.data[0]) &&
+          m.data[1] == "B"
+        ) {
+          live_status.set(m.data[0], m.data[2]);
+          updateChairStatus(m.data[0], m.data[2]);
         }
         // image
         if (m.data[1] == "i") {
