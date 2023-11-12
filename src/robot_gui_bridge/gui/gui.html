@@ -105,7 +105,7 @@
 
       txt_listener.subscribe(function (m) {
         document.getElementById("msg").innerHTML = m.data;
-        // console.log(m, m.length, chairs.includes(m.data[0]));
+        console.log(m);
         if (
           m.data.length == 3 &&
           chairs.includes(m.data[0]) &&
