@@ -6,7 +6,9 @@
     <script type="text/javascript" src="roslib.min.js"></script>
     <script type="text/javascript" src="js-yaml.min.js"></script>
     <script type="text/javascript" src="FileSaver.js"></script>
+    <script type="text/javascript" src="jsoneditor.min.js"></script>
     <link rel="stylesheet" type="text/css" href="./index.css" />
+    <link rel="stylesheet" type="text/css" href="./jsoneditor.min.css" />
 
     <script type="text/javascript" type="text/javascript" defer>
       var ros = new ROSLIB.Ros({
@@ -580,6 +582,274 @@
           setSideWidth(sideWidth);
           setTopWidth(topWidth);
         };
+
+        const jsonSchema = {
+          $schema: "https://json-schema.org/draft/2020-12/schema",
+          $id: "https://json-schema.org/draft/2020-12/schema",
+          title: "Pre-loaded Commands",
+          description:
+            "Handwritten / Autonomous commands and their associated speeds.",
+          type: "object",
+          properties: {
+            handwritten: {
+              description: "Handwritten commands",
+              type: "object",
+              properties: {
+                left: {
+                  type: "string",
+                },
+                right: {
+                  type: "string",
+                },
+                fwd: {
+                  type: "string",
+                },
+                ffwd: {
+                  type: "string",
+                },
+                fwdl: {
+                  type: "string",
+                },
+                fwdr: {
+                  type: "string",
+                },
+                bwd: {
+                  type: "string",
+                },
+                fbwd: {
+                  type: "string",
+                },
+                bwdl: {
+                  type: "string",
+                },
+                bwdr: {
+                  type: "string",
+                },
+                pivotl: {
+                  type: "string",
+                },
+                pivotr: {
+                  type: "string",
+                },
+                stop: {
+                  type: "string",
+                },
+                toggle: {
+                  type: "string",
+                },
+              },
+              required: [
+                "left",
+                "right",
+                "fwd",
+                "ffwd",
+                "fwdl",
+                "fwdr",
+                "bwd",
+                "fbwd",
+                "bwdl",
+                "bwdr",
+                "pivotl",
+                "pivotr",
+                "stop",
+                "toggle",
+              ],
+            },
+            autonomous: {
+              description: "Autonomous commands",
+              type: "object",
+              properties: {
+                RREVERSE: {
+                  type: "string",
+                },
+                LREVERSE: {
+                  type: "string",
+                },
+                LCW: {
+                  type: "string",
+                },
+                RCW: {
+                  type: "string",
+                },
+                SPIN: {
+                  type: "string",
+                },
+                LCP: {
+                  type: "string",
+                },
+                RCP: {
+                  type: "string",
+                },
+                STOP: {
+                  type: "string",
+                },
+                PIVOTR: {
+                  type: "string",
+                },
+                PIVOTL: {
+                  type: "string",
+                },
+                FPIVOTR: {
+                  type: "string",
+                },
+                FPIVOTL: {
+                  type: "string",
+                },
+                VEERR: {
+                  type: "string",
+                },
+                VEERL: {
+                  type: "string",
+                },
+                FWD: {
+                  type: "string",
+                },
+                BWD: {
+                  type: "string",
+                },
+                FFWD: {
+                  type: "string",
+                },
+                FBWD: {
+                  type: "string",
+                },
+                SLIGHTR: {
+                  type: "string",
+                },
+                SLIGHTL: {
+                  type: "string",
+                },
+                SPOOK: {
+                  type: "string",
+                },
+                GO: {
+                  type: "string",
+                },
+              },
+              required: [
+                "RREVERSE",
+                "LREVERSE",
+                "LCW",
+                "RCW",
+                "SPIN",
+                "LCP",
+                "RCP",
+                "STOP",
+                "PIVOTR",
+                "PIVOTL",
+                "FPIVOTR",
+                "FPIVOTL",
+                "VEERR",
+                "VEERL",
+                "FWD",
+                "BWD",
+                "FFWD",
+                "FBWD",
+                "SLIGHTR",
+                "SLIGHTL",
+                "SPOOK",
+                "GO",
+              ],
+            },
+          },
+        };
+
+        // create the editor
+        const container = document.getElementById("jsoneditor");
+        const options = {
+          schema: jsonSchema,
+          mode: "form",
+          onValidate: function (json) {
+            // rules:
+            // - team, names, and ages must be filled in and be of correct type
+            // - a team must have 4 members
+            // - at lease one member of the team must be adult
+            const errors = [];
+
+            if (json && !json.handwritten) {
+              errors.push({
+                path: ["handwritten"],
+                message: "Handwritten commands must be specified",
+              });
+            }
+            if (json && !json.autonomous) {
+              errors.push({
+                path: ["autonomous"],
+                message: "Autonomous commands must be specified",
+              });
+            }
+            if (json && json.handwritten) {
+              // check whether each team member has name and age filled in correctly
+              json.handwritten.properties.forEach(function (cmd, index) {
+                if (typeof cmd !== "string") {
+                  errors.push({
+                    path: ["cmd", index],
+                    message: "Command must be a string",
+                  });
+                }
+                if (cmd[0] != "0" || cmd[1] != "H") {
+                  errors.push({
+                    path: ["cmd", index],
+                    message: 'Handwritten command must begin with "0H"',
+                  });
+                }
+              });
+            }
+
+            return errors;
+          },
+        };
+        const editor = new JSONEditor(container, options);
+
+        // set json
+        const initialJson = {
+          handwritten: {
+            left: "0Hf0.0f3.0",
+            right: "0Hf3.0f0.0",
+            fwd: "0Hf2.0f2.0",
+            ffwd: "0Hf3.0f3.0",
+            fwdl: "0Hf1.5f3.0",
+            fwdr: "0Hf3.0f1.5",
+            bwd: "0Hr2.0r2.0",
+            fbwd: "0Hr3.0r3.0",
+            bwdl: "0Hr1.5r3.0",
+            bwdr: "0Hr3.0r1.5",
+            pivotl: "0Hr2.5f2.5",
+            pivotr: "0Hf2.5r2.5",
+            stop: "0Hf0.0f0.0",
+            toggle: "0Htoggle",
+          },
+          autonomous: {
+            RREVERSE: "ACD",
+            LREVERSE: "ACE",
+            LCW: "ACF",
+            RCW: "ACG",
+            SPIN: "ACH",
+            LCP: "BCI",
+            RCP: "BCJ",
+            STOP: "CAf0.0f0.0",
+            PIVOTR: "DAf2.5r2.5",
+            PIVOTL: "DAr2.5f2.5",
+            FPIVOTR: "DAf3.0r3.0",
+            FPIVOTL: "DAr3.0f3.0",
+            VEERR: "DAf3.0f1.5",
+            VEERL: "DAf1.5f3.0",
+            FWD: "DAf1.5f1.5",
+            BWD: "DAr1.5r1.5",
+            FFWD: "DAf2.0f2.0",
+            FBWD: "DAr2.0r2.0",
+            SLIGHTR: "DAf3.0f2.0",
+            SLIGHTL: "DAf2.0f3.0",
+            SPOOK: "EAf4.0f4.0",
+            GO: "FAf1.5f1.5",
+          },
+        };
+        editor.set(initialJson);
+        editor.expandAll();
+
+        // get json
+        const updatedJson = editor.get();
+        console.log(updatedJson);
       };
     </script>
   </head>
@@ -907,5 +1177,6 @@
         switch to live mode
       </button>
     </div>
+    <div id="jsoneditor" style="width: 400px; height: 400px"></div>
   </body>
 </html>
