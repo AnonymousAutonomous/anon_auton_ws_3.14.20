@@ -43,13 +43,13 @@ enum class chair_broadcast_status : char
 };
 enum class chair_stuck_status : char
 {
-	stuck,
-	not_stuck
+	stuck = 'u',
+	not_stuck = 'n'
 };
 enum class chair_trapped_status : char
 {
-	trapped,
-	not_trapped
+	trapped = 't',
+	not_trapped = 'm'
 };
 
 #define flag_A !autonomous_queue.empty()
