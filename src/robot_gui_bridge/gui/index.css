@@ -74,6 +74,16 @@
     background-color: red;
 }
 
+.sidebyside {
+    display: flex;
+    flex-direction: row;
+}
+
+#cmd_config_form {
+    display: flex;
+    flex-direction: row;
+}
+
 .handwritten_form {
     width: 100%;
     display: flex;
