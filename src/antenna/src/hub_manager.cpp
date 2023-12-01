@@ -227,6 +227,7 @@ void broadcast_callback(const std_msgs::String &msg)
 	ROS_ERROR("BROADCAST CALLBACK FOR %s", msg.data.c_str());
 	if (msg.data.c_str() == "clear")
 	{
+		ROS_ERROR("CLEEEEEEEEEEEEEEEEEEAR");
 		clean_up_after_broadcast_done();
 	}
 	transmit_queue.push(msg);
