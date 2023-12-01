@@ -39,6 +39,7 @@ std::map<int, chair_status> chair_status_map;
 
 ros::Time startTime;
 ros::Duration waitDurationBeforeCheckingAgain(1.0); // 1.0 seconds
+ros::Publisher hub_manager_pub;
 
 bool all_chairs_are_ready()
 {
@@ -228,8 +229,6 @@ void clean_up_after_broadcast_done()
 	overwrite_trapped_chairs();
 	overwrite_excluded_chairs();
 }
-
-ros::Publisher hub_manager_pub;
 
 int main(int argc, char **argv)
 {
