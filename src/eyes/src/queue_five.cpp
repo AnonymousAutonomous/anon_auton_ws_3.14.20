@@ -550,6 +550,15 @@ int main(int argc, char **argv)
 		case state::broadcast:
 		{
 			// ROS_ERROR("BROADCAST");
+			if (flag_SOB)
+			{
+				// If asked to say "ready" again, say "ready" again
+				std_msgs::String to_hub;
+				to_hub.data = "B";
+				to_hub.data.push_back(static_cast<char>(chair_broadcast_status::ready));
+				update_hub_pub.publish(to_hub);
+				flag_SOB = false;
+			}
 
 			std_msgs::Char queue_to_lidar_msg;
 			queue_to_lidar_msg.data = 'B';
