@@ -57,7 +57,7 @@ void overwrite_excluded_chairs()
 {
 	for (auto &p : chair_status_map)
 	{
-		if (p.second.cbs == chair_broadcast_status::exclude)
+		if (p.second.cbs != chair_broadcast_status::success)
 		{
 			p.second.cbs = chair_broadcast_status::failure;
 		}
