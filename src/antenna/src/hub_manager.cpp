@@ -37,6 +37,9 @@ struct chair_status
 std::vector<int> active_chair_nums;
 std::map<int, chair_status> chair_status_map;
 
+ros::Time startTime;
+ros::Duration waitDurationBeforeCheckingAgain(1.0); // 1.0 seconds
+
 bool all_chairs_are_ready()
 {
 	for (const auto &p : chair_status_map)
@@ -270,6 +273,7 @@ int main(int argc, char **argv)
 				std_msgs::String msg;
 				msg.data = "00Bstart";
 				hub_manager_pub.publish(msg);
+				startTime = ros::Time::now();
 			}
 			break;
 		}
@@ -283,11 +287,17 @@ int main(int argc, char **argv)
 			// hub_manager_pub.publish(msg);
 			// wait until cbs is ready for all chairs
 			// then transmit until end of broadcast stage
-			while (!all_chairs_are_ready())
+			if (!all_chairs_are_ready())
 			{
-				// std_msgs::String msg;
-				// msg.data = "00Bstart";
-				// hub_manager_pub.publish(msg);
+				// Waited long enough, so check again
+				if (ros::Time::now() >= startTime + waitDurationBeforeCheckingAgain)
+				{
+					std_msgs::String msg;
+					msg.data = "00Bstart";
+					hub_manager_pub.publish(msg);
+					startTime = ros::Time::now();
+				}
+				break;
 			}
 			ROS_ERROR("ALL CHAIRS ARE READY");
 			mode = state::awaiting_status;
