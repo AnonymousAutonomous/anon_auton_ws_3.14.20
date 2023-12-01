@@ -209,15 +209,6 @@ void receive_callback(const std_msgs::String &msg)
 	}
 }
 
-void broadcast_callback(const std_msgs::String &msg)
-{
-	if (msg.data.to_cstr() == "clear")
-	{
-		clean_up_after_broadcast_done();
-	}
-	transmit_queue.push(msg);
-}
-
 void clean_up_after_broadcast_done()
 {
 	mode = state::outside;
@@ -229,6 +220,15 @@ void clean_up_after_broadcast_done()
 	transmit_queue = std::queue<std_msgs::String>();
 	overwrite_trapped_chairs();
 	overwrite_excluded_chairs();
+}
+
+void broadcast_callback(const std_msgs::String &msg)
+{
+	if (msg.data.c_str() == "clear")
+	{
+		clean_up_after_broadcast_done();
+	}
+	transmit_queue.push(msg);
 }
 
 int main(int argc, char **argv)
