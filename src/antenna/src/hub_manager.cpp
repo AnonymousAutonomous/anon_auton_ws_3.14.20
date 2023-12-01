@@ -210,7 +210,23 @@ void receive_callback(const std_msgs::String &msg)
 
 void broadcast_callback(const std_msgs::String &msg)
 {
+	if (msg.data.to_cstr() == "clear")
+	{
+		clean_up_after_broadcast_done();
+	}
 	transmit_queue.push(msg);
+}
+
+void clean_up_after_broadcast_done()
+{
+	mode = state::outside;
+	std_msgs::String msg;
+	msg.data = "00Bfinish";
+	hub_manager_pub.publish(msg);
+	ROS_ERROR("BROADCAST IS FINISHED");
+	transmit_queue.clear();
+	overwrite_trapped_chairs();
+	overwrite_excluded_chairs();
 }
 
 ros::Publisher hub_manager_pub;
@@ -324,13 +340,7 @@ int main(int argc, char **argv)
 				// pass
 			}
 			ROS_ERROR("ALL CHAIRS ARE DONE");
-			mode = state::outside;
-			std_msgs::String msg;
-			msg.data = "00Bfinish";
-			hub_manager_pub.publish(msg);
-			ROS_ERROR("BROADCAST IS FINISHED");
-			overwrite_trapped_chairs();
-			overwrite_excluded_chairs();
+			clean_up_after_broadcast_done();
 			break;
 		}
 		default:
