@@ -225,7 +225,8 @@ void clean_up_after_broadcast_done()
 	msg.data = "00Bfinish";
 	hub_manager_pub.publish(msg);
 	ROS_ERROR("BROADCAST IS FINISHED");
-	transmit_queue.clear();
+	// clear transmit queue
+	transmit_queue = std::queue<std_msgs::String>();
 	overwrite_trapped_chairs();
 	overwrite_excluded_chairs();
 }
