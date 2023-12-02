@@ -23,7 +23,7 @@ def chair_receiver():
 
     while not rospy.is_shutdown():
         str_msg = ser.readline().strip()
-        if len(str_msg >= 2):
+        if len(str_msg) >= 2:
             rospy.loginfo(str_msg)
             debug_pub.publish(str_msg)
             if str_msg[0] == chair_num or str_msg[0] == "0":
