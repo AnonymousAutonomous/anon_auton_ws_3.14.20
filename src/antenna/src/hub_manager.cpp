@@ -315,7 +315,7 @@ int main(int argc, char **argv)
 		}
 		case state::awaiting_confirmation:
 		{
-			ROS_ERROR("awaiting confirmation");
+			ROS_ERROR("awaiting confirmation for %d commands", transmit_queue.size());
 
 			// // also transmit start of broadcast
 			// std_msgs::String msg;
@@ -325,7 +325,7 @@ int main(int argc, char **argv)
 			// then transmit until end of broadcast stage
 			if (!all_chairs_are_ready())
 			{
-				ROS_ERROR("not all chairs are ready");
+				// ROS_ERROR("not all chairs are ready");
 
 				// Waited long enough, so check again
 				if (ros::Time::now() >= startTime + waitDurationBeforeCheckingAgain)
