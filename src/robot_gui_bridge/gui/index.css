@@ -171,3 +171,12 @@ textarea {
     display: flex; 
     flex-direction: column;
 }
+
+.dot {
+    height: 12px;
+    width: 12px;
+    background-color: limegreen;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 5px;
+  }
