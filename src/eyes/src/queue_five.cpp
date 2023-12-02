@@ -310,7 +310,7 @@ int main(int argc, char **argv)
 	mode = state::autonomous;
 	while (ros::ok())
 	{
-		ROS_ERROR("\nflag_A: %s\t\tflag_B: %s\t\tflag_C: %s\t\tflag_H: %s\nflag_T: %s\t\tflag_D: %s\t\tflag_S: %s\nflag_EOC: %s\tflag_SOB: %s\tflag_EOB: %s", BoolToString(flag_A), BoolToString(flag_B), BoolToString(flag_C), BoolToString(flag_H), BoolToString(flag_T), BoolToString(flag_D), BoolToString(flag_S), BoolToString(flag_EOC), BoolToString(flag_SOB), BoolToString(flag_EOB));
+		ROS_ERROR("\nflag_A:\t%s\tflag_B:\t%s\tflag_C:\t%s\tflag_H:\t%s\nflag_T:\t%s\tflag_D:\t%s\tflag_S:\t%s\nflag_EOC:\t%s\tflag_SOB:\t%s\tflag_EOB:\t%s", BoolToString(flag_A), BoolToString(flag_B), BoolToString(flag_C), BoolToString(flag_H), BoolToString(flag_T), BoolToString(flag_D), BoolToString(flag_S), BoolToString(flag_EOC), BoolToString(flag_SOB), BoolToString(flag_EOB));
 		// ROS_ERROR("ROS OK");
 		switch (mode)
 		{
