@@ -274,10 +274,29 @@ void broadcast_callback(const std_msgs::String &msg)
 	}
 }
 
-void alertGui()
+std::string notReadyChairsToString()
+{
+	std::string response = "";
+	for (auto s : chair_status_map)
+}
+
+std::string notReadyChairsToString()
+{
+	std::string response = "";
+	for (const auto &p : chair_status_map)
+	{
+		if (p.second.cbs != chair_broadcast_status::ready && p.second.cbs != chair_broadcast_status::exclude)
+		{
+			response += p.first;
+		}
+	}
+	return response;
+}
+
+void alertGui(std::string custom_msg)
 {
 	std_msgs::String msg;
-	msg.data = "A CHAIR NEEDS HELP!";
+	msg.data = "A CHAIR NEEDS HELP!\n" + custom_msg;
 	hub_to_gui_pub.publish(msg);
 }
 
@@ -371,7 +390,7 @@ int main(int argc, char **argv)
 				if (timesChecked >= timesCheckedLimit)
 				{
 					timesChecked = 0;
-					alertGui();
+					alertGui(notReadyChairsToString());
 					clean_up_after_broadcast_done();
 				}
 				break;
