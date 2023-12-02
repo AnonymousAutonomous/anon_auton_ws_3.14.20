@@ -218,7 +218,7 @@
 
       hub_to_gui_listener.subscribe(function (m) {
         alert(m.data);
-        playLowBatt();
+        playBeep();
       });
 
       txt_listener.subscribe(function (m) {
@@ -984,7 +984,7 @@
           list.appendChild(option);
         });
 
-        playLowBatt();
+        // playLowBatt();
         playBeep();
       };
     </script>
