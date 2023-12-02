@@ -539,7 +539,7 @@ int main(int argc, char **argv)
 				autonomous_queue = std::queue<eyes::Generic>();
 				choreo_queue = std::queue<eyes::Generic>();
 				custom_queue = std::queue<eyes::Generic>();
-				broadcast_queue = std::queue<eyes::Generic>();
+				// broadcast_queue = std::queue<eyes::Generic>();
 				// tell camera to publish to me
 				std_msgs::Empty empty_msg;
 				eoc_pub.publish(empty_msg);
