@@ -228,7 +228,7 @@
         updateChairStatus(element, status);
       }
 
-      function updateChairBroadcastStatus(key, status) {
+      function updateBroadcastStatus(key, status) {
         let element = document.getElementById(key + "_broadcast_status");
         if (element) {
           element.innerHTML = getTextForStatus(status);
