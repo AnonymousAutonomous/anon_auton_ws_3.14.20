@@ -159,6 +159,7 @@ void receive_callback(const std_msgs::String &msg)
 	{
 	case 'B':
 	{
+		// TODO: handle bad formed messages coming through for success / failure -- ask for it again?
 		chair_broadcast_status incoming_status = static_cast<chair_broadcast_status>(property_value);
 		if (incoming_status == chair_broadcast_status::ready)
 		{
