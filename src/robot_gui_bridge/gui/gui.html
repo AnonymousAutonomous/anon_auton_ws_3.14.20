@@ -177,6 +177,12 @@
         messageType: "std_msgs/String",
       });
 
+      var hub_to_gui_listener = new ROSLIB.Topic({
+        ros: ros,
+        name: "/hub_to_gui",
+        messageType: "std_msgs/String",
+      });
+
       var to_hub_manager_pub = new ROSLIB.Topic({
         ros: ros,
         name: "/to_hub_manager",
@@ -209,6 +215,11 @@
           element.classList.add("status", status);
         }
       }
+
+      hub_to_gui_listener.subscribe(function (m) {
+        playBeep();
+        alert(m.data);
+      });
 
       txt_listener.subscribe(function (m) {
         document.getElementById("msg").innerHTML = m.data;
@@ -899,6 +910,16 @@
         xhr.send();
       }
 
+      function playLowBatt() {
+        const audio = document.getElementById("audio_lowbatt");
+        audio.play();
+      }
+
+      function playBeep() {
+        const audio = document.getElementById("audio_beep");
+        audio.play();
+      }
+
       window.onload = function () {
         switchscreen("live");
 
@@ -962,12 +983,20 @@
           option.value = item;
           list.appendChild(option);
         });
+
+        // playLowBatt();
+        playBeep();
       };
     </script>
   </head>
 
   <body>
     <h1>Anonymous Autonomous</h1>
+    <audio
+      id="audio_lowbatt"
+      src="audio/582986__oysterqueen__low-battery.mp3"
+    ></audio>
+    <audio id="audio_beep" src="audio/258193__kodack__beep-beep.wav"></audio>
     <p>Connection status: <span id="status">NOT CONNECTED</span></p>
     <p>Last chair status received: <span id="msg"></span></p>
     <p>

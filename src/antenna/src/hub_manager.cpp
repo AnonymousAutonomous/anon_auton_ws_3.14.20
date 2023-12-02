@@ -37,6 +37,14 @@ struct chair_status
 std::vector<int> active_chair_nums;
 std::map<int, chair_status> chair_status_map;
 
+ros::Time startTime;
+ros::Duration waitDurationBeforeCheckingAgain(1.0); // 1.0 seconds
+int timesChecked = 0;
+int timesCheckedLimit = 10;
+
+ros::Publisher hub_manager_pub;
+ros::Publisher hub_to_gui_pub;
+
 bool all_chairs_are_ready()
 {
 	for (const auto &p : chair_status_map)
@@ -53,7 +61,7 @@ void overwrite_excluded_chairs()
 {
 	for (auto &p : chair_status_map)
 	{
-		if (p.second.cbs == chair_broadcast_status::exclude)
+		if (p.second.cbs != chair_broadcast_status::success)
 		{
 			p.second.cbs = chair_broadcast_status::failure;
 		}
@@ -107,7 +115,10 @@ std::queue<std_msgs::String> transmit_queue;
 
 void receive_callback(const std_msgs::String &msg)
 {
-	ROS_ERROR("hub manager callback for: %s", msg.data.c_str());
+	if (strlen(msg.data.c_str()) > 2)
+	{
+		ROS_ERROR("hub manager callback for: %s", msg.data.c_str());
+	}
 
 	// ignore malformed messages and heartbeats
 	if (strlen(msg.data.c_str()) != 3)
@@ -202,12 +213,55 @@ void receive_callback(const std_msgs::String &msg)
 	}
 }
 
-void broadcast_callback(const std_msgs::String &msg)
+void clean_up_after_broadcast_done()
 {
-	transmit_queue.push(msg);
+	// clear transmit queue
+	overwrite_trapped_chairs();
+	overwrite_excluded_chairs();
+	transmit_queue = std::queue<std_msgs::String>();
+	mode = state::outside;
+	std_msgs::String msg;
+	msg.data = "00Bfinish";
+	hub_manager_pub.publish(msg);
+	ROS_ERROR("BROADCAST IS FINISHED");
+	if (all_chairs_are_done())
+	{
+		ROS_ERROR("CLEAR - all chairs are done");
+	}
+	else
+	{
+		ROS_ERROR("CLEAR - ALL CHAIRS ARE NOT DONE");
+	}
+	if (all_chairs_are_ready())
+	{
+		ROS_ERROR("CLEAR - all chairs are ready");
+	}
+	else
+	{
+		ROS_ERROR("CLEAR - ALL CHAIRS ARE NOT READY");
+	}
 }
 
-ros::Publisher hub_manager_pub;
+void broadcast_callback(const std_msgs::String &msg)
+{
+	ROS_ERROR("BROADCAST CALLBACK FOR %s", msg.data.c_str());
+	if (msg.data == "clear")
+	{
+		ROS_ERROR("CLEEEEEEEEEEEEEEEEEEAR");
+		clean_up_after_broadcast_done();
+	}
+	else
+	{
+		transmit_queue.push(msg);
+	}
+}
+
+void alertGui()
+{
+	std_msgs::String msg;
+	msg.data = "A CHAIR NEEDS HELP!";
+	hub_to_gui_pub.publish(msg);
+}
 
 int main(int argc, char **argv)
 {
@@ -233,6 +287,7 @@ int main(int argc, char **argv)
 
 	// initialize publishers
 	hub_manager_pub = nh.advertise<std_msgs::String>("from_hub", 1000);
+	hub_to_gui_pub = nh.advertise<std_msgs::String>("hub_to_gui", 1000);
 
 	mode = state::outside;
 	while (ros::ok())
@@ -256,6 +311,7 @@ int main(int argc, char **argv)
 			}
 			if (!transmit_queue.empty())
 			{
+				ROS_ERROR("transmit queue not empty, let's send");
 				// ROS_ERROR("NUM COMMANDS: %d", transmit_queue.size());
 				// // Wait until entire broadcast is in the queue
 				// if (transmit_queue.back().data == "00Bend")
@@ -267,12 +323,13 @@ int main(int argc, char **argv)
 				std_msgs::String msg;
 				msg.data = "00Bstart";
 				hub_manager_pub.publish(msg);
+				startTime = ros::Time::now();
 			}
 			break;
 		}
 		case state::awaiting_confirmation:
 		{
-			// ROS_ERROR("awaiting confirmation");
+			ROS_ERROR("awaiting confirmation for %d commands", transmit_queue.size());
 
 			// // also transmit start of broadcast
 			// std_msgs::String msg;
@@ -280,11 +337,26 @@ int main(int argc, char **argv)
 			// hub_manager_pub.publish(msg);
 			// wait until cbs is ready for all chairs
 			// then transmit until end of broadcast stage
-			while (!all_chairs_are_ready())
+			if (!all_chairs_are_ready())
 			{
-				// std_msgs::String msg;
-				// msg.data = "00Bstart";
-				// hub_manager_pub.publish(msg);
+				// ROS_ERROR("not all chairs are ready");
+
+				// Waited long enough, so check again
+				if (ros::Time::now() >= startTime + waitDurationBeforeCheckingAgain)
+				{
+					timesChecked++;
+					std_msgs::String msg;
+					msg.data = "00Bstart";
+					hub_manager_pub.publish(msg);
+					startTime = ros::Time::now();
+				}
+				if (timesChecked >= timesCheckedLimit)
+				{
+					timesChecked = 0;
+					alertGui();
+					clean_up_after_broadcast_done();
+				}
+				break;
 			}
 			ROS_ERROR("ALL CHAIRS ARE READY");
 			mode = state::awaiting_status;
@@ -311,13 +383,7 @@ int main(int argc, char **argv)
 				// pass
 			}
 			ROS_ERROR("ALL CHAIRS ARE DONE");
-			mode = state::outside;
-			std_msgs::String msg;
-			msg.data = "00Bfinish";
-			hub_manager_pub.publish(msg);
-			ROS_ERROR("BROADCAST IS FINISHED");
-			overwrite_trapped_chairs();
-			overwrite_excluded_chairs();
+			clean_up_after_broadcast_done();
 			break;
 		}
 		default:
