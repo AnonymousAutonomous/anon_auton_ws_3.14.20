@@ -190,16 +190,24 @@
       });
 
       getTextForStatus = function (status) {
-        if (status == "r") {
+        if (status == "Br") {
           return "READY";
         } else if (status == "h") {
           return "HEARTBEAT";
-        } else if (status == "e") {
+        } else if (status == "Be") {
           return "EXCLUDE";
-        } else if (status == "s") {
+        } else if (status == "Bs") {
           return "SUCCESS";
-        } else if (status == "f") {
+        } else if (status == "Bf") {
           return "FAILURE";
+        } else if (status == "Tt") {
+          return "TRAPPED";
+        } else if (status == "Tm") {
+          return "NOT TRAPPED";
+        } else if (status == "Ss") {
+          return "STUCK";
+        } else if (status == "Sn") {
+          return "NOT STUCK";
         } else if (status == "o" || status == null) {
           return "OFFLINE";
         } else {
@@ -207,10 +215,41 @@
         }
       };
 
-      function updateChairStatus(key, status) {
-        let element = document.getElementById(key + "status");
+      function updateChairStatus(element, status) {
         if (element) {
           element.innerHTML = getTextForStatus(status);
+          element.classList.remove(...element.classList);
+          element.classList.add("status", status);
+        }
+      }
+
+      function updateHeartbeatStatus(key, status) {
+        let element = document.getElementById(key + "status");
+        updateChairStatus(element, status);
+      }
+
+      function updateChairBroadcastStatus(key, status) {
+        let element = document.getElementById(key + "_broadcast_status");
+        if (element) {
+          element.innerHTML = getTextForStatus(status);
+          element.classList.remove(...element.classList);
+          element.classList.add("status", status);
+        }
+      }
+
+      function updateChairTrappedStatus(key, status) {
+        let element = document.getElementById(key + "_trapped_status");
+        if (element) {
+          element.innerHTML = getTextForStatus(status);
+          element.classList.remove(...element.classList);
+          element.classList.add("status", status);
+        }
+      }
+
+      function updateChairStuckStatus(key, status) {
+        let element = document.getElementById(key + "_stuck_status");
+        if (element) {
+          element.innerHTML = getTextForStuckStatus(status);
           element.classList.remove(...element.classList);
           element.classList.add("status", status);
         }
@@ -231,14 +270,14 @@
           m.data[1] == "B"
         ) {
           live_status.set(m.data[0], m.data[2]);
-          updateChairStatus(m.data[0], m.data[2]);
+          updateBroadcastStatus(m.data[0], m.data[1] + m.data[2]);
         } else if (
           // heartbeat
           m.data.length == 2 &&
           chairs.includes(m.data[0]) &&
           m.data[1] == "h"
         ) {
-          updateChairStatus(m.data[0], m.data[1]);
+          updateHeartbeatStatus(m.data[0], m.data[1]);
         }
         // image
         if (m.data[1] == "i") {
@@ -249,7 +288,7 @@
       function checkStatus() {
         for (let [key, value] of live_status) {
           if (value == null) {
-            updateChairStatus(key, "o");
+            updateHeartbeatStatus(key, "o");
           }
           live_status.set(key, null);
         }
@@ -1025,6 +1064,7 @@
         <div class="chair_monitor" id="1">
           <h2>Chair 1</h2>
           <div class="status o" id="1status">OFFLINE</div>
+          <div class="status o" id="1_broadcast_status">OFFLINE</div>
           <br />
           <div class="chair_control">
             <div class="directions">
@@ -1073,6 +1113,7 @@
         <div class="chair_monitor" id="2">
           <h2>Chair 2</h2>
           <div class="status o" id="2status">OFFLINE</div>
+          <div class="status o" id="2_broadcast_status">OFFLINE</div>
           <br />
           <div class="chair_control">
             <div class="directions">
@@ -1121,6 +1162,7 @@
         <div class="chair_monitor" id="3">
           <h2>Chair 3</h2>
           <div class="status o" id="3status">OFFLINE</div>
+          <div class="status o" id="3_broadcast_status">OFFLINE</div>
           <br />
           <div class="chair_control">
             <div class="directions">
@@ -1169,6 +1211,7 @@
         <div class="chair_monitor" id="4">
           <h2>Chair 4</h2>
           <div class="status o" id="4status">OFFLINE</div>
+          <div class="status o" id="4_broadcast_status">OFFLINE</div>
           <br />
           <div class="chair_control">
             <div class="directions">
