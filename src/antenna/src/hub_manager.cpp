@@ -159,50 +159,67 @@ void receive_callback(const std_msgs::String &msg)
 	{
 	case 'B':
 	{
-		// TODO: error handle here if it's not in the enum?
-		chair_status_map[chair_number].cbs = static_cast<chair_broadcast_status>(property_value);
-		if (chair_status_map[chair_number].cbs == chair_broadcast_status::ready)
+		chair_broadcast_status incoming_status = static_cast<chair_broadcast_status>(property_value);
+		if (incoming_status == chair_broadcast_status::ready)
 		{
 			ROS_ERROR("CHAIR %d IS READY TO RECEIVE BROADCAST", chair_number);
 		}
-		if (chair_status_map[chair_number].cbs == chair_broadcast_status::exclude)
+		else if (incoming_status == chair_broadcast_status::exclude)
 		{
 			ROS_ERROR("CHAIR %d IS EXCLUDED FROM THIS BROADCAST", chair_number);
 		}
-		if (chair_status_map[chair_number].cbs == chair_broadcast_status::success)
+		else if (incoming_status == chair_broadcast_status::success)
 		{
 			ROS_ERROR("CHAIR %d SUCCESSFULLY COMPLETED BROADCAST", chair_number);
 		}
-		if (chair_status_map[chair_number].cbs == chair_broadcast_status::failure)
+		else if (incoming_status == chair_broadcast_status::failure)
 		{
 			ROS_ERROR("CHAIR %d FAILED TO COMPLETE BROADCAST", chair_number);
 		}
+		else
+		{
+			ROS_ERROR("Badly formed broadcast message");
+			return;
+		}
+		chair_status_map[chair_number].cbs = incoming_status;
 		break;
 	}
 	case 'S':
 	{
-		chair_status_map[chair_number].css = static_cast<chair_stuck_status>(property_value);
-		if (chair_status_map[chair_number].css == chair_stuck_status::stuck)
+		chair_stuck_status incoming_stuck_status = static_cast<chair_stuck_status>(property_value);
+		if (incoming_stuck_status == chair_stuck_status::stuck)
 		{
 			ROS_ERROR("CHAIR %d IS STUCK", chair_number);
 		}
-		if (chair_status_map[chair_number].css == chair_stuck_status::not_stuck)
+		else if (incoming_stuck_status == chair_stuck_status::not_stuck)
 		{
 			ROS_ERROR("CHAIR %d IS NOT STUCK", chair_number);
 		}
+		else
+		{
+			ROS_ERROR("Badly formed stuck message");
+			return;
+		}
+		chair_status_map[chair_number].css = incoming_stuck_status;
 		break;
 	}
 	case 'T':
 	{
-		chair_status_map[chair_number].cts = static_cast<chair_trapped_status>(property_value);
-		if (chair_status_map[chair_number].cts == chair_trapped_status::trapped)
+		chair_trapped_status incoming_trapped_status = static_cast<chair_trapped_status>(property_value);
+		if (incoming_trapped_status == chair_trapped_status::trapped)
 		{
 			ROS_ERROR("CHAIR %d IS TRAPPED", chair_number);
 		}
-		if (chair_status_map[chair_number].cts == chair_trapped_status::not_trapped)
+		else if (incoming_trapped_status == chair_trapped_status::not_trapped)
 		{
 			ROS_ERROR("CHAIR %d IS NOT TRAPPED", chair_number);
 		}
+		else
+		{
+			ROS_ERROR("Badly formed trapped message");
+			return;
+		}
+		chair_status_map[chair_number].cts = incoming_trapped_status;
 		break;
 	}
 	default:
