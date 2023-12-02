@@ -246,7 +246,10 @@ void broadcast_callback(const std_msgs::String &msg)
 		ROS_ERROR("CLEEEEEEEEEEEEEEEEEEAR");
 		clean_up_after_broadcast_done();
 	}
-	transmit_queue.push(msg);
+	else
+	{
+		transmit_queue.push(msg);
+	}
 }
 
 int main(int argc, char **argv)
