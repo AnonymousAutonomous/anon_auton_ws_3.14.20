@@ -296,7 +296,6 @@ int main(int argc, char **argv)
 		{
 		case state::outside:
 		{
-			ROS_ERROR("outside");
 			if (a_chair_is_trapped())
 			{
 				ROS_ERROR("A chair is trapped!");
