@@ -59,7 +59,7 @@ const std::unordered_map<std::string, Command> cmd_to_case = {
 char LAUNCH_AUTONOMOUS_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_autonomous.sh &";
 char LAUNCH_HANDWRITTEN_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/launch_handwritten.sh &";
 char SHUTDOWN_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/shutdown.sh &";
-char RESET_SCRIPT[] = "~/anon_auton_ws/src/launch_manager/launch/shutdown.sh &";
+char RESET_SCRIPT[] = "{killros; chair} &";
 
 // probably not necessary
 // #define NUMBER_OF_CHAIRS 1
