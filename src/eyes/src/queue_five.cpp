@@ -541,8 +541,8 @@ int main(int argc, char **argv)
 				custom_queue = std::queue<eyes::Generic>();
 				broadcast_queue = std::queue<eyes::Generic>();
 				// tell camera to publish to me
-				std_msgs::Empty empty_msg;
-				eoc_pub.publish(empty_msg);
+				// std_msgs::Empty empty_msg;
+				// eoc_pub.publish(empty_msg);
 				ROS_ERROR("TOGGLE");
 				flag_SOB = false;
 				flag_EOB = false;
