@@ -617,6 +617,15 @@
         });
       };
 
+      send_clear_choreo = function () {
+        console.log("SENDING CLEAR CHOREO");
+        msg = "clear";
+        var dir = new ROSLIB.Message({
+          data: msg,
+        });
+        to_hub_manager_pub.publish(dir);
+      };
+
       function switchscreen(newScreenId) {
         var liveScreen = document.getElementById("live");
         var configScreen = document.getElementById("config");
@@ -1006,8 +1015,11 @@
     <div class="screen" id="live" style="display: none">
       <button onclick="stop('0')" class="stop">STOP ALL</button>
       <button onclick="toggle('0')" class="auto">AUTO ALL</button>
-      <button class="test_choreo" id="1" onclick="send_test_choreo()">
+      <button class="test_choreo" onclick="send_test_choreo()">
         TEST CHOREO
+      </button>
+      <button class="clear_choreo" onclick="send_clear_choreo()">
+        CLEAR CHOREO
       </button>
       <div class="statuses">
         <div class="chair_monitor" id="1">
