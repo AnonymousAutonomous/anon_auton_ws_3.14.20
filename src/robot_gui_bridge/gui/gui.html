@@ -217,8 +217,8 @@
       }
 
       hub_to_gui_listener.subscribe(function (m) {
-        alert(m.data);
         playBeep();
+        alert(m.data);
       });
 
       txt_listener.subscribe(function (m) {
