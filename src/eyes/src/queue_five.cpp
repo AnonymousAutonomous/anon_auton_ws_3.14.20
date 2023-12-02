@@ -284,6 +284,11 @@ ros::Publisher update_hub_pub;
 ros::Publisher audio_pub;
 ros::Publisher notify_lidar;
 
+inline const char *const BoolToString(bool b)
+{
+	return b ? "true" : "false";
+}
+
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "queue_five");
@@ -305,6 +310,7 @@ int main(int argc, char **argv)
 	mode = state::autonomous;
 	while (ros::ok())
 	{
+		ROS_ERROR("\nflag_A:\t\t%s\tflag_B:\t\t%s\tflag_C:\t\t%s\tflag_H:\t\t%s\nflag_T:\t\t%s\tflag_D:\t\t%s\tflag_S:\t\t%s\nflag_EOC:\t%s\tflag_SOB:\t%s\tflag_EOB:\t%s", BoolToString(flag_A), BoolToString(flag_B), BoolToString(flag_C), BoolToString(flag_H), BoolToString(flag_T), BoolToString(flag_D), BoolToString(flag_S), BoolToString(flag_EOC), BoolToString(flag_SOB), BoolToString(flag_EOB));
 		// ROS_ERROR("ROS OK");
 		switch (mode)
 		{
@@ -358,11 +364,11 @@ int main(int argc, char **argv)
 			notify_lidar.publish(queue_to_lidar_msg);
 			if (flag_T)
 			{
-				ROS_ERROR("IN CHOREO with Flag T");
+				// ROS_ERROR("IN CHOREO with Flag T");
 			}
 			if (flag_H)
 			{
-				ROS_ERROR("IN CHOREO with Flag H");
+				// ROS_ERROR("IN CHOREO with Flag H");
 			}
 
 			if (flag_H)
@@ -534,6 +540,9 @@ int main(int argc, char **argv)
 				choreo_queue = std::queue<eyes::Generic>();
 				custom_queue = std::queue<eyes::Generic>();
 				broadcast_queue = std::queue<eyes::Generic>();
+				// tell camera to publish to me
+				// std_msgs::Empty empty_msg;
+				// eoc_pub.publish(empty_msg);
 				ROS_ERROR("TOGGLE");
 				flag_SOB = false;
 				flag_EOB = false;

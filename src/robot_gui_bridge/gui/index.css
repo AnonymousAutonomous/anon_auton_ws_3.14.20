@@ -70,6 +70,22 @@
     background-color: greenyellow;
 }
 
+.Br {
+    background-color: mediumaquamarine;
+}
+
+.Be {
+    background-color: orange;
+}
+
+.Bs {
+    background-color: greenyellow;
+}
+
+.Bf {
+    background-color: red;
+}
+
 .f {
     background-color: red;
 }
@@ -155,3 +171,12 @@ textarea {
     display: flex; 
     flex-direction: column;
 }
+
+.dot {
+    height: 12px;
+    width: 12px;
+    background-color: limegreen;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 5px;
+  }

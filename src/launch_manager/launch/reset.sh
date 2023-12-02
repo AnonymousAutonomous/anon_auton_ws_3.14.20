@@ -10,4 +10,4 @@ echo "stop" > /tmp/handwritten-input
 
 sleep 5 
 
-./src/launch_manager/launch/launch_antenna_chair.sh &
+./src/launch_manager/scripts/chair_on_startup.bash &
