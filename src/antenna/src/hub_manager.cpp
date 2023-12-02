@@ -290,6 +290,7 @@ std::string notReadyChairsToString()
 void alertGui(std::string custom_msg)
 {
 	std_msgs::String msg;
+	ROS_ERROR("alert gui: %s", custom_msg);
 	msg.data = "A CHAIR NEEDS HELP!\n" + custom_msg;
 	hub_to_gui_pub.publish(msg);
 }
