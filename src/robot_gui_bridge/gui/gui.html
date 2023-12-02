@@ -177,6 +177,12 @@
         messageType: "std_msgs/String",
       });
 
+      var hub_to_gui_listener = new ROSLIB.Topic({
+        ros: ros,
+        name: "/hub_to_gui",
+        messageType: "std_msgs/String",
+      });
+
       var to_hub_manager_pub = new ROSLIB.Topic({
         ros: ros,
         name: "/to_hub_manager",
@@ -209,6 +215,10 @@
           element.classList.add("status", status);
         }
       }
+
+      hub_to_gui_listener.subscribe(function (m) {
+        alert(m.data);
+      });
 
       txt_listener.subscribe(function (m) {
         document.getElementById("msg").innerHTML = m.data;

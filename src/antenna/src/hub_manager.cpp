@@ -39,7 +39,11 @@ std::map<int, chair_status> chair_status_map;
 
 ros::Time startTime;
 ros::Duration waitDurationBeforeCheckingAgain(1.0); // 1.0 seconds
+int timesChecked = 0;
+int timesCheckedLimit = 10;
+
 ros::Publisher hub_manager_pub;
+ros::Publisher hub_to_gui_pub;
 
 bool all_chairs_are_ready()
 {
@@ -252,6 +256,13 @@ void broadcast_callback(const std_msgs::String &msg)
 	}
 }
 
+void alertGui()
+{
+	std_msgs::String msg;
+	msg.data = "A CHAIR NEEDS HELP!";
+	hub_to_gui_pub.publish(msg);
+}
+
 int main(int argc, char **argv)
 {
 	// initialize node and node handle
@@ -276,6 +287,7 @@ int main(int argc, char **argv)
 
 	// initialize publishers
 	hub_manager_pub = nh.advertise<std_msgs::String>("from_hub", 1000);
+	hub_to_gui_pub = nh.advertise<std_msgs::String>("hub_to_gui", 1000);
 
 	mode = state::outside;
 	while (ros::ok())
@@ -333,10 +345,17 @@ int main(int argc, char **argv)
 				// Waited long enough, so check again
 				if (ros::Time::now() >= startTime + waitDurationBeforeCheckingAgain)
 				{
+					timesChecked++;
 					std_msgs::String msg;
 					msg.data = "00Bstart";
 					hub_manager_pub.publish(msg);
 					startTime = ros::Time::now();
+				}
+				if (timesChecked >= timesCheckedLimit)
+				{
+					timesChecked = 0;
+					alertGui();
+					clean_up_after_broadcast_done();
 				}
 				break;
 			}
