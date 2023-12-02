@@ -358,11 +358,11 @@ int main(int argc, char **argv)
 			notify_lidar.publish(queue_to_lidar_msg);
 			if (flag_T)
 			{
-				ROS_ERROR("IN CHOREO with Flag T");
+				// ROS_ERROR("IN CHOREO with Flag T");
 			}
 			if (flag_H)
 			{
-				ROS_ERROR("IN CHOREO with Flag H");
+				// ROS_ERROR("IN CHOREO with Flag H");
 			}
 
 			if (flag_H)
