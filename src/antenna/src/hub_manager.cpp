@@ -281,7 +281,7 @@ std::string notReadyChairsToString()
 	{
 		if (p.second.cbs != chair_broadcast_status::ready && p.second.cbs != chair_broadcast_status::exclude)
 		{
-			response += p.first;
+			response += ('0' + p.first);
 		}
 	}
 	return response;
@@ -290,8 +290,8 @@ std::string notReadyChairsToString()
 void alertGui(std::string custom_msg)
 {
 	std_msgs::String msg;
-	ROS_ERROR("alert gui: %s", custom_msg);
-	msg.data = "A CHAIR NEEDS HELP!\n" + custom_msg;
+	ROS_ERROR("alert gui: %s", custom_msg.c_str());
+	msg.data = "A CHAIR NEEDS HELP!\n" + custom_msg.c_str();
 	hub_to_gui_pub.publish(msg);
 }
 
