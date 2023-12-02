@@ -277,12 +277,6 @@ void broadcast_callback(const std_msgs::String &msg)
 std::string notReadyChairsToString()
 {
 	std::string response = "";
-	for (auto s : chair_status_map)
-}
-
-std::string notReadyChairsToString()
-{
-	std::string response = "";
 	for (const auto &p : chair_status_map)
 	{
 		if (p.second.cbs != chair_broadcast_status::ready && p.second.cbs != chair_broadcast_status::exclude)
