@@ -220,6 +220,22 @@ void clean_up_after_broadcast_done()
 	msg.data = "00Bfinish";
 	hub_manager_pub.publish(msg);
 	ROS_ERROR("BROADCAST IS FINISHED");
+	if (all_chairs_are_done())
+	{
+		ROS_ERROR("CLEAR - all chairs are done");
+	}
+	else
+	{
+		ROS_ERROR("CLEAR - ALL CHAIRS ARE NOT DONE");
+	}
+	if (all_chairs_are_ready())
+	{
+		ROS_ERROR("CLEAR - all chairs are ready");
+	}
+	else
+	{
+		ROS_ERROR("CLEAR - ALL CHAIRS ARE NOT READY");
+	}
 }
 
 void broadcast_callback(const std_msgs::String &msg)
