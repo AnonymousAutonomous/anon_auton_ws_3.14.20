@@ -284,6 +284,11 @@ ros::Publisher update_hub_pub;
 ros::Publisher audio_pub;
 ros::Publisher notify_lidar;
 
+inline const char *const BoolToString(bool b)
+{
+	return b ? "true" : "false";
+}
+
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "queue_five");
@@ -305,6 +310,7 @@ int main(int argc, char **argv)
 	mode = state::autonomous;
 	while (ros::ok())
 	{
+		ROS_ERROR("flag_A: %s\tflag_B\t%s\tflag_C: %s\tflag_H: %s\nflag_T: %s\tflag_D: %s\tflag_S: %s\nflag_EOC: %s\tflag_SOB: %s\tflag_EOB: %s", BoolToString(flag_A), BoolToString(flag_B), BoolToString(flag_C), BoolToString(flag_H), BoolToString(flag_T), BoolToString(flag_D), BoolToString(flag_S), BoolToString(flag_EOC), BoolToString(flag_SOB), BoolToString(flag_EOB));
 		// ROS_ERROR("ROS OK");
 		switch (mode)
 		{
