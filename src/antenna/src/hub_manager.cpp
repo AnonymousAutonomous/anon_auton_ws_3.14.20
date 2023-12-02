@@ -281,6 +281,7 @@ int main(int argc, char **argv)
 		{
 		case state::outside:
 		{
+			ROS_ERROR("outside");
 			if (a_chair_is_trapped())
 			{
 				ROS_ERROR("A chair is trapped!");
@@ -296,6 +297,7 @@ int main(int argc, char **argv)
 			}
 			if (!transmit_queue.empty())
 			{
+				ROS_ERROR("transmit queue not empty, let's send");
 				// ROS_ERROR("NUM COMMANDS: %d", transmit_queue.size());
 				// // Wait until entire broadcast is in the queue
 				// if (transmit_queue.back().data == "00Bend")
@@ -313,7 +315,7 @@ int main(int argc, char **argv)
 		}
 		case state::awaiting_confirmation:
 		{
-			// ROS_ERROR("awaiting confirmation");
+			ROS_ERROR("awaiting confirmation");
 
 			// // also transmit start of broadcast
 			// std_msgs::String msg;
@@ -323,6 +325,8 @@ int main(int argc, char **argv)
 			// then transmit until end of broadcast stage
 			if (!all_chairs_are_ready())
 			{
+				ROS_ERROR("not all chairs are ready");
+
 				// Waited long enough, so check again
 				if (ros::Time::now() >= startTime + waitDurationBeforeCheckingAgain)
 				{
