@@ -211,15 +211,15 @@ void receive_callback(const std_msgs::String &msg)
 
 void clean_up_after_broadcast_done()
 {
+	// clear transmit queue
+	overwrite_trapped_chairs();
+	overwrite_excluded_chairs();
 	transmit_queue = std::queue<std_msgs::String>();
 	mode = state::outside;
 	std_msgs::String msg;
 	msg.data = "00Bfinish";
 	hub_manager_pub.publish(msg);
 	ROS_ERROR("BROADCAST IS FINISHED");
-	// clear transmit queue
-	overwrite_trapped_chairs();
-	overwrite_excluded_chairs();
 }
 
 void broadcast_callback(const std_msgs::String &msg)
