@@ -249,15 +249,27 @@
       function updateChairStuckStatus(key, status) {
         let element = document.getElementById(key + "_stuck_status");
         if (element) {
-          element.innerHTML = getTextForStuckStatus(status);
+          element.innerHTML = getTextForStatus(status);
           element.classList.remove(...element.classList);
           element.classList.add("status", status);
         }
       }
 
       hub_to_gui_listener.subscribe(function (m) {
-        playBeep();
-        alert(m.data);
+        // Update
+        if (m.data.length == 5 && m.data[0] == "u") {
+          const chair_num = m.data[1];
+          const broadcast_status = m.data[2];
+          const stuck_status = m.data[3];
+          const trapped_status = m.data[4];
+
+          updateBroadcastStatus(chair_num, "B" + broadcast_status);
+          updateChairStuckStatus(chair_num, "S" + stuck_status);
+          updateChairTrappedStatus(chair_num, "T" + trapped_status);
+        } else {
+          playBeep();
+          alert(m.data);
+        }
       });
 
       txt_listener.subscribe(function (m) {
@@ -1067,6 +1079,8 @@
             OFFLINE<span class="dot"></span>
           </div>
           <div class="status o" id="1_broadcast_status">OFFLINE</div>
+          <div class="status o" id="1_stuck_status">OFFLINE</div>
+          <div class="status o" id="1_trapped_status">OFFLINE</div>
           <br />
           <div class="chair_control">
             <div class="directions">
@@ -1114,8 +1128,12 @@
         </div>
         <div class="chair_monitor" id="2">
           <h2>Chair 2</h2>
-          <div class="status o" id="2status">OFFLINE<span class="dot"></span></div>
+          <div class="status o" id="2status">
+            OFFLINE<span class="dot"></span>
+          </div>
           <div class="status o" id="2_broadcast_status">OFFLINE</div>
+          <div class="status o" id="2_stuck_status">OFFLINE</div>
+          <div class="status o" id="2_trapped_status">OFFLINE</div>
           <br />
           <div class="chair_control">
             <div class="directions">
@@ -1163,8 +1181,12 @@
         </div>
         <div class="chair_monitor" id="3">
           <h2>Chair 3</h2>
-          <div class="status o" id="3status">OFFLINE<span class="dot"></span></div>
+          <div class="status o" id="3status">
+            OFFLINE<span class="dot"></span>
+          </div>
           <div class="status o" id="3_broadcast_status">OFFLINE</div>
+          <div class="status o" id="3_stuck_status">OFFLINE</div>
+          <div class="status o" id="3_trapped_status">OFFLINE</div>
           <br />
           <div class="chair_control">
             <div class="directions">
@@ -1212,8 +1234,12 @@
         </div>
         <div class="chair_monitor" id="4">
           <h2>Chair 4</h2>
-          <div class="status o" id="4status">OFFLINE<span class="dot"></span></div>
+          <div class="status o" id="4status">
+            OFFLINE<span class="dot"></span>
+          </div>
           <div class="status o" id="4_broadcast_status">OFFLINE</div>
+          <div class="status o" id="4_stuck_status">OFFLINE</div>
+          <div class="status o" id="4_trapped_status">OFFLINE</div>
           <br />
           <div class="chair_control">
             <div class="directions">
