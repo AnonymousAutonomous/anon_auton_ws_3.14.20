@@ -302,9 +302,9 @@ void guiStatusUpdate()
 	{
 		std::string statuses = "u";
 		statuses += ('0' + p.first);
-		statuses += static_cast<chair_broadcast_status>(p.second.cbs);
-		statuses += static_cast<chair_stuck_status>(p.second.css);
-		statuses += static_cast<chair_trapped_status>(p.second.cts);
+		statuses += static_cast<char>(p.second.cbs);
+		statuses += static_cast<char>(p.second.css);
+		statuses += static_cast<char>(p.second.cts);
 		std_msgs::String msg;
 		msg.data = statuses;
 		hub_to_gui_pub.publish(msg);
