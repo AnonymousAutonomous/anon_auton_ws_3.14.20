@@ -295,6 +295,22 @@ void alertGui(std::string custom_msg)
 	hub_to_gui_pub.publish(msg);
 }
 
+void guiStatusUpdate()
+{
+
+	for (const auto &p : chair_status_map)
+	{
+		std::string statuses = "u";
+		statuses += ('0' + p.first);
+		statuses += static_cast<chair_broadcast_status>(p.second.cbs);
+		statuses += static_cast<chair_stuck_status>(p.second.css);
+		statuses += static_cast<chair_trapped_status>(p.second.cts);
+		std_msgs::String msg;
+		msg.data = statuses;
+		hub_to_gui_pub.publish(msg);
+	}
+}
+
 int main(int argc, char **argv)
 {
 	// initialize node and node handle
@@ -320,6 +336,8 @@ int main(int argc, char **argv)
 	// initialize publishers
 	hub_manager_pub = nh.advertise<std_msgs::String>("from_hub", 1000);
 	hub_to_gui_pub = nh.advertise<std_msgs::String>("hub_to_gui", 1000);
+
+	ros::Timer timer = nh.createTimer(ros::Duration(0.1), guiStatusUpdate);
 
 	mode = state::outside;
 	while (ros::ok())
