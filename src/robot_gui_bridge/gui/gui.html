@@ -249,7 +249,7 @@
       function updateChairStuckStatus(key, status) {
         let element = document.getElementById(key + "_stuck_status");
         if (element) {
-          element.innerHTML = getTextForStuckStatus(status);
+          element.innerHTML = getTextForStatus(status);
           element.classList.remove(...element.classList);
           element.classList.add("status", status);
         }
