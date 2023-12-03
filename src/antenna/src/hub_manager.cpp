@@ -295,7 +295,7 @@ void alertGui(std::string custom_msg)
 	hub_to_gui_pub.publish(msg);
 }
 
-void guiStatusUpdate()
+void guiStatusUpdate(const ros::TimerEvent &event)
 {
 
 	for (const auto &p : chair_status_map)
