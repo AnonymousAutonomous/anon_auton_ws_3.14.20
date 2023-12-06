@@ -283,7 +283,6 @@ ros::Publisher eoc_pub;
 ros::Publisher update_hub_pub;
 ros::Publisher audio_pub;
 ros::Publisher notify_lidar;
-ros::Publisher queue_to_manager_pub;
 
 inline const char *const BoolToString(bool b)
 {
@@ -307,7 +306,6 @@ int main(int argc, char **argv)
 	update_hub_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 	audio_pub = nh.advertise<std_msgs::String>("audio_channel", 1000);
 	notify_lidar = nh.advertise<std_msgs::Char>("queue_to_lidar", 1000);
-	queue_to_manager_pub = nh.advertise<std_msgs::Char>("queue_to_manager", 1000);
 
 	mode = state::autonomous;
 	while (ros::ok())
