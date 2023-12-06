@@ -252,16 +252,16 @@
       ) {
         let element = document.getElementById(chair_num + "_flags");
         if (element) {
-          element.innerHTML = `flag_A: ${flag_A == "y" ? "TRUE" : ""}
-          flag_B: ${flag_B == "y" ? "TRUE" : ""}
-          flag_C: ${flag_C == "y" ? "TRUE" : ""}
-          flag_H: ${flag_H == "y" ? "TRUE" : ""}
-          flag_T: ${flag_T == "y" ? "TRUE" : ""}
-          flag_D: ${flag_D == "y" ? "TRUE" : ""}
-          flag_S: ${flag_S == "y" ? "TRUE" : ""}
-          flag_EOC: ${flag_EOC == "y" ? "TRUE" : ""}
-          flag_SOB: ${flag_SOB == "y" ? "TRUE" : ""}
-          flag_EOB: ${flag_EOB == "y" ? "TRUE" : ""}`;
+          element.innerHTML = `${flag_A == "y" ? " A " : " x "}
+          ${flag_B == "y" ? " B " : " x "}
+          ${flag_C == "y" ? " C " : " x "}
+          ${flag_H == "y" ? " H " : " x "}
+          ${flag_T == "y" ? " T " : " x "}
+          ${flag_D == "y" ? " D " : " x "}
+          ${flag_S == "y" ? " S " : " x "}
+          ${flag_EOC == "y" ? "EOC" : " x "}
+          ${flag_SOB == "y" ? "SOB" : " x "}
+          ${flag_EOB == "y" ? "EOB" : " x "}`;
         }
       }
 
