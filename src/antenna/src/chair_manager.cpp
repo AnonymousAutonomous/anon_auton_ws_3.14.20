@@ -221,7 +221,7 @@ void receive_callback(const std_msgs::String &msg)
 
 void chair_state_callback(const std_msgs::Char state_in)
 {
-	chair_state = static_cast<state>(state_in);
+	chair_state = static_cast<state>(state_in.data);
 }
 
 void onHeartbeat(const ros::TimerEvent &event)
