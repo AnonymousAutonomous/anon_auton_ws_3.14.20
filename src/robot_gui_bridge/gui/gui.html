@@ -42,7 +42,7 @@
       // var chairs = ["1", "2", "3", "4"];
       console.log(live_status);
 
-      var test_choreo = [
+      var test_broadcast = [
         "00Bf2.0f2.0t5",
         "00BAp",
         "00Bf0.0f0.0t5",
@@ -669,9 +669,9 @@
         hub_dir_listener.publish(formatMsg(id, "pivotr"));
       };
 
-      send_test_choreo = function () {
+      send_test_broadcast = function () {
         console.log("SENDING TEST CHOREO");
-        test_choreo.forEach((msg) => {
+        test_broadcast.forEach((msg) => {
           var dir = new ROSLIB.Message({
             data: msg,
           });
@@ -679,7 +679,7 @@
         });
       };
 
-      send_clear_choreo = function () {
+      send_clear_broadcast = function () {
         console.log("SENDING CLEAR CHOREO");
         msg = "clear";
         var dir = new ROSLIB.Message({
@@ -1077,11 +1077,11 @@
     <div class="screen" id="live" style="display: none">
       <button onclick="stop('0')" class="stop">STOP ALL</button>
       <button onclick="toggle('0')" class="auto">AUTO ALL</button>
-      <button class="test_choreo" onclick="send_test_choreo()">
-        TEST CHOREO
+      <button class="test_broadcast" onclick="send_test_broadcast()">
+        TEST BROADCAST
       </button>
-      <button class="clear_choreo" onclick="send_clear_choreo()">
-        CLEAR CHOREO
+      <button class="clear_broadcast" onclick="send_clear_broadcast()">
+        CLEAR BROADCAST
       </button>
       <div class="statuses">
         <div class="chair_monitor" id="1">
