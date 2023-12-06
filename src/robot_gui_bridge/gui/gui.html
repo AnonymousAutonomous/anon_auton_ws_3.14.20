@@ -194,6 +194,14 @@
           return "READY";
         } else if (status == "h") {
           return "HEARTBEAT";
+        } else if (status == "H") {
+          return "HANDWRITTEN";
+        } else if (status == "A") {
+          return "AUTONOMOUS";
+        } else if (status == "B") {
+          return "BROADCAST";
+        } else if (status == "C") {
+          return "CHOREO";
         } else if (status == "Be") {
           return "EXCLUDE";
         } else if (status == "Bs") {
@@ -287,7 +295,10 @@
           // heartbeat
           m.data.length == 2 &&
           chairs.includes(m.data[0]) &&
-          m.data[1] == "h"
+          (m.data[1] == "H" ||
+            m.data[1] == "A" ||
+            m.data[1] == "C" ||
+            m.data[1] == "B")
         ) {
           updateHeartbeatStatus(m.data[0], m.data[1]);
         }
