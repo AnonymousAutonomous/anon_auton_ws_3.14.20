@@ -289,7 +289,6 @@
           chairs.includes(m.data[0]) &&
           m.data[1] == "B"
         ) {
-          live_status.set(m.data[0], m.data[2]);
           updateBroadcastStatus(m.data[0], m.data[1] + m.data[2]);
         } else if (
           // heartbeat
@@ -300,6 +299,7 @@
             m.data[1] == "C" ||
             m.data[1] == "B")
         ) {
+          live_status.set(m.data[0], m.data[1]);
           updateHeartbeatStatus(m.data[0], m.data[1]);
         }
         // image
