@@ -63,10 +63,9 @@ public:
 	char flag_EOC = 'n';
 	char flag_SOB = 'n';
 	char flag_EOB = 'n';
-}
+};
 
-std::vector<int>
-	active_chair_nums;
+std::vector<int> active_chair_nums;
 std::map<int, ChairStatus> chair_status_map;
 
 ros::Time startTime;
