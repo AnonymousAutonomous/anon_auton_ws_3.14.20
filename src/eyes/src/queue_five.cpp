@@ -295,7 +295,7 @@ void send_current_flags()
 	// Order [A][B][C][H][T][D][S][EOC][SOB][EOB]
 	// y/n
 
-	String all_flags = "";
+	std::string all_flags = "";
 	all_flags += flag_A ? 'y' : 'n';
 	all_flags += flag_B ? 'y' : 'n';
 	all_flags += flag_C ? 'y' : 'n';
