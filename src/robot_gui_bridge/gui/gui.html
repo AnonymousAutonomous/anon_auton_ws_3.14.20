@@ -232,8 +232,37 @@
       }
 
       function updateHeartbeatStatus(key, status) {
+        live_status.set(key, status);
         let element = document.getElementById(key + "status");
         updateChairStatus(element, status);
+      }
+
+      function updateFlags(
+        chair_num,
+        flag_A,
+        flag_B,
+        flag_C,
+        flag_H,
+        flag_T,
+        flag_D,
+        flag_S,
+        flag_EOC,
+        flag_SOB,
+        flag_EOB
+      ) {
+        let element = document.getElementById(chair_num + "_flags");
+        if (element) {
+          element.innerHTML = `flag_A: ${flag_A == "y" ? "TRUE" : ""}\n
+          flag_B: ${flag_B == "y" ? "TRUE" : ""}\n
+          flag_C: ${flag_C == "y" ? "TRUE" : ""}\n
+          flag_H: ${flag_H == "y" ? "TRUE" : ""}\n
+          flag_T: ${flag_T == "y" ? "TRUE" : ""}\n
+          flag_D: ${flag_D == "y" ? "TRUE" : ""}\n
+          flag_S: ${flag_S == "y" ? "TRUE" : ""}\n
+          flag_EOC: ${flag_EOC == "y" ? "TRUE" : ""}\n
+          flag_SOB: ${flag_SOB == "y" ? "TRUE" : ""}\n
+          flag_EOB: ${flag_EOB == "y" ? "TRUE" : ""}\n`;
+        }
       }
 
       function updateBroadcastStatus(key, status) {
@@ -265,15 +294,40 @@
 
       hub_to_gui_listener.subscribe(function (m) {
         // Update
-        if (m.data.length == 5 && m.data[0] == "u") {
+        if (m.data.length == 16 && m.data[0] == "u") {
           const chair_num = m.data[1];
           const broadcast_status = m.data[2];
           const stuck_status = m.data[3];
           const trapped_status = m.data[4];
+          const state_status = m.data[5];
+          const flag_A = m.data[6];
+          const flag_B = m.data[7];
+          const flag_C = m.data[8];
+          const flag_H = m.data[9];
+          const flag_T = m.data[10];
+          const flag_D = m.data[11];
+          const flag_S = m.data[12];
+          const flag_EOC = m.data[13];
+          const flag_SOB = m.data[14];
+          const flag_EOB = m.data[15];
 
           updateBroadcastStatus(chair_num, "B" + broadcast_status);
           updateChairStuckStatus(chair_num, "S" + stuck_status);
           updateChairTrappedStatus(chair_num, "T" + trapped_status);
+          updateHeartbeatStatus(chair_num, state_status);
+          updateFlags(
+            chair_num,
+            flag_A,
+            flag_B,
+            flag_C,
+            flag_H,
+            flag_T,
+            flag_D,
+            flag_S,
+            flag_EOC,
+            flag_SOB,
+            flag_EOB
+          );
         } else {
           playBeep();
           alert(m.data);
@@ -299,7 +353,7 @@
             m.data[1] == "C" ||
             m.data[1] == "B")
         ) {
-          live_status.set(m.data[0], m.data[1]);
+          // live_status.set(m.data[0], m.data[1]);
           updateHeartbeatStatus(m.data[0], m.data[1]);
         }
         // image
@@ -1092,6 +1146,7 @@
           <div class="status o" id="1_broadcast_status">OFFLINE</div>
           <div class="status o" id="1_stuck_status">OFFLINE</div>
           <div class="status o" id="1_trapped_status">OFFLINE</div>
+          <div id="1_flags"></div>
           <br />
           <div class="chair_control">
             <div class="directions">
@@ -1145,6 +1200,7 @@
           <div class="status o" id="2_broadcast_status">OFFLINE</div>
           <div class="status o" id="2_stuck_status">OFFLINE</div>
           <div class="status o" id="2_trapped_status">OFFLINE</div>
+          <div id="2_flags"></div>
           <br />
           <div class="chair_control">
             <div class="directions">
@@ -1198,6 +1254,7 @@
           <div class="status o" id="3_broadcast_status">OFFLINE</div>
           <div class="status o" id="3_stuck_status">OFFLINE</div>
           <div class="status o" id="3_trapped_status">OFFLINE</div>
+          <div id="3_flags"></div>
           <br />
           <div class="chair_control">
             <div class="directions">
@@ -1251,6 +1308,7 @@
           <div class="status o" id="4_broadcast_status">OFFLINE</div>
           <div class="status o" id="4_stuck_status">OFFLINE</div>
           <div class="status o" id="4_trapped_status">OFFLINE</div>
+          <div id="4_flags"></div>
           <br />
           <div class="chair_control">
             <div class="directions">
