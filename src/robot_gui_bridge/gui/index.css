@@ -110,6 +110,22 @@
     background-color: red;
 }
 
+.H {
+    background-color: orange;
+}
+
+.B {
+    background-color: cyan;
+}
+
+.A {
+    background-color: greenyellow;
+}
+
+.C {
+    background-color: yellow;
+}
+
 .sidebyside {
     display: flex;
     flex-direction: row;
