@@ -144,7 +144,7 @@ state mode = state::outside;
 
 std::queue<std_msgs::String> transmit_queue;
 
-void update_chair_from_heartbeat(const std::string &str)
+void update_chair_from_heartbeat(const std::string str)
 {
 	auto &ref = chair_status_map[str[0]];
 	ref.chairstate = static_cast<chair_state>(str[1]);
@@ -167,16 +167,11 @@ void receive_callback(const std_msgs::String &msg)
 		ROS_ERROR("hub manager callback for: %s", msg.data.c_str());
 	}
 
-	if (strlen(msg.data.c_str()) == 12)
-	{
-		update_chair_from_heartbeat(msg.data.c_str());
-	}
-
 	// ignore malformed messages and heartbeats
-	if (strlen(msg.data.c_str()) != 3)
-	{
-		return;
-	}
+	// if (strlen(msg.data.c_str()) != 3)
+	// {
+	// 	return;
+	// }
 
 	std::string stringmsg = std::string(msg.data.c_str());
 
@@ -191,6 +186,12 @@ void receive_callback(const std_msgs::String &msg)
 	if (std::find(active_chair_nums.begin(), active_chair_nums.end(), chair_number) == active_chair_nums.end())
 	{
 		return;
+	}
+
+	if (strlen(msg.data.c_str()) == 12)
+	{
+		update_chair_from_heartbeat(stringmsg);
+		return
 	}
 
 	ROS_ERROR("getting chair property");
