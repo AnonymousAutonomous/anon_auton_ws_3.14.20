@@ -283,6 +283,7 @@ ros::Publisher eoc_pub;
 ros::Publisher update_hub_pub;
 ros::Publisher audio_pub;
 ros::Publisher notify_lidar;
+ros::Publisher queue_to_manager_pub;
 
 inline const char *const BoolToString(bool b)
 {
@@ -306,10 +307,14 @@ int main(int argc, char **argv)
 	update_hub_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 	audio_pub = nh.advertise<std_msgs::String>("audio_channel", 1000);
 	notify_lidar = nh.advertise<std_msgs::Char>("queue_to_lidar", 1000);
+	queue_to_manager_pub = nh.advertise<std_msgs::Char>("queue_to_manager", 1000);
 
 	mode = state::autonomous;
 	while (ros::ok())
 	{
+		std_msgs::Char chair_state_msg;
+		chair_state_msg.data = static_cast<char>(mode);
+		queue_to_manager_pub.publish(chair_state_msg);
 		ROS_ERROR("\nflag_A:\t\t%s\tflag_B:\t\t%s\tflag_C:\t\t%s\tflag_H:\t\t%s\nflag_T:\t\t%s\tflag_D:\t\t%s\tflag_S:\t\t%s\nflag_EOC:\t%s\tflag_SOB:\t%s\tflag_EOB:\t%s", BoolToString(flag_A), BoolToString(flag_B), BoolToString(flag_C), BoolToString(flag_H), BoolToString(flag_T), BoolToString(flag_D), BoolToString(flag_S), BoolToString(flag_EOC), BoolToString(flag_SOB), BoolToString(flag_EOB));
 		// ROS_ERROR("ROS OK");
 		switch (mode)

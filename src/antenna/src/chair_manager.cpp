@@ -72,11 +72,21 @@ enum class chair_broadcast_status : char
 	success = 's',
 	failure = 'f'
 };
+
+enum class state : char
+{
+	autonomous = 'a',
+	choreo = 'c',
+	custom = 'h',
+	broadcast = 'b'
+};
 // enum class chair_stuck_status : char {stuck, not_stuck};
 // enum class chair_trapped_status : char {trapped, not_trapped};
 
 ros::Publisher chair_manager_pub;
 ros::Publisher from_chair_pub;
+
+state chair_state = state::autonomous;
 
 void handle_start()
 {
@@ -208,10 +218,15 @@ void receive_callback(const std_msgs::String &msg)
 	}
 }
 
+void chair_state_callback(const std_msgs::Char state_in)
+{
+	chair_state = state_in;
+}
+
 void onHeartbeat(const ros::TimerEvent &event)
 {
 	std_msgs::String msg;
-	msg.data = 'h'; // heartbeat!
+	msg.data = static_cast<char>(chair_state); // heartbeat!
 	from_chair_pub.publish(msg);
 }
 
@@ -223,6 +238,7 @@ int main(int argc, char **argv)
 
 	// initialize subscribers
 	ros::Subscriber sub = nh.subscribe("from_chair_receiver", 1000, receive_callback);
+	ros::Subscriber chair_state_sub = nh.subscribe("queue_to_manager", 1000, chair_state_callback);
 
 	// initialize publishers
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
