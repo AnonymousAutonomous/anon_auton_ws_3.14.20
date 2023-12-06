@@ -88,6 +88,7 @@ ros::Publisher chair_manager_pub;
 ros::Publisher from_chair_pub;
 
 state chair_state = state::autonomous;
+std::string chair_flags = "";
 
 void handle_start()
 {
