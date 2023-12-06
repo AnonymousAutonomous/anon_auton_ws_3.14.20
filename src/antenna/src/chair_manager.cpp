@@ -234,7 +234,7 @@ void chair_flags_callback(const std_msgs::String flags_in)
 void onHeartbeat(const ros::TimerEvent &event)
 {
 	std_msgs::String msg;
-	msg.data = static_cast<char>(chair_state); // heartbeat!
+	msg.data = static_cast<char>(chair_state) + chair_flags; // heartbeat!
 	from_chair_pub.publish(msg);
 }
 
