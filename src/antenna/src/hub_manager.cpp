@@ -147,7 +147,7 @@ std::queue<std_msgs::String> transmit_queue;
 void update_chair_from_heartbeat(const std::string &str)
 {
 	auto &ref = chair_status_map[str[0]];
-	ref.chairstate = str[1];
+	ref.chairstate = static_cast<chair_state>([1]);
 	ref.flag_A = str[2];
 	ref.flag_B = str[3];
 	ref.flag_C = str[4];
