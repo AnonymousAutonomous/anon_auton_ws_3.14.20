@@ -191,7 +191,7 @@ void receive_callback(const std_msgs::String &msg)
 	if (strlen(msg.data.c_str()) == 12)
 	{
 		update_chair_from_heartbeat(stringmsg);
-		return
+		return;
 	}
 
 	ROS_ERROR("getting chair property");
