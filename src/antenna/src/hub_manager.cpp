@@ -13,7 +13,9 @@ enum class chair_broadcast_status : char
 	ready = 'r',
 	exclude = 'e',
 	success = 's',
-	failure = 'f'
+	failure = 'f',
+	waiting = 'w',
+
 };
 enum class chair_stuck_status : char
 {
@@ -26,16 +28,46 @@ enum class chair_trapped_status : char
 	not_trapped = 'm'
 };
 
-struct chair_status
+enum class state : char
 {
+	autonomous = 'A',
+	choreo = 'C',
+	custom = 'H',
+	broadcast = 'B'
+};
+
+// struct chair_status
+// {
+// 	chair_broadcast_status cbs = chair_broadcast_status::success;
+// 	chair_stuck_status css = chair_stuck_status::not_stuck;
+// 	chair_trapped_status cts = chair_trapped_status::not_trapped;
+// 	// being user-controlled? low battery? surrounded? current command? connection break?
+// };
+
+class ChairStatus
+{
+public:
 	chair_broadcast_status cbs = chair_broadcast_status::success;
 	chair_stuck_status css = chair_stuck_status::not_stuck;
 	chair_trapped_status cts = chair_trapped_status::not_trapped;
-	// being user-controlled? low battery? surrounded? current command? connection break?
-};
+	state chair_state = state::autonomous;
+	// Order [A][B][C][H][T][D][S][EOC][SOB][EOB]
+	// y/n
+	char flag_A = 'n';
+	char flag_B = 'n';
+	char flag_C = 'n';
+	char flag_H = 'n';
+	char flag_T = 'n';
+	char flag_D = 'n';
+	char flag_S = 'n';
+	char flag_EOC = 'n';
+	char flag_SOB = 'n';
+	char flag_EOB = 'n';
+}
 
-std::vector<int> active_chair_nums;
-std::map<int, chair_status> chair_status_map;
+std::vector<int>
+	active_chair_nums;
+std::map<int, ChairStatus> chair_status_map;
 
 ros::Time startTime;
 ros::Duration waitDurationBeforeCheckingAgain(1.0); // 1.0 seconds
@@ -113,11 +145,32 @@ state mode = state::outside;
 
 std::queue<std_msgs::String> transmit_queue;
 
+void update_chair_from_heartbeat(const std::string &str)
+{
+	auto &ref = chair_status_map[str[0]];
+	ref.chair_state = str[1];
+	ref.flag_A = str[2];
+	ref.flag_B = str[3];
+	ref.flag_C = str[4];
+	ref.flag_H = str[5];
+	ref.flag_T = str[6];
+	ref.flag_D = str[7];
+	ref.flag_S = str[8];
+	ref.flag_EOC = str[9];
+	ref.flag_SOB = str[10];
+	ref.flag_EOB = str[11];
+}
+
 void receive_callback(const std_msgs::String &msg)
 {
 	if (strlen(msg.data.c_str()) > 2)
 	{
 		ROS_ERROR("hub manager callback for: %s", msg.data.c_str());
+	}
+
+	if (strlen(msg.data.c_str()) == 12)
+	{
+		update_chair_from_heartbeat(msg.data.c_str());
 	}
 
 	// ignore malformed messages and heartbeats
@@ -305,6 +358,17 @@ void guiStatusUpdate(const ros::TimerEvent &event)
 		statuses += static_cast<char>(p.second.cbs);
 		statuses += static_cast<char>(p.second.css);
 		statuses += static_cast<char>(p.second.cts);
+		statuses += static_cast<char>(p.second.chair_state);
+		statuses += static_cast<char>(p.second.flag_A);
+		statuses += static_cast<char>(p.second.flag_B);
+		statuses += static_cast<char>(p.second.flag_C);
+		statuses += static_cast<char>(p.second.flag_H);
+		statuses += static_cast<char>(p.second.flag_T);
+		statuses += static_cast<char>(p.second.flag_D);
+		statuses += static_cast<char>(p.second.flag_S);
+		statuses += static_cast<char>(p.second.flag_EOC);
+		statuses += static_cast<char>(p.second.flag_SOB);
+		statuses += static_cast<char>(p.second.flag_EOB);
 		std_msgs::String msg;
 		msg.data = statuses;
 		hub_to_gui_pub.publish(msg);
