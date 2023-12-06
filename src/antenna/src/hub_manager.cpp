@@ -28,7 +28,7 @@ enum class chair_trapped_status : char
 	not_trapped = 'm'
 };
 
-enum class state : char
+enum class chair_state : char
 {
 	autonomous = 'A',
 	choreo = 'C',
@@ -50,7 +50,7 @@ public:
 	chair_broadcast_status cbs = chair_broadcast_status::success;
 	chair_stuck_status css = chair_stuck_status::not_stuck;
 	chair_trapped_status cts = chair_trapped_status::not_trapped;
-	state chair_state = state::autonomous;
+	state chair_state = chair_state::autonomous;
 	// Order [A][B][C][H][T][D][S][EOC][SOB][EOB]
 	// y/n
 	char flag_A = 'n';
