@@ -224,7 +224,7 @@ void chair_state_callback(const std_msgs::Char state_in)
 	chair_state = static_cast<state>(state_in.data);
 }
 
-void chair_state_callback(const std_msgs::String flags_in)
+void chair_flags_callback(const std_msgs::String flags_in)
 {
 	// Order [A][B][C][H][T][D][S][EOC][SOB][EOB]
 	// y/n
