@@ -385,7 +385,7 @@ int main(int argc, char **argv)
 
 	for (int num : active_chair_nums)
 	{
-		chair_status_map[num] = chair_status();
+		chair_status_map[num] = ChairStatus();
 	}
 
 	// initialize spinner
