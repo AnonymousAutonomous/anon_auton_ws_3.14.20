@@ -224,6 +224,13 @@ void chair_state_callback(const std_msgs::Char state_in)
 	chair_state = static_cast<state>(state_in.data);
 }
 
+void chair_state_callback(const std_msgs::String flags_in)
+{
+	// Order [A][B][C][H][T][D][S][EOC][SOB][EOB]
+	// y/n
+	chair_flags = flags_in.data;
+}
+
 void onHeartbeat(const ros::TimerEvent &event)
 {
 	std_msgs::String msg;
@@ -240,6 +247,9 @@ int main(int argc, char **argv)
 	// initialize subscribers
 	ros::Subscriber sub = nh.subscribe("from_chair_receiver", 1000, receive_callback);
 	ros::Subscriber chair_state_sub = nh.subscribe("queue_to_lidar", 1000, chair_state_callback);
+
+	// TODO: delete this when actually running!
+	ros::Subscriber chair_flags_sub = nh.subscribe("queue_to_manager", 1000, chair_flags_callback);
 
 	// initialize publishers
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
