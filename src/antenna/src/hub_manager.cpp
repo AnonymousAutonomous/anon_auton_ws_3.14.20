@@ -50,7 +50,7 @@ public:
 	chair_broadcast_status cbs = chair_broadcast_status::success;
 	chair_stuck_status css = chair_stuck_status::not_stuck;
 	chair_trapped_status cts = chair_trapped_status::not_trapped;
-	state chair_state = chair_state::autonomous;
+	chair_state chairstate = chair_state::autonomous;
 	// Order [A][B][C][H][T][D][S][EOC][SOB][EOB]
 	// y/n
 	char flag_A = 'n';
@@ -147,7 +147,7 @@ std::queue<std_msgs::String> transmit_queue;
 void update_chair_from_heartbeat(const std::string &str)
 {
 	auto &ref = chair_status_map[str[0]];
-	ref.chair_state = str[1];
+	ref.chairstate = str[1];
 	ref.flag_A = str[2];
 	ref.flag_B = str[3];
 	ref.flag_C = str[4];
@@ -357,7 +357,7 @@ void guiStatusUpdate(const ros::TimerEvent &event)
 		statuses += static_cast<char>(p.second.cbs);
 		statuses += static_cast<char>(p.second.css);
 		statuses += static_cast<char>(p.second.cts);
-		statuses += static_cast<char>(p.second.chair_state);
+		statuses += static_cast<char>(p.second.chairstate);
 		statuses += static_cast<char>(p.second.flag_A);
 		statuses += static_cast<char>(p.second.flag_B);
 		statuses += static_cast<char>(p.second.flag_C);
