@@ -50,11 +50,11 @@
     background-color: orangered;
 }
 
-.test_choreo {
+.test_broadcast {
     background-color: yellow;
 }
 
-.clear_choreo {
+.clear_broadcast {
     background-color: magenta;
 }
 
@@ -108,6 +108,22 @@
 
 .o {
     background-color: red;
+}
+
+.H {
+    background-color: orange;
+}
+
+.B {
+    background-color: cyan;
+}
+
+.A {
+    background-color: greenyellow;
+}
+
+.C {
+    background-color: yellow;
 }
 
 .sidebyside {

@@ -283,10 +283,33 @@ ros::Publisher eoc_pub;
 ros::Publisher update_hub_pub;
 ros::Publisher audio_pub;
 ros::Publisher notify_lidar;
+ros::Publisher send_flags;
 
 inline const char *const BoolToString(bool b)
 {
 	return b ? "true" : "false";
+}
+
+void send_current_flags()
+{
+	// Order [A][B][C][H][T][D][S][EOC][SOB][EOB]
+	// y/n
+
+	std::string all_flags = "";
+	all_flags += flag_A ? 'y' : 'n';
+	all_flags += flag_B ? 'y' : 'n';
+	all_flags += flag_C ? 'y' : 'n';
+	all_flags += flag_H ? 'y' : 'n';
+	all_flags += flag_T ? 'y' : 'n';
+	all_flags += flag_D ? 'y' : 'n';
+	all_flags += flag_S ? 'y' : 'n';
+	all_flags += flag_EOC ? 'y' : 'n';
+	all_flags += flag_SOB ? 'y' : 'n';
+	all_flags += flag_EOB ? 'y' : 'n';
+
+	std_msgs::String str_msg;
+	str_msg.data = all_flags;
+	send_flags.publish(str_msg);
 }
 
 int main(int argc, char **argv)
@@ -306,10 +329,12 @@ int main(int argc, char **argv)
 	update_hub_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 	audio_pub = nh.advertise<std_msgs::String>("audio_channel", 1000);
 	notify_lidar = nh.advertise<std_msgs::Char>("queue_to_lidar", 1000);
+	send_flags = nh.advertise<std_msgs::String>("queue_to_manager", 1000);
 
 	mode = state::autonomous;
 	while (ros::ok())
 	{
+		send_current_flags();
 		ROS_ERROR("\nflag_A:\t\t%s\tflag_B:\t\t%s\tflag_C:\t\t%s\tflag_H:\t\t%s\nflag_T:\t\t%s\tflag_D:\t\t%s\tflag_S:\t\t%s\nflag_EOC:\t%s\tflag_SOB:\t%s\tflag_EOB:\t%s", BoolToString(flag_A), BoolToString(flag_B), BoolToString(flag_C), BoolToString(flag_H), BoolToString(flag_T), BoolToString(flag_D), BoolToString(flag_S), BoolToString(flag_EOC), BoolToString(flag_SOB), BoolToString(flag_EOB));
 		// ROS_ERROR("ROS OK");
 		switch (mode)

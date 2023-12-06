@@ -42,7 +42,7 @@
       // var chairs = ["1", "2", "3", "4"];
       console.log(live_status);
 
-      var test_choreo = [
+      var test_broadcast = [
         "00Bf2.0f2.0t5",
         "00BAp",
         "00Bf0.0f0.0t5",
@@ -194,6 +194,14 @@
           return "READY";
         } else if (status == "h") {
           return "HEARTBEAT";
+        } else if (status == "H") {
+          return "HANDWRITTEN";
+        } else if (status == "A") {
+          return "AUTONOMOUS";
+        } else if (status == "B") {
+          return "BROADCAST";
+        } else if (status == "C") {
+          return "CHOREO";
         } else if (status == "Be") {
           return "EXCLUDE";
         } else if (status == "Bs") {
@@ -224,8 +232,37 @@
       }
 
       function updateHeartbeatStatus(key, status) {
+        live_status.set(key, status);
         let element = document.getElementById(key + "status");
         updateChairStatus(element, status);
+      }
+
+      function updateFlags(
+        chair_num,
+        flag_A,
+        flag_B,
+        flag_C,
+        flag_H,
+        flag_T,
+        flag_D,
+        flag_S,
+        flag_EOC,
+        flag_SOB,
+        flag_EOB
+      ) {
+        let element = document.getElementById(chair_num + "_flags");
+        if (element) {
+          element.innerHTML = `${flag_A == "y" ? " A " : " x "}
+          ${flag_B == "y" ? " B " : " x "}
+          ${flag_C == "y" ? " C " : " x "}
+          ${flag_H == "y" ? " H " : " x "}
+          ${flag_T == "y" ? " T " : " x "}
+          ${flag_D == "y" ? " D " : " x "}
+          ${flag_S == "y" ? " S " : " x "}
+          ${flag_EOC == "y" ? "EOC" : " x "}
+          ${flag_SOB == "y" ? "SOB" : " x "}
+          ${flag_EOB == "y" ? "EOB" : " x "}`;
+        }
       }
 
       function updateBroadcastStatus(key, status) {
@@ -257,19 +294,45 @@
 
       hub_to_gui_listener.subscribe(function (m) {
         // Update
-        if (m.data.length == 5 && m.data[0] == "u") {
+        if (m.data.length == 16 && m.data[0] == "u") {
           const chair_num = m.data[1];
           const broadcast_status = m.data[2];
           const stuck_status = m.data[3];
           const trapped_status = m.data[4];
+          const state_status = m.data[5];
+          const flag_A = m.data[6];
+          const flag_B = m.data[7];
+          const flag_C = m.data[8];
+          const flag_H = m.data[9];
+          const flag_T = m.data[10];
+          const flag_D = m.data[11];
+          const flag_S = m.data[12];
+          const flag_EOC = m.data[13];
+          const flag_SOB = m.data[14];
+          const flag_EOB = m.data[15];
 
           updateBroadcastStatus(chair_num, "B" + broadcast_status);
           updateChairStuckStatus(chair_num, "S" + stuck_status);
           updateChairTrappedStatus(chair_num, "T" + trapped_status);
-        } else {
-          playBeep();
-          alert(m.data);
+          updateHeartbeatStatus(chair_num, state_status);
+          updateFlags(
+            chair_num,
+            flag_A,
+            flag_B,
+            flag_C,
+            flag_H,
+            flag_T,
+            flag_D,
+            flag_S,
+            flag_EOC,
+            flag_SOB,
+            flag_EOB
+          );
         }
+        // } else {
+        //   playBeep();
+        //   alert(m.data);
+        // }
       });
 
       txt_listener.subscribe(function (m) {
@@ -281,14 +344,17 @@
           chairs.includes(m.data[0]) &&
           m.data[1] == "B"
         ) {
-          live_status.set(m.data[0], m.data[2]);
           updateBroadcastStatus(m.data[0], m.data[1] + m.data[2]);
         } else if (
           // heartbeat
           m.data.length == 2 &&
           chairs.includes(m.data[0]) &&
-          m.data[1] == "h"
+          (m.data[1] == "H" ||
+            m.data[1] == "A" ||
+            m.data[1] == "C" ||
+            m.data[1] == "B")
         ) {
+          // live_status.set(m.data[0], m.data[1]);
           updateHeartbeatStatus(m.data[0], m.data[1]);
         }
         // image
@@ -304,7 +370,7 @@
           }
           live_status.set(key, null);
         }
-        setTimeout(checkStatus, 5000);
+        setTimeout(checkStatus, 1000);
       }
 
       checkStatus();
@@ -658,9 +724,9 @@
         hub_dir_listener.publish(formatMsg(id, "pivotr"));
       };
 
-      send_test_choreo = function () {
+      send_test_broadcast = function () {
         console.log("SENDING TEST CHOREO");
-        test_choreo.forEach((msg) => {
+        test_broadcast.forEach((msg) => {
           var dir = new ROSLIB.Message({
             data: msg,
           });
@@ -668,7 +734,7 @@
         });
       };
 
-      send_clear_choreo = function () {
+      send_clear_broadcast = function () {
         console.log("SENDING CLEAR CHOREO");
         msg = "clear";
         var dir = new ROSLIB.Message({
@@ -1066,11 +1132,11 @@
     <div class="screen" id="live" style="display: none">
       <button onclick="stop('0')" class="stop">STOP ALL</button>
       <button onclick="toggle('0')" class="auto">AUTO ALL</button>
-      <button class="test_choreo" onclick="send_test_choreo()">
-        TEST CHOREO
+      <button class="test_broadcast" onclick="send_test_broadcast()">
+        TEST BROADCAST
       </button>
-      <button class="clear_choreo" onclick="send_clear_choreo()">
-        CLEAR CHOREO
+      <button class="clear_broadcast" onclick="send_clear_broadcast()">
+        CLEAR BROADCAST
       </button>
       <div class="statuses">
         <div class="chair_monitor" id="1">
@@ -1081,6 +1147,7 @@
           <div class="status o" id="1_broadcast_status">OFFLINE</div>
           <div class="status o" id="1_stuck_status">OFFLINE</div>
           <div class="status o" id="1_trapped_status">OFFLINE</div>
+          <div id="1_flags"></div>
           <br />
           <div class="chair_control">
             <div class="directions">
@@ -1134,6 +1201,7 @@
           <div class="status o" id="2_broadcast_status">OFFLINE</div>
           <div class="status o" id="2_stuck_status">OFFLINE</div>
           <div class="status o" id="2_trapped_status">OFFLINE</div>
+          <div id="2_flags"></div>
           <br />
           <div class="chair_control">
             <div class="directions">
@@ -1187,6 +1255,7 @@
           <div class="status o" id="3_broadcast_status">OFFLINE</div>
           <div class="status o" id="3_stuck_status">OFFLINE</div>
           <div class="status o" id="3_trapped_status">OFFLINE</div>
+          <div id="3_flags"></div>
           <br />
           <div class="chair_control">
             <div class="directions">
@@ -1240,6 +1309,7 @@
           <div class="status o" id="4_broadcast_status">OFFLINE</div>
           <div class="status o" id="4_stuck_status">OFFLINE</div>
           <div class="status o" id="4_trapped_status">OFFLINE</div>
+          <div id="4_flags"></div>
           <br />
           <div class="chair_control">
             <div class="directions">
