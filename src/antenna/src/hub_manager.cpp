@@ -425,7 +425,7 @@ int main(int argc, char **argv)
 			}
 			if (!transmit_queue.empty())
 			{
-				ROS_ERROR("transmit queue not empty, let's send: %s", transmit_queue.front().data);
+				ROS_ERROR("transmit queue not empty, let's send: %s", transmit_queue.front().data.c_str());
 
 				// if (transmit_queue.front().data == "00Bfinish")
 				// {
