@@ -426,18 +426,33 @@ int main(int argc, char **argv)
 			if (!transmit_queue.empty())
 			{
 				ROS_ERROR("transmit queue not empty, let's send");
-				// ROS_ERROR("NUM COMMANDS: %d", transmit_queue.size());
-				// // Wait until entire broadcast is in the queue
-				// if (transmit_queue.back().data == "00Bend")
-				// {
-				// 	mode = state::awaiting_confirmation;
-				// }
-				mode = state::awaiting_confirmation;
-				// also transmit start of broadcast
-				std_msgs::String msg;
-				msg.data = "00Bstart";
-				hub_manager_pub.publish(msg);
-				startTime = ros::Time::now();
+
+				if (transmit_queue.front().data == "00Bfinish")
+				{
+					// Telling chairs to clear out the broadcast
+					std_msgs::String msg;
+					msg.data = "00Bfinish";
+					hub_manager_pub.publish(msg);
+
+					// Clear transmit queue (assumed done)
+					// TODO: if we want to queue up multiple broadcasts, need to change this
+					transmit_queue = std::queue<std_msgs::String>();
+				}
+				else
+				{
+					// ROS_ERROR("NUM COMMANDS: %d", transmit_queue.size());
+					// // Wait until entire broadcast is in the queue
+					// if (transmit_queue.back().data == "00Bend")
+					// {
+					// 	mode = state::awaiting_confirmation;
+					// }
+					mode = state::awaiting_confirmation;
+					// also transmit start of broadcast
+					std_msgs::String msg;
+					msg.data = "00Bstart";
+					hub_manager_pub.publish(msg);
+					startTime = ros::Time::now();
+				}
 			}
 			break;
 		}
