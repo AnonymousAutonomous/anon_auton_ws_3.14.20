@@ -76,6 +76,8 @@ int timesCheckedLimit = 10;
 ros::Publisher hub_manager_pub;
 ros::Publisher hub_to_gui_pub;
 
+bool pleaseClear = false;
+
 bool all_chairs_are_ready()
 {
 	for (const auto &p : chair_status_map)
@@ -318,8 +320,9 @@ void broadcast_callback(const std_msgs::String &msg)
 	ROS_ERROR("BROADCAST CALLBACK FOR %s", msg.data.c_str());
 	if (msg.data == "clear")
 	{
-		ROS_ERROR("CLEEEEEEEEEEEEEEEEEEAR");
-		clean_up_after_broadcast_done();
+		pleaseClear = true;
+		// ROS_ERROR("CLEEEEEEEEEEEEEEEEEEAR");
+		// clean_up_after_broadcast_done();
 	}
 	else
 	{
@@ -406,6 +409,11 @@ int main(int argc, char **argv)
 	mode = state::outside;
 	while (ros::ok())
 	{
+		if (pleaseClear)
+		{
+			clean_up_after_broadcast_done();
+			pleaseClear = false;
+		}
 		switch (mode)
 		{
 		case state::outside:
