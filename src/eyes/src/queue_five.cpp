@@ -290,7 +290,7 @@ inline const char *const BoolToString(bool b)
 	return b ? "true" : "false";
 }
 
-void send_current_flags()
+void send_current_flags(const ros::TimerEvent &event)
 {
 	// Order [A][B][C][H][T][D][S][EOC][SOB][EOB]
 	// y/n
