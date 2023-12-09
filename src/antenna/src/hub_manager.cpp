@@ -323,6 +323,7 @@ void broadcast_callback(const std_msgs::String &msg)
 		pleaseClear = true;
 		// ROS_ERROR("CLEEEEEEEEEEEEEEEEEEAR");
 		// clean_up_after_broadcast_done();
+		return;
 	}
 	else
 	{
