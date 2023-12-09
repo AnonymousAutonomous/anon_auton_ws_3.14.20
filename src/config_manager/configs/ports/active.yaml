@@ -1,3 +1,4 @@
+chair_num: '2'
 antenna_port: '/dev/ttyUSB0'
-chair_num: '1'
+device_path: '/dev/video0'
 port: '/dev/ttyACM0'

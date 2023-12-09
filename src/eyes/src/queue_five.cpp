@@ -290,7 +290,7 @@ inline const char *const BoolToString(bool b)
 	return b ? "true" : "false";
 }
 
-void send_current_flags(const ros::TimerEvent &event)
+void send_current_flags()
 {
 	// Order [A][B][C][H][T][D][S][EOC][SOB][EOB]
 	// y/n
@@ -331,12 +331,11 @@ int main(int argc, char **argv)
 	notify_lidar = nh.advertise<std_msgs::Char>("queue_to_lidar", 1000);
 	send_flags = nh.advertise<std_msgs::String>("queue_to_manager", 1000);
 
-	ros::Timer timer = nh.createTimer(ros::Duration(0.2), send_current_flags);
-
 	mode = state::autonomous;
 	while (ros::ok())
 	{
-		// ROS_ERROR("\nflag_A:\t\t%s\tflag_B:\t\t%s\tflag_C:\t\t%s\tflag_H:\t\t%s\nflag_T:\t\t%s\tflag_D:\t\t%s\tflag_S:\t\t%s\nflag_EOC:\t%s\tflag_SOB:\t%s\tflag_EOB:\t%s", BoolToString(flag_A), BoolToString(flag_B), BoolToString(flag_C), BoolToString(flag_H), BoolToString(flag_T), BoolToString(flag_D), BoolToString(flag_S), BoolToString(flag_EOC), BoolToString(flag_SOB), BoolToString(flag_EOB));
+		send_current_flags();
+		ROS_ERROR("\nflag_A:\t\t%s\tflag_B:\t\t%s\tflag_C:\t\t%s\tflag_H:\t\t%s\nflag_T:\t\t%s\tflag_D:\t\t%s\tflag_S:\t\t%s\nflag_EOC:\t%s\tflag_SOB:\t%s\tflag_EOB:\t%s", BoolToString(flag_A), BoolToString(flag_B), BoolToString(flag_C), BoolToString(flag_H), BoolToString(flag_T), BoolToString(flag_D), BoolToString(flag_S), BoolToString(flag_EOC), BoolToString(flag_SOB), BoolToString(flag_EOB));
 		// ROS_ERROR("ROS OK");
 		switch (mode)
 		{
