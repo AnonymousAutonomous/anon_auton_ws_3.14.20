@@ -164,7 +164,7 @@ void receive_callback(const std_msgs::String &msg)
 {
 	if (strlen(msg.data.c_str()) > 2)
 	{
-		ROS_ERROR("hub manager callback for: %s", msg.data.c_str());
+		// ROS_ERROR("hub manager callback for: %s", msg.data.c_str());
 	}
 
 	// ignore malformed messages and heartbeats
@@ -458,7 +458,7 @@ int main(int argc, char **argv)
 		}
 		case state::awaiting_confirmation:
 		{
-			ROS_ERROR("awaiting confirmation for %d commands", transmit_queue.size());
+			// ROS_ERROR("awaiting confirmation for %d commands", transmit_queue.size());
 
 			// // also transmit start of broadcast
 			// std_msgs::String msg;
