@@ -412,6 +412,7 @@ int main(int argc, char **argv)
 	{
 		if (pleaseClear)
 		{
+			ROS_ERROR("CLEARING");
 			clean_up_after_broadcast_done();
 			pleaseClear = false;
 		}
@@ -496,19 +497,23 @@ int main(int argc, char **argv)
 				}
 				break;
 			}
-			ROS_ERROR("ALL CHAIRS ARE READY");
-			mode = state::awaiting_status;
-			while (!transmit_queue.empty())
+			else
 			{
-				bool break_out = transmit_queue.front().data == "00Bend";
-				hub_manager_pub.publish(transmit_queue.front());
-				transmit_queue.pop();
-				// if (break_out)
-				// {
-				// 	mode = state::awaiting_status;
-				// 	break;
-				// }
+				ROS_ERROR("ALL CHAIRS ARE READY");
+				while (!transmit_queue.empty())
+				{
+					bool break_out = transmit_queue.front().data == "00Bend";
+					hub_manager_pub.publish(transmit_queue.front());
+					transmit_queue.pop();
+					// if (break_out)
+					// {
+					// 	mode = state::awaiting_status;
+					// 	break;
+					// }
+				}
+				mode = state::awaiting_status;
 			}
+
 			break;
 		}
 		case state::awaiting_status:
@@ -516,12 +521,12 @@ int main(int argc, char **argv)
 			// wait until cbs is success / failure for all chairs
 			// change state to outside
 			// transmit end of broadcast message
-			while (!all_chairs_are_done())
+			if (all_chairs_are_done())
 			{
-				// pass
+				ROS_ERROR("ALL CHAIRS ARE DONE");
+				clean_up_after_broadcast_done();
 			}
-			ROS_ERROR("ALL CHAIRS ARE DONE");
-			clean_up_after_broadcast_done();
+
 			break;
 		}
 		default:
