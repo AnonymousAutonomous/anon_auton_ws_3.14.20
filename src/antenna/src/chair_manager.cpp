@@ -265,14 +265,13 @@ int main(int argc, char **argv)
 	ros::Timer timer = nh.createTimer(ros::Duration(0.1), onHeartbeat);
 	// ros::Rate delay_rate(5); // 5 cycles per second
 
+	while (ros::ok())
+	{
+		// 	std_msgs::String msg;
+		// 	msg.data = 'h'; // heartbeat!
+		// 	from_chair_pub.publish(msg);
+		// 	delay_rate.sleep(); // runs out duration is remaining
+		spin.once()
+	}
 	ros::waitForShutdown();
-
-	// while (ros::ok())
-	// {
-	// 	std_msgs::String msg;
-	// 	msg.data = 'h'; // heartbeat!
-	// 	from_chair_pub.publish(msg);
-	// 	delay_rate.sleep(); // runs out duration is remaining
-	// 	spin.once()
-	// }
 }
