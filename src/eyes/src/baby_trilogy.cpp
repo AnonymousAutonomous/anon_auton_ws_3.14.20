@@ -214,7 +214,7 @@ void lidar_callback(const std_msgs::String &commands)
 
 			ROS_ERROR("checking lidar for %s: %d vs %d", commands.data.c_str(), earliest_choreo.toSec(), ros::Time::now().toSec());
 
-			if (ros::Time::now().toSec() >= earliest_choreo.toSec() + lidar_stuck_duration)
+			if (ros::Time::now().toSec() - lidar_stuck_duration <= earliest_choreo.toSec() + lidar_stuck_duration)
 			{
 				std_msgs::Char msg;
 				msg.data = 'S'; // Stuck!
