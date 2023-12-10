@@ -227,6 +227,7 @@ void chair_state_callback(const std_msgs::Char state_in)
 
 void chair_flags_callback(const std_msgs::String flags_in)
 {
+	ROS_ERROR("HERE ARE THE FLAGS: %s", flags_in.data.c_str())
 	// Order [A][B][C][H][T][D][S][EOC][SOB][EOB]
 	// y/n
 	chair_flags = flags_in.data;
