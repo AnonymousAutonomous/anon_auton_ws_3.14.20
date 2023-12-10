@@ -349,8 +349,25 @@ std::string notReadyChairsToString()
 	return response;
 }
 
+std::string offlineChairsToString()
+{
+	std::string response = "";
+	for (const auto &p : chair_status_map)
+	{
+		if (p.second.chairstate == chair_state::offline)
+		{
+			response += ('0' + p.first + ' ');
+		}
+	}
+	return response;
+}
+
 void alertGui(std::string custom_msg)
 {
+	if (custom_msg == "")
+	{
+		return;
+	}
 	std_msgs::String msg;
 	ROS_ERROR("alert gui: %s", custom_msg.c_str());
 	msg.data = "A CHAIR NEEDS HELP!\n" + custom_msg;
@@ -367,6 +384,7 @@ void guiStatusUpdate(const ros::TimerEvent &event)
 			p.second.chairstate = chair_state::offline;
 		}
 	}
+	alertGui(offlineChairsToString());
 	for (const auto &p : chair_status_map)
 	{
 		std::string statuses = "u";
