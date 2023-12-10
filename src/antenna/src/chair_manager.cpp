@@ -227,7 +227,7 @@ void chair_state_callback(const std_msgs::Char state_in)
 
 void chair_flags_callback(const std_msgs::String flags_in)
 {
-	ROS_ERROR("HERE ARE THE FLAGS: %s", flags_in.data.c_str())
+	ROS_ERROR("HERE ARE THE FLAGS: %s", flags_in.data.c_str());
 	// Order [A][B][C][H][T][D][S][EOC][SOB][EOB]
 	// y/n
 	chair_flags = flags_in.data;
@@ -235,6 +235,7 @@ void chair_flags_callback(const std_msgs::String flags_in)
 
 void onHeartbeat(const ros::TimerEvent &event)
 {
+	ROS_ERROR("<3");
 	std_msgs::String msg;
 	msg.data = static_cast<char>(chair_state) + chair_flags; // heartbeat!
 	from_chair_pub.publish(msg);
