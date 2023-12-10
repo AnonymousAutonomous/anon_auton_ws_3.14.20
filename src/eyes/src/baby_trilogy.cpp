@@ -180,6 +180,7 @@ void camera_callback(const std_msgs::String &commands)
 		{
 			ros::Time earliest_choreo = camera_trapped_pq.top();
 			camera_trapped_pq.pop();
+			ROS_ERROR("checking camera: %d", earliest_choreo.toSec());
 
 			if (ros::Time::now() >= earliest_choreo + camera_trapped_duration)
 			{
@@ -209,6 +210,8 @@ void lidar_callback(const std_msgs::String &commands)
 		{
 			ros::Time earliest_choreo = lidar_stuck_pq.top();
 			lidar_stuck_pq.pop();
+
+			ROS_ERROR("checking lidar: %d", earliest_choreo.toSec());
 
 			if (ros::Time::now() >= earliest_choreo + lidar_stuck_duration)
 			{
