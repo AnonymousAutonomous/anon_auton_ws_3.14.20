@@ -20,7 +20,7 @@ void lidar_callback(const std_msgs::String &commands);
 // N = 2; M = 3
 std::priority_queue<ros::Time> lidar_stuck_pq;
 int lidar_stuck_max_choreos = 2;
-ros::Duration lidar_stuck_duration(60.0 * 3); // 3 mins
+int lidar_stuck_duration = 60 * 3; // 3 mins in seconds
 
 // Keeps track of last N pivots. If we've done N pivots in the past M minutes, then we are stuck.
 // N = 2; M = 3
@@ -214,7 +214,7 @@ void lidar_callback(const std_msgs::String &commands)
 
 			ROS_ERROR("checking lidar for %s: %d vs %d", commands.data.c_str(), earliest_choreo.toSec(), ros::Time::now().toSec());
 
-			if (ros::Time::now() >= earliest_choreo + lidar_stuck_duration)
+			if (ros::Time::now().toSec() >= earliest_choreo.toSec() + lidar_stuck_duration)
 			{
 				std_msgs::Char msg;
 				msg.data = 'S'; // Stuck!
