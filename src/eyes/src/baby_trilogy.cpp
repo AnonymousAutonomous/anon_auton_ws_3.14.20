@@ -205,7 +205,8 @@ void lidar_callback(const std_msgs::String &commands)
 	// If choreo, then count towards stuck
 	if (commands.data[1] == 'C')
 	{
-		lidar_stuck_pq.push(ros::Time::now());
+		ros::Time nowTime = ros::Time::now();
+		lidar_stuck_pq.push(nowTime);
 		if (lidar_stuck_pq.size() >= lidar_stuck_max_choreos)
 		{
 			ros::Time earliest_choreo = lidar_stuck_pq.top();
