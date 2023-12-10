@@ -236,12 +236,12 @@ void chair_flags_callback(const std_msgs::String flags_in)
 	chair_flags = flags_in.data;
 }
 
-void onHeartbeat(const ros::TimerEvent &event)
+void onHeartbeat()
 {
-	ROS_ERROR("<3");
 	std_msgs::String msg;
 	msg.data = static_cast<char>(chair_state) + chair_flags; // heartbeat!
 	from_chair_pub.publish(msg);
+	ROS_ERROR("<3 %s", msg.data.c_str());
 }
 
 int main(int argc, char **argv)
