@@ -8,6 +8,7 @@
 #include <sstream>
 #include <map>
 #include <unordered_map>
+#include <queue>
 
 ros::Publisher driver_pub;
 ros::Publisher to_chair_manager_pub;
