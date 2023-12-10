@@ -211,7 +211,7 @@ void lidar_callback(const std_msgs::String &commands)
 			ros::Time earliest_choreo = lidar_stuck_pq.top();
 			lidar_stuck_pq.pop();
 
-			ROS_ERROR("checking lidar for %s: %d", commands.data.c_str(), earliest_choreo.toSec());
+			ROS_ERROR("checking lidar for %s: %d was %d mins ago", commands.data.c_str(), earliest_choreo.toSec(), (ros::Time::now() - earliest_choreo).toSec() / 60.0);
 
 			if (ros::Time::now() >= earliest_choreo + lidar_stuck_duration)
 			{
