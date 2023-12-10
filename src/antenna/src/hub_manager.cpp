@@ -33,7 +33,8 @@ enum class chair_state : char
 	autonomous = 'A',
 	choreo = 'C',
 	custom = 'H',
-	broadcast = 'B'
+	broadcast = 'B',
+	offline = 'o'
 };
 
 // struct chair_status
@@ -50,7 +51,7 @@ public:
 	chair_broadcast_status cbs = chair_broadcast_status::success;
 	chair_stuck_status css = chair_stuck_status::not_stuck;
 	chair_trapped_status cts = chair_trapped_status::not_trapped;
-	chair_state chairstate = chair_state::autonomous;
+	chair_state chairstate = chair_state::offline;
 	// Order [A][B][C][H][T][D][S][EOC][SOB][EOB]
 	// y/n
 	char flag_A = 'n';
@@ -63,6 +64,8 @@ public:
 	char flag_EOC = 'n';
 	char flag_SOB = 'n';
 	char flag_EOB = 'n';
+
+	ros::Time lastUpdatedTime = ros::Time::now();
 };
 
 std::vector<int> active_chair_nums;
@@ -70,6 +73,7 @@ std::map<int, ChairStatus> chair_status_map;
 
 ros::Time startTime;
 ros::Duration waitDurationBeforeCheckingAgain(1.0); // 1.0 seconds
+ros::Duration timeBeforeChairOffline(2.0);			// 2.0 seconds
 int timesChecked = 0;
 int timesCheckedLimit = 10;
 
@@ -160,6 +164,7 @@ void update_chair_from_heartbeat(const std::string str)
 	ref.flag_EOC = str[9];
 	ref.flag_SOB = str[10];
 	ref.flag_EOB = str[11];
+	ref.lastUpdatedTime = ros::Time::now();
 }
 
 void receive_callback(const std_msgs::String &msg)
@@ -355,6 +360,13 @@ void alertGui(std::string custom_msg)
 void guiStatusUpdate(const ros::TimerEvent &event)
 {
 
+	for (auto &p : chair_status_map)
+	{
+		if (ros::Time::now() >= p.second.lastUpdatedTime + timeBeforeChairOffline)
+		{
+			p.second.chairstate = chair_state::offline;
+		}
+	}
 	for (const auto &p : chair_status_map)
 	{
 		std::string statuses = "u";
