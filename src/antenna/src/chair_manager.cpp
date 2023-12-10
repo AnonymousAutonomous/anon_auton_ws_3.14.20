@@ -271,7 +271,7 @@ int main(int argc, char **argv)
 		// 	msg.data = 'h'; // heartbeat!
 		// 	from_chair_pub.publish(msg);
 		// 	delay_rate.sleep(); // runs out duration is remaining
-		spin.once()
+		// spin.once()
 	}
 	ros::waitForShutdown();
 }
