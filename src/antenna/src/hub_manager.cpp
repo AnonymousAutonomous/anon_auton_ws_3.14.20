@@ -74,7 +74,7 @@ std::map<int, ChairStatus> chair_status_map;
 ros::Time startTime;
 ros::Duration waitDurationBeforeCheckingAgain(1.0); // 1.0 seconds
 ros::Duration timeBeforeChairOffline(2.0);			// 2.0 seconds
-ros::Duration maxBroadcastTime(20.0);				// 20.0 seconds
+ros::Duration maxBroadcastTime(30.0);				// seconds
 int timesChecked = 0;
 int timesCheckedLimit = 10;
 
