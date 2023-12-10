@@ -356,7 +356,8 @@ std::string offlineChairsToString()
 	{
 		if (p.second.chairstate == chair_state::offline)
 		{
-			response += ('0' + p.first) + ' ';
+			response += ('0' + p.first);
+			response += ' ';
 		}
 	}
 	return response;
