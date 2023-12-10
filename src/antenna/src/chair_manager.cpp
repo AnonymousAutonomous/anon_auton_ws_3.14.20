@@ -247,6 +247,10 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "chair_manager");
 	ros::NodeHandle nh;
 
+	// initialize spinner
+	ros::AsyncSpinner spinner(0);
+	spinner.start();
+
 	// initialize subscribers
 	ros::Subscriber sub = nh.subscribe("from_chair_receiver", 1000, receive_callback);
 	ros::Subscriber chair_state_sub = nh.subscribe("queue_to_lidar", 1000, chair_state_callback);
@@ -261,9 +265,6 @@ int main(int argc, char **argv)
 	ros::Timer timer = nh.createTimer(ros::Duration(0.1), onHeartbeat);
 	// ros::Rate delay_rate(5); // 5 cycles per second
 
-	// initialize spinner
-	ros::AsyncSpinner spinner(0);
-	spinner.start();
 	ros::waitForShutdown();
 
 	// while (ros::ok())
