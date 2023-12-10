@@ -74,6 +74,7 @@ std::map<int, ChairStatus> chair_status_map;
 ros::Time startTime;
 ros::Duration waitDurationBeforeCheckingAgain(1.0); // 1.0 seconds
 ros::Duration timeBeforeChairOffline(2.0);			// 2.0 seconds
+ros::Duration maxBroadcastTime(15.0);				// 15.0 seconds
 int timesChecked = 0;
 int timesCheckedLimit = 10;
 
@@ -536,12 +537,14 @@ int main(int argc, char **argv)
 					bool break_out = transmit_queue.front().data == "00Bend";
 					hub_manager_pub.publish(transmit_queue.front());
 					transmit_queue.pop();
-					// if (break_out)
-					// {
-					// 	mode = state::awaiting_status;
-					// 	break;
-					// }
+					if (break_out)
+					{
+						startTime = ros::Time::now();
+						mode = state::awaiting_status;
+						break;
+					}
 				}
+				startTime = ros::Time::now();
 				mode = state::awaiting_status;
 			}
 
@@ -552,7 +555,7 @@ int main(int argc, char **argv)
 			// wait until cbs is success / failure for all chairs
 			// change state to outside
 			// transmit end of broadcast message
-			if (all_chairs_are_done())
+			if (all_chairs_are_done() || ros::Time::now() >= startTime + maxBroadcastTime)
 			{
 				ROS_ERROR("ALL CHAIRS ARE DONE");
 				clean_up_after_broadcast_done();
