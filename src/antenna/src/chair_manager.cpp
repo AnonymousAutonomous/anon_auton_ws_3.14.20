@@ -90,6 +90,9 @@ ros::Publisher from_chair_pub;
 state chair_state = state::autonomous;
 std::string chair_flags = "";
 
+ros::Time startTime;
+ros::Duration heartbeatDuration(0.5); // 0.5 seconds
+
 void handle_start()
 {
 	system("echo \"toggle\" > /tmp/handwritten-input");
@@ -262,11 +265,17 @@ int main(int argc, char **argv)
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
 	from_chair_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 
-	ros::Timer timer = nh.createTimer(ros::Duration(0.1), onHeartbeat);
+	// ros::Timer timer = nh.createTimer(ros::Duration(0.1), onHeartbeat);
 	// ros::Rate delay_rate(5); // 5 cycles per second
+	startTime = ros::Time::now();
 
 	while (ros::ok())
 	{
+		if (ros::Time::now() >= startTime + heartbeatDuration)
+		{
+			onHeartbeat();
+			startTime = ros::Time::now();
+		}
 		// 	std_msgs::String msg;
 		// 	msg.data = 'h'; // heartbeat!
 		// 	from_chair_pub.publish(msg);
