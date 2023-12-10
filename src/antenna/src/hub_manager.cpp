@@ -413,6 +413,7 @@ int main(int argc, char **argv)
 		{
 			clean_up_after_broadcast_done();
 			pleaseClear = false;
+			return;
 		}
 		switch (mode)
 		{
