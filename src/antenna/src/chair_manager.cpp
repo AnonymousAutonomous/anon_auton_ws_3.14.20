@@ -236,14 +236,6 @@ void chair_flags_callback(const std_msgs::String flags_in)
 	chair_flags = flags_in.data;
 }
 
-void onHeartbeat()
-{
-	std_msgs::String msg;
-	msg.data = static_cast<char>(chair_state) + chair_flags; // heartbeat!
-	from_chair_pub.publish(msg);
-	ROS_ERROR("<3 %s", msg.data.c_str());
-}
-
 int main(int argc, char **argv)
 {
 	// initialize node and node handle
@@ -273,14 +265,18 @@ int main(int argc, char **argv)
 	{
 		if (ros::Time::now() >= startTime + heartbeatDuration)
 		{
-			onHeartbeat();
+			// Send heartbeat
+			std_msgs::String msg;
+			msg.data = static_cast<char>(chair_state) + chair_flags; // heartbeat!
+			from_chair_pub.publish(msg);
+			ROS_ERROR("<3 %s", msg.data.c_str());
 			startTime = ros::Time::now();
 		}
 		// 	std_msgs::String msg;
 		// 	msg.data = 'h'; // heartbeat!
 		// 	from_chair_pub.publish(msg);
 		// 	delay_rate.sleep(); // runs out duration is remaining
-		// spin.once()
+		ros::spinOnce();
 	}
 	ros::waitForShutdown();
 }
