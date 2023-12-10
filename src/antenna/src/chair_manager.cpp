@@ -90,6 +90,9 @@ ros::Publisher from_chair_pub;
 state chair_state = state::autonomous;
 std::string chair_flags = "";
 
+ros::Time startTime;
+ros::Duration heartbeatDuration(0.5); // 0.5 seconds
+
 void handle_start()
 {
 	system("echo \"toggle\" > /tmp/handwritten-input");
@@ -227,16 +230,10 @@ void chair_state_callback(const std_msgs::Char state_in)
 
 void chair_flags_callback(const std_msgs::String flags_in)
 {
+	ROS_ERROR("HERE ARE THE FLAGS: %s", flags_in.data.c_str());
 	// Order [A][B][C][H][T][D][S][EOC][SOB][EOB]
 	// y/n
 	chair_flags = flags_in.data;
-}
-
-void onHeartbeat(const ros::TimerEvent &event)
-{
-	std_msgs::String msg;
-	msg.data = static_cast<char>(chair_state) + chair_flags; // heartbeat!
-	from_chair_pub.publish(msg);
 }
 
 int main(int argc, char **argv)
@@ -244,6 +241,10 @@ int main(int argc, char **argv)
 	// initialize node and node handle
 	ros::init(argc, argv, "chair_manager");
 	ros::NodeHandle nh;
+
+	// initialize spinner
+	ros::AsyncSpinner spinner(0);
+	spinner.start();
 
 	// initialize subscribers
 	ros::Subscriber sub = nh.subscribe("from_chair_receiver", 1000, receive_callback);
@@ -256,20 +257,26 @@ int main(int argc, char **argv)
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
 	from_chair_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 
-	ros::Timer timer = nh.createTimer(ros::Duration(0.1), onHeartbeat);
+	// ros::Timer timer = nh.createTimer(ros::Duration(0.1), onHeartbeat);
 	// ros::Rate delay_rate(5); // 5 cycles per second
+	startTime = ros::Time::now();
 
-	// initialize spinner
-	ros::AsyncSpinner spinner(0);
-	spinner.start();
-	ros::waitForShutdown();
-
-	// while (ros::ok())
-	// {
-	// 	std_msgs::String msg;
-	// 	msg.data = 'h'; // heartbeat!
-	// 	from_chair_pub.publish(msg);
-	// 	delay_rate.sleep(); // runs out duration is remaining
-	// 	spin.once()
-	// }
+	while (ros::ok())
+	{
+		if (ros::Time::now() >= startTime + heartbeatDuration)
+		{
+			// Send heartbeat
+			std_msgs::String msg;
+			msg.data = static_cast<char>(chair_state) + chair_flags; // heartbeat!
+			from_chair_pub.publish(msg);
+			ROS_ERROR("<3 %s", msg.data.c_str());
+			startTime = ros::Time::now();
+		}
+		// 	std_msgs::String msg;
+		// 	msg.data = 'h'; // heartbeat!
+		// 	from_chair_pub.publish(msg);
+		// 	delay_rate.sleep(); // runs out duration is remaining
+		// ros::spin();
+	}
+	// ros::waitForShutdown();
 }

@@ -76,6 +76,8 @@ int timesCheckedLimit = 10;
 ros::Publisher hub_manager_pub;
 ros::Publisher hub_to_gui_pub;
 
+bool pleaseClear = false;
+
 bool all_chairs_are_ready()
 {
 	for (const auto &p : chair_status_map)
@@ -164,7 +166,7 @@ void receive_callback(const std_msgs::String &msg)
 {
 	if (strlen(msg.data.c_str()) > 2)
 	{
-		ROS_ERROR("hub manager callback for: %s", msg.data.c_str());
+		// ROS_ERROR("hub manager callback for: %s", msg.data.c_str());
 	}
 
 	// ignore malformed messages and heartbeats
@@ -175,7 +177,7 @@ void receive_callback(const std_msgs::String &msg)
 
 	std::string stringmsg = std::string(msg.data.c_str());
 
-	ROS_ERROR("getting chair number");
+	// ROS_ERROR("getting chair number");
 
 	// update chair status vector
 	// format of str msg is {chair number}{chair status indicator}{new value}
@@ -194,7 +196,7 @@ void receive_callback(const std_msgs::String &msg)
 		return;
 	}
 
-	ROS_ERROR("getting chair property");
+	// ROS_ERROR("getting chair property");
 
 	char chair_property = stringmsg[1];
 
@@ -204,7 +206,7 @@ void receive_callback(const std_msgs::String &msg)
 		return;
 	}
 
-	ROS_ERROR("getting property value");
+	// ROS_ERROR("getting property value");
 
 	char property_value = stringmsg[2];
 
@@ -318,8 +320,10 @@ void broadcast_callback(const std_msgs::String &msg)
 	ROS_ERROR("BROADCAST CALLBACK FOR %s", msg.data.c_str());
 	if (msg.data == "clear")
 	{
-		ROS_ERROR("CLEEEEEEEEEEEEEEEEEEAR");
-		clean_up_after_broadcast_done();
+		pleaseClear = true;
+		// ROS_ERROR("CLEEEEEEEEEEEEEEEEEEAR");
+		// clean_up_after_broadcast_done();
+		return;
 	}
 	else
 	{
@@ -406,6 +410,12 @@ int main(int argc, char **argv)
 	mode = state::outside;
 	while (ros::ok())
 	{
+		if (pleaseClear)
+		{
+			ROS_ERROR("CLEARING");
+			clean_up_after_broadcast_done();
+			pleaseClear = false;
+		}
 		switch (mode)
 		{
 		case state::outside:
@@ -425,7 +435,21 @@ int main(int argc, char **argv)
 			}
 			if (!transmit_queue.empty())
 			{
-				ROS_ERROR("transmit queue not empty, let's send");
+				ROS_ERROR("transmit queue not empty, let's send: %s", transmit_queue.front().data.c_str());
+
+				// if (transmit_queue.front().data == "00Bfinish")
+				// {
+				// 	// Telling chairs to clear out the broadcast
+				// 	std_msgs::String msg;
+				// 	msg.data = "00Bfinish";
+				// 	hub_manager_pub.publish(msg);
+
+				// 	// Clear transmit queue (assumed done)
+				// 	// TODO: if we want to queue up multiple broadcasts, need to change this
+				// 	transmit_queue = std::queue<std_msgs::String>();
+				// }
+				// else
+				// {
 				// ROS_ERROR("NUM COMMANDS: %d", transmit_queue.size());
 				// // Wait until entire broadcast is in the queue
 				// if (transmit_queue.back().data == "00Bend")
@@ -438,12 +462,13 @@ int main(int argc, char **argv)
 				msg.data = "00Bstart";
 				hub_manager_pub.publish(msg);
 				startTime = ros::Time::now();
+				// }
 			}
 			break;
 		}
 		case state::awaiting_confirmation:
 		{
-			ROS_ERROR("awaiting confirmation for %d commands", transmit_queue.size());
+			// ROS_ERROR("awaiting confirmation for %d commands", transmit_queue.size());
 
 			// // also transmit start of broadcast
 			// std_msgs::String msg;
@@ -472,19 +497,23 @@ int main(int argc, char **argv)
 				}
 				break;
 			}
-			ROS_ERROR("ALL CHAIRS ARE READY");
-			mode = state::awaiting_status;
-			while (!transmit_queue.empty())
+			else
 			{
-				bool break_out = transmit_queue.front().data == "00Bend";
-				hub_manager_pub.publish(transmit_queue.front());
-				transmit_queue.pop();
-				// if (break_out)
-				// {
-				// 	mode = state::awaiting_status;
-				// 	break;
-				// }
+				ROS_ERROR("ALL CHAIRS ARE READY");
+				while (!transmit_queue.empty())
+				{
+					bool break_out = transmit_queue.front().data == "00Bend";
+					hub_manager_pub.publish(transmit_queue.front());
+					transmit_queue.pop();
+					// if (break_out)
+					// {
+					// 	mode = state::awaiting_status;
+					// 	break;
+					// }
+				}
+				mode = state::awaiting_status;
 			}
+
 			break;
 		}
 		case state::awaiting_status:
@@ -492,12 +521,12 @@ int main(int argc, char **argv)
 			// wait until cbs is success / failure for all chairs
 			// change state to outside
 			// transmit end of broadcast message
-			while (!all_chairs_are_done())
+			if (all_chairs_are_done())
 			{
-				// pass
+				ROS_ERROR("ALL CHAIRS ARE DONE");
+				clean_up_after_broadcast_done();
 			}
-			ROS_ERROR("ALL CHAIRS ARE DONE");
-			clean_up_after_broadcast_done();
+
 			break;
 		}
 		default:
