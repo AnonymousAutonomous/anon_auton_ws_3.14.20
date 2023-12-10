@@ -236,6 +236,41 @@ void chair_flags_callback(const std_msgs::String flags_in)
 	chair_flags = flags_in.data;
 }
 
+void stuck_or_trapped_callback(const std_msgs::Char state_in)
+{
+	// Stuck!
+	if (state_in.data == 'S')
+	{
+		std_msgs::String msg;
+		msg.data = "Ss";
+		from_chair_pub.publish(msg);
+	}
+	// Trapped!
+	else if (state_in.data == 'T')
+	{
+		std_msgs::String msg;
+		msg.data = "Tt";
+		from_chair_pub.publish(msg);
+	}
+	// Not stuck anymore
+	else if (state_in.data == 's')
+	{
+		std_msgs::String msg;
+		msg.data = "Sn";
+		from_chair_pub.publish(msg);
+	}
+	// Not trapped anymore
+	else if (state_in.data == 't')
+	{
+		std_msgs::String msg;
+		msg.data = "Tm";
+		from_chair_pub.publish(msg);
+	}
+	{
+		return;
+	}
+}
+
 int main(int argc, char **argv)
 {
 	// initialize node and node handle
@@ -252,6 +287,7 @@ int main(int argc, char **argv)
 
 	// TODO: delete this when actually running!
 	ros::Subscriber chair_flags_sub = nh.subscribe("queue_to_manager", 1000, chair_flags_callback);
+	ros::Subscriber trapped_stuck_sub = nh.subscribe("stuck_or_trapped_alert", 1000, stuck_or_trapped_callback);
 
 	// initialize publishers
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
