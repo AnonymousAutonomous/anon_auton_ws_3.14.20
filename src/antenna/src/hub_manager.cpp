@@ -197,7 +197,7 @@ void receive_callback(const std_msgs::String &msg)
 		return;
 	}
 
-	if (strlen(msg.data.c_str()) == 12)
+	if (strlen(msg.data.c_str()) == 14)
 	{
 		update_chair_from_heartbeat(stringmsg);
 		return;
