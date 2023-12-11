@@ -309,12 +309,10 @@ int main(int argc, char **argv)
 			from_chair_pub.publish(msg);
 
 			// send stuck or not
-			std_msgs::String msg;
 			msg.data = "S" + static_cast<char>(chair_stuck_state);
 			from_chair_pub.publish(msg);
 
 			// send trapped or not
-			std_msgs::String msg;
 			msg.data = "T" + static_cast<char>(chair_trapped_state);
 			from_chair_pub.publish(msg);
 
