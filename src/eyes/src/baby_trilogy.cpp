@@ -71,6 +71,7 @@ void updateStuckStatus()
 	if (lidar_stuck_pq.size() > 0)
 	{
 		double earliest_choreo = lidar_stuck_pq.top();
+		ROS_ERROR("LIDAR DIFF: %d", ros::WallTime::now().toSec() - earliest_choreo);
 		if (ros::WallTime::now().toSec() - lidar_stuck_duration <= earliest_choreo)
 		{
 			std_msgs::Char msg;
@@ -91,6 +92,8 @@ void updateTrappedStatus()
 	if (camera_trapped_pq.size() > 0)
 	{
 		double earliest_choreo = camera_trapped_pq.top();
+		ROS_ERROR("CAMERA DIFF: %d", ros::WallTime::now().toSec() - earliest_choreo);
+
 		if (ros::WallTime::now().toSec() - camera_trapped_duration <= earliest_choreo)
 		{
 			std_msgs::Char msg;
