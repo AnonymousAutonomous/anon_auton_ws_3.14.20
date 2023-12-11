@@ -148,18 +148,20 @@ std::queue<std_msgs::String> transmit_queue;
 
 void update_chair_from_heartbeat(const std::string str)
 {
-	auto &ref = chair_status_map[str[0] - 48];
+	ChairStatus &ref = chair_status_map[str[0] - 48];
 	ref.chairstate = static_cast<chair_state>(str[1]);
-	ref.flag_A = str[2];
-	ref.flag_B = str[3];
-	ref.flag_C = str[4];
-	ref.flag_H = str[5];
-	ref.flag_T = str[6];
-	ref.flag_D = str[7];
-	ref.flag_S = str[8];
-	ref.flag_EOC = str[9];
-	ref.flag_SOB = str[10];
-	ref.flag_EOB = str[11];
+	ref.css = static_cast<chair_stuck_status>(str[2]);
+	ref.cts = static_cast<chair_trapped_status>(str[3]);
+	ref.flag_A = str[4];
+	ref.flag_B = str[5];
+	ref.flag_C = str[6];
+	ref.flag_H = str[7];
+	ref.flag_T = str[8];
+	ref.flag_D = str[9];
+	ref.flag_S = str[10];
+	ref.flag_EOC = str[11];
+	ref.flag_SOB = str[12];
+	ref.flag_EOB = str[13];
 }
 
 void receive_callback(const std_msgs::String &msg)
@@ -240,6 +242,7 @@ void receive_callback(const std_msgs::String &msg)
 		chair_status_map[chair_number].cbs = incoming_status;
 		break;
 	}
+	// Now also be sent along as part of heartbeat
 	case 'S':
 	{
 		chair_stuck_status incoming_stuck_status = static_cast<chair_stuck_status>(property_value);
@@ -259,6 +262,7 @@ void receive_callback(const std_msgs::String &msg)
 		chair_status_map[chair_number].css = incoming_stuck_status;
 		break;
 	}
+	// Now also be sent along as part of heartbeat
 	case 'T':
 	{
 		chair_trapped_status incoming_trapped_status = static_cast<chair_trapped_status>(property_value);

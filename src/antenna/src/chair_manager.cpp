@@ -252,48 +252,48 @@ void stuck_or_trapped_callback(const std_msgs::Char state_in)
 	if (state_in.data == 'S')
 	{
 		// send first time
-		if (chair_stuck_state == chair_stuck_status::not_stuck)
-		{
-			std_msgs::String msg;
-			msg.data = "Ss";
-			from_chair_pub.publish(msg);
-		}
+		// if (chair_stuck_state == chair_stuck_status::not_stuck)
+		// {
+		// 	std_msgs::String msg;
+		// 	msg.data = "Ss";
+		// 	from_chair_pub.publish(msg);
+		// }
 		chair_stuck_state = chair_stuck_status::stuck;
 	}
 	// Trapped!
 	else if (state_in.data == 'T')
 	{
 		// send first time
-		if (chair_trapped_state == chair_trapped_status::not_trapped)
-		{
-			std_msgs::String msg;
-			msg.data = "Tt";
-			from_chair_pub.publish(msg);
-		}
+		// if (chair_trapped_state == chair_trapped_status::not_trapped)
+		// {
+		// 	std_msgs::String msg;
+		// 	msg.data = "Tt";
+		// 	from_chair_pub.publish(msg);
+		// }
 		chair_trapped_state = chair_trapped_status::trapped;
 	}
 	// Not stuck anymore
 	else if (state_in.data == 's')
 	{
 		// send first time
-		if (chair_stuck_state == chair_stuck_status::stuck)
-		{
-			std_msgs::String msg;
-			msg.data = "Sn";
-			from_chair_pub.publish(msg);
-		}
+		// if (chair_stuck_state == chair_stuck_status::stuck)
+		// {
+		// 	std_msgs::String msg;
+		// 	msg.data = "Sn";
+		// 	from_chair_pub.publish(msg);
+		// }
 		chair_stuck_state = chair_stuck_status::not_stuck;
 	}
 	// Not trapped anymore
 	else if (state_in.data == 't')
 	{
 		// send first time
-		if (chair_trapped_state == chair_trapped_status::trapped)
-		{
-			std_msgs::String msg;
-			msg.data = "Tm";
-			from_chair_pub.publish(msg);
-		}
+		// if (chair_trapped_state == chair_trapped_status::trapped)
+		// {
+		// 	std_msgs::String msg;
+		// 	msg.data = "Tm";
+		// 	from_chair_pub.publish(msg);
+		// }
 		chair_trapped_state = chair_trapped_status::not_trapped;
 	}
 	{
@@ -333,7 +333,10 @@ int main(int argc, char **argv)
 		{
 			// Send heartbeat with statuses
 			std_msgs::String msg;
-			msg.data = static_cast<char>(chair_state) + chair_flags; // heartbeat!
+			msg.data = static_cast<char>(chair_state);
+			msg.data += static_cast<char>(chair_stuck_state);
+			msg.data += static_cast<char>(chair_trapped_state);
+			msg.data += chair_flags; // heartbeat!
 			from_chair_pub.publish(msg);
 
 			// // send stuck or not
