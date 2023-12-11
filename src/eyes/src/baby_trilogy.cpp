@@ -20,8 +20,8 @@ void lidar_callback(const std_msgs::String &commands);
 // N = 2; M = 3
 // Contains unix walltime as double
 std::priority_queue<double> lidar_stuck_pq;
-int lidar_stuck_max_choreos = 2;
-int lidar_stuck_duration = 60 * 3; // 3 mins in seconds
+int lidar_stuck_max_choreos = 1;
+int lidar_stuck_duration = 30; // 1 min in seconds
 
 // Keeps track of last N pivots. If we've done N pivots in the past M minutes, then we are stuck.
 // N = 2; M = 3
