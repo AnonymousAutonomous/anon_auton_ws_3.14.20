@@ -81,13 +81,23 @@ enum class state : char
 	custom = 'H',
 	broadcast = 'B'
 };
-// enum class chair_stuck_status : char {stuck, not_stuck};
-// enum class chair_trapped_status : char {trapped, not_trapped};
+enum class chair_stuck_status : char
+{
+	stuck = 's',
+	not_stuck = 'n'
+};
+enum class chair_trapped_status : char
+{
+	trapped = 't',
+	not_trapped = 'm'
+};
 
 ros::Publisher chair_manager_pub;
 ros::Publisher from_chair_pub;
 
 state chair_state = state::autonomous;
+state chair_stuck_state = chair_stuck_status::not_stuck;
+state chair_trapped_state = chair_trapped_status::not_trapped;
 std::string chair_flags = "";
 
 ros::Time startTime;
@@ -241,30 +251,22 @@ void stuck_or_trapped_callback(const std_msgs::Char state_in)
 	// Stuck!
 	if (state_in.data == 'S')
 	{
-		std_msgs::String msg;
-		msg.data = "Ss";
-		from_chair_pub.publish(msg);
+		chair_stuck_state = chair_stuck_status::stuck;
 	}
 	// Trapped!
 	else if (state_in.data == 'T')
 	{
-		std_msgs::String msg;
-		msg.data = "Tt";
-		from_chair_pub.publish(msg);
+		chair_trapped_state = chair_trapped_status::trapped;
 	}
 	// Not stuck anymore
 	else if (state_in.data == 's')
 	{
-		std_msgs::String msg;
-		msg.data = "Sn";
-		from_chair_pub.publish(msg);
+		chair_stuck_state = chair_stuck_status::not_stuck;
 	}
 	// Not trapped anymore
 	else if (state_in.data == 't')
 	{
-		std_msgs::String msg;
-		msg.data = "Tm";
-		from_chair_pub.publish(msg);
+		chair_trapped_state = chair_trapped_status::not_trapped;
 	}
 	{
 		return;
@@ -301,10 +303,21 @@ int main(int argc, char **argv)
 	{
 		if (ros::Time::now() >= startTime + heartbeatDuration)
 		{
-			// Send heartbeat
+			// Send heartbeat with statuses
 			std_msgs::String msg;
 			msg.data = static_cast<char>(chair_state) + chair_flags; // heartbeat!
 			from_chair_pub.publish(msg);
+
+			// send stuck or not
+			std_msgs::String msg;
+			msg.data = "S" + static_cast<char>(chair_stuck_state);
+			from_chair_pub.publish(msg);
+
+			// send trapped or not
+			std_msgs::String msg;
+			msg.data = "T" + static_cast<char>(chair_trapped_state);
+			from_chair_pub.publish(msg);
+
 			ROS_ERROR("<3 %s", msg.data.c_str());
 			startTime = ros::Time::now();
 		}
