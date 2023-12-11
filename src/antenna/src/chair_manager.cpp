@@ -251,21 +251,49 @@ void stuck_or_trapped_callback(const std_msgs::Char state_in)
 	// Stuck!
 	if (state_in.data == 'S')
 	{
+		// send first time
+		if (chair_stuck_state == chair_stuck_status::not_stuck)
+		{
+			std_msgs::String msg;
+			msg.data = "Ss";
+			from_chair_pub.publish(msg);
+		}
 		chair_stuck_state = chair_stuck_status::stuck;
 	}
 	// Trapped!
 	else if (state_in.data == 'T')
 	{
+		// send first time
+		if (chair_trapped_state == chair_trapped_status::not_trapped)
+		{
+			std_msgs::String msg;
+			msg.data = "Tt";
+			from_chair_pub.publish(msg);
+		}
 		chair_trapped_state = chair_trapped_status::trapped;
 	}
 	// Not stuck anymore
 	else if (state_in.data == 's')
 	{
+		// send first time
+		if (chair_stuck_state == chair_stuck_status::stuck)
+		{
+			std_msgs::String msg;
+			msg.data = "Sn";
+			from_chair_pub.publish(msg);
+		}
 		chair_stuck_state = chair_stuck_status::not_stuck;
 	}
 	// Not trapped anymore
 	else if (state_in.data == 't')
 	{
+		// send first time
+		if (chair_trapped_state == chair_trapped_status::trapped)
+		{
+			std_msgs::String msg;
+			msg.data = "Tm";
+			from_chair_pub.publish(msg);
+		}
 		chair_trapped_state = chair_trapped_status::not_trapped;
 	}
 	{
@@ -308,17 +336,17 @@ int main(int argc, char **argv)
 			msg.data = static_cast<char>(chair_state) + chair_flags; // heartbeat!
 			from_chair_pub.publish(msg);
 
-			// send stuck or not
-			std_msgs::String stuck_msg;
-			stuck_msg.data = "S" + static_cast<char>(chair_stuck_state);
-			from_chair_pub.publish(stuck_msg);
+			// // send stuck or not
+			// std_msgs::String stuck_msg;
+			// stuck_msg.data = "S" + static_cast<char>(chair_stuck_state);
+			// from_chair_pub.publish(stuck_msg);
 
-			// send trapped or not
-			std_msgs::String trapped_msg;
-			trapped_msg.data = "T" + static_cast<char>(chair_trapped_state);
-			from_chair_pub.publish(trapped_msg);
+			// // send trapped or not
+			// std_msgs::String trapped_msg;
+			// trapped_msg.data = "T" + static_cast<char>(chair_trapped_state);
+			// from_chair_pub.publish(trapped_msg);
 
-			ROS_ERROR("<3 %s %s %s", msg.data.c_str(), stuck_msg.data.c_str(), trapped_msg.data.c_str());
+			ROS_ERROR("<3 %s", msg.data.c_str());
 			startTime = ros::Time::now();
 		}
 		// 	std_msgs::String msg;
