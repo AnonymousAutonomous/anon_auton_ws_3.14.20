@@ -203,6 +203,23 @@ void camera_callback(const std_msgs::String &commands)
 
 void lidar_callback(const std_msgs::String &commands)
 {
+	if (lidar_stuck_pq.size() > 0)
+	{
+		double earliest_choreo = lidar_stuck_pq.top();
+		if (ros::WallTime::now().toSec() - lidar_stuck_duration <= earliest_choreo + lidar_stuck_duration)
+		{
+			std_msgs::Char msg;
+			msg.data = 'S'; // Stuck!
+			to_chair_manager_pub.publish(msg);
+		}
+		else
+		{
+			std_msgs::Char msg;
+			msg.data = 's'; // not stuck
+			to_chair_manager_pub.publish(msg);
+		}
+	}
+
 	// If choreo, then count towards stuck
 	if (commands.data[1] == 'C')
 	{
@@ -210,23 +227,9 @@ void lidar_callback(const std_msgs::String &commands)
 		lidar_stuck_pq.push(nowTime);
 		if (lidar_stuck_pq.size() >= lidar_stuck_max_choreos)
 		{
-			double earliest_choreo = lidar_stuck_pq.top();
 			lidar_stuck_pq.pop();
 
 			ROS_ERROR("checking lidar for %s: %d vs %d", commands.data.c_str(), earliest_choreo, ros::WallTime::now().toSec());
-
-			if (ros::WallTime::now().toSec() - lidar_stuck_duration <= earliest_choreo + lidar_stuck_duration)
-			{
-				std_msgs::Char msg;
-				msg.data = 'S'; // Stuck!
-				to_chair_manager_pub.publish(msg);
-			}
-			else
-			{
-				std_msgs::Char msg;
-				msg.data = 's'; // not stuck
-				to_chair_manager_pub.publish(msg);
-			}
 		}
 	}
 	command_pair.second = commands;
