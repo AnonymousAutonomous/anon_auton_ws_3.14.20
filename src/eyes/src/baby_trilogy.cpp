@@ -21,7 +21,7 @@ void lidar_callback(const std_msgs::String &commands);
 // Contains unix walltime as double
 std::priority_queue<double> lidar_stuck_pq;
 int lidar_stuck_max_choreos = 1;
-int lidar_stuck_duration = 30; // 1 min in seconds
+int lidar_stuck_duration = 60; // 1 min in seconds
 
 // Keeps track of last N pivots. If we've done N pivots in the past M minutes, then we are stuck.
 // N = 2; M = 3
@@ -206,7 +206,7 @@ void lidar_callback(const std_msgs::String &commands)
 	if (lidar_stuck_pq.size() > 0)
 	{
 		double earliest_choreo = lidar_stuck_pq.top();
-		if (ros::WallTime::now().toSec() - lidar_stuck_duration <= earliest_choreo + lidar_stuck_duration)
+		if (ros::WallTime::now().toSec() - lidar_stuck_duration <= earliest_choreo)
 		{
 			std_msgs::Char msg;
 			msg.data = 'S'; // Stuck!
@@ -225,7 +225,7 @@ void lidar_callback(const std_msgs::String &commands)
 	{
 		double nowTime = ros::WallTime::now().toSec();
 		lidar_stuck_pq.push(nowTime);
-		if (lidar_stuck_pq.size() >= lidar_stuck_max_choreos)
+		while (lidar_stuck_pq.size() > lidar_stuck_max_choreos)
 		{
 			lidar_stuck_pq.pop();
 		}
