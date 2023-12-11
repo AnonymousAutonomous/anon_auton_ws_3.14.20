@@ -228,8 +228,6 @@ void lidar_callback(const std_msgs::String &commands)
 		if (lidar_stuck_pq.size() >= lidar_stuck_max_choreos)
 		{
 			lidar_stuck_pq.pop();
-
-			ROS_ERROR("checking lidar for %s: %d vs %d", commands.data.c_str(), earliest_choreo, ros::WallTime::now().toSec());
 		}
 	}
 	command_pair.second = commands;
