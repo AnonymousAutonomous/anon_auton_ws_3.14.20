@@ -308,15 +308,17 @@ int main(int argc, char **argv)
 			msg.data = static_cast<char>(chair_state) + chair_flags; // heartbeat!
 			from_chair_pub.publish(msg);
 
-			ROS_ERROR("<3 %s", msg.data.c_str());
-
 			// send stuck or not
-			msg.data = "S" + static_cast<char>(chair_stuck_state);
-			from_chair_pub.publish(msg);
+			std_msgs::String stuck_msg;
+			stuck_msg.data = "S" + static_cast<char>(chair_stuck_state);
+			from_chair_pub.publish(stuck_msg);
 
 			// send trapped or not
-			msg.data = "T" + static_cast<char>(chair_trapped_state);
-			from_chair_pub.publish(msg);
+			std_msgs::String trapped_msg;
+			trapped_msg.data = "T" + static_cast<char>(chair_trapped_state);
+			from_chair_pub.publish(trapped_msg);
+
+			ROS_ERROR("<3 %s %s %s", msg.data.c_str(), stuck_msg.data.c_str(), trapped_msg.data.c_str());
 			startTime = ros::Time::now();
 		}
 		// 	std_msgs::String msg;
