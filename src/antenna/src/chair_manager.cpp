@@ -96,8 +96,8 @@ ros::Publisher chair_manager_pub;
 ros::Publisher from_chair_pub;
 
 state chair_state = state::autonomous;
-state chair_stuck_state = chair_stuck_status::not_stuck;
-state chair_trapped_state = chair_trapped_status::not_trapped;
+chair_stuck_status chair_stuck_state = chair_stuck_status::not_stuck;
+chair_trapped_status chair_trapped_state = chair_trapped_status::not_trapped;
 std::string chair_flags = "";
 
 ros::Time startTime;
