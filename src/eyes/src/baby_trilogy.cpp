@@ -25,9 +25,9 @@ int lidar_stuck_duration = 60; // 1 min in seconds
 
 // Keeps track of last N pivots. If we've done N pivots in the past M minutes, then we are stuck.
 // N = 2; M = 3
-std::priority_queue<ros::Time> camera_trapped_pq;
+std::priority_queue<double> camera_trapped_pq;
 int camera_trapped_max_choreos = 2;
-ros::Duration camera_trapped_duration(60.0 * 3); // 3 mins
+int camera_trapped_duration = 60; // 3 mins
 
 std::pair<std_msgs::String, std_msgs::String> command_pair;
 // first command is camera
