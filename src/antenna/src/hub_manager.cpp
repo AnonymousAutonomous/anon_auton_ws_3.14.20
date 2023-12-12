@@ -167,6 +167,7 @@ void update_chair_from_heartbeat(const std::string str)
 	ref.flag_EOC = str[11];
 	ref.flag_SOB = str[12];
 	ref.flag_EOB = str[13];
+	ref.lastUpdatedTime = ros::Time::now();
 }
 
 void receive_callback(const std_msgs::String &msg)
