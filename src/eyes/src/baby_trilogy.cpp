@@ -74,7 +74,7 @@ void updateStuckStatus()
 		ros::WallTime now = ros::WallTime::now();
 		// double now = ros::WallTime::now().toSec();
 		ROS_ERROR("LIDAR DIFF: %d\t%d\t%d", now, earliest_choreo, now - earliest_choreo);
-		if (now - earliest_choreo <= camera_trapped_duration)
+		if ((now - earliest_choreo).toSec() <= camera_trapped_duration)
 		{
 			std_msgs::Char msg;
 			msg.data = 'S'; // Stuck!
@@ -97,7 +97,7 @@ void updateTrappedStatus()
 		ros::WallTime now = ros::WallTime::now();
 		// ROS_ERROR("CAMERA DIFF: %d", now - earliest_choreo);
 
-		if (now - earliest_choreo <= camera_trapped_duration)
+		if ((now - earliest_choreo).toSec() <= camera_trapped_duration)
 		{
 			std_msgs::Char msg;
 			msg.data = 'T'; // Trapped!
