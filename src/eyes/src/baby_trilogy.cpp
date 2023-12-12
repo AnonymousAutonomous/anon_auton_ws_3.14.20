@@ -71,10 +71,10 @@ void updateStuckStatus()
 	if (lidar_stuck_pq.size() > 0)
 	{
 		ros::WallTime earliest_choreo = lidar_stuck_pq.top();
-		ros::WallTime now = ros::WallTime::now();
+		// ros::WallTime now = ros::WallTime::now();
 		// double now = ros::WallTime::now().toSec();
-		ROS_ERROR("LIDAR DIFF: %d\t%d\t%d", static_cast<double>(now.toSec()), static_cast<double>(earliest_choreo.toSec()), static_cast<double>((now - earliest_choreo).toSec()));
-		if ((now - earliest_choreo).toSec() <= camera_trapped_duration)
+		ROS_ERROR("LIDAR DIFF: %d\t%d\t%d", static_cast<double>(ros::WallTime::now().toSec()), static_cast<double>(earliest_choreo.toSec()), static_cast<double>((ros::WallTime::now() - earliest_choreo).toSec()));
+		if ((ros::WallTime::now() - earliest_choreo).toSec() <= camera_trapped_duration)
 		{
 			std_msgs::Char msg;
 			msg.data = 'S'; // Stuck!
