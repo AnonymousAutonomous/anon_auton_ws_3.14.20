@@ -39,39 +39,6 @@ bool favor_right = true;
 std::map<std::string, std::string> auto_commands_in;
 std::unordered_map<AutonomousCmd, std::string> auto_commands;
 
-int main(int argc, char **argv)
-{
-	ros::init(argc, argv, "baby_trilogy");
-
-	ros::NodeHandle nh;
-	if (nh.getParam("/autonomous", auto_commands_in))
-	{
-		for (auto i = auto_commands_in.begin(); i != auto_commands_in.end(); i++)
-		{
-			auto_commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
-		}
-		ROS_INFO("Autonomous commands have been loaded for baby trilogy.");
-	}
-	else
-	{
-		ROS_INFO("You must load autonomous commands before using baby trilogy.");
-		return 1;
-	}
-
-	ros::Subscriber camera_sub = nh.subscribe("cameron", 1000, camera_callback);
-	ros::Subscriber lidar_sub = nh.subscribe("larry", 1000, lidar_callback);
-	driver_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
-	to_chair_manager_pub = nh.advertise<std_msgs::Char>("stuck_or_trapped_alert", 2);
-
-	while (ros::ok())
-	{
-		command_compare();
-		ros::spinOnce();
-	}
-
-	// ros::spin();
-}
-
 void updateStuckStatus()
 {
 	if (lidar_stuck_pq.size() > 0)
@@ -256,4 +223,37 @@ void lidar_callback(const std_msgs::String &commands)
 	}
 	command_pair.second = commands;
 	// command_compare();
+}
+
+int main(int argc, char **argv)
+{
+	ros::init(argc, argv, "baby_trilogy");
+
+	ros::NodeHandle nh;
+	if (nh.getParam("/autonomous", auto_commands_in))
+	{
+		for (auto i = auto_commands_in.begin(); i != auto_commands_in.end(); i++)
+		{
+			auto_commands[AUTOCMD_STRING_TO_ENUM[i->first]] = i->second;
+		}
+		ROS_INFO("Autonomous commands have been loaded for baby trilogy.");
+	}
+	else
+	{
+		ROS_INFO("You must load autonomous commands before using baby trilogy.");
+		return 1;
+	}
+
+	ros::Subscriber camera_sub = nh.subscribe("cameron", 1000, camera_callback);
+	ros::Subscriber lidar_sub = nh.subscribe("larry", 1000, lidar_callback);
+	driver_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
+	to_chair_manager_pub = nh.advertise<std_msgs::Char>("stuck_or_trapped_alert", 2);
+
+	while (ros::ok())
+	{
+		command_compare();
+		ros::spinOnce();
+	}
+
+	// ros::spin();
 }
