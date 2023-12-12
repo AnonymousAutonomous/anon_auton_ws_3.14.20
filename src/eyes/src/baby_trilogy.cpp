@@ -94,7 +94,7 @@ void updateTrappedStatus()
 	if (camera_trapped_pq.size() > 0)
 	{
 		ros::WallTime earliest_choreo = camera_trapped_pq.top();
-		double now = ros::WallTime::now();
+		ros::WallTime now = ros::WallTime::now();
 		// ROS_ERROR("CAMERA DIFF: %d", now - earliest_choreo);
 
 		if (now - earliest_choreo <= camera_trapped_duration)
