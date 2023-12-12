@@ -72,9 +72,7 @@ void updateStuckStatus()
 {
 	if (lidar_stuck_pq.size() > 0)
 	{
-		auto minIt = boost::range::min_element(lidar_stuck_pq.begin(), lidar_stuck_pq.end());
-
-		ros::WallTime earliest_choreo = *minIt;
+		ros::WallTime earliest_choreo = lidar_stuck_pq[0];
 		ros::WallTime now = ros::WallTime::now();
 		// ros::WallTime now = ros::WallTime::now();
 		// double now = ros::WallTime::now().toSec();
@@ -98,9 +96,8 @@ void updateTrappedStatus()
 {
 	if (camera_trapped_pq.size() > 0)
 	{
-		auto minIt = boost::range::min_element(camera_trapped_pq.begin(), camera_trapped_pq.end());
 
-		ros::WallTime earliest_choreo = *minIt;
+		ros::WallTime earliest_choreo = camera_trapped_pq[0];
 		ros::WallTime now = ros::WallTime::now();
 		// ROS_ERROR("CAMERA DIFF: %d", now - earliest_choreo);
 
