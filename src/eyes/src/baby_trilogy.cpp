@@ -72,7 +72,7 @@ void updateStuckStatus()
 	{
 		double earliest_choreo = lidar_stuck_pq.top();
 		double now = ros::WallTime::now().toSec();
-		// ROS_ERROR("LIDAR DIFF: %d", now - earliest_choreo);
+		ROS_ERROR("LIDAR DIFF: %d\t%d\t%d", now, earliest_choreo, now - earliest_choreo);
 		if (now - lidar_stuck_duration <= earliest_choreo)
 		{
 			std_msgs::Char msg;
