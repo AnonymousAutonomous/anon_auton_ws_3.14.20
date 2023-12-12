@@ -63,7 +63,13 @@ int main(int argc, char **argv)
 	driver_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
 	to_chair_manager_pub = nh.advertise<std_msgs::Char>("stuck_or_trapped_alert", 2);
 
-	ros::spin();
+	while (ros::ok())
+	{
+		command_compare();
+		ros::spinOnce();
+	}
+
+	// ros::spin();
 }
 
 void updateStuckStatus()
@@ -234,7 +240,7 @@ void camera_callback(const std_msgs::String &commands)
 		}
 	}
 	command_pair.first = commands;
-	command_compare();
+	// command_compare();
 }
 
 void lidar_callback(const std_msgs::String &commands)
@@ -249,5 +255,5 @@ void lidar_callback(const std_msgs::String &commands)
 		}
 	}
 	command_pair.second = commands;
-	command_compare();
+	// command_compare();
 }
