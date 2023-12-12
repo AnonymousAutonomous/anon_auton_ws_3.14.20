@@ -113,6 +113,7 @@ void updateTrappedStatus()
 
 void command_compare()
 {
+	ROS_ERROR("lidar pq size: %d\tcam pq size: %d", lidar_stuck_pq.size(), camera_trapped_pq.size());
 	updateStuckStatus();
 	updateTrappedStatus();
 
