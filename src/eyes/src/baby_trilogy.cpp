@@ -9,7 +9,8 @@
 #include <map>
 #include <unordered_map>
 #include <queue>
-#include <boost>
+#include <boost/circular_buffer.hpp>
+#include <boost/range/algorithm.hpp>
 
 ros::Publisher driver_pub;
 ros::Publisher to_chair_manager_pub;
@@ -71,7 +72,7 @@ void updateStuckStatus()
 {
 	if (lidar_stuck_pq.size() > 0)
 	{
-		auto minIt = boost::min_element(lidar_stuck_pq.begin(), lidar_stuck_pq.end());
+		auto minIt = boost::range::min_element(lidar_stuck_pq.begin(), lidar_stuck_pq.end());
 
 		ros::WallTime earliest_choreo = *minIt;
 		ros::WallTime now = ros::WallTime::now();
@@ -97,7 +98,7 @@ void updateTrappedStatus()
 {
 	if (camera_trapped_pq.size() > 0)
 	{
-		auto minIt = boost::min_element(camera_trapped_pq.begin(), camera_trapped_pq.end());
+		auto minIt = boost::range::min_element(camera_trapped_pq.begin(), camera_trapped_pq.end());
 
 		ros::WallTime earliest_choreo = *minIt;
 		ros::WallTime now = ros::WallTime::now();
