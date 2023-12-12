@@ -65,12 +65,16 @@ int main(int argc, char **argv)
 	driver_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
 	to_chair_manager_pub = nh.advertise<std_msgs::Char>("stuck_or_trapped_alert", 2);
 
+	// while (ros::ok) {
+	// 	updateStuckStatus();
+	// 	updateTrappedStatus();
+	// }
 	ros::spin();
 }
 
 void updateStuckStatus()
 {
-	if (lidar_stuck_pq.size() > 0)
+	if (lidar_stuck_pq.size() == lidar_stuck_max_choreos)
 	{
 		ros::WallTime earliest_choreo = lidar_stuck_pq[0];
 		ros::WallTime now = ros::WallTime::now();
@@ -94,7 +98,7 @@ void updateStuckStatus()
 
 void updateTrappedStatus()
 {
-	if (camera_trapped_pq.size() > 0)
+	if (camera_trapped_pq.size() == camera_trapped_max_choreos)
 	{
 
 		ros::WallTime earliest_choreo = camera_trapped_pq[0];
