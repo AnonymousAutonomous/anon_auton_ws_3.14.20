@@ -23,13 +23,13 @@ void lidar_callback(const std_msgs::String &commands);
 // Contains unix walltime as double
 int lidar_stuck_max_choreos = 1;
 boost::circular_buffer<ros::WallTime> lidar_stuck_pq(lidar_stuck_max_choreos);
-int lidar_stuck_duration = 60; // 1 min in seconds
+ros::Duration lidar_stuck_duration(1.0 * 60); // 1 min in seconds
 
 // Keeps track of last N pivots. If we've done N pivots in the past M minutes, then we are stuck.
 // N = 2; M = 3
 int camera_trapped_max_choreos = 2;
 boost::circular_buffer<ros::WallTime> camera_trapped_pq(camera_trapped_max_choreos);
-int camera_trapped_duration = 60; // 3 mins
+ros::Duration camera_trapped_duration(1.0 * 60); // 3 mins
 
 std::pair<std_msgs::String, std_msgs::String> command_pair;
 // first command is camera
@@ -77,7 +77,7 @@ void updateStuckStatus()
 		// ros::WallTime now = ros::WallTime::now();
 		// double now = ros::WallTime::now().toSec();
 		ROS_ERROR("LIDAR DIFF: %d\t%d\t%d", static_cast<double>(ros::WallTime::now().toSec()), static_cast<double>(earliest_choreo.toSec()), static_cast<double>((ros::WallTime::now() - earliest_choreo).toSec()));
-		if ((ros::WallTime::now() - earliest_choreo).toSec() <= camera_trapped_duration)
+		if (now - earliest_choreo <= camera_trapped_duration)
 		{
 			std_msgs::Char msg;
 			msg.data = 'S'; // Stuck!
@@ -101,7 +101,7 @@ void updateTrappedStatus()
 		ros::WallTime now = ros::WallTime::now();
 		// ROS_ERROR("CAMERA DIFF: %d", now - earliest_choreo);
 
-		if ((now - earliest_choreo).toSec() <= camera_trapped_duration)
+		if (now - earliest_choreo <= camera_trapped_duration)
 		{
 			std_msgs::Char msg;
 			msg.data = 'T'; // Trapped!
