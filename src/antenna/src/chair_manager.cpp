@@ -317,7 +317,7 @@ int main(int argc, char **argv)
 
 	// TODO: delete this when actually running!
 	ros::Subscriber chair_flags_sub = nh.subscribe("queue_to_manager", 1000, chair_flags_callback);
-	ros::Subscriber trapped_stuck_sub = nh.subscribe("stuck_or_trapped_alert", 16, stuck_or_trapped_callback);
+	ros::Subscriber trapped_stuck_sub = nh.subscribe("stuck_or_trapped_alert", 2, stuck_or_trapped_callback);
 
 	// initialize publishers
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
