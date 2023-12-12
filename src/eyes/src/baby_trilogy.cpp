@@ -22,13 +22,13 @@ void lidar_callback(const std_msgs::String &commands);
 // N = 2; M = 3
 // Contains unix walltime as double
 int lidar_stuck_max_choreos = 1;
-std::boost::circular_buffer<ros::WallTime> lidar_stuck_pq(lidar_stuck_max_choreos);
+boost::circular_buffer<ros::WallTime> lidar_stuck_pq(lidar_stuck_max_choreos);
 int lidar_stuck_duration = 60; // 1 min in seconds
 
 // Keeps track of last N pivots. If we've done N pivots in the past M minutes, then we are stuck.
 // N = 2; M = 3
 int camera_trapped_max_choreos = 2;
-std::boost::circular_buffer<ros::WallTime> camera_trapped_pq(camera_trapped_max_choreos);
+boost::circular_buffer<ros::WallTime> camera_trapped_pq(camera_trapped_max_choreos);
 int camera_trapped_duration = 60; // 3 mins
 
 std::pair<std_msgs::String, std_msgs::String> command_pair;
