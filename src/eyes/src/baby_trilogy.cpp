@@ -233,7 +233,7 @@ void camera_callback(const std_msgs::String &commands)
 	// If choreo, then count towards trapped
 	if (commands.data[1] == 'C')
 	{
-		camera_trapped_pq.push(ros::WallTime::now());
+		camera_trapped_pq.push_back(ros::WallTime::now());
 	}
 	command_pair.first = commands;
 	command_compare();
@@ -244,7 +244,7 @@ void lidar_callback(const std_msgs::String &commands)
 	// If choreo, then count towards stuck
 	if (commands.data[1] == 'C')
 	{
-		lidar_stuck_pq.push(ros::WallTime::now());
+		lidar_stuck_pq.push_back(ros::WallTime::now());
 	}
 	command_pair.second = commands;
 	command_compare();
