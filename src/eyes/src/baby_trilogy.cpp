@@ -12,7 +12,6 @@
 
 ros::Publisher driver_pub;
 ros::Publisher to_chair_manager_pub;
-ros::Publisher now_pub;
 
 void camera_callback(const std_msgs::String &commands);
 void lidar_callback(const std_msgs::String &commands);
@@ -63,7 +62,7 @@ int main(int argc, char **argv)
 	ros::Subscriber lidar_sub = nh.subscribe("larry", 1000, lidar_callback);
 	driver_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
 	to_chair_manager_pub = nh.advertise<std_msgs::Char>("stuck_or_trapped_alert", 2);
-	now_pub = nh.advertise<std_msgs::Time>("now_time", 2);
+
 	ros::spin();
 }
 
@@ -71,10 +70,6 @@ void updateStuckStatus()
 {
 	if (lidar_stuck_pq.size() > 0)
 	{
-		std_msgs::Time msg;
-		msg.data = ros::WallTime::now();
-		now_pub.publish(msg);
-
 		ros::WallTime earliest_choreo = lidar_stuck_pq.top();
 		// ros::WallTime now = ros::WallTime::now();
 		// double now = ros::WallTime::now().toSec();
