@@ -49,6 +49,14 @@ void clear_queues_callback(const std_msgs::Empty empty_msg)
 {
 	lidar_stuck_pq = boost::circular_buffer<ros::WallTime>(lidar_stuck_max_choreos);
 	camera_trapped_pq = boost::circular_buffer<ros::WallTime>(camera_trapped_max_choreos);
+	is_stuck = false;
+	is_trapped = false;
+	std_msgs::Char msg;
+	msg.data = 's'; // not stuck
+	to_chair_manager_pub.publish(msg);
+	std_msgs::Char tmsg;
+	tmsg.data = 't'; // not stuck
+	to_chair_manager_pub.publish(tmsg);
 }
 
 int main(int argc, char **argv)
