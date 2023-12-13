@@ -40,6 +40,7 @@ bool favor_right = true;
 
 bool is_stuck = false;
 bool is_trapped = false;
+bool please_clear_queue = false;
 
 // All available autonomous commands
 std::map<std::string, std::string> auto_commands_in;
@@ -47,16 +48,7 @@ std::unordered_map<AutonomousCmd, std::string> auto_commands;
 
 void clear_queues_callback(const std_msgs::Empty empty_msg)
 {
-	lidar_stuck_pq = boost::circular_buffer<ros::WallTime>(lidar_stuck_max_choreos);
-	camera_trapped_pq = boost::circular_buffer<ros::WallTime>(camera_trapped_max_choreos);
-	is_stuck = false;
-	is_trapped = false;
-	std_msgs::Char msg;
-	msg.data = 's'; // not stuck
-	to_chair_manager_pub.publish(msg);
-	std_msgs::Char tmsg;
-	tmsg.data = 't'; // not stuck
-	to_chair_manager_pub.publish(tmsg);
+	please_clear_queue = true;
 }
 
 int main(int argc, char **argv)
@@ -158,8 +150,25 @@ void updateTrappedStatus()
 void command_compare()
 {
 	ROS_ERROR("lidar pq size: %d\tcam pq size: %d", lidar_stuck_pq.size(), camera_trapped_pq.size());
-	updateStuckStatus();
-	updateTrappedStatus();
+	if (please_clear_queue)
+	{
+		lidar_stuck_pq = boost::circular_buffer<ros::WallTime>(lidar_stuck_max_choreos);
+		camera_trapped_pq = boost::circular_buffer<ros::WallTime>(camera_trapped_max_choreos);
+		is_stuck = false;
+		is_trapped = false;
+		std_msgs::Char msg;
+		msg.data = 's'; // not stuck
+		to_chair_manager_pub.publish(msg);
+		std_msgs::Char tmsg;
+		tmsg.data = 't'; // not stuck
+		to_chair_manager_pub.publish(tmsg);
+		please_clear_queue = false;
+	}
+	else
+	{
+		updateStuckStatus();
+		updateTrappedStatus();
+	}
 
 	ROS_INFO("%s OR %s", command_pair.first.data.c_str(), command_pair.second.data.c_str());
 	if (command_pair.first.data.empty() && command_pair.second.data.empty())
