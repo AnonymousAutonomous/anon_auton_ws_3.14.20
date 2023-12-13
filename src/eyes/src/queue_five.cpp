@@ -16,6 +16,14 @@
 #include <ctime>
 #include <cmath>
 
+ros::Publisher generic_pub;
+ros::Publisher eoc_pub;
+ros::Publisher update_hub_pub;
+ros::Publisher audio_pub;
+ros::Publisher notify_lidar;
+ros::Publisher send_flags;
+ros::Publisher clear_stuck_or_trapped;
+
 enum class state : char
 {
 	autonomous = 'a',
@@ -223,9 +231,9 @@ void callback(const std_msgs::String &command)
 		else if (command.data == "0Bfinish")
 		{
 			ROS_ERROR("FINISHED BROADCAST");
-			// std_msgs::Empty empty_msg;
-			// eoc_pub.publish(empty_msg);
-			// choreo_queue = std::queue<eyes::Generic>();
+			std_msgs::Empty empty_msg;
+			clear_stuck_or_trappedpublish(empty_msg);
+
 			flag_EOB = true;
 		}
 		else if (command.data == "0Bend")
@@ -278,13 +286,6 @@ void callback(const std_msgs::String &command)
 	}
 }
 
-ros::Publisher generic_pub;
-ros::Publisher eoc_pub;
-ros::Publisher update_hub_pub;
-ros::Publisher audio_pub;
-ros::Publisher notify_lidar;
-ros::Publisher send_flags;
-
 inline const char *const BoolToString(bool b)
 {
 	return b ? "true" : "false";
@@ -326,6 +327,7 @@ int main(int argc, char **argv)
 
 	generic_pub = nh.advertise<eyes::Generic>("generic_feed", 1000);
 	eoc_pub = nh.advertise<std_msgs::Empty>("end_of_choreo", 1000);
+	clear_stuck_or_trapped = nh.advertise<std_msgs::Empty>("clear_stuck_trapped", 1000);
 	update_hub_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 	audio_pub = nh.advertise<std_msgs::String>("audio_channel", 1000);
 	notify_lidar = nh.advertise<std_msgs::Char>("queue_to_lidar", 1000);

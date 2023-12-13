@@ -44,6 +44,12 @@ bool is_trapped = false;
 std::map<std::string, std::string> auto_commands_in;
 std::unordered_map<AutonomousCmd, std::string> auto_commands;
 
+void clear_queues_callback(const std_msgs::Empty empty_msg)
+{
+	lidar_stuck_pq = boost::circular_buffer<ros::WallTime>(lidar_stuck_max_choreos);
+	camera_trapped_pq = boost::circular_buffer<ros::WallTime>(camera_trapped_max_choreos);
+}
+
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "baby_trilogy");
@@ -65,6 +71,7 @@ int main(int argc, char **argv)
 
 	ros::Subscriber camera_sub = nh.subscribe("cameron", 1000, camera_callback);
 	ros::Subscriber lidar_sub = nh.subscribe("larry", 1000, lidar_callback);
+	ros::Subscriber clear_queues = nh.subscribe("clear_stuck_trapped", 1000, clear_queues_callback);
 	driver_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
 	to_chair_manager_pub = nh.advertise<std_msgs::Char>("stuck_or_trapped_alert", 1000);
 
