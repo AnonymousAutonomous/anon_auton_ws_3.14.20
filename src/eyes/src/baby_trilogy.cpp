@@ -37,6 +37,9 @@ std::pair<std_msgs::String, std_msgs::String> command_pair;
 
 bool favor_right = true;
 
+bool is_stuck = false;
+bool is_trapped = false;
+
 // All available autonomous commands
 std::map<std::string, std::string> auto_commands_in;
 std::unordered_map<AutonomousCmd, std::string> auto_commands;
@@ -83,15 +86,23 @@ void updateStuckStatus()
 		ROS_ERROR("LIDAR DIFF: %d\t%d\t%d", static_cast<double>(ros::WallTime::now().toSec()), static_cast<double>(earliest_choreo.toSec()), static_cast<double>((ros::WallTime::now() - earliest_choreo).toSec()));
 		if (now - earliest_choreo <= camera_trapped_duration)
 		{
-			std_msgs::Char msg;
-			msg.data = 'S'; // Stuck!
-			to_chair_manager_pub.publish(msg);
+			if (!is_stuck)
+			{
+				std_msgs::Char msg;
+				msg.data = 'S'; // Stuck!
+				to_chair_manager_pub.publish(msg);
+			}
+			is_stuck = true;
 		}
 		else
 		{
-			std_msgs::Char msg;
-			msg.data = 's'; // not stuck
-			to_chair_manager_pub.publish(msg);
+			if (is_stuck)
+			{
+				std_msgs::Char msg;
+				msg.data = 's'; // not stuck
+				to_chair_manager_pub.publish(msg);
+			}
+			is_stuck = false;
 		}
 	}
 }
@@ -107,15 +118,23 @@ void updateTrappedStatus()
 
 		if (now - earliest_choreo <= camera_trapped_duration)
 		{
-			std_msgs::Char msg;
-			msg.data = 'T'; // Trapped!
-			to_chair_manager_pub.publish(msg);
+			if (!is_trapped)
+			{
+				std_msgs::Char msg;
+				msg.data = 'T'; // Trapped!
+				to_chair_manager_pub.publish(msg);
+			}
+			is_trapped = true;
 		}
 		else
 		{
-			std_msgs::Char msg;
-			msg.data = 't'; // not trapped
-			to_chair_manager_pub.publish(msg);
+			if (is_trapped)
+			{
+				std_msgs::Char msg;
+				msg.data = 't'; // not trapped
+				to_chair_manager_pub.publish(msg);
+			}
+			is_trapped = false;
 		}
 	}
 }
