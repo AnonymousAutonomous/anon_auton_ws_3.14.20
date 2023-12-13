@@ -357,7 +357,7 @@ void loop()
     //   pubR.publish(&int32_msg_R);
     //   pubL.publish(&int32_msg_L);
 
-    if (nowTime - prevTime >= 1000)
+    if (nowTime - prevTime >= 200)
     {
       int32_msg_R.data = countR;
       int32_msg_L.data = countL;
