@@ -66,7 +66,7 @@ int main(int argc, char **argv)
 	ros::Subscriber camera_sub = nh.subscribe("cameron", 1000, camera_callback);
 	ros::Subscriber lidar_sub = nh.subscribe("larry", 1000, lidar_callback);
 	driver_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
-	to_chair_manager_pub = nh.advertise<std_msgs::Char>("stuck_or_trapped_alert", 2);
+	to_chair_manager_pub = nh.advertise<std_msgs::Char>("stuck_or_trapped_alert", 1000);
 
 	// while (ros::ok) {
 	// 	updateStuckStatus();
