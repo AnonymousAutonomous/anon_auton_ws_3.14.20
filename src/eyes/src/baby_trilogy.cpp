@@ -4,6 +4,7 @@
 #include "../../../constants/str_cmds.h"
 #include "std_msgs/String.h"
 #include "std_msgs/Char.h"
+#include "std_msgs/Empty.h"
 #include <string>
 #include <sstream>
 #include <map>
