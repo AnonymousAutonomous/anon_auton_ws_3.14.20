@@ -232,7 +232,7 @@ void callback(const std_msgs::String &command)
 		{
 			ROS_ERROR("FINISHED BROADCAST");
 			std_msgs::Empty empty_msg;
-			clear_stuck_or_trappedpublish(empty_msg);
+			clear_stuck_or_trapped.publish(empty_msg);
 
 			flag_EOB = true;
 		}
