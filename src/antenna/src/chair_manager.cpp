@@ -81,13 +81,23 @@ enum class state : char
 	custom = 'H',
 	broadcast = 'B'
 };
-// enum class chair_stuck_status : char {stuck, not_stuck};
-// enum class chair_trapped_status : char {trapped, not_trapped};
+enum class chair_stuck_status : char
+{
+	stuck = 's',
+	not_stuck = 'n'
+};
+enum class chair_trapped_status : char
+{
+	trapped = 't',
+	not_trapped = 'm'
+};
 
 ros::Publisher chair_manager_pub;
 ros::Publisher from_chair_pub;
 
 state chair_state = state::autonomous;
+chair_stuck_status chair_stuck_state = chair_stuck_status::not_stuck;
+chair_trapped_status chair_trapped_state = chair_trapped_status::not_trapped;
 std::string chair_flags = "";
 
 ros::Time startTime;
@@ -236,6 +246,61 @@ void chair_flags_callback(const std_msgs::String flags_in)
 	chair_flags = flags_in.data;
 }
 
+void stuck_or_trapped_callback(const std_msgs::Char state_in)
+{
+	// Stuck!
+	if (state_in.data == 'S')
+	{
+		// send first time
+		// if (chair_stuck_state == chair_stuck_status::not_stuck)
+		// {
+		// 	std_msgs::String msg;
+		// 	msg.data = "Ss";
+		// 	from_chair_pub.publish(msg);
+		// }
+		chair_stuck_state = chair_stuck_status::stuck;
+	}
+	// Trapped!
+	else if (state_in.data == 'T')
+	{
+		// send first time
+		// if (chair_trapped_state == chair_trapped_status::not_trapped)
+		// {
+		// 	std_msgs::String msg;
+		// 	msg.data = "Tt";
+		// 	from_chair_pub.publish(msg);
+		// }
+		chair_trapped_state = chair_trapped_status::trapped;
+	}
+	// Not stuck anymore
+	else if (state_in.data == 's')
+	{
+		// send first time
+		// if (chair_stuck_state == chair_stuck_status::stuck)
+		// {
+		// 	std_msgs::String msg;
+		// 	msg.data = "Sn";
+		// 	from_chair_pub.publish(msg);
+		// }
+		chair_stuck_state = chair_stuck_status::not_stuck;
+	}
+	// Not trapped anymore
+	else if (state_in.data == 't')
+	{
+		// send first time
+		// if (chair_trapped_state == chair_trapped_status::trapped)
+		// {
+		// 	std_msgs::String msg;
+		// 	msg.data = "Tm";
+		// 	from_chair_pub.publish(msg);
+		// }
+		chair_trapped_state = chair_trapped_status::not_trapped;
+	}
+	{
+		return;
+	}
+}
+
 int main(int argc, char **argv)
 {
 	// initialize node and node handle
@@ -252,6 +317,7 @@ int main(int argc, char **argv)
 
 	// TODO: delete this when actually running!
 	ros::Subscriber chair_flags_sub = nh.subscribe("queue_to_manager", 1000, chair_flags_callback);
+	ros::Subscriber trapped_stuck_sub = nh.subscribe("stuck_or_trapped_alert", 1000, stuck_or_trapped_callback);
 
 	// initialize publishers
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
@@ -265,10 +331,24 @@ int main(int argc, char **argv)
 	{
 		if (ros::Time::now() >= startTime + heartbeatDuration)
 		{
-			// Send heartbeat
+			// Send heartbeat with statuses
 			std_msgs::String msg;
-			msg.data = static_cast<char>(chair_state) + chair_flags; // heartbeat!
+			msg.data = static_cast<char>(chair_state);
+			msg.data += static_cast<char>(chair_stuck_state);
+			msg.data += static_cast<char>(chair_trapped_state);
+			msg.data += chair_flags; // heartbeat!
 			from_chair_pub.publish(msg);
+
+			// // send stuck or not
+			// std_msgs::String stuck_msg;
+			// stuck_msg.data = "S" + static_cast<char>(chair_stuck_state);
+			// from_chair_pub.publish(stuck_msg);
+
+			// // send trapped or not
+			// std_msgs::String trapped_msg;
+			// trapped_msg.data = "T" + static_cast<char>(chair_trapped_state);
+			// from_chair_pub.publish(trapped_msg);
+
 			ROS_ERROR("<3 %s", msg.data.c_str());
 			startTime = ros::Time::now();
 		}

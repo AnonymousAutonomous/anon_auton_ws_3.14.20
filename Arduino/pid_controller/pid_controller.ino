@@ -10,30 +10,29 @@
 boolean DEBUG = true;
 
 // Motor timing
-unsigned long nowTime = 0;       // updated on every loop
-unsigned long startTimeA = 0;    // start timing A interrupts
-unsigned long startTimeB = 0;    // start timing B interrupts
-unsigned long countIntA = 0;     // count the A interrupts
-unsigned long countIntB = 0;     // count the B interrupts
-double periodA = 0;              // motor A period
-double periodB = 0;              // motor B period
+unsigned long nowTime = 0;    // updated on every loop
+unsigned long startTimeA = 0; // start timing A interrupts
+unsigned long startTimeB = 0; // start timing B interrupts
+unsigned long countIntA = 0;  // count the A interrupts
+unsigned long countIntB = 0;  // count the B interrupts
+double periodA = 0;           // motor A period
+double periodB = 0;           // motor B period
 
-// PID 
-const unsigned long SAMPLE_TIME = 10;  // time between PID updates
-const unsigned long INT_COUNT = 100;     // 100 encoder ticks for accurate timing
-
+// PID
+const unsigned long SAMPLE_TIME = 10; // time between PID updates
+const unsigned long INT_COUNT = 100;  // 100 encoder ticks for accurate timing
 
 // !!!!!!!!!!!!! SETPOINTS MUST BE POSITIVE !!!!!!!!!!!!!!
-double setpointA = 3.0;         // setpoint is inches / second
-double setpointB = setpointA;   // setpoint is inches / second
+double setpointA = 3.0;       // setpoint is inches / second
+double setpointB = setpointA; // setpoint is inches / second
 
-double inputA = 0;              // input is inches / second
-double outputA = 0;             // output is PWM to motors
+double inputA = 0;  // input is inches / second
+double outputA = 0; // output is PWM to motors
 int FEEDFWDA = 60;
 int a_adjust = 0;
 
-double inputB = 0;              // input is inches / second
-double outputB = 0;             // output is PWM to motors
+double inputB = 0;  // input is inches / second
+double outputB = 0; // output is PWM to motors
 int FEEDFWDB = FEEDFWDA;
 int b_adjust = 0;
 
@@ -41,13 +40,12 @@ double KpA = 10.0, KiA = 25.0, KdA = 0.0;
 double KpB = KpA, KiB = KiA, KdB = KdA;
 PID motorA(&inputA, &outputA, setpointA, KpA, KiA, KdA, DIRECT);
 PID motorB(&inputB, &outputB, setpointB, KpB, KiB, KdB, DIRECT);
-double storeB = 0;               // used for debug print
+double storeB = 0; // used for debug print
 
-unsigned long prevTime = 0;       // updated on every loop
+unsigned long prevTime = 0; // updated on every loop
 
 volatile long countR = 0;
 volatile long countL = 0;
-
 
 boolean CONNECTED_TO_ROS = true;
 
@@ -59,57 +57,63 @@ std_msgs::Int32 int32_msg_L;
 ros::Publisher pubR("encoder_value_R", &int32_msg_R);
 ros::Publisher pubL("encoder_value_L", &int32_msg_L);
 
-
-void generic_callback(const eyes::Generic& generic_msg) {
+void generic_callback(const eyes::Generic &generic_msg)
+{
   char left_dir = FWD;
   char right_dir = FWD;
-  
-   if (generic_msg.left_forward) {
-     left_dir = FWD;
-   }
-   else {
-     left_dir = BWD;
-   }
-   if (generic_msg.right_forward) {
-     right_dir = FWD;
-   }
-   else {
-     right_dir = BWD;
-   }
-   if (generic_msg.left_speed < 0.001) {
+
+  if (generic_msg.left_forward)
+  {
+    left_dir = FWD;
+  }
+  else
+  {
+    left_dir = BWD;
+  }
+  if (generic_msg.right_forward)
+  {
+    right_dir = FWD;
+  }
+  else
+  {
+    right_dir = BWD;
+  }
+  if (generic_msg.left_speed < 0.001)
+  {
     left_dir = STOP;
-   }
-   if (generic_msg.right_speed < 0.001) {
+  }
+  if (generic_msg.right_speed < 0.001)
+  {
     right_dir = STOP;
-   }
-    setNewSetpointMotorA(generic_msg.left_speed, left_dir);
-    setNewSetpointMotorB(generic_msg.right_speed, right_dir);
-       analogWrite(LEFT_MOTOR, generic_msg.left_speed);
-   analogWrite(RIGHT_MOTOR, generic_msg.right_speed);
+  }
+  setNewSetpointMotorA(generic_msg.left_speed, left_dir);
+  setNewSetpointMotorB(generic_msg.right_speed, right_dir);
+  analogWrite(LEFT_MOTOR, generic_msg.left_speed);
+  analogWrite(RIGHT_MOTOR, generic_msg.right_speed);
 
-
-   return;
+  return;
 };
 
 ros::Subscriber<eyes::Generic> generic_sub("generic_feed", &generic_callback);
 
-
-void initROSSerial() {
+void initROSSerial()
+{
   nh.initNode();
   nh.advertise(pubR);
   nh.advertise(pubL);
   nh.subscribe(generic_sub);
 };
 
-
-void initEncoders(){
+void initEncoders()
+{
   pinMode(ENCA, INPUT_PULLUP);
   pinMode(ENCB, INPUT_PULLUP);
-  attachInterrupt(ENCA == 2 ? 0 : 1, isr_A, CHANGE);  // TODO: fix this for the updated arduino board
+  attachInterrupt(ENCA == 2 ? 0 : 1, isr_A, CHANGE); // TODO: fix this for the updated arduino board
   attachInterrupt(ENCB == 2 ? 0 : 1, isr_B, CHANGE);
 };
 
-void initPWM(){
+void initPWM()
+{
   startTimeA = millis();
   startTimeB = millis();
   motorA.SetOutputLimits(MIN_PWM, MAX_PWM);
@@ -122,254 +126,296 @@ void initPWM(){
   setNewSetpointMotorB(setpointB, FWD);
 };
 
-bool AreSame(double a, double b) {
+bool AreSame(double a, double b)
+{
   return fabs(a - b) < 0.001;
 }
 
+void setNewSetpointMotorA(float setpoint, char dir)
+{
+  float signed_setpoint = dir == BWD ? -1 * setpoint : setpoint;
 
-void setNewSetpointMotorA(float setpoint, char dir) {
-   float signed_setpoint = dir == BWD ? -1 * setpoint : setpoint;
-
-  if (setpoint < 0.001 || dir == STOP) {
+  if (setpoint < 0.001 || dir == STOP)
+  {
     a_adjust = 0;
   }
-  else {
+  else
+  {
     a_adjust = FEEDFWDA;
   }
-  if (!AreSame(signed_setpoint, setpointA)) {
-      setpointA = signed_setpoint;
-      motorA.SetSetpoint(setpoint);
-      setADir(dir);
-    } 
+  if (!AreSame(signed_setpoint, setpointA))
+  {
+    setpointA = signed_setpoint;
+    motorA.SetSetpoint(setpoint);
+    setADir(dir);
+  }
 }
 
-void setNewSetpointMotorB(float setpoint, char dir) {
-    float signed_setpoint = dir == BWD ? -1 * setpoint : setpoint;
+void setNewSetpointMotorB(float setpoint, char dir)
+{
+  float signed_setpoint = dir == BWD ? -1 * setpoint : setpoint;
 
-  if (setpoint < 0.001 || dir == STOP) {
+  if (setpoint < 0.001 || dir == STOP)
+  {
     b_adjust = 0;
   }
-  else {
+  else
+  {
     b_adjust = FEEDFWDB;
   }
-    if (!AreSame(signed_setpoint, setpointB)) {
-      setpointB = signed_setpoint;
-      motorB.SetSetpoint(setpoint);
-      setBDir(dir);
-    }  
+  if (!AreSame(signed_setpoint, setpointB))
+  {
+    setpointB = signed_setpoint;
+    motorB.SetSetpoint(setpoint);
+    setBDir(dir);
+  }
 }
 
-void processIncomingByte(const byte inByte) {
-  static char input_line [MAX_INPUT];
+void processIncomingByte(const byte inByte)
+{
+  static char input_line[MAX_INPUT];
   static unsigned int input_pos = 0;
 
-  switch (inByte) {
-    case '\n':
-      input_line[input_pos] = 0; // terminating null byte
-      processData(input_line);
-      // reset
-      input_pos = 0;
-      break;
-    case '\r':
-      break; 
-    default:
-      if (input_pos < (MAX_INPUT - 1))
-        input_line [input_pos++] = inByte;
-      break;
+  switch (inByte)
+  {
+  case '\n':
+    input_line[input_pos] = 0; // terminating null byte
+    processData(input_line);
+    // reset
+    input_pos = 0;
+    break;
+  case '\r':
+    break;
+  default:
+    if (input_pos < (MAX_INPUT - 1))
+      input_line[input_pos++] = inByte;
+    break;
   }
 }
 
-void processData(const char* data) {
+void processData(const char *data)
+{
   char changeVar = data[0];
-  if (changeVar == 'p') {
+  if (changeVar == 'p')
+  {
     KpA = KpB = strToFloat(String(data).substring(1));
   }
-  else if (changeVar == 'i') {
+  else if (changeVar == 'i')
+  {
     KiA = KiB = strToFloat(String(data).substring(1));
   }
-  else if (changeVar == 'd') {
+  else if (changeVar == 'd')
+  {
     KdA = KdB = strToFloat(String(data).substring(1));
   }
-  else if (changeVar == 'b') {
-        standbyMotors(true);
+  else if (changeVar == 'b')
+  {
+    standbyMotors(true);
   }
-  else if (changeVar == 's') {
+  else if (changeVar == 's')
+  {
     parseNewSetpoints(String(data).substring(1));
   }
   motorA.SetTunings(KpA, KiA, KdA);
-    motorB.SetTunings(KpB, KiB, KdB);
+  motorB.SetTunings(KpB, KiB, KdB);
 
-
-     printPID(KpA, KiA, KdA, setpointA, FEEDFWDA, a_adjust);
+  printPID(KpA, KiA, KdA, setpointA, FEEDFWDA, a_adjust);
 }
 
-void parseNewSetpoints(String setpointsIn) {
+void parseNewSetpoints(String setpointsIn)
+{
   char ADir = '\0';
   char BDir = '\0';
   float aSpeed = -1;
   float bSpeed = -1;
 
   String temp = "";
-  
+
   // Go through string
-  for (char c : setpointsIn) {
-    if (isalpha(c)) {
+  for (char c : setpointsIn)
+  {
+    if (isalpha(c))
+    {
       // first alpha = A direction
-      if (ADir == '\0') {
+      if (ADir == '\0')
+      {
         ADir = c;
       }
       // second alpha = B direction. Set A speed
-      else {
+      else
+      {
         BDir = c;
         aSpeed = strToFloat(temp);
         temp = "";
-        if (aSpeed < 0.0001) {
+        if (aSpeed < 0.0001)
+        {
           aSpeed = 0;
           ADir = STOP;
         }
       }
     }
-    // add to temp 
-    else {
+    // add to temp
+    else
+    {
       temp += c;
     }
   }
   // set B Speed
   bSpeed = strToFloat(temp);
-  if (bSpeed < 0.0001) {
+  if (bSpeed < 0.0001)
+  {
     bSpeed = 0;
     BDir = STOP;
   }
-// update setpoints
+  // update setpoints
   setNewSetpointMotorA(aSpeed, ADir);
   setNewSetpointMotorB(bSpeed, BDir);
-  };
-
+};
 
 /***********************************************************
  * SETUP & LOOP                                            *
  ***********************************************************/
 
-void setup() {
-  if (CONNECTED_TO_ROS) {
+void setup()
+{
+  if (CONNECTED_TO_ROS)
+  {
     Serial.begin(57600);
     nh.getHardware()->setBaud(57600);
     initROSSerial();
-  } else {
+  }
+  else
+  {
     initPIDSerial();
   }
 
-    // Initialize pins and value ranges
-   initMotors();
-   initEncoders();
-   initPWM();
-  
-  if (DEBUG) {
-    printForPID("MOTOR A:\n");
-     printPIDHeader();
-     printPID(KpA, KiA, KdA, setpointA, FEEDFWDA, a_adjust);
-     
-     printForPID("MOTOR B:\n");
-     printPIDHeader();
-     printPID(KpB, KiB, KdB, setpointB, FEEDFWDB, b_adjust);
-  }
+  // Initialize pins and value ranges
+  initMotors();
+  initEncoders();
+  initPWM();
 
+  if (DEBUG)
+  {
+    printForPID("MOTOR A:\n");
+    printPIDHeader();
+    printPID(KpA, KiA, KdA, setpointA, FEEDFWDA, a_adjust);
+
+    printForPID("MOTOR B:\n");
+    printPIDHeader();
+    printPID(KpB, KiB, KdB, setpointB, FEEDFWDB, b_adjust);
+  }
 }
 
 String info = "";
-void loop() {
+void loop()
+{
   nowTime = millis();
   motorA.Compute();
   motorB.Compute();
 
-  if (nowTime - startTimeA > 250) {
+  if (nowTime - startTimeA > 250)
+  {
     inputA = 0;
   }
 
-  if (nowTime - startTimeB > 250) {
+  if (nowTime - startTimeB > 250)
+  {
     inputB = 0;
   }
 
   moveA(max(0, min(255, (int)outputA + a_adjust)));
   moveB(max(0, min(255, (int)outputB + b_adjust)));
 
-
-  if (!CONNECTED_TO_ROS) {
-    while (Serial.available() > 0) {
+  if (!CONNECTED_TO_ROS)
+  {
+    while (Serial.available() > 0)
+    {
       processIncomingByte(Serial.read());
     }
   }
-  
-  if (DEBUG) {
-    if (storeB != outputB){
-        storeB = outputB;
-        printPIDUpdate(inputA, outputA, a_adjust);
+
+  if (DEBUG)
+  {
+    if (storeB != outputB)
+    {
+      storeB = outputB;
+      printPIDUpdate(inputA, outputA, a_adjust);
     }
   }
 
-//   int32_msg_R.data = int(setpointA * 100);
-//   int32_msg_L.data = int(setpointB * 100);
-//   pubR.publish(&int32_msg_R);
-//   pubL.publish(&int32_msg_L);
-//   nh.spinOnce();
-//   delay(1000);
-   
- if (CONNECTED_TO_ROS) {
-//   int32_msg_R.data = int(setpointA * 100);
-//   int32_msg_L.data = int(setpointB * 100);
-//   pubR.publish(&int32_msg_R);
-//   pubL.publish(&int32_msg_L);
+  //   int32_msg_R.data = int(setpointA * 100);
+  //   int32_msg_L.data = int(setpointB * 100);
+  //   pubR.publish(&int32_msg_R);
+  //   pubL.publish(&int32_msg_L);
+  //   nh.spinOnce();
+  //   delay(1000);
 
-   if (nowTime - prevTime >= 200) {
-     int32_msg_R.data = countR;
-     int32_msg_L.data = countL;
-     pubR.publish(&int32_msg_R);
-     pubL.publish(&int32_msg_L);
-     info = String(countL) + ' ' + String(countR);
-     nh.loginfo(info.c_str());
-     prevTime = nowTime;
-   }
+  if (CONNECTED_TO_ROS)
+  {
+    //   int32_msg_R.data = int(setpointA * 100);
+    //   int32_msg_L.data = int(setpointB * 100);
+    //   pubR.publish(&int32_msg_R);
+    //   pubL.publish(&int32_msg_L);
 
-//
-//   // TODO: check if this will cause issues
-   nh.spinOnce();
-   delay(10);
- }
+    if (nowTime - prevTime >= 200)
+    {
+      int32_msg_R.data = countR;
+      int32_msg_L.data = countL;
+      pubR.publish(&int32_msg_R);
+      pubL.publish(&int32_msg_L);
+      info = String(countL) + ' ' + String(countR);
+      nh.loginfo(info.c_str());
+      prevTime = nowTime;
+    }
 
-  
+    //
+    //   // TODO: check if this will cause issues
+    nh.spinOnce();
+    delay(10);
+  }
 }
 
 /***********************************************************
  * ENCODER CALLBACKS                                       *
  ***********************************************************/
-void isr_A(){
+void isr_A()
+{
   // count sufficient interrupts to get accurate timing
   countIntA++;
-  if (countIntA == INT_COUNT){
-    inputA = (float) ENCODER_CONVERSION * (1.0 / (float)(nowTime - startTimeA));
+  if (countIntA == INT_COUNT)
+  {
+    inputA = (float)ENCODER_CONVERSION * (1.0 / (float)(nowTime - startTimeA));
     startTimeA = nowTime;
     countIntA = 0;
   }
 
-  if (digitalRead(ENCA) == digitalRead(STBYA)) {
+  if (digitalRead(ENCA) == digitalRead(STBYA))
+  {
     countL++;
-  } else {
+  }
+  else
+  {
     countL--;
   }
 }
 
-void isr_B(){
+void isr_B()
+{
   // count sufficient interrupts to get accurate timing
   countIntB++;
-  if (countIntB == INT_COUNT){
-    inputB = (float) ENCODER_CONVERSION * (1.0 / (float)(nowTime - startTimeB));
+  if (countIntB == INT_COUNT)
+  {
+    inputB = (float)ENCODER_CONVERSION * (1.0 / (float)(nowTime - startTimeB));
     startTimeB = nowTime;
     countIntB = 0;
   }
 
-  if (digitalRead(ENCB) != digitalRead(STBYB)) {
+  if (digitalRead(ENCB) != digitalRead(STBYB))
+  {
     countR++;
-  } else {
+  }
+  else
+  {
     countR--;
   }
 }
