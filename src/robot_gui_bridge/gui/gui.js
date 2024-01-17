@@ -51,6 +51,9 @@ function handleSetActiveChairs(e) {
     
     setActiveChairNums(newActiveChairs);
     modal.style.display = "none";
+
+    var empty_msg = new ROSLIB.Message({});
+    reload_active_chairs_pub.publish(empty_msg);
 }
 
 function setActiveChairNums(chairList) {
@@ -290,6 +293,12 @@ var to_hub_manager_pub = new ROSLIB.Topic({
   name: "/to_hub_manager",
   messageType: "std_msgs/String",
 });
+
+var reload_active_chairs_pub = new ROSLIB.Topic({
+    ros: ros,
+    name: "/reload_active_chairs",
+    messageType: "std_msgs/Empty",
+  });
 
 getTextForStatus = function (status) {
   if (status == "Br") {

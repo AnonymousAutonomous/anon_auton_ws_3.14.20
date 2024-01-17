@@ -296,6 +296,12 @@ void receive_callback(const std_msgs::String &msg)
 	}
 }
 
+void reload_active_chairs_callback(const std_msgs::Empty empty, nh)
+{
+	nh.getParam("active_chair_nums", active_chair_nums);
+	setActiveChairs(active_chair_nums);
+}
+
 void clean_up_after_broadcast_done()
 {
 	// clear transmit queue
@@ -415,6 +421,16 @@ void guiStatusUpdate(const ros::TimerEvent &event)
 	}
 }
 
+void setActiveChairs(std::vector<int> active_chair_nums)
+{
+	// Clear map
+	chair_status_map = std::map<int, ChairStatus>();
+	for (int num : active_chair_nums)
+	{
+		chair_status_map[num] = ChairStatus();
+	}
+}
+
 int main(int argc, char **argv)
 {
 	// initialize node and node handle
@@ -423,11 +439,7 @@ int main(int argc, char **argv)
 
 	// initialize chair map
 	nh.getParam("active_chair_nums", active_chair_nums);
-
-	for (int num : active_chair_nums)
-	{
-		chair_status_map[num] = ChairStatus();
-	}
+	setActiveChairs(active_chair_nums);
 
 	// initialize spinner
 	ros::AsyncSpinner spinner(0);
@@ -436,6 +448,7 @@ int main(int argc, char **argv)
 	// initialize subscribers
 	ros::Subscriber sub1 = nh.subscribe("from_hub_receiver", 1000, receive_callback);
 	ros::Subscriber sub2 = nh.subscribe("to_hub_manager", 1000, broadcast_callback);
+	ros::Subscriber activeChairSub = nh.subscribe("reload_active_chairs", 1000, reload_active_chairs_callback, nh);
 
 	// initialize publishers
 	hub_manager_pub = nh.advertise<std_msgs::String>("from_hub", 1000);
