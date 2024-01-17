@@ -8,6 +8,17 @@
 
 ros::NodeHandle *n_ptr;
 
+std::string chairsToString(std::vector<int> chairs)
+{
+	std::string response = "";
+	for (int c : chairs)
+	{
+		response += ('0' + c);
+		response += ' ';
+	}
+	return response;
+}
+
 enum class chair_broadcast_status : char
 {
 	ready = 'r',
@@ -369,17 +380,6 @@ std::string notReadyChairsToString()
 		{
 			response += ('0' + p.first);
 		}
-	}
-	return response;
-}
-
-std::string chairsToString(std::vector<int> chairs)
-{
-	std::string response = "";
-	for (int c : chairs)
-	{
-		response += ('0' + c);
-		response += ' ';
 	}
 	return response;
 }
