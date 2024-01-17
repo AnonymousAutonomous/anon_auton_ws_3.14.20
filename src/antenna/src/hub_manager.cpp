@@ -7,6 +7,7 @@
 #include <algorithm>
 
 // active_chair_nums :
+ros::NodeHandle nh;
 
 enum class chair_broadcast_status : char
 {
@@ -435,7 +436,6 @@ int main(int argc, char **argv)
 {
 	// initialize node and node handle
 	ros::init(argc, argv, "hub_manager");
-	ros::NodeHandle nh;
 
 	// initialize chair map
 	nh.getParam("active_chair_nums", active_chair_nums);
