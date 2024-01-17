@@ -2,29 +2,77 @@ var ros = new ROSLIB.Ros({
   url: "ws://localhost:9090",
 });
 
-// ros.getParams(function(params) {
-//   console.log(params);
-// });
+ros.getParams(function(params) {
+  console.log(params);
+});
 
 var active_chair_nums = new ROSLIB.Param({
   ros: ros,
   name: "active_chair_nums",
 });
 
-var editor;
-
 var chairs = [];
 var live_status = new Map();
 
-active_chair_nums.get(function (value) {
-  console.log("GETTING ACTIVE CHAIRS!", value);
-  chairs = value.map((v) => String(v));
-  chairs.map((chair) => live_status.set(chair, null));
+
+
+setActiveChairNums([2, 3, 4]);
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("editActiveChairsBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("closeModal")[0];
+
+// When the user clicks on the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+function handleSetActiveChairs(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const formProps = Object.fromEntries(formData);
+    const newActiveChairs = Object.keys(formProps).map(num => parseInt(num));
+    console.log(newActiveChairs);
+    setActiveChairNums(newActiveChairs);
+    modal.style.display = "none";
+}
+
+function setActiveChairNums(chairList) {
+    active_chair_nums.set(chairList);
+    console.log("GETTING ACTIVE CHAIRS!", chairList);
+    chairs = chairList.map((v) => String(v));
+    chairs.map((chair) => live_status.set(chair, null));
+
+  chairs.forEach((chair) => document.getElementById("activate" + chair).checked = true);
 
   document.getElementById("num_chairs").innerHTML =
     String(chairs.length) + " chair" + (chairs.length != 1 ? "s" : "");
   document.getElementById("active_chair_list").innerHTML =
     chairs.toString();
+
+}
+
+var editor;
+
+
+active_chair_nums.get(function (value) {
+  setActiveChairNums(value);
 });
 // var chairs = ["1", "2", "3", "4"];
 console.log(live_status);

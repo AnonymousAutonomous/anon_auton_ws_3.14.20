@@ -14,6 +14,27 @@
 
   <body>
     <h1>Anonymous Autonomous</h1>
+    <div id="myModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="closeModal">&times;</span>
+        <form
+          id="setActiveChairForm"
+          class="handwritten_form"
+          onsubmit="return handleSetActiveChairs(event);"
+        >
+          <input type="checkbox" id="activate1" name="1" />
+          <label for="activate1">1</label>
+          <input type="checkbox" id="activate2" name="2" />
+          <label for="activate2">2</label>
+          <input type="checkbox" id="activate3" name="3" />
+          <label for="activate3">3</label>
+          <input type="checkbox" id="activate4" name="4" />
+          <label for="activate4">4</label>
+          <button type="submit" class="submit_button">Save</button>
+        </form>
+      </div>
+    </div>
     <audio
       id="audio_lowbatt"
       src="audio/582986__oysterqueen__low-battery.mp3"
@@ -24,6 +45,7 @@
     <p>
       <span id="num_chairs">0 chairs</span> active:
       <span id="active_chair_list"></span>
+      <button id="editActiveChairsBtn">Edit</button>
     </p>
     <div class="screen" id="live" style="display: none">
       <button onclick="stop('0')" class="stop">STOP ALL</button>
