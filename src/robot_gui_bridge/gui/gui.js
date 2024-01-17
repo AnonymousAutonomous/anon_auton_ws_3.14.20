@@ -52,7 +52,7 @@ function handleSetActiveChairs(e) {
     setActiveChairNums(newActiveChairs);
     modal.style.display = "none";
 
-    var msg = new ROSLIB.Message({data: ""});
+    var msg = new ROSLIB.Message({data: newActiveChairs.map(c => c.toString()).toString()});
     reload_active_chairs_pub.publish(msg);
 }
 
