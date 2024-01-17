@@ -321,7 +321,7 @@ void reload_active_chairs_callback(const std_msgs::String &msg)
 {
 	n_ptr->getParam("active_chair_nums", active_chair_nums);
 
-	std::vector<int> actives();
+	std::vector<int> actives;
 	for (char c : msg.data)
 	{
 		actives.append(c - '0');
