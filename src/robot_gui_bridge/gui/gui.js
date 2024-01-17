@@ -45,6 +45,10 @@ window.onclick = function(event) {
 
 function handleSetActiveChairs(e) {
     e.preventDefault();
+    const formData = new FormData(e.target);
+    const formProps = Object.fromEntries(formData);
+    const newActiveChairs = Object.keys(formProps).map(id => parseInt(id));
+    
     setActiveChairNums(newActiveChairs);
     modal.style.display = "none";
 }
@@ -65,48 +69,48 @@ function setActiveChairNums(chairList) {
 
 }
 
-function generateStatuses() {
+function generateStatuses(chairList) {
     console.log("generating statuses");
-    var t = $.template(`<div class="chair_monitor" id="{id}">
-    <h2>Chair {id}</h2>
-    <div class="status o" id="{id}status">
+    const statusBlock = (id) => (`<div class="chair_monitor" id="${id}">
+    <h2>Chair ${id}</h2>
+    <div class="status o" id="${id}status">
       OFFLINE<span class="dot"></span>
     </div>
-    <div class="status o" id="{id}_broadcast_status">OFFLINE</div>
-    <div class="status o" id="{id}_stuck_status">OFFLINE</div>
-    <div class="status o" id="{id}_trapped_status">OFFLINE</div>
-    <div id="{id}_flags"></div>
+    <div class="status o" id="${id}_broadcast_status">OFFLINE</div>
+    <div class="status o" id="${id}_stuck_status">OFFLINE</div>
+    <div class="status o" id="${id}_trapped_status">OFFLINE</div>
+    <div id="${id}_flags"></div>
     <br />
     <div class="chair_control">
       <div class="directions">
-        <button class="auto" id="{id}" onclick="toggle(this.id)">
+        <button class="auto" id="${id}" onclick="toggle(this.id)">
           AUTO
         </button>
         <br />
-        <button id="{id}" onclick="ffwd(this.id)">⤊</button>
+        <button id="${id}" onclick="ffwd(this.id)">⤊</button>
         <div>
-          <button id="{id}" onclick="fwdl(this.id)">⬉</button>
-          <button id="{id}" onclick="fwd(this.id)">↑</button>
-          <button id="{id}" onclick="fwdr(this.id)">⬈</button>
+          <button id="${id}" onclick="fwdl(this.id)">⬉</button>
+          <button id="${id}" onclick="fwd(this.id)">↑</button>
+          <button id="${id}" onclick="fwdr(this.id)">⬈</button>
         </div>
         <div>
-          <button id="{id}" onclick="pivotl(this.id)">⟲</button>
-          <button id="{id}" onclick="stop(this.id)">🛑</button>
-          <button id="{id}" onclick="pivotr(this.id)">⟳</button>
+          <button id="${id}" onclick="pivotl(this.id)">⟲</button>
+          <button id="${id}" onclick="stop(this.id)">🛑</button>
+          <button id="${id}" onclick="pivotr(this.id)">⟳</button>
         </div>
         <div>
-          <button id="{id}" onclick="bwdl(this.id)">⬋</button>
-          <button id="{id}" onclick="bwd(this.id)">↓</button>
-          <button id="{id}" onclick="bwdr(this.id)">⬊</button>
+          <button id="${id}" onclick="bwdl(this.id)">⬋</button>
+          <button id="${id}" onclick="bwd(this.id)">↓</button>
+          <button id="${id}" onclick="bwdr(this.id)">⬊</button>
         </div>
-        <button id="{id}" onclick="fbwd(this.id)">⤋</button>
+        <button id="${id}" onclick="fbwd(this.id)">⤋</button>
       </div>
       <br />
-      <!-- <button id="{id}" onclick="start(this.id)">START</button>
-  <button id="{id}" onclick="stop(this.id)" class="stop">STOP</button> -->
+      <!-- <button id="${id}" onclick="start(this.id)">START</button>
+  <button id="${id}" onclick="stop(this.id)" class="stop">STOP</button> -->
       <br />
       <form
-        id="{id}custom_handwritten"
+        id="${id}custom_handwritten"
         class="handwritten_form"
         onsubmit="return submitForm(event);"
       >
@@ -122,9 +126,11 @@ function generateStatuses() {
     </div>
   </div>`);
 
-    $("#statuses").append( t , {
-        id: 1
-    });
+  const statusContainer = document.getElementById("chairStatuses");
+//   Clear out statuses
+  statusContainer.innerHTML = '';
+
+  chairList.forEach(id => statusContainer.insertAdjacentHTML( 'beforeend', statusBlock(id)));
 
 }
 
