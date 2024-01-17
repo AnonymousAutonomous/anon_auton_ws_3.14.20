@@ -320,7 +320,7 @@ void receive_callback(const std_msgs::String &msg)
 void reload_active_chairs_callback(const std_msgs::String &msg)
 {
 	n_ptr->getParam("active_chair_nums", active_chair_nums);
-	ROS_ERROR("RELOADED ACTIVE CHAIRS. New ones are: %s", chairsToString(active_chair_nums));
+	ROS_ERROR("RELOADED ACTIVE CHAIRS. New ones are: %s", chairsToString(active_chair_nums).c_str());
 
 	setActiveChairs(active_chair_nums);
 }
