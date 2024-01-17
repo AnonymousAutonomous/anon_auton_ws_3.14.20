@@ -297,7 +297,7 @@ void receive_callback(const std_msgs::String &msg)
 	}
 }
 
-void reload_active_chairs_callback(const std_msgs::Empty empty, nh)
+void reload_active_chairs_callback(const std_msgs::String &msg)
 {
 	nh.getParam("active_chair_nums", active_chair_nums);
 	setActiveChairs(active_chair_nums);
