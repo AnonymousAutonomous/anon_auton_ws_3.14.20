@@ -51,6 +51,8 @@ function handleSetActiveChairs(e) {
     
     // Set chair list. Handle rest of updates in the getter for this param, after we know the param is updated.
     active_chair_nums.set(newActiveChairs);
+    // Reload new vals?
+    active_chair_nums.get();
 
     modal.style.display = "none";
 }
