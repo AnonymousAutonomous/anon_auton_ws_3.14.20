@@ -6,7 +6,18 @@
 #include <vector>
 #include <algorithm>
 
-// active_chair_nums :
+ros::NodeHandle *n_ptr;
+
+std::string chairsToString(std::vector<int> chairs)
+{
+	std::string response = "";
+	for (int c : chairs)
+	{
+		response += ('0' + c);
+		response += ' ';
+	}
+	return response;
+}
 
 enum class chair_broadcast_status : char
 {
@@ -70,6 +81,16 @@ public:
 
 std::vector<int> active_chair_nums;
 std::map<int, ChairStatus> chair_status_map;
+
+void setActiveChairs(std::vector<int> active_chair_nums)
+{
+	// Clear map
+	chair_status_map = std::map<int, ChairStatus>();
+	for (int num : active_chair_nums)
+	{
+		chair_status_map[num] = ChairStatus();
+	}
+}
 
 ros::Time startTime;
 ros::Duration waitDurationBeforeCheckingAgain(1.0); // 1.0 seconds
@@ -296,6 +317,22 @@ void receive_callback(const std_msgs::String &msg)
 	}
 }
 
+void reload_active_chairs_callback(const std_msgs::String &msg)
+{
+	n_ptr->getParam("active_chair_nums", active_chair_nums);
+
+	std::vector<int> actives;
+	for (char c : msg.data)
+	{
+		actives.push_back(c - '0');
+	}
+
+	std::string chairstr = chairsToString(actives);
+	ROS_WARN_STREAM(chairstr);
+	ROS_ERROR("RELOADED ACTIVE CHAIRS. New ones are: %s", chairstr.c_str());
+	setActiveChairs(actives);
+}
+
 void clean_up_after_broadcast_done()
 {
 	// clear transmit queue
@@ -420,14 +457,11 @@ int main(int argc, char **argv)
 	// initialize node and node handle
 	ros::init(argc, argv, "hub_manager");
 	ros::NodeHandle nh;
+	n_ptr = &nh;
 
 	// initialize chair map
 	nh.getParam("active_chair_nums", active_chair_nums);
-
-	for (int num : active_chair_nums)
-	{
-		chair_status_map[num] = ChairStatus();
-	}
+	setActiveChairs(active_chair_nums);
 
 	// initialize spinner
 	ros::AsyncSpinner spinner(0);
@@ -436,6 +470,7 @@ int main(int argc, char **argv)
 	// initialize subscribers
 	ros::Subscriber sub1 = nh.subscribe("from_hub_receiver", 1000, receive_callback);
 	ros::Subscriber sub2 = nh.subscribe("to_hub_manager", 1000, broadcast_callback);
+	ros::Subscriber activeChairSub = nh.subscribe("reload_active_chairs", 1000, reload_active_chairs_callback);
 
 	// initialize publishers
 	hub_manager_pub = nh.advertise<std_msgs::String>("from_hub", 1000);
