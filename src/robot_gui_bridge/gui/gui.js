@@ -141,6 +141,7 @@ var editor;
 
 active_chair_nums.get(function (value) {
     // Tell other nodes to reload the param
+    console.error("Got new active chair nums", value);
     var msg = new ROSLIB.Message({data: ""});
     reload_active_chairs_pub.publish(msg);
   setActiveChairNums(value);
