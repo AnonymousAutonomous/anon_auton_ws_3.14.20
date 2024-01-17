@@ -50,7 +50,7 @@ function handleSetActiveChairs(e) {
     const newActiveChairs = Object.keys(formProps).map(id => parseInt(id));
     
     // Set chair list. Handle rest of updates in the getter for this param, after we know the param is updated.
-    active_chair_nums.set(chairList);
+    active_chair_nums.set(newActiveChairs);
 
     modal.style.display = "none";
 }
