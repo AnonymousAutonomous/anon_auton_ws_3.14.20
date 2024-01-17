@@ -16,7 +16,7 @@ var live_status = new Map();
 
 
 
-setActiveChairNums([2, 3, 4]);
+// setActiveChairNums([2, 3, 4]);
 // Get the modal
 var modal = document.getElementById("myModal");
 
