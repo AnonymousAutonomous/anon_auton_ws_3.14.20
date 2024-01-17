@@ -6,8 +6,7 @@
 #include <vector>
 #include <algorithm>
 
-// active_chair_nums :
-ros::NodeHandle nh;
+ros::NodeHandle *n_ptr;
 
 enum class chair_broadcast_status : char
 {
@@ -309,7 +308,8 @@ void receive_callback(const std_msgs::String &msg)
 
 void reload_active_chairs_callback(const std_msgs::String &msg)
 {
-	nh.getParam("active_chair_nums", active_chair_nums);
+	ros::NodeHandle n = n_ptr;
+	n.getParam("active_chair_nums", active_chair_nums);
 	setActiveChairs(active_chair_nums);
 }
 
@@ -436,6 +436,8 @@ int main(int argc, char **argv)
 {
 	// initialize node and node handle
 	ros::init(argc, argv, "hub_manager");
+	ros::NodeHandle nh;
+	n_ptr = &nh;
 
 	// initialize chair map
 	nh.getParam("active_chair_nums", active_chair_nums);
