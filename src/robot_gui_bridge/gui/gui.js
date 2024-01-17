@@ -67,7 +67,7 @@ function setActiveChairNums(chairList) {
   document.getElementById("active_chair_list").innerHTML =
     chairs.toString();
     generateStatuses(chairList);
-    var msg = new ROSLIB.Message({data: chairList.map(c => c.toString).join()});
+    var msg = new ROSLIB.Message({data: chairList.map(c => c.toString()).join()});
     reload_active_chairs_pub.publish(msg);
 
 }
