@@ -309,6 +309,9 @@ void receive_callback(const std_msgs::String &msg)
 void reload_active_chairs_callback(const std_msgs::String &msg)
 {
 	n_ptr->getParam("active_chair_nums", active_chair_nums);
+	ROS_ERROR("RELOADED ACTIVE CHAIRS. New ones are:");
+	ROS_ERROR(chairsToString(active_chair_nums));
+
 	setActiveChairs(active_chair_nums);
 }
 
@@ -366,6 +369,17 @@ std::string notReadyChairsToString()
 		{
 			response += ('0' + p.first);
 		}
+	}
+	return response;
+}
+
+std::string chairsToString(std::vector<int> chairs)
+{
+	std::string response = "";
+	for (int c : chairs)
+	{
+		response += ('0' + c);
+		response += ' ';
 	}
 	return response;
 }
