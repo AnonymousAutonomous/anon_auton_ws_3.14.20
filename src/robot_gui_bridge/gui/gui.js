@@ -67,6 +67,8 @@ function setActiveChairNums(chairList) {
   document.getElementById("active_chair_list").innerHTML =
     chairs.toString();
     generateStatuses(chairList);
+    var msg = new ROSLIB.Message({data: ""});
+    reload_active_chairs_pub.publish(msg);
 
 }
 
@@ -142,8 +144,6 @@ var editor;
 active_chair_nums.get(function (value) {
     // Tell other nodes to reload the param
     console.error("Got new active chair nums", value);
-    var msg = new ROSLIB.Message({data: ""});
-    reload_active_chairs_pub.publish(msg);
   setActiveChairNums(value);
 });
 // var chairs = ["1", "2", "3", "4"];
