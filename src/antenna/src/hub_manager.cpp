@@ -324,7 +324,7 @@ void reload_active_chairs_callback(const std_msgs::String &msg)
 	std::vector<int> actives;
 	for (char c : msg.data)
 	{
-		actives.append(c - '0');
+		actives.push(c - '0');
 	}
 
 	ROS_ERROR("RELOADED ACTIVE CHAIRS. New ones are: %s", chairsToString(actives).c_str());
