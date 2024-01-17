@@ -49,15 +49,13 @@ function handleSetActiveChairs(e) {
     const formProps = Object.fromEntries(formData);
     const newActiveChairs = Object.keys(formProps).map(id => parseInt(id));
     
-    setActiveChairNums(newActiveChairs);
-    modal.style.display = "none";
+    // Set chair list. Handle rest of updates in the getter for this param, after we know the param is updated.
+    active_chair_nums.set(chairList);
 
-    var msg = new ROSLIB.Message({data: newActiveChairs.map(c => c.toString()).toString()});
-    reload_active_chairs_pub.publish(msg);
+    modal.style.display = "none";
 }
 
 function setActiveChairNums(chairList) {
-    active_chair_nums.set(chairList);
     console.log("GETTING ACTIVE CHAIRS!", chairList);
     chairs = chairList.map((v) => String(v));
     chairs.map((chair) => live_status.set(chair, null));
@@ -142,6 +140,9 @@ var editor;
 
 
 active_chair_nums.get(function (value) {
+    // Tell other nodes to reload the param
+    var msg = new ROSLIB.Message({data: ""});
+    reload_active_chairs_pub.publish(msg);
   setActiveChairNums(value);
 });
 // var chairs = ["1", "2", "3", "4"];
