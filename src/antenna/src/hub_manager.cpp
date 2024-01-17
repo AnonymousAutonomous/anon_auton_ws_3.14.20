@@ -72,6 +72,16 @@ public:
 std::vector<int> active_chair_nums;
 std::map<int, ChairStatus> chair_status_map;
 
+void setActiveChairs(std::vector<int> active_chair_nums)
+{
+	// Clear map
+	chair_status_map = std::map<int, ChairStatus>();
+	for (int num : active_chair_nums)
+	{
+		chair_status_map[num] = ChairStatus();
+	}
+}
+
 ros::Time startTime;
 ros::Duration waitDurationBeforeCheckingAgain(1.0); // 1.0 seconds
 ros::Duration timeBeforeChairOffline(2.0);			// 2.0 seconds
@@ -422,16 +432,6 @@ void guiStatusUpdate(const ros::TimerEvent &event)
 	}
 }
 
-void setActiveChairs(std::vector<int> active_chair_nums)
-{
-	// Clear map
-	chair_status_map = std::map<int, ChairStatus>();
-	for (int num : active_chair_nums)
-	{
-		chair_status_map[num] = ChairStatus();
-	}
-}
-
 int main(int argc, char **argv)
 {
 	// initialize node and node handle
@@ -448,7 +448,7 @@ int main(int argc, char **argv)
 	// initialize subscribers
 	ros::Subscriber sub1 = nh.subscribe("from_hub_receiver", 1000, receive_callback);
 	ros::Subscriber sub2 = nh.subscribe("to_hub_manager", 1000, broadcast_callback);
-	ros::Subscriber activeChairSub = nh.subscribe("reload_active_chairs", 1000, reload_active_chairs_callback, nh);
+	ros::Subscriber activeChairSub = nh.subscribe("reload_active_chairs", 1000, reload_active_chairs_callback);
 
 	// initialize publishers
 	hub_manager_pub = nh.advertise<std_msgs::String>("from_hub", 1000);
