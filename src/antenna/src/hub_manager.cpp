@@ -308,8 +308,7 @@ void receive_callback(const std_msgs::String &msg)
 
 void reload_active_chairs_callback(const std_msgs::String &msg)
 {
-	ros::NodeHandle n = n_ptr;
-	n.getParam("active_chair_nums", active_chair_nums);
+	n_ptr->getParam("active_chair_nums", active_chair_nums);
 	setActiveChairs(active_chair_nums);
 }
 
