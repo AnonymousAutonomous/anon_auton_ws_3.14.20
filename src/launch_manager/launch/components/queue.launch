@@ -1,6 +1,7 @@
 <launch>
   <rosparam command="load" file="$(find config_manager)/configs/live/active.yaml"/>
   <rosparam command="load" file="$(find config_manager)/configs/ports/active.yaml"/>
+  <rosparam command="load" file="$(find config_manager)/configs/stuck/active.yaml"/>
 
   <node name="queue" pkg="eyes" type="queue_five"  >
   </node>
