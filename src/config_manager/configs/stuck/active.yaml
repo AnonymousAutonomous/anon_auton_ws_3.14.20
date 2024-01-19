@@ -1,0 +1,6 @@
+{
+  "lidar_stuck_max_choreos": 3,
+  "lidar_stuck_duration_in_sec": 60,
+  "camera_trapped_max_choreos": 3,
+  "camera_trapped_duration_in_sec": 60,
+}

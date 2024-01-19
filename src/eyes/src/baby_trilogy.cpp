@@ -24,13 +24,15 @@ void lidar_callback(const std_msgs::String &commands);
 // Contains unix walltime as double
 int lidar_stuck_max_choreos = 1;
 boost::circular_buffer<ros::WallTime> lidar_stuck_pq(lidar_stuck_max_choreos);
-ros::WallDuration lidar_stuck_duration(1.0 * 60); // 1 min in seconds
+int lidar_stuck_duration_in_sec = 60;
+ros::WallDuration lidar_stuck_duration(1.0 * lidar_stuck_duration_in_sec); // 1 min in seconds
 
 // Keeps track of last N pivots. If we've done N pivots in the past M minutes, then we are stuck.
 // N = 2; M = 3
 int camera_trapped_max_choreos = 2;
 boost::circular_buffer<ros::WallTime> camera_trapped_pq(camera_trapped_max_choreos);
-ros::WallDuration camera_trapped_duration(1.0 * 60); // 1 mins
+int camera_trapped_duration_in_sec = 60;
+ros::WallDuration camera_trapped_duration(1.0 * camera_trapped_duration_in_sec); // 1 mins
 
 std::pair<std_msgs::String, std_msgs::String> command_pair;
 // first command is camera
@@ -67,6 +69,43 @@ int main(int argc, char **argv)
 	else
 	{
 		ROS_INFO("You must load autonomous commands before using baby trilogy.");
+		return 1;
+	}
+
+	if (nh.getParam("/lidar_stuck_max_choreos", lidar_stuck_max_choreos))
+	{
+		lidar_stuck_pq = boost::circular_buffer<ros::WallTime>(lidar_stuck_max_choreos);
+	}
+	else
+	{
+		ROS_INFO("You must load lidar_stuck_max_choreos before using baby trilogy.");
+		return 1;
+	}
+	if (nh.getParam("/camera_trapped_max_choreos", camera_trapped_max_choreos))
+	{
+		camera_trapped_pq = boost::circular_buffer<ros::WallTime>(camera_trapped_max_choreos);
+	}
+	else
+	{
+		ROS_INFO("You must load camera_trapped_max_choreos before using baby trilogy.");
+		return 1;
+	}
+	if (nh.getParam("/lidar_stuck_duration_in_sec", lidar_stuck_duration_in_sec))
+	{
+		lidar_stuck_duration = ros::WallDuration(1.0 * lidar_stuck_duration_in_sec); // 1 min in seconds
+	}
+	else
+	{
+		ROS_INFO("You must load lidar_stuck_duration_in_sec before using baby trilogy.");
+		return 1;
+	}
+	if (nh.getParam("/camera_trapped_duration_in_sec", camera_trapped_duration_in_sec))
+	{
+		camera_trapped_duration = ros::WallDuration(1.0 * camera_trapped_duration_in_sec); // 1 min in seconds
+	}
+	else
+	{
+		ROS_INFO("You must load camera_trapped_duration_in_sec before using baby trilogy.");
 		return 1;
 	}
 
