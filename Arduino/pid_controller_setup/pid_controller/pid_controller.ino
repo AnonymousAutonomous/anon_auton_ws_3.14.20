@@ -35,13 +35,13 @@
 const uint16_t PWMA = 11;         // Motor A PWM control     BLUE 
 const uint16_t AIN1 = 9;         // Motor A input 1         YELLOW
 const uint16_t AIN2 = 8;         // Motor A input 2         GREEN
-const uint16_t STBYA = 4;        // Standby                 
+const uint16_t STBYA = 6;        // Standby                 
 
 // B is right motor
 const uint16_t BIN1 = 12;        // Motor B input 1         ORANGE
-const uint16_t BIN2 = 13;        // Motor B input 2         RED
+const uint16_t BIN2 = 7;        // Motor B input 2         RED
 const uint16_t PWMB = 10;        // Motor B PWM control     BROWN
-const uint16_t STBYB = 7;        // Standby                 
+const uint16_t STBYB = 5;        // Standby                 
 
 // Motor encoder external interrupt pins
 const uint16_t ENCA = 3;        // Encoder A input         
@@ -71,17 +71,17 @@ double setpointB = setpointA;   // setpoint is inches / second
 
 double inputA = 0;              // input is inches / second
 double outputA = 0;             // output is PWM to motors
-int FEEDFWDA = 60;
+int FEEDFWDA = 50;
 int a_adjust = 0;
 
 double inputB = 0;              // input is inches / second
 double outputB = 0;             // output is PWM to motors
-int FEEDFWDB = 60;
+int FEEDFWDB = 50;
 int b_adjust = 0;
 
 //double KpA = 2.0, KiA = 7.0, KdA = 2.0;
 // TODO: diff tunings for fwd or bwd? how to even out between the two motors? -- send avg to both? OR diff FEEDFWD terms for the two?
-double KpA = 10.0, KiA = 25.0, KdA = 0.0;
+double KpA = 30.0, KiA = 0.0, KdA = 0.0;
 double KpB = KpA, KiB = KiA, KdB = KdA;
 PID motorA(&inputA, &outputA, setpointA, KpA, KiA, KdA, DIRECT);
 PID motorB(&inputB, &outputB, setpointB, KpB, KiB, KdB, DIRECT);
@@ -101,6 +101,12 @@ float strToFloat(String str) {
    return atof(buffer);
 }
 
+int strToInt(String str) {
+  char buffer[10];
+   str.toCharArray(buffer, 10);
+   return atoi(buffer);
+}
+
 
 /***********************************************************
  * SERIAL / PRINTING HELPER FUNCTIONS                      *
@@ -111,13 +117,22 @@ float strToFloat(String str) {
   Serial.print(KpA); Serial.print(","); Serial.print(KiA); Serial.print(","); Serial.print(KdA); Serial.print(","); Serial.print(setpointA); Serial.print(","); Serial.print(FEEDFWDA); Serial.print(",");
   Serial.print(KpB); Serial.print(","); Serial.print(KiB); Serial.print(","); Serial.print(KdB); Serial.print(","); Serial.print(setpointB); Serial.print(","); Serial.print(FEEDFWDB); Serial.print("\n");
  
- Serial.print("inputA"); Serial.print(","); Serial.print("outputA"); Serial.print(","); Serial.print("a_adjust"); Serial.print(","); 
-  Serial.print("inputB"); Serial.print(","); Serial.print("outputB"); Serial.print(","); Serial.print("b_adjust"); Serial.print("\n"); 
+ Serial.print("inputA"); Serial.print(","); 
+ Serial.print("outputA"); Serial.print(","); 
+ Serial.print("a_adjust"); Serial.print(","); 
+ Serial.print("errorA"); Serial.print(","); 
+ 
+  Serial.print("inputB"); Serial.print(","); 
+  Serial.print("outputB"); Serial.print(","); 
+  Serial.print("b_adjust"); Serial.print(",");
+  Serial.print("errorB"); 
+  Serial.print("\n"); 
  }
 
  void printUpdates() {
- Serial.print(inputA); Serial.print(","); Serial.print(outputA); Serial.print(","); Serial.print(a_adjust); Serial.print(","); 
-  Serial.print(inputB); Serial.print(","); Serial.print(outputB); Serial.print(","); Serial.print(b_adjust); Serial.print("\n"); 
+ Serial.print(inputA); Serial.print(","); 
+ Serial.print(outputA); Serial.print(","); Serial.print(a_adjust); Serial.print(",");  Serial.print(100*(setpointA-inputA)/setpointA); Serial.print(","); 
+  Serial.print(inputB); Serial.print(","); Serial.print(outputB); Serial.print(","); Serial.print(b_adjust); Serial.print(",");  Serial.print(100*(setpointB-inputB)/setpointB); Serial.print("\n"); 
  
  }
  
@@ -131,6 +146,9 @@ float strToFloat(String str) {
   }
   else if (changeVar == 'd') {
     KdA = KdB = strToFloat(String(data).substring(1));
+  }
+  if (changeVar == 'f') {
+    FEEDFWDA = FEEDFWDB = strToInt(String(data).substring(1));
   }
   else if (changeVar == 'b') {
         standbyMotors(true);
@@ -394,6 +412,16 @@ void loop(){
   motorA.Compute();
   motorB.Compute();
 
+  if (nowTime - startTimeA > 250)
+  {
+    inputA = 0;
+  }
+
+  if (nowTime - startTimeB > 250)
+  {
+    inputB = 0;
+  }
+  
   moveA(max(0, min(255, (int)outputA + a_adjust)));
   moveB(max(0, min(255, (int)outputB + b_adjust)));
 
