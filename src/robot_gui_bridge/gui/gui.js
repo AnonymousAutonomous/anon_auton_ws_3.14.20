@@ -856,6 +856,14 @@ send_clear_broadcast = function () {
   to_hub_manager_pub.publish(dir);
 };
 
+send_shutdown_all_chairs = function () {
+  hub_dir_listener.publish(formatMsg(0, "shutdown"));
+};
+
+send_reset_all_chairs = function () {
+  hub_dir_listener.publish(formatMsg(0, "reset"));
+};
+
 function switchscreen(newScreenId) {
   var liveScreen = document.getElementById("live");
   var configScreen = document.getElementById("config");
