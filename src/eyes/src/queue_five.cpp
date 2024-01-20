@@ -333,6 +333,10 @@ int main(int argc, char **argv)
 	notify_lidar = nh.advertise<std_msgs::Char>("queue_to_lidar", 1000);
 	send_flags = nh.advertise<std_msgs::String>("queue_to_manager", 1000);
 
+	// Clear out if chair is somehow already in a choreo
+	ROS_ERROR("END OF CHOREO");
+	std_msgs::Empty empty_msg;
+	eoc_pub.publish(empty_msg);
 	// ros::Timer timer = nh.createTimer(ros::Duration(0.5), send_current_flags);
 
 	mode = state::autonomous;
