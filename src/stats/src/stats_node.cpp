@@ -12,7 +12,7 @@
 #include <vector>
 #include <string>
 
-std::vector<std::string> topics_we_care_about("image_mono", "raw_obstacles");
+std::vector<std::string> topics_we_care_about{"image_mono", "raw_obstacles"};
 ros::Duration timeBeforeOfflineSec(2); // 2 seconds
 
 std::unordered_map<std::string, ros::Time> topic_to_last_start_time = {};
