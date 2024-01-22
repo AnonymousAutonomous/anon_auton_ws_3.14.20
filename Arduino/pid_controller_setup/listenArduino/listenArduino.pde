@@ -13,6 +13,7 @@ boolean sentCommands = false;
  float d = 0.0;
  int f = 65;
  String s = "f2.0f2.0";
+ String notes = "backspin2";
 
 void setup() {
    int arduino_index = 0;
@@ -29,7 +30,7 @@ void setup() {
    mySerial.clear();
 
 
-   output = createWriter( "data/csvs/" + p + "_" + i + "_" + d + "_" + s + "_" + f + ".csv" );
+   output = createWriter( "data/csvs/" + p + "_" + i + "_" + d + "_" + s + "_" + f + "_" + notes + ".csv" );
    
    savedTime = millis();
 }
