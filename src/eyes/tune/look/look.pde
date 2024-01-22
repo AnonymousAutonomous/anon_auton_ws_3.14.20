@@ -18,7 +18,7 @@ void setup() {
   background(80);
   
   // Load image from a web server
-  webImg = loadImage("/Users/felichri/Documents/AnonAuton/anon_auton_ws/images/capture2.jpg");
+  webImg = loadImage("../test0.jpg");
   webImg.resize(width, height);
 
    handles = new Handle[5];
