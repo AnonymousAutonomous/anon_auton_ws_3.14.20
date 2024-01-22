@@ -188,7 +188,7 @@ void updateTrappedStatus()
 
 void command_compare()
 {
-	ROS_ERROR("lidar pq size: %d\tcam pq size: %d", lidar_stuck_pq.size(), camera_trapped_pq.size());
+	// ROS_ERROR("lidar pq size: %d\tcam pq size: %d", lidar_stuck_pq.size(), camera_trapped_pq.size());
 	if (please_clear_queue)
 	{
 		lidar_stuck_pq = boost::circular_buffer<ros::WallTime>(lidar_stuck_max_choreos);
