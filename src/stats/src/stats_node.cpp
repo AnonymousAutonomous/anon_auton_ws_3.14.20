@@ -45,7 +45,7 @@ int main(int argc, char **argv)
     ros::Subscriber statistics_sub = nh.subscribe("statistics", 1000, statistics_callback);
 
     // initialize publishers
-    stats_debug_pub = nh.advertise<TopicStatistics>("stats_debug", 1000);
+    ros::Publisher stats_debug_pub = nh.advertise<rosgraph_msgs::TopicStatistics>("stats_debug", 1000);
 
     // ros::Timer timer = nh.createTimer(ros::Duration(0.1), onHeartbeat);
     // ros::Rate delay_rate(5); // 5 cycles per second
