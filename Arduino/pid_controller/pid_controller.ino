@@ -28,7 +28,7 @@ double setpointB = setpointA; // setpoint is inches / second
 
 double inputA = 0;  // input is inches / second
 double outputA = 0; // output is PWM to motors
-int FEEDFWDA = 60;
+int FEEDFWDA = 65;
 int a_adjust = 0;
 
 double inputB = 0;  // input is inches / second

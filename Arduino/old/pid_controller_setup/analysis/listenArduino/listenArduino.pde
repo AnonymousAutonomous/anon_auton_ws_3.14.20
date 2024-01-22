@@ -11,7 +11,7 @@ boolean sentCommands = false;
  float p = 10.0;
  float i = 25.0;
  float d = 0.0;
- String s = "f0.0f0.0";
+ String s = "f3.0f3.0";
 
 void setup() {
    int arduino_index = 0;
