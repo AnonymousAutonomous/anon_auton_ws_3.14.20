@@ -5,7 +5,7 @@
       "sideBandWidth": 180,
       "imageWidth": 640,
       "imageHeight": 480,
-      "brightnessThreshold": 175,
+      "brightnessThreshold": 125,
       "sidePercentThreshold": 0.20,
       "topPercentThreshold": 0.20,
       "numMiddlePixels": 100800,

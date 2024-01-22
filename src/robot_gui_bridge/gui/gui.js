@@ -1200,9 +1200,9 @@ window.onload = function () {
 
   var background = new Image();
   background.crossOrigin = "Anonymous";
-  background.src = "./images/test.jpg";
+  background.src = "./images/frame0000.jpg";
 
-  toDataURL("./images/test.jpg", function (dataUrl) {
+  toDataURL("./images/frame0000.jpg", function (dataUrl) {
     console.log("RESULT:", dataUrl);
   });
 
