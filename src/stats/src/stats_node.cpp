@@ -84,6 +84,6 @@ int main(int argc, char **argv)
                 stats_debug_pub.publish(msgs);
             }
         }
-        ros.spin();
     }
+    ros::waitForShutdown();
 }
