@@ -12,12 +12,12 @@
 #include <vector>
 #include <string>
 
-const std::unordered_map<std::string, ros::Time> cmd_to_case = {
-    // launching entire chair
-    {
-        "launch",
-    },
-};
+// const std::unordered_map<std::string, ros::Time> cmd_to_case = {
+//     // launching entire chair
+//     {
+//         "launch",
+//     },
+// };
 
 ros::Time startTime;
 ros::Duration heartbeatDuration(0.5); // 0.5 seconds
@@ -27,7 +27,7 @@ ros::Publisher stats_debug_pub;
 void statistics_callback(const rosgraph_msgs::TopicStatistics &stats_msg)
 {
     rosgraph_msgs::TopicStatistics msg_copy;
-    msg_copy.data = stats_msg.data;
+    msg_copy = stats_msg;
     stats_debug_pub.publish(msg_copy);
 }
 
