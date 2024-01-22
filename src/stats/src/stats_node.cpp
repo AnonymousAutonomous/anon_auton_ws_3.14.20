@@ -21,6 +21,9 @@ ros::Time startTime;
 
 ros::Publisher stats_debug_pub;
 
+bool camera_online = true;
+bool lidar_online = true;
+
 void statistics_callback(const rosgraph_msgs::TopicStatistics &stats_msg)
 {
     std::string topic(stats_msg.topic);
@@ -54,23 +57,29 @@ int main(int argc, char **argv)
 
     while (ros::ok())
     {
-        for (auto i = m.begin(); i != m.end(); i++)
+        for (auto i = topic_to_last_start_time.begin(); i != topic_to_last_start_time.end(); i++)
         {
             if (ros::Time::now() >= i->second + timeBeforeOfflineSec)
             {
-                std::String msg;
+                std::string msg;
                 if (i->first == "image_mono")
                 {
-                    msg.data = "CAMERA OFFLINE";
+                    camera_online = false;
                 }
                 else if (i->first == "raw_obstacles")
                 {
-                    msg.data = "LIDAR OFFLINE";
+                    lidar_online = false;
                 }
                 else
                 {
                 }
-                stats_debug_pub.publish(msg);
+                msg += "Camera: ";
+                msg += camera_online ? "on" : "OFF";
+                msg += "\tLidar: ";
+                msg += lidar_online ? "on" : "OFF";
+                std_msgs::String msgs;
+                msgs.data = msg;
+                stats_debug_pub.publish(msgs);
             }
         }
     }
