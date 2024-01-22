@@ -133,7 +133,7 @@
 
 #cmd_config_form {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 
 .handwritten_form {
@@ -250,3 +250,19 @@ textarea {
     text-decoration: none;
     cursor: pointer;
   }
+
+.explanation {
+    font-style: italic;
+    color: #888;
+}
+
+#saveCmdToConfig {
+    padding: 5px;
+    margin-left: 5px;
+    border: 2px solid #888;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
