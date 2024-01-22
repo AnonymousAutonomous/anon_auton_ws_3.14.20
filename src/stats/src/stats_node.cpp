@@ -24,9 +24,9 @@ ros::Duration heartbeatDuration(0.5); // 0.5 seconds
 
 ros::Publisher stats_debug_pub;
 
-void statistics_callback(const TopicStatistics stats_msg)
+void statistics_callback(const rosgraph_msgs::TopicStatistics &stats_msg)
 {
-    TopicStatistics msg_copy;
+    rosgraph_msgs::TopicStatistics msg_copy;
     msg_copy.data = stats_msg.data;
     stats_debug_pub.publish(msg_copy);
 }
@@ -45,7 +45,7 @@ int main(int argc, char **argv)
     ros::Subscriber statistics_sub = nh.subscribe("statistics", 1000, statistics_callback);
 
     // initialize publishers
-    ros::Publisher stats_debug_pub = nh.advertise<rosgraph_msgs::TopicStatistics>("stats_debug", 1000);
+    stats_debug_pub = nh.advertise<rosgraph_msgs::TopicStatistics>("stats_debug", 1000);
 
     // ros::Timer timer = nh.createTimer(ros::Duration(0.1), onHeartbeat);
     // ros::Rate delay_rate(5); // 5 cycles per second
