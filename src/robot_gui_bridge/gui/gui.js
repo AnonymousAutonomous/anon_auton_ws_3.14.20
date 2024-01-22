@@ -15,7 +15,7 @@ var chairs = [];
 var live_status = new Map();
 
 
-
+// TODO -- remove
 // setActiveChairNums([2, 3, 4]);
 // Get the modal
 var modal = document.getElementById("myModal");
@@ -64,12 +64,10 @@ function setActiveChairNums(chairList) {
 
   document.getElementById("num_chairs").innerHTML =
     String(chairs.length) + " chair" + (chairs.length != 1 ? "s" : "");
-  document.getElementById("active_chair_list").innerHTML =
-    chairs.toString();
+  document.getElementById("active_chair_list").innerHTML = chairs.toString();
     generateStatuses(chairList);
     var msg = new ROSLIB.Message({data: chairList.map(c => c.toString()).join('')});
     reload_active_chairs_pub.publish(msg);
-
 }
 
 function generateStatuses(chairList) {
@@ -726,38 +724,39 @@ formPropsToString = function (formProps) {
   return left_f_r + left_speed + right_f_r + right_speed;
 };
 
-saveCmd = function (e) {
+saveCmd = function (e, fromButton) {
   e.preventDefault();
-  console.log("prevented default");
   const formData = new FormData(e.target);
   const formProps = Object.fromEntries(formData);
-
   const stringcmd = formPropsToString(formProps);
 
-  const matchedCmds = cmdEquivalents[formProps.cmd];
-  console.log(matchedCmds);
+  console.log(formProps);
 
-  var json = editor.get();
-  console.log(json);
+  if (fromButton == "Save") {
+    const matchedCmds = cmdEquivalents[formProps.cmd];
+    console.log(matchedCmds);
+  
+    var json = editor.get();
+    console.log(json);
+  
+    matchedCmds.handwritten.forEach((h) => {
+      json.handwritten[h.key] = h.prefix + stringcmd;
+    });
+    matchedCmds.autonomous.forEach((a) => {
+      json.autonomous[a.key] = a.prefix + stringcmd;
+    });
+  
+    editor.set(json);
+    editor.expandAll();
+  } else if (fromButton == "Test") {
 
-  matchedCmds.handwritten.forEach((h) => {
-    json.handwritten[h.key] = h.prefix + stringcmd;
-  });
-  matchedCmds.autonomous.forEach((a) => {
-    json.autonomous[a.key] = a.prefix + stringcmd;
-  });
-
-  editor.set(json);
-  editor.expandAll();
+  } else {
+    alert("Not a valid option", fromButton);
+  }
+  
 };
 
-submitForm = function (e) {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  const formProps = Object.fromEntries(formData);
-
-  const cmd = formProps.custom_handwritten;
-
+sendCommandToChair = function(cmd, chairNum) {
   if (
     cmd.length == 8 &&
     (cmd[0] == "f" || cmd[0] == "r") &&
@@ -774,14 +773,26 @@ submitForm = function (e) {
     cmd[7] <= "9"
   ) {
     hub_dir_listener.publish(
-      formatMsg(e.target.id[0], "hand " + formProps.custom_handwritten)
+      formatMsg(chairNum, "hand " + cmd)
     );
-    document.getElementById(e.target.id).reset();
   } else {
     alert(
       "Custom commands must be 8 characters: [f/r][#.#][f/r][#.#]\nExample: f1.0f1.0"
     );
   }
+}
+
+submitForm = function (e) {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const formProps = Object.fromEntries(formData);
+
+  const cmd = formProps.custom_handwritten;
+
+  sendCommandToChair(cmd, e.target.id[0]);
+
+  document.getElementById(e.target.id).reset();
+
 };
 
 move = function () {
@@ -1165,6 +1176,11 @@ function playLowBatt() {
 function playBeep() {
   const audio = document.getElementById("audio_beep");
   audio.play();
+}
+
+function sendSpeedToChair() {
+  const audio = document.getElementById("audio_beep");
+
 }
 
 window.onload = function () {
