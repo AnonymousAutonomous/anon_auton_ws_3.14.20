@@ -61,29 +61,39 @@ int main(int argc, char **argv)
     {
         for (auto i = topic_to_last_start_time.begin(); i != topic_to_last_start_time.end(); i++)
         {
-            if (ros::Time::now() >= i->second + timeBeforeOfflineSec)
+            if (i->first == "/cv_camera/image_mono")
             {
-                std::string msg;
-                if (i->first == "/cv_camera/image_mono")
+                if (ros::Time::now() >= i->second + timeBeforeOfflineSec)
                 {
                     camera_online = false;
                 }
-                else if (i->first == "raw_obstacles")
+                else
+                {
+                    camera_online = true;
+                }
+            }
+            else if (i->first == "raw_obstacles")
+            {
+                if (ros::Time::now() >= i->second + timeBeforeOfflineSec)
                 {
                     lidar_online = false;
                 }
                 else
                 {
+                    lidar_online = true;
                 }
-                msg += "Camera: ";
-                msg += camera_online ? "on" : "OFF";
-                msg += "\tLidar: ";
-                msg += lidar_online ? "on" : "OFF";
-                std_msgs::String msgs;
-                msgs.data = msg;
-                stats_debug_pub.publish(msgs);
             }
+            std::string msg;
+
+            msg += "Camera: ";
+            msg += camera_online ? "on" : "OFF";
+            msg += "\tLidar: ";
+            msg += lidar_online ? "on" : "OFF";
+            std_msgs::String msgs;
+            msgs.data = msg;
+            stats_debug_pub.publish(msgs);
         }
     }
-    ros::waitForShutdown();
+}
+ros::waitForShutdown();
 }
