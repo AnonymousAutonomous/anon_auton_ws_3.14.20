@@ -749,7 +749,7 @@ saveCmd = function (e, fromButton) {
     editor.set(json);
     editor.expandAll();
   } else if (fromButton == "Test") {
-
+    sendCommandToChair(stringcmd, formProps.get('testChair'));
   } else {
     alert("Not a valid option", fromButton);
   }
