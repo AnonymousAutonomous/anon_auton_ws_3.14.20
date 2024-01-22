@@ -14,6 +14,8 @@ roscore &
 
 until rostopic list; do sleep 1; done
 
+rosparam set enable_statistics true
+
 yes | rosclean purge 
 
 cd src/launch_manager/launch/components/

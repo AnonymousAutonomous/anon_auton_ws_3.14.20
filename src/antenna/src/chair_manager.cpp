@@ -349,7 +349,7 @@ int main(int argc, char **argv)
 			// trapped_msg.data = "T" + static_cast<char>(chair_trapped_state);
 			// from_chair_pub.publish(trapped_msg);
 
-			ROS_ERROR("<3 %s", msg.data.c_str());
+			// ROS_ERROR("<3 %s", msg.data.c_str());
 			startTime = ros::Time::now();
 		}
 		// 	std_msgs::String msg;
