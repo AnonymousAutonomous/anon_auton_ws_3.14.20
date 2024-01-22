@@ -757,7 +757,9 @@ saveCmd = function (e, fromButton) {
 };
 
 sendCommandToChair = function(cmd, chairNum) {
-  alert("sending", cmd, chairNum);
+  alert(cmd);
+  alert(chairNum);
+  alert(typeof chairNum);
   if (
     cmd.length == 8 &&
     (cmd[0] == "f" || cmd[0] == "r") &&
