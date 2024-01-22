@@ -27,8 +27,8 @@ bool lidar_online = true;
 void statistics_callback(const rosgraph_msgs::TopicStatistics &stats_msg)
 {
     std::string topic(stats_msg.topic);
-    ros::Time startTime = stats_msg.window_start
-                              topic_to_last_start_time[topic] = startTime;
+    ros::Time startTime = stats_msg.window_start;
+    topic_to_last_start_time[topic] = startTime;
 }
 
 int main(int argc, char **argv)
