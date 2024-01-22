@@ -12,7 +12,7 @@
 #include <vector>
 #include <string>
 
-const std::vector<std::string> topics_we_care_about = [ "image_mono", "raw_obstacles" ];
+const std::vector<std::string> topics_we_care_about("image_mono", "raw_obstacles");
 ros::Duration timeBeforeOfflineSec(2); // 2 seconds
 
 const std::unordered_map<std::string, ros::Time> topic_to_last_start_time = {};
@@ -23,7 +23,8 @@ ros::Publisher stats_debug_pub;
 
 void statistics_callback(const rosgraph_msgs::TopicStatistics &stats_msg)
 {
-    topic_to_last_start_time[stats_msg.topic] = stats_msg.window_start;
+    std::string topic(stats_msg.topic);
+    topic_to_last_start_time[topic] = stats_msg.window_start;
 }
 
 int main(int argc, char **argv)
