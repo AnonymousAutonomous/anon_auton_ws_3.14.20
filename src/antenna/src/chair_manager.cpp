@@ -242,9 +242,9 @@ void chair_state_callback(const std_msgs::Char state_in)
 	chair_state = static_cast<state>(state_in.data);
 }
 
-void chair_flags_callback(const std_msgs::String flags_in)
+void chair_flags_callback(const std_msgs::String &flags_in)
 {
-	// ROS_ERROR("HERE ARE THE FLAGS: %s", flags_in.data.c_str());
+	ROS_ERROR("HERE ARE THE FLAGS: %s", flags_in.data.c_str());
 	// Order [A][B][C][H][T][D][S][EOC][SOB][EOB]
 	// y/n
 	chair_flags = flags_in.data;
@@ -307,6 +307,7 @@ void stuck_or_trapped_callback(const std_msgs::Char state_in)
 
 void camera_status_callback(const std_msgs::Bool msg)
 {
+	ROS_ERROR("IN CAMERA STATUS CALLBACK");
 	if (msg.data == true)
 	{
 		camera_online = 'y';
@@ -319,6 +320,8 @@ void camera_status_callback(const std_msgs::Bool msg)
 
 void lidar_status_callback(const std_msgs::Bool msg)
 {
+	ROS_ERROR("IN LIDAR STATUS CALLBACK");
+
 	if (msg.data == true)
 	{
 		lidar_online = 'y';
@@ -367,7 +370,8 @@ int main(int argc, char **argv)
 			msgs = static_cast<char>(chair_state);
 			msgs += static_cast<char>(chair_stuck_state);
 			msgs += static_cast<char>(chair_trapped_state);
-			msgs += chair_flags; // heartbeat!
+			// Anm|nnnnyynnnn|nn = sends once, then never again...
+			msgs += chair_flags; // heartbeat! -- coming in
 			msgs += camera_online;
 			msgs += lidar_online;
 			ROS_ERROR("SENDING HEARTBEAT: %s", msgs.c_str());
