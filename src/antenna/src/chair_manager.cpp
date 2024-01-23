@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
+#include "std_msgs/Bool.h"
 #include "std_msgs/Char.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -98,6 +99,9 @@ ros::Publisher from_chair_pub;
 state chair_state = state::autonomous;
 chair_stuck_status chair_stuck_state = chair_stuck_status::not_stuck;
 chair_trapped_status chair_trapped_state = chair_trapped_status::not_trapped;
+bool camera_online = true;
+bool lidar_online = true;
+
 std::string chair_flags = "";
 
 ros::Time startTime;
@@ -301,6 +305,16 @@ void stuck_or_trapped_callback(const std_msgs::Char state_in)
 	}
 }
 
+void camera_status_callback(const std_msgs::Bool msg)
+{
+	camera_online = msg.data;
+}
+
+void lidar_status_callback(const std_msgs::Bool msg)
+{
+	lidar_online = msg.data;
+}
+
 int main(int argc, char **argv)
 {
 	// initialize node and node handle
@@ -318,6 +332,9 @@ int main(int argc, char **argv)
 	// TODO: delete this when actually running!
 	ros::Subscriber chair_flags_sub = nh.subscribe("queue_to_manager", 1000, chair_flags_callback);
 	ros::Subscriber trapped_stuck_sub = nh.subscribe("stuck_or_trapped_alert", 1000, stuck_or_trapped_callback);
+
+	ros::Subscriber chair_flags_sub = nh.subscribe("camera_online_status", 1000, camera_status_callback);
+	ros::Subscriber chair_flags_sub = nh.subscribe("lidar_online_status", 1000, lidar_status_callback);
 
 	// initialize publishers
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
@@ -337,6 +354,8 @@ int main(int argc, char **argv)
 			msg.data += static_cast<char>(chair_stuck_state);
 			msg.data += static_cast<char>(chair_trapped_state);
 			msg.data += chair_flags; // heartbeat!
+			msg.data += camera_online ? 'o' : 'x';
+			msg.data += lidar_online ? 'o' : 'x';
 			from_chair_pub.publish(msg);
 
 			// // send stuck or not

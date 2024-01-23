@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
+#include "std_msgs/Bool.h"
 #include "std_msgs/Char.h"
 #include "rosgraph_msgs/TopicStatistics.h"
 #include <stdio.h>
@@ -19,7 +20,9 @@ std::unordered_map<std::string, ros::Time> topic_to_last_start_time = {};
 
 ros::Time startTime;
 
-ros::Publisher stats_debug_pub;
+ros::Publisher stats_pub;
+ros::Publisher camera_status_pub;
+ros::Publisher lidar_status_pub;
 
 bool camera_online = true;
 bool lidar_online = true;
@@ -45,7 +48,8 @@ int main(int argc, char **argv)
     ros::Subscriber statistics_sub = nh.subscribe("statistics", 1000, statistics_callback);
 
     // initialize publishers
-    stats_debug_pub = nh.advertise<std_msgs::String>("stats_debug", 1000);
+    camera_status_pub = nh.advertise<std_msgs::Bool>("camera_online_status", 1000);
+    lidar_status_pub = nh.advertise<std_msgs::Bool>("lidar_online_status", 1000);
 
     // ros::Timer timer = nh.createTimer(ros::Duration(0.1), onHeartbeat);
     // ros::Rate delay_rate(5); // 5 cycles per second
@@ -66,10 +70,12 @@ int main(int argc, char **argv)
                 if (ros::Time::now() >= i->second + timeBeforeOfflineSec)
                 {
                     camera_online = false;
+                    camera_status_pub.publish(std_msgs::Bool(false));
                 }
                 else
                 {
                     camera_online = true;
+                    camera_status_pub.publish(std_msgs::Bool(true));
                 }
             }
             else if (i->first == "/raw_obstacles")
@@ -77,10 +83,12 @@ int main(int argc, char **argv)
                 if (ros::Time::now() >= i->second + timeBeforeOfflineSec)
                 {
                     lidar_online = false;
+                    lidar_status_pub.publish(std_msgs::Bool(false));
                 }
                 else
                 {
                     lidar_online = true;
+                    lidar_status_pub.publish(std_msgs::Bool(true));
                 }
             }
             std::string msg;
@@ -91,7 +99,7 @@ int main(int argc, char **argv)
             msg += lidar_online ? "on" : "OFF";
             std_msgs::String msgs;
             msgs.data = msg;
-            stats_debug_pub.publish(msgs);
+            stats_pub.publish(msgs);
         }
         ros::spinOnce();
         loop_rate.sleep();
