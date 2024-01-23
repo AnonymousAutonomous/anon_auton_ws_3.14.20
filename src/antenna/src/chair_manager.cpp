@@ -348,7 +348,7 @@ int main(int argc, char **argv)
 
 	// TODO: delete this when actually running!
 	// ros::Subscriber chair_flags_sub = nh.subscribe("queue_to_manager", 1000, chair_flags_callback);
-	// ros::Subscriber trapped_stuck_sub = nh.subscribe("stuck_or_trapped_alert", 1000, stuck_or_trapped_callback);
+	ros::Subscriber trapped_stuck_sub = nh.subscribe("stuck_or_trapped_alert", 1000, stuck_or_trapped_callback);
 
 	ros::Subscriber camera_online_sub = nh.subscribe("camera_online_status", 1000, camera_status_callback);
 	ros::Subscriber lidar_online_sub = nh.subscribe("lidar_online_status", 1000, lidar_status_callback);
