@@ -24,6 +24,9 @@ ros::Publisher notify_lidar;
 ros::Publisher send_flags;
 ros::Publisher clear_stuck_or_trapped;
 
+ros::Time startTime;
+ros::Duration heartbeatDuration(0.5);
+
 enum class state : char
 {
 	autonomous = 'a',
@@ -333,16 +336,21 @@ int main(int argc, char **argv)
 	notify_lidar = nh.advertise<std_msgs::Char>("queue_to_lidar", 1000);
 	send_flags = nh.advertise<std_msgs::String>("queue_to_manager", 1000);
 
+	startTime = ros::Time::now();
 	// Clear out if chair is somehow already in a choreo
 	ROS_ERROR("END OF CHOREO");
 	std_msgs::Empty empty_msg;
 	eoc_pub.publish(empty_msg);
-	ros::Timer timer = nh.createTimer(ros::Duration(0.5), send_current_flags);
+	// ros::Timer timer = nh.createTimer(ros::Duration(0.5), send_current_flags);
 
 	mode = state::autonomous;
 	while (ros::ok())
 	{
-		// send_current_flags();
+		if (ros::Time::now() >= startTime + heartbeatDuration)
+		{
+			send_current_flags();
+			startTime = ros::Time::now();
+		}
 		// !!!!!! YOU MUST KEEP THIS ROS_INFO LINE IN, OR HEARTBEATS DON'T SEND!!!! I don't know why, but it's taking too long to debug.
 		ROS_INFO("");
 		// ROS_ERROR("\nflag_A:\t\t%s\tflag_B:\t\t%s\tflag_C:\t\t%s\tflag_H:\t\t%s\nflag_T:\t\t%s\tflag_D:\t\t%s\tflag_S:\t\t%s\nflag_EOC:\t%s\tflag_SOB:\t%s\tflag_EOB:\t%s", BoolToString(flag_A), BoolToString(flag_B), BoolToString(flag_C), BoolToString(flag_H), BoolToString(flag_T), BoolToString(flag_D), BoolToString(flag_S), BoolToString(flag_EOC), BoolToString(flag_SOB), BoolToString(flag_EOB));
