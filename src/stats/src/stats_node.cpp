@@ -93,7 +93,7 @@ int main(int argc, char **argv)
             msgs.data = msg;
             stats_debug_pub.publish(msgs);
         }
-        ros.spinOnce();
+        ros::spinOnce();
         loop_rate.sleep();
     }
 }
