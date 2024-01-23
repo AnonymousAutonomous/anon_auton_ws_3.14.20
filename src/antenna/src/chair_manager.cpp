@@ -344,7 +344,7 @@ int main(int argc, char **argv)
 
 	// initialize subscribers
 	ros::Subscriber sub = nh.subscribe("from_chair_receiver", 1000, receive_callback);
-	// ros::Subscriber chair_state_sub = nh.subscribe("queue_to_lidar", 1000, chair_state_callback);
+	ros::Subscriber chair_state_sub = nh.subscribe("queue_to_lidar", 1000, chair_state_callback);
 
 	// TODO: delete this when actually running!
 	// ros::Subscriber chair_flags_sub = nh.subscribe("queue_to_manager", 1000, chair_flags_callback);
