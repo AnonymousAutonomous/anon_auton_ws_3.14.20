@@ -353,12 +353,23 @@ int main(int argc, char **argv)
 		{
 			// Send heartbeat with statuses
 			std::string msgs;
-			msgs = chair_flags.substr(0, 1); // get autonomous, broadcast, etc. from chair flags
+			msgs = "";
+			if (chair_flags.size() >= 1)
+			{
+				msgs += chair_flags.substr(0, 1); // get autonomous, broadcast, etc. from chair flags
+			}
+			else
+			{
+				msgs += 'o';
+			}
 			msgs += camera_online;
 			msgs += lidar_online;
 			msgs += static_cast<char>(chair_stuck_state);
 			msgs += static_cast<char>(chair_trapped_state);
-			msgs += chair_flags.substr(1); // rest of flags
+			if (chair_flags.size() >= 2)
+			{
+				msgs += chair_flags.substr(1); // rest of flags
+			}
 
 			ROS_ERROR("SENDING HEARTBEAT: %s", msgs.c_str());
 			std_msgs::String msg;
