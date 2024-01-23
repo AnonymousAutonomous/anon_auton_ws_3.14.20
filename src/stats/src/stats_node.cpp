@@ -70,12 +70,12 @@ int main(int argc, char **argv)
                 if (ros::Time::now() >= i->second + timeBeforeOfflineSec)
                 {
                     camera_online = false;
-                    camera_status_pub.publish(std_msgs::Bool(false));
+                    camera_status_pub.publish(std_msgs::Bool({"data" : false}));
                 }
                 else
                 {
                     camera_online = true;
-                    camera_status_pub.publish(std_msgs::Bool(true));
+                    camera_status_pub.publish(std_msgs::Bool({"data" : true}));
                 }
             }
             else if (i->first == "/raw_obstacles")
@@ -83,12 +83,12 @@ int main(int argc, char **argv)
                 if (ros::Time::now() >= i->second + timeBeforeOfflineSec)
                 {
                     lidar_online = false;
-                    lidar_status_pub.publish(std_msgs::Bool(false));
+                    lidar_status_pub.publish(std_msgs::Bool({"data" : false}));
                 }
                 else
                 {
                     lidar_online = true;
-                    lidar_status_pub.publish(std_msgs::Bool(true));
+                    lidar_status_pub.publish(std_msgs::Bool({"data" : true}));
                 }
             }
             std::string msg;
