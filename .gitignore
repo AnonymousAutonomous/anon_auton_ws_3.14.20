@@ -8,3 +8,4 @@ src/config_manager/configs/ports/active.yaml
 
 *.pdf
 *.csv
+bags/
