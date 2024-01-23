@@ -42,14 +42,12 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
     ros::Rate loop_rate(1);
 
-    // initialize spinner
-
-    // initialize subscribers
-    ros::Subscriber statistics_sub = nh.subscribe("statistics", 1000, statistics_callback);
-
     // initialize publishers
     camera_status_pub = nh.advertise<std_msgs::Bool>("camera_online_status", 1000);
     lidar_status_pub = nh.advertise<std_msgs::Bool>("lidar_online_status", 1000);
+
+    // initialize subscribers
+    ros::Subscriber statistics_sub = nh.subscribe("statistics", 1000, statistics_callback);
 
     // ros::Timer timer = nh.createTimer(ros::Duration(0.1), onHeartbeat);
     // ros::Rate delay_rate(5); // 5 cycles per second
