@@ -25,7 +25,7 @@ ros::Publisher send_flags;
 ros::Publisher clear_stuck_or_trapped;
 
 ros::Time startTime;
-ros::Duration heartbeatDuration(0.5);
+ros::Duration heartbeatDuration(0.1);
 
 enum class state : char
 {
@@ -300,6 +300,7 @@ void send_current_flags()
 	// y/n
 
 	std::string all_flags = "";
+	all_flags += static_cast<char> mode;
 	all_flags += flag_A ? 'y' : 'n';
 	all_flags += flag_B ? 'y' : 'n';
 	all_flags += flag_C ? 'y' : 'n';
@@ -328,12 +329,12 @@ int main(int argc, char **argv)
 	generic_pub = nh.advertise<eyes::Generic>("generic_feed", 1000);
 	eoc_pub = nh.advertise<std_msgs::Empty>("end_of_choreo", 1000);
 	clear_stuck_or_trapped = nh.advertise<std_msgs::Empty>("clear_stuck_trapped", 1000);
-	update_hub_pub = nh.advertise<std_msgs::String>("from_chair_from_queue", 1000);
+	update_hub_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 	audio_pub = nh.advertise<std_msgs::String>("audio_channel", 1000);
 	notify_lidar = nh.advertise<std_msgs::Char>("queue_to_lidar", 1000);
 	send_flags = nh.advertise<std_msgs::String>("queue_to_manager", 1000);
 
-	ros::AsyncSpinner spinner(6); // Try with 6 threads
+	ros::AsyncSpinner spinner(0); // Try with 6 threads
 	spinner.start();
 
 	startTime = ros::Time::now();
@@ -352,7 +353,7 @@ int main(int argc, char **argv)
 			startTime = ros::Time::now();
 		}
 		// !!!!!! YOU MUST KEEP THIS ROS_INFO LINE IN, OR HEARTBEATS DON'T SEND!!!! I don't know why, but it's taking too long to debug.
-		ROS_ERROR("hello??");
+		// ROS_ERROR("hello??");
 		// ROS_ERROR("\nflag_A:\t\t%s\tflag_B:\t\t%s\tflag_C:\t\t%s\tflag_H:\t\t%s\nflag_T:\t\t%s\tflag_D:\t\t%s\tflag_S:\t\t%s\nflag_EOC:\t%s\tflag_SOB:\t%s\tflag_EOB:\t%s", BoolToString(flag_A), BoolToString(flag_B), BoolToString(flag_C), BoolToString(flag_H), BoolToString(flag_T), BoolToString(flag_D), BoolToString(flag_S), BoolToString(flag_EOC), BoolToString(flag_SOB), BoolToString(flag_EOB));
 		// ROS_ERROR("ROS OK");
 		switch (mode)
