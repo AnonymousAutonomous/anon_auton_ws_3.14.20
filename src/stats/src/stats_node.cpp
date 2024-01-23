@@ -12,7 +12,7 @@
 #include <vector>
 #include <string>
 
-std::vector<std::string> topics_we_care_about{"/cv_camera/image_mono", "raw_obstacles"};
+std::vector<std::string> topics_we_care_about{"/cv_camera/image_mono", "/raw_obstacles"};
 ros::Duration timeBeforeOfflineSec(10); // 10 seconds
 
 std::unordered_map<std::string, ros::Time> topic_to_last_start_time = {};
@@ -72,7 +72,7 @@ int main(int argc, char **argv)
                     camera_online = true;
                 }
             }
-            else if (i->first == "raw_obstacles")
+            else if (i->first == "/raw_obstacles")
             {
                 if (ros::Time::now() >= i->second + timeBeforeOfflineSec)
                 {
