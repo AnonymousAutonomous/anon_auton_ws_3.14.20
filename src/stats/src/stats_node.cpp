@@ -61,6 +61,7 @@ int main(int argc, char **argv)
     {
         for (auto i = topic_to_last_start_time.begin(); i != topic_to_last_start_time.end(); i++)
         {
+            ROS_INFO("checking: %s", i->first.c_str());
             if (i->first == "/cv_camera/image_mono")
             {
                 if (ros::Time::now() >= i->second + timeBeforeOfflineSec)
