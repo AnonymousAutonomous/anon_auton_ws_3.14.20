@@ -77,9 +77,9 @@ function generateStatuses(chairList) {
     <div class="status o" id="${id}status">
       OFFLINE<span class="dot"></span>
     </div>
-    <div class="status o" id="${id}_broadcast_status">OFFLINE</div>
     <div class="status o" id="${id}_camera_status">OFFLINE</div>
     <div class="status o" id="${id}_lidar_status">OFFLINE</div>
+    <div class="status o" id="${id}_broadcast_status">OFFLINE</div>
     <div class="status o" id="${id}_stuck_status">OFFLINE</div>
     <div class="status o" id="${id}_trapped_status">OFFLINE</div>
     <div id="${id}_flags"></div>
