@@ -37,10 +37,9 @@ int main(int argc, char **argv)
     // initialize node and node handle
     ros::init(argc, argv, "stats");
     ros::NodeHandle nh;
+    ros::Rate loop_rate(1);
 
     // initialize spinner
-    ros::AsyncSpinner spinner(0);
-    spinner.start();
 
     // initialize subscribers
     ros::Subscriber statistics_sub = nh.subscribe("statistics", 1000, statistics_callback);
@@ -61,7 +60,7 @@ int main(int argc, char **argv)
     {
         for (auto i = topic_to_last_start_time.begin(); i != topic_to_last_start_time.end(); i++)
         {
-            ROS_INFO("checking: %s", i->first.c_str());
+            ROS_INFO("checking: %s diff", i->first.c_str());
             if (i->first == "/cv_camera/image_mono")
             {
                 if (ros::Time::now() >= i->second + timeBeforeOfflineSec)
@@ -94,6 +93,7 @@ int main(int argc, char **argv)
             msgs.data = msg;
             stats_debug_pub.publish(msgs);
         }
+        ros.spinOnce();
+        loop_rate.sleep();
     }
-    ros::waitForShutdown();
 }
