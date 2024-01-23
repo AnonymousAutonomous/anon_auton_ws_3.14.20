@@ -349,6 +349,7 @@ int main(int argc, char **argv)
 		if (ros::Time::now() >= startTime + heartbeatDuration)
 		{
 			// Send heartbeat with statuses
+			ROS_ERROR("SENDING HEARTBEAT");
 			std_msgs::String msg;
 			msg.data = static_cast<char>(chair_state);
 			msg.data += static_cast<char>(chair_stuck_state);
