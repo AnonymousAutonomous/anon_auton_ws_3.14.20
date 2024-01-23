@@ -24,8 +24,8 @@ ros::Publisher stats_pub;
 ros::Publisher camera_status_pub;
 ros::Publisher lidar_status_pub;
 
-bool camera_online = true;
-bool lidar_online = true;
+bool camera_online = false;
+bool lidar_online = false;
 
 void statistics_callback(const rosgraph_msgs::TopicStatistics &stats_msg)
 {

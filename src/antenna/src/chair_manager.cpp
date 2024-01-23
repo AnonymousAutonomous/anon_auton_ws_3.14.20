@@ -99,8 +99,8 @@ ros::Publisher from_chair_pub;
 state chair_state = state::autonomous;
 chair_stuck_status chair_stuck_state = chair_stuck_status::not_stuck;
 chair_trapped_status chair_trapped_state = chair_trapped_status::not_trapped;
-bool camera_online = true;
-bool lidar_online = true;
+bool camera_online = false;
+bool lidar_online = false;
 
 std::string chair_flags = "";
 
