@@ -24,6 +24,9 @@ ros::Publisher notify_lidar;
 ros::Publisher send_flags;
 ros::Publisher clear_stuck_or_trapped;
 
+ros::Time startTime;
+ros::Duration heartbeatDuration(0.1);
+
 enum class state : char
 {
 	autonomous = 'a',
@@ -104,7 +107,7 @@ void callback(const std_msgs::String &command)
 	// code coming soon
 	// think sorting hat from Harry Potter
 	char identifier = command.data[1];
-	ROS_ERROR("COMMAND: %s", command.data.c_str());
+	// ROS_ERROR("COMMAND: %s", command.data.c_str());
 	switch (identifier)
 	{
 	case 'H':
@@ -297,6 +300,7 @@ void send_current_flags()
 	// y/n
 
 	std::string all_flags = "";
+	all_flags += static_cast<char>(mode);
 	all_flags += flag_A ? 'y' : 'n';
 	all_flags += flag_B ? 'y' : 'n';
 	all_flags += flag_C ? 'y' : 'n';
@@ -318,9 +322,6 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "queue_five");
 	ros::NodeHandle nh;
 
-	ros::AsyncSpinner spinner(0);
-	spinner.start();
-
 	ros::Subscriber sub = nh.subscribe("driver_output", 1000, callback);
 	ros::Subscriber sub_R = nh.subscribe("encoder_value_R", 10, update_encoder_values_R);
 	ros::Subscriber sub_L = nh.subscribe("encoder_value_L", 10, update_encoder_values_L);
@@ -333,6 +334,10 @@ int main(int argc, char **argv)
 	notify_lidar = nh.advertise<std_msgs::Char>("queue_to_lidar", 1000);
 	send_flags = nh.advertise<std_msgs::String>("queue_to_manager", 1000);
 
+	ros::AsyncSpinner spinner(0); // Try with 6 threads
+	spinner.start();
+
+	startTime = ros::Time::now();
 	// Clear out if chair is somehow already in a choreo
 	ROS_ERROR("END OF CHOREO");
 	std_msgs::Empty empty_msg;
@@ -342,9 +347,13 @@ int main(int argc, char **argv)
 	mode = state::autonomous;
 	while (ros::ok())
 	{
-		send_current_flags();
+		if (ros::Time::now() >= startTime + heartbeatDuration)
+		{
+			send_current_flags();
+			startTime = ros::Time::now();
+		}
 		// !!!!!! YOU MUST KEEP THIS ROS_INFO LINE IN, OR HEARTBEATS DON'T SEND!!!! I don't know why, but it's taking too long to debug.
-		ROS_INFO("");
+		// ROS_ERROR("hello??");
 		// ROS_ERROR("\nflag_A:\t\t%s\tflag_B:\t\t%s\tflag_C:\t\t%s\tflag_H:\t\t%s\nflag_T:\t\t%s\tflag_D:\t\t%s\tflag_S:\t\t%s\nflag_EOC:\t%s\tflag_SOB:\t%s\tflag_EOB:\t%s", BoolToString(flag_A), BoolToString(flag_B), BoolToString(flag_C), BoolToString(flag_H), BoolToString(flag_T), BoolToString(flag_D), BoolToString(flag_S), BoolToString(flag_EOC), BoolToString(flag_SOB), BoolToString(flag_EOB));
 		// ROS_ERROR("ROS OK");
 		switch (mode)

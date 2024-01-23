@@ -1,0 +1,4 @@
+<launch>
+  <node name="stats" pkg="stats" type="stats_node">
+  </node>
+</launch>

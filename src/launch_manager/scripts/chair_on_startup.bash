@@ -14,6 +14,8 @@ roscore &
 
 until rostopic list; do sleep 1; done
 
+rosparam set enable_statistics true
+
 yes | rosclean purge 
 
 cd src/launch_manager/launch/components/
@@ -72,6 +74,8 @@ if rosnode list | grep "queue"; then
 else
     roslaunch --wait queue.launch &
 fi
+
+roslaunch --wait stats.launch &
 
 rm -rf /tmp/handwritten-input
 mkfifo /tmp/handwritten-input

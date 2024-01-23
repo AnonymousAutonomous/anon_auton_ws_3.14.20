@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
+#include "std_msgs/Bool.h"
 #include "std_msgs/Char.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -74,13 +75,6 @@ enum class chair_broadcast_status : char
 	failure = 'f'
 };
 
-enum class state : char
-{
-	autonomous = 'A',
-	choreo = 'C',
-	custom = 'H',
-	broadcast = 'B'
-};
 enum class chair_stuck_status : char
 {
 	stuck = 's',
@@ -95,9 +89,11 @@ enum class chair_trapped_status : char
 ros::Publisher chair_manager_pub;
 ros::Publisher from_chair_pub;
 
-state chair_state = state::autonomous;
 chair_stuck_status chair_stuck_state = chair_stuck_status::not_stuck;
 chair_trapped_status chair_trapped_state = chair_trapped_status::not_trapped;
+char camera_online = 'n';
+char lidar_online = 'n';
+
 std::string chair_flags = "";
 
 ros::Time startTime;
@@ -233,14 +229,9 @@ void receive_callback(const std_msgs::String &msg)
 	}
 }
 
-void chair_state_callback(const std_msgs::Char state_in)
+void chair_flags_callback(const std_msgs::String &flags_in)
 {
-	chair_state = static_cast<state>(state_in.data);
-}
-
-void chair_flags_callback(const std_msgs::String flags_in)
-{
-	// ROS_ERROR("HERE ARE THE FLAGS: %s", flags_in.data.c_str());
+	ROS_ERROR("HERE ARE THE FLAGS: %s", flags_in.data.c_str());
 	// Order [A][B][C][H][T][D][S][EOC][SOB][EOB]
 	// y/n
 	chair_flags = flags_in.data;
@@ -301,6 +292,33 @@ void stuck_or_trapped_callback(const std_msgs::Char state_in)
 	}
 }
 
+void camera_status_callback(const std_msgs::Bool msg)
+{
+	ROS_ERROR("IN CAMERA STATUS CALLBACK");
+	if (msg.data == true)
+	{
+		camera_online = 'y';
+	}
+	else
+	{
+		camera_online = 'n';
+	}
+}
+
+void lidar_status_callback(const std_msgs::Bool msg)
+{
+	ROS_ERROR("IN LIDAR STATUS CALLBACK");
+
+	if (msg.data == true)
+	{
+		lidar_online = 'y';
+	}
+	else
+	{
+		lidar_online = 'n';
+	}
+}
+
 int main(int argc, char **argv)
 {
 	// initialize node and node handle
@@ -313,11 +331,13 @@ int main(int argc, char **argv)
 
 	// initialize subscribers
 	ros::Subscriber sub = nh.subscribe("from_chair_receiver", 1000, receive_callback);
-	ros::Subscriber chair_state_sub = nh.subscribe("queue_to_lidar", 1000, chair_state_callback);
 
 	// TODO: delete this when actually running!
 	ros::Subscriber chair_flags_sub = nh.subscribe("queue_to_manager", 1000, chair_flags_callback);
 	ros::Subscriber trapped_stuck_sub = nh.subscribe("stuck_or_trapped_alert", 1000, stuck_or_trapped_callback);
+
+	ros::Subscriber camera_online_sub = nh.subscribe("camera_online_status", 1000, camera_status_callback);
+	ros::Subscriber lidar_online_sub = nh.subscribe("lidar_online_status", 1000, lidar_status_callback);
 
 	// initialize publishers
 	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
@@ -332,11 +352,28 @@ int main(int argc, char **argv)
 		if (ros::Time::now() >= startTime + heartbeatDuration)
 		{
 			// Send heartbeat with statuses
+			std::string msgs;
+			msgs = "";
+			if (chair_flags.size() >= 1)
+			{
+				msgs += chair_flags.substr(0, 1); // get autonomous, broadcast, etc. from chair flags
+			}
+			else
+			{
+				msgs += 'o';
+			}
+			msgs += camera_online;
+			msgs += lidar_online;
+			msgs += static_cast<char>(chair_stuck_state);
+			msgs += static_cast<char>(chair_trapped_state);
+			if (chair_flags.size() >= 2)
+			{
+				msgs += chair_flags.substr(1); // rest of flags
+			}
+
+			ROS_ERROR("SENDING HEARTBEAT: %s", msgs.c_str());
 			std_msgs::String msg;
-			msg.data = static_cast<char>(chair_state);
-			msg.data += static_cast<char>(chair_stuck_state);
-			msg.data += static_cast<char>(chair_trapped_state);
-			msg.data += chair_flags; // heartbeat!
+			msg.data = msgs;
 			from_chair_pub.publish(msg);
 
 			// // send stuck or not
@@ -349,14 +386,12 @@ int main(int argc, char **argv)
 			// trapped_msg.data = "T" + static_cast<char>(chair_trapped_state);
 			// from_chair_pub.publish(trapped_msg);
 
-			ROS_ERROR("<3 %s", msg.data.c_str());
 			startTime = ros::Time::now();
 		}
 		// 	std_msgs::String msg;
 		// 	msg.data = 'h'; // heartbeat!
 		// 	from_chair_pub.publish(msg);
 		// 	delay_rate.sleep(); // runs out duration is remaining
-		// ros::spin();
 	}
-	// ros::waitForShutdown();
+	ros::waitForShutdown();
 }

@@ -75,6 +75,8 @@ public:
 	char flag_EOC = 'n';
 	char flag_SOB = 'n';
 	char flag_EOB = 'n';
+	char camera_online = 'n';
+	char lidar_online = 'n';
 
 	ros::Time lastUpdatedTime = ros::Time::now();
 };
@@ -175,19 +177,22 @@ std::queue<std_msgs::String> transmit_queue;
 void update_chair_from_heartbeat(const std::string str)
 {
 	ChairStatus &ref = chair_status_map[str[0] - 48];
-	ref.chairstate = static_cast<chair_state>(str[1]);
-	ref.css = static_cast<chair_stuck_status>(str[2]);
-	ref.cts = static_cast<chair_trapped_status>(str[3]);
-	ref.flag_A = str[4];
-	ref.flag_B = str[5];
-	ref.flag_C = str[6];
-	ref.flag_H = str[7];
-	ref.flag_T = str[8];
-	ref.flag_D = str[9];
-	ref.flag_S = str[10];
-	ref.flag_EOC = str[11];
-	ref.flag_SOB = str[12];
-	ref.flag_EOB = str[13];
+	ref.chairstate = static_cast<chair_state>(std::toupper(str[1]));
+	ref.camera_online = str[2];
+	ref.lidar_online = str[3];
+	ref.css = static_cast<chair_stuck_status>(str[4]);
+	ref.cts = static_cast<chair_trapped_status>(str[5]);
+	ref.flag_A = str[6];
+	ref.flag_B = str[7];
+	ref.flag_C = str[8];
+	ref.flag_H = str[9];
+	ref.flag_T = str[10];
+	ref.flag_D = str[11];
+	ref.flag_S = str[12];
+	ref.flag_EOC = str[13];
+	ref.flag_SOB = str[14];
+	ref.flag_EOB = str[15];
+
 	ref.lastUpdatedTime = ros::Time::now();
 }
 
@@ -219,7 +224,7 @@ void receive_callback(const std_msgs::String &msg)
 		return;
 	}
 
-	if (strlen(msg.data.c_str()) == 14)
+	if (strlen(msg.data.c_str()) == 16)
 	{
 		update_chair_from_heartbeat(stringmsg);
 		return;
@@ -446,6 +451,8 @@ void guiStatusUpdate(const ros::TimerEvent &event)
 		statuses += static_cast<char>(p.second.flag_EOC);
 		statuses += static_cast<char>(p.second.flag_SOB);
 		statuses += static_cast<char>(p.second.flag_EOB);
+		statuses += static_cast<char>(p.second.camera_online);
+		statuses += static_cast<char>(p.second.lidar_online);
 		std_msgs::String msg;
 		msg.data = statuses;
 		hub_to_gui_pub.publish(msg);
