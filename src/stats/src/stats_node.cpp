@@ -105,7 +105,7 @@ int main(int argc, char **argv)
             msg += lidar_online ? "on" : "OFF";
             std_msgs::String msgs;
             msgs.data = msg;
-            stats_pub.publish(msgs);
+            // stats_pub.publish(msgs);
         }
         ros::spinOnce();
         loop_rate.sleep();
