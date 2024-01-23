@@ -354,8 +354,8 @@ int main(int argc, char **argv)
 			msg.data += static_cast<char>(chair_stuck_state);
 			msg.data += static_cast<char>(chair_trapped_state);
 			msg.data += chair_flags; // heartbeat!
-			msg.data += camera_online ? 'o' : 'x';
-			msg.data += lidar_online ? 'o' : 'x';
+			msg.data += camera_online ? 'y' : 'n';
+			msg.data += lidar_online ? 'y' : 'n';
 			from_chair_pub.publish(msg);
 
 			// // send stuck or not

@@ -75,6 +75,8 @@ public:
 	char flag_EOC = 'n';
 	char flag_SOB = 'n';
 	char flag_EOB = 'n';
+	char camera_online = 'n';
+	char lidar_online = 'n';
 
 	ros::Time lastUpdatedTime = ros::Time::now();
 };
@@ -188,6 +190,8 @@ void update_chair_from_heartbeat(const std::string str)
 	ref.flag_EOC = str[11];
 	ref.flag_SOB = str[12];
 	ref.flag_EOB = str[13];
+	ref.camera_online = str[14];
+	ref.lidar_online = str[15];
 	ref.lastUpdatedTime = ros::Time::now();
 }
 
@@ -219,7 +223,7 @@ void receive_callback(const std_msgs::String &msg)
 		return;
 	}
 
-	if (strlen(msg.data.c_str()) == 14)
+	if (strlen(msg.data.c_str()) == 16)
 	{
 		update_chair_from_heartbeat(stringmsg);
 		return;
@@ -446,6 +450,8 @@ void guiStatusUpdate(const ros::TimerEvent &event)
 		statuses += static_cast<char>(p.second.flag_EOC);
 		statuses += static_cast<char>(p.second.flag_SOB);
 		statuses += static_cast<char>(p.second.flag_EOB);
+		statuses += static_cast<char>(p.second.camera_online);
+		statuses += static_cast<char>(p.second.lidar_online);
 		std_msgs::String msg;
 		msg.data = statuses;
 		hub_to_gui_pub.publish(msg);
