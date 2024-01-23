@@ -99,8 +99,8 @@ ros::Publisher from_chair_pub;
 state chair_state = state::autonomous;
 chair_stuck_status chair_stuck_state = chair_stuck_status::not_stuck;
 chair_trapped_status chair_trapped_state = chair_trapped_status::not_trapped;
-bool camera_online = false;
-bool lidar_online = false;
+char camera_online = 'n';
+char lidar_online = 'n';
 
 std::string chair_flags = "";
 
@@ -307,12 +307,26 @@ void stuck_or_trapped_callback(const std_msgs::Char state_in)
 
 void camera_status_callback(const std_msgs::Bool msg)
 {
-	camera_online = msg.data;
+	if (msg.data == true)
+	{
+		camera_online = 'y';
+	}
+	else
+	{
+		camera_online = 'n';
+	}
 }
 
 void lidar_status_callback(const std_msgs::Bool msg)
 {
-	lidar_online = msg.data;
+	if (msg.data == true)
+	{
+		lidar_online = 'y';
+	}
+	else
+	{
+		lidar_online = 'n';
+	}
 }
 
 int main(int argc, char **argv)
@@ -349,14 +363,16 @@ int main(int argc, char **argv)
 		if (ros::Time::now() >= startTime + heartbeatDuration)
 		{
 			// Send heartbeat with statuses
-			ROS_ERROR("SENDING HEARTBEAT");
+			std::string msgs;
+			msgs = static_cast<char>(chair_state);
+			msgs += static_cast<char>(chair_stuck_state);
+			msgs += static_cast<char>(chair_trapped_state);
+			msgs += chair_flags; // heartbeat!
+			msgs += camera_online;
+			msgs += lidar_online;
+			ROS_ERROR("SENDING HEARTBEAT: %s", msgs.c_str());
 			std_msgs::String msg;
-			msg.data = static_cast<char>(chair_state);
-			msg.data += static_cast<char>(chair_stuck_state);
-			msg.data += static_cast<char>(chair_trapped_state);
-			msg.data += chair_flags; // heartbeat!
-			msg.data += camera_online ? 'y' : 'n';
-			msg.data += lidar_online ? 'y' : 'n';
+			msg.data = msgs;
 			from_chair_pub.publish(msg);
 
 			// // send stuck or not
