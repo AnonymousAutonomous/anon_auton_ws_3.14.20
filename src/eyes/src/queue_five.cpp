@@ -300,7 +300,7 @@ void send_current_flags()
 	// y/n
 
 	std::string all_flags = "";
-	all_flags += static_cast<char> mode;
+	all_flags += static_cast<char>(mode);
 	all_flags += flag_A ? 'y' : 'n';
 	all_flags += flag_B ? 'y' : 'n';
 	all_flags += flag_C ? 'y' : 'n';
