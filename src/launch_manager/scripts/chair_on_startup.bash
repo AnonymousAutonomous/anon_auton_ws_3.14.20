@@ -75,7 +75,7 @@ else
     roslaunch --wait queue.launch &
 fi
 
-roslaunch --wait stats.launch &
+# roslaunch --wait stats.launch &
 
 rm -rf /tmp/handwritten-input
 mkfifo /tmp/handwritten-input
