@@ -93,7 +93,7 @@ enum class chair_trapped_status : char
 	not_trapped = 'm'
 };
 
-ros::Publisher chair_manager_pub;
+// ros::Publisher chair_manager_pub;
 ros::Publisher from_chair_pub;
 
 state chair_state = state::autonomous;
@@ -178,7 +178,7 @@ void receive_callback(const std_msgs::String &msg)
 	// Broadcast = send along to the queue
 	if (strlen(msg.data.c_str()) > 2 && msg.data[1] == 'B')
 	{
-		chair_manager_pub.publish(msg);
+		// chair_manager_pub.publish(msg);
 
 		// std_msgs::String sendmsg;
 		// sendmsg.data = "0" + std::string(msg_copy);
@@ -344,17 +344,17 @@ int main(int argc, char **argv)
 
 	// initialize subscribers
 	ros::Subscriber sub = nh.subscribe("from_chair_receiver", 1000, receive_callback);
-	ros::Subscriber chair_state_sub = nh.subscribe("queue_to_lidar", 1000, chair_state_callback);
+	// ros::Subscriber chair_state_sub = nh.subscribe("queue_to_lidar", 1000, chair_state_callback);
 
 	// TODO: delete this when actually running!
 	// ros::Subscriber chair_flags_sub = nh.subscribe("queue_to_manager", 1000, chair_flags_callback);
-	ros::Subscriber trapped_stuck_sub = nh.subscribe("stuck_or_trapped_alert", 1000, stuck_or_trapped_callback);
+	// ros::Subscriber trapped_stuck_sub = nh.subscribe("stuck_or_trapped_alert", 1000, stuck_or_trapped_callback);
 
 	ros::Subscriber camera_online_sub = nh.subscribe("camera_online_status", 1000, camera_status_callback);
 	ros::Subscriber lidar_online_sub = nh.subscribe("lidar_online_status", 1000, lidar_status_callback);
 
 	// initialize publishers
-	chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
+	// chair_manager_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
 	from_chair_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
 
 	// ros::Timer timer = nh.createTimer(ros::Duration(0.1), onHeartbeat);
