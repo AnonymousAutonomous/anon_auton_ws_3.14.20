@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 
     for (int i = 0; i < topics_we_care_about.size(); i++)
     {
-        topic_to_last_start_time[topics_we_care_about[i]] = startTime - timeBeforeOfflineSec - ros::Time::Duration(1);
+        topic_to_last_start_time[topics_we_care_about[i]] = startTime - timeBeforeOfflineSec - ros::Duration(1);
     }
 
     while (ros::ok())
