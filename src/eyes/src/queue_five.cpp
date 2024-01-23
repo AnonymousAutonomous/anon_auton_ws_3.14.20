@@ -328,7 +328,7 @@ int main(int argc, char **argv)
 	generic_pub = nh.advertise<eyes::Generic>("generic_feed", 1000);
 	eoc_pub = nh.advertise<std_msgs::Empty>("end_of_choreo", 1000);
 	clear_stuck_or_trapped = nh.advertise<std_msgs::Empty>("clear_stuck_trapped", 1000);
-	update_hub_pub = nh.advertise<std_msgs::String>("from_chair", 1000);
+	update_hub_pub = nh.advertise<std_msgs::String>("from_chair_from_queue", 1000);
 	audio_pub = nh.advertise<std_msgs::String>("audio_channel", 1000);
 	notify_lidar = nh.advertise<std_msgs::Char>("queue_to_lidar", 1000);
 	send_flags = nh.advertise<std_msgs::String>("queue_to_manager", 1000);
