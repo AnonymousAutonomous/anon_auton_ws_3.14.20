@@ -321,9 +321,6 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "queue_five");
 	ros::NodeHandle nh;
 
-	ros::AsyncSpinner spinner(0);
-	spinner.start();
-
 	ros::Subscriber sub = nh.subscribe("driver_output", 1000, callback);
 	ros::Subscriber sub_R = nh.subscribe("encoder_value_R", 10, update_encoder_values_R);
 	ros::Subscriber sub_L = nh.subscribe("encoder_value_L", 10, update_encoder_values_L);
@@ -335,6 +332,9 @@ int main(int argc, char **argv)
 	audio_pub = nh.advertise<std_msgs::String>("audio_channel", 1000);
 	notify_lidar = nh.advertise<std_msgs::Char>("queue_to_lidar", 1000);
 	send_flags = nh.advertise<std_msgs::String>("queue_to_manager", 1000);
+
+	ros::AsyncSpinner spinner(6); // Try with 6 threads
+	spinner.start();
 
 	startTime = ros::Time::now();
 	// Clear out if chair is somehow already in a choreo
