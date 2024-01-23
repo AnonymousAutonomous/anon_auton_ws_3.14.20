@@ -86,7 +86,7 @@ enum class chair_trapped_status : char
 	not_trapped = 'm'
 };
 
-// ros::Publisher chair_manager_pub;
+ros::Publisher chair_manager_pub;
 ros::Publisher from_chair_pub;
 
 chair_stuck_status chair_stuck_state = chair_stuck_status::not_stuck;
