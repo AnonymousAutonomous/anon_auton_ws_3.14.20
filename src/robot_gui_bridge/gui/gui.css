@@ -126,6 +126,21 @@
     background-color: yellow;
 }
 
+.CAMERAy {
+    background-color: greenyellow;
+}
+
+.LIDARy {
+    background-color: greenyellow;
+}
+
+.CAMERAn {
+    background-color: red;
+}
+
+.LIDARn {
+    background-color: red;
+}
 .sidebyside {
     display: flex;
     flex-direction: row;

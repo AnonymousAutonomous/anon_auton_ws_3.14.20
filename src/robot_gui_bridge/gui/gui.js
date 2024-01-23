@@ -78,6 +78,8 @@ function generateStatuses(chairList) {
       OFFLINE<span class="dot"></span>
     </div>
     <div class="status o" id="${id}_broadcast_status">OFFLINE</div>
+    <div class="status o" id="${id}_camera_status">OFFLINE</div>
+    <div class="status o" id="${id}_lidar_status">OFFLINE</div>
     <div class="status o" id="${id}_stuck_status">OFFLINE</div>
     <div class="status o" id="${id}_trapped_status">OFFLINE</div>
     <div id="${id}_flags"></div>
@@ -329,6 +331,14 @@ getTextForStatus = function (status) {
     return "NOT STUCK";
   } else if (status == "o" || status == null) {
     return "OFFLINE";
+  } else if (status == "CAMERAy") {
+    return "Camera online";
+  }else if (status == "CAMERAn") {
+    return "Camera OFFLINE";
+  } else if (status == "LIDARy") {
+    return "Lidar online";
+  }else if (status == "LIDARn") {
+    return "Lidar OFFLINE";
   } else {
     return "ERROR: " + status;
   }
@@ -403,9 +413,27 @@ function updateChairStuckStatus(key, status) {
   }
 }
 
+function updateCameraOnlineStatus(key, status) {
+  let element = document.getElementById(key + "_camera_status");
+  if (element) {
+    element.innerHTML = getTextForStatus(status);
+    element.classList.remove(...element.classList);
+    element.classList.add("status", status);
+  }
+}
+
+function updateLidarOnlineStatus(key, status) {
+  let element = document.getElementById(key + "_lidar_status");
+  if (element) {
+    element.innerHTML = getTextForStatus(status);
+    element.classList.remove(...element.classList);
+    element.classList.add("status", status);
+  }
+}
+
 hub_to_gui_listener.subscribe(function (m) {
   // Update
-  if (m.data.length == 16 && m.data[0] == "u") {
+  if (m.data.length == 18 && m.data[0] == "u") {
     const chair_num = m.data[1];
     const broadcast_status = m.data[2];
     const stuck_status = m.data[3];
@@ -421,8 +449,12 @@ hub_to_gui_listener.subscribe(function (m) {
     const flag_EOC = m.data[13];
     const flag_SOB = m.data[14];
     const flag_EOB = m.data[15];
+    const camera_online = m.data[16];
+    const lidar_online = m.data[17];
 
     updateBroadcastStatus(chair_num, "B" + broadcast_status);
+    updateCameraOnlineStatus(chair_num, "CAMERA" + camera_online);
+    updateLidarOnlineStatus(chair_num, "LIDAR" + lidar_online);
     updateChairStuckStatus(chair_num, "S" + stuck_status);
     updateChairTrappedStatus(chair_num, "T" + trapped_status);
     updateHeartbeatStatus(chair_num, state_status);
