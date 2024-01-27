@@ -74,6 +74,9 @@ function generateStatuses(chairList) {
     console.log("generating statuses");
     const statusBlock = (id) => (`<div class="chair_monitor" id="${id}">
     <h2>Chair ${id}</h2>
+    <button class="reset_chair" onclick="reset(this.id)">
+        RESTART
+      </button>
     <div class="status o" id="${id}status">
       OFFLINE<span class="dot"></span>
     </div>
@@ -905,6 +908,10 @@ send_shutdown_all_chairs = function () {
 
 send_reset_all_chairs = function () {
   hub_dir_listener.publish(formatMsg(0, "reset"));
+};
+
+reset = function (id) {
+  hub_dir_listener.publish(formatMsg(id, "reset"));
 };
 
 function switchscreen(newScreenId) {
