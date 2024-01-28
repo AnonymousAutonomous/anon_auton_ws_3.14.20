@@ -18,8 +18,8 @@ double periodA = 0;           // motor A period
 double periodB = 0;           // motor B period
 
 // PID
-// const unsigned long SAMPLE_TIME = 10; // time between PID updates
-const unsigned long INT_COUNT = 100; // 100 encoder ticks for accurate timing
+const unsigned long SAMPLE_TIME = 10; // time between PID updates
+const unsigned long INT_COUNT = 100;  // 100 encoder ticks for accurate timing
 
 // !!!!!!!!!!!!! SETPOINTS MUST BE POSITIVE !!!!!!!!!!!!!!
 double setpointA = 3.0;       // setpoint is inches / second
@@ -384,7 +384,7 @@ void loop()
       //   int32_msg_L.data = countL;
       //   // pubR.publish(&int32_msg_R);
       //   // pubL.publish(&int32_msg_L);
-      info = String(setpointA) + '\t' + String(inputA) + '\t' + String(outputA);
+      info = String(setpointA) + '\t' + String(inputA) + '\t' + String(outputA) + '\t' + String(setpointB) + '\t' + String(inputB) + '\t' + String(outputB);
       nh.loginfo(info.c_str());
       prevTime = nowTime;
     }
