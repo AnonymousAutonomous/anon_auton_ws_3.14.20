@@ -93,7 +93,8 @@ void setup()
   initMotors();
   initEncoders();
   initPWM();
-  standbyMotors(true);
+  // standbyMotors(true); // This could cause real issues -- then encoder just goes between 0 and -1
+  setADir(STOP);
 }
 
 String info = "";
