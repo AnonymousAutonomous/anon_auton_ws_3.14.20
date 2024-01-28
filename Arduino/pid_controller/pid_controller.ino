@@ -384,7 +384,7 @@ void loop()
       //   int32_msg_L.data = countL;
       //   // pubR.publish(&int32_msg_R);
       //   // pubL.publish(&int32_msg_L);
-      info = String(setpointA, 4) + '\t' + String(inputA, 4) + '\t' + String(outputA, 4) + '\t' + String(setpointB, 4) + '\t' + String(inputB, 4) + '\t' + String(outputB, 4);
+      info = String(int(setpointA * 100)) + '\t' + String(int(inputA * 100)) + '\t' + String(int(outputA * 100)) + '\t' + String(int(setpointB * 100) + '\t' + String(int(inputB * 100)) + '\t' + String(int(outputB * 100));
       nh.loginfo(info.c_str());
       prevTime = nowTime;
     }
