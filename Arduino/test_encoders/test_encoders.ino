@@ -72,6 +72,10 @@ void initPWM()
 {
   startTimeA = millis();
   startTimeB = millis();
+  motorA.SetOutputLimits(MIN_PWM, MAX_PWM);
+  motorA.SetSampleTime(SAMPLE_TIME);
+  motorA.SetMode(AUTOMATIC);
+  motorA.SetSetpoint(75);
   setADir(FWD);
   setBDir(FWD);
 };
@@ -114,6 +118,7 @@ void loop()
       //   vcountInterrB = 0;
       // }
     }
+    inputA = countL - prevCountL;
 
     Serial.print(countL - prevCountL);
     Serial.print("\t");
@@ -121,6 +126,7 @@ void loop()
     Serial.print("\n");
     prevTime = nowTime;
   }
+  motorA.Compute();
   // Serial.print(",");
   // Serial.print(countR);
 }
