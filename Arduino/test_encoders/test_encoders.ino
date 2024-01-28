@@ -14,11 +14,11 @@ double periodA = 0;           // motor A period
 double periodB = 0;           // motor B period
 
 // PID
-const unsigned long SAMPLE_TIME = 100; // time between PID updates, in ms
+const unsigned long SAMPLE_TIME = 25; // time between PID updates, in ms
 const unsigned long INT_COUNT = 100;  // 100 encoder ticks for accurate timing
 
 // !!!!!!!!!!!!! SETPOINTS MUST BE POSITIVE !!!!!!!!!!!!!!
-double setpointA = 3.0;       // setpoint is inches / second
+double setpointA = 32;       // setpoint is inches / second
 double setpointB = setpointA; // setpoint is inches / second
 
 double inputA = 0;  // input is inches / second
@@ -26,12 +26,15 @@ double outputA = 0; // output is PWM to motors
 int FEEDFWDA = 60;
 int a_adjust = 0;
 
-double inputB = 0;  // input is inches / second
+double inputB = 0;  // input is inchess / second
 double outputB = 0; // output is PWM to motors
 int FEEDFWDB = FEEDFWDA;
 int b_adjust = 0;
 
-double KpA = .7, KiA = 0, KdA = 0.0;
+
+// FWD PID tuning = double KpA = .7, KiA = 0, KdA = 0.0;
+double KpA = 1, KiA = 0, KdA = 0.0;
+
 double KpB = KpA, KiB = KiA, KdB = KdA;
 PID motorA(&inputA, &outputA, setpointA, KpA, KiA, KdA, DIRECT);
 PID motorB(&inputB, &outputB, setpointB, KpB, KiB, KdB, DIRECT);
@@ -75,9 +78,9 @@ void initPWM()
   motorA.SetOutputLimits(0, MAX_PWM);
   motorA.SetSampleTime(SAMPLE_TIME);
   motorA.SetMode(AUTOMATIC);
-  motorA.SetSetpoint(100);
-  setADir(FWD);
-  setBDir(FWD);
+//  motorA.SetSetpoint(100);
+//  setADir(BWD);
+//  setBDir(FWD);
 };
 
 void setup()
@@ -90,6 +93,7 @@ void setup()
   initPWM();
   // standbyMotors(true); // This could cause real issues -- then encoder just goes between 0 and -1
   setADir(FWD);
+//  motorA.SetControllerDirection(REVERSE);
   moveA(0);
 }
 
@@ -117,25 +121,26 @@ void loop()
       // {
       //   vcountInterrB = 0;
       // }
-    }
-    inputA = countL - prevCountL;
 
-    Serial.print(countL - prevCountL);
+//      TODO: set to zero if need be to avoid overflow
+    }
+
+    long diff = countL - prevCountL;
+    inputA = max(0, diff);
+
+    Serial.print(diff);
+    Serial.print("\t");
+    Serial.print(setpointA);
+    Serial.print("\t");
+    Serial.print(inputA);
     Serial.print("\t");
     Serial.print(outputA);
     Serial.print("\n");
     prevTime = nowTime;
-
   }
-  if (outputA < 0) {
-    setADir(BWD);
-  } else {
-    setADir(FWD);
-  }
-  moveA(outputA);
 
   motorA.Compute();
-  moveA(outputA);
+  moveA(outputA + 30);
   // Serial.print(",");
   // Serial.print(countR);
 }
