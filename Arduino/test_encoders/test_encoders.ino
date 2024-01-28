@@ -122,11 +122,12 @@ void loop()
 
     Serial.print(countL - prevCountL);
     Serial.print("\t");
-    Serial.print(nowTime - prevTime);
+    Serial.print(outputA);
     Serial.print("\n");
     prevTime = nowTime;
   }
   motorA.Compute();
+  moveA(outputA);
   // Serial.print(",");
   // Serial.print(countR);
 }
