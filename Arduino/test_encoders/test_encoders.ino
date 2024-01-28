@@ -75,16 +75,6 @@ void initPWM()
   setBDir(FWD);
 };
 
-void moveA(uint16_t pwm)
-{
-  analogWrite(PWMA, pwm);
-};
-
-void moveB(uint16_t pwm)
-{
-  analogWrite(PWMB, pwm);
-};
-
 void setup()
 {
   Serial.begin(57600);
@@ -121,7 +111,7 @@ void loop()
   nowTime = millis();
 
   Serial.print(countL);
-  Serial.print(",");
+  Serial.print("\t");
   Serial.print(countR);
   Serial.print("\n");
 }

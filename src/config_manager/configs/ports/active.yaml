@@ -1,5 +1,4 @@
-chair_num: '2'
-antenna_port: '/dev/ttyUSB1'
+chair_num: '4'
 device_path: '/dev/video0'
 port: '/dev/ttyACM0'
 serial_port: '/dev/ttyUSB0'
