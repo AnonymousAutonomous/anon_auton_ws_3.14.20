@@ -85,43 +85,44 @@ void setup()
   initEncoders();
   initPWM();
   // standbyMotors(true); // This could cause real issues -- then encoder just goes between 0 and -1
-  setADir(STOP);
+  setADir(FWD);
+  moveA(0);
 }
 
 String info = "";
 void loop()
 {
-  prevCountL = countL;
-  // Copy volatile variables so they don't change while we compute
-  ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
-  {
-    // countInterrA = vcountInterrA;
-    // countInterrB = vcountInterrB;
-    countL = vcountL;
-    countR = vcountR;
-
-    // if (countInterrA >= INT_COUNT)
-    // {
-    //   vcountInterrA = 0;
-    // }
-    // if (countInterrB >= INT_COUNT)
-    // {
-    //   vcountInterrB = 0;
-    // }
-  }
-
-  moveA(30);
-
   nowTime = millis();
-  prevTime - nowTime;
-
+  if (nowTime - prevTime >= 10) {
+      
+    prevCountL = countL;
+    // Copy volatile variables so they don't change while we compute
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+    {
+      // countInterrA = vcountInterrA;
+      // countInterrB = vcountInterrB;
+      countL = vcountL;
+      countR = vcountR;
+  
+      // if (countInterrA >= INT_COUNT)
+      // {
+      //   vcountInterrA = 0;
+      // }
+      // if (countInterrB >= INT_COUNT)
+      // {
+      //   vcountInterrB = 0;
+      // }
+    }
+  
   Serial.print(countL - prevCountL);
   Serial.print("\t");
   Serial.print(nowTime - prevTime);
+  Serial.print("\n");
   prevTime = nowTime;
+  }
   // Serial.print(",");
   // Serial.print(countR);
-  Serial.print("\n");
+
 }
 
 /***********************************************************
