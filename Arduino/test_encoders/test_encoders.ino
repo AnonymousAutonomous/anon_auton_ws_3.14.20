@@ -93,6 +93,7 @@ void setup()
   initMotors();
   initEncoders();
   initPWM();
+  standbyMotors(true);
 }
 
 String info = "";
@@ -101,19 +102,19 @@ void loop()
   // Copy volatile variables so they don't change while we compute
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
   {
-    countInterrA = vcountInterrA;
-    countInterrB = vcountInterrB;
+    // countInterrA = vcountInterrA;
+    // countInterrB = vcountInterrB;
     countL = vcountL;
     countR = vcountR;
 
-    if (countInterrA >= INT_COUNT)
-    {
-      vcountInterrA = 0;
-    }
-    if (countInterrB >= INT_COUNT)
-    {
-      vcountInterrB = 0;
-    }
+    // if (countInterrA >= INT_COUNT)
+    // {
+    //   vcountInterrA = 0;
+    // }
+    // if (countInterrB >= INT_COUNT)
+    // {
+    //   vcountInterrB = 0;
+    // }
   }
 
   nowTime = millis();
@@ -130,7 +131,7 @@ void loop()
 void isr_A()
 {
   // count sufficient interrupts to get accurate timing
-  vcountInterrA++;
+  // vcountInterrA++;
 
   if (digitalRead(ENCA) == digitalRead(STBYA))
   {
@@ -145,7 +146,7 @@ void isr_A()
 void isr_B()
 {
   // count sufficient interrupts to get accurate timing
-  vcountInterrB++;
+  // vcountInterrB++;
 
   if (digitalRead(ENCB) != digitalRead(STBYB))
   {
