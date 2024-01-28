@@ -46,6 +46,7 @@ volatile int vcountInterrB = 0; // count the B interrupts
 
 long countR = 0;
 long countL = 0;
+long prevCountL = 0;
 int countInterrA = 0; // count the A interrupts
 int countInterrB = 0; // count the B interrupts
 
@@ -90,6 +91,7 @@ void setup()
 String info = "";
 void loop()
 {
+  prevCountL = countL;
   // Copy volatile variables so they don't change while we compute
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
   {
@@ -108,11 +110,17 @@ void loop()
     // }
   }
 
-  nowTime = millis();
+  moveA(30);
 
-  Serial.print(countL);
+  nowTime = millis();
+  prevTime - nowTime;
+
+  Serial.print(countL - prevCountL);
   Serial.print("\t");
-  Serial.print(countR);
+  Serial.print(nowTime - prevTime);
+  prevTime = nowTime;
+  // Serial.print(",");
+  // Serial.print(countR);
   Serial.print("\n");
 }
 
