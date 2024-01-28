@@ -14,7 +14,7 @@ double periodA = 0;           // motor A period
 double periodB = 0;           // motor B period
 
 // PID
-const unsigned long SAMPLE_TIME = 50; // time between PID updates, in ms
+const unsigned long SAMPLE_TIME = 100; // time between PID updates, in ms
 const unsigned long INT_COUNT = 100;  // 100 encoder ticks for accurate timing
 
 // !!!!!!!!!!!!! SETPOINTS MUST BE POSITIVE !!!!!!!!!!!!!!
@@ -31,7 +31,7 @@ double outputB = 0; // output is PWM to motors
 int FEEDFWDB = FEEDFWDA;
 int b_adjust = 0;
 
-double KpA = 10.0, KiA = 25.0, KdA = 0.0;
+double KpA = .7, KiA = 0, KdA = 0.0;
 double KpB = KpA, KiB = KiA, KdB = KdA;
 PID motorA(&inputA, &outputA, setpointA, KpA, KiA, KdA, DIRECT);
 PID motorB(&inputB, &outputB, setpointB, KpB, KiB, KdB, DIRECT);
@@ -72,10 +72,10 @@ void initPWM()
 {
   startTimeA = millis();
   startTimeB = millis();
-  motorA.SetOutputLimits(MIN_PWM, MAX_PWM);
+  motorA.SetOutputLimits(0, MAX_PWM);
   motorA.SetSampleTime(SAMPLE_TIME);
   motorA.SetMode(AUTOMATIC);
-  motorA.SetSetpoint(75);
+  motorA.SetSetpoint(100);
   setADir(FWD);
   setBDir(FWD);
 };
@@ -122,10 +122,18 @@ void loop()
 
     Serial.print(countL - prevCountL);
     Serial.print("\t");
-    Serial.print(nowTime - prevTime);
+    Serial.print(outputA);
     Serial.print("\n");
     prevTime = nowTime;
+
   }
+  if (outputA < 0) {
+    setADir(BWD);
+  } else {
+    setADir(FWD);
+  }
+  moveA(outputA);
+
   motorA.Compute();
   // Serial.print(",");
   // Serial.print(countR);
