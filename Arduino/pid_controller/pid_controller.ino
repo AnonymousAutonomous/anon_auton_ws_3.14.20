@@ -303,16 +303,19 @@ void loop()
   // TODO: handle checking for very long time gap and ignore;
   if (nowTime - prevTime >= SAMPLE_TIME)
   {
-    prevCountL = countL;
-    prevCountR = countR;
+//    prevCountL = countL;
+//    prevCountR = countR;
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
     {
+      // Reset each loop
       countL = vcountL;
       countR = vcountR;
+      vcountL = 0;
+      vcountR = 0;
     }
 
-    diffL = setpointA >= 0 ? (countL - prevCountL) : (prevCountL - countL);
-    diffR = setpointB >= 0 ? (countR - prevCountR) : (prevCountR - countR);
+    diffL = setpointA >= 0 ? countL : 0 - countL;
+    diffR = setpointB >= 0 ? countR : 0 - countR;
 
     inputA = max(0, diffL);
     inputB = max(0, diffR);
@@ -329,7 +332,7 @@ void loop()
     Serial.print(nowTime - prevTime);
     Serial.print("\n");
     } else {
-      info = String(int(nowTime - prevTime));
+      info = String(int(nowTime - prevTime)) + "\t" + String(int(setpointAAsTicksPerSampleTime)) + "\t" + String(int(diffL));
       nh.loginfo(info.c_str());
     }
     
