@@ -14,7 +14,7 @@ double periodA = 0;           // motor A period
 double periodB = 0;           // motor B period
 
 // PID
-const unsigned long SAMPLE_TIME = 10; // time between PID updates
+const unsigned long SAMPLE_TIME = 50; // time between PID updates, in ms
 const unsigned long INT_COUNT = 100;  // 100 encoder ticks for accurate timing
 
 // !!!!!!!!!!!!! SETPOINTS MUST BE POSITIVE !!!!!!!!!!!!!!
@@ -93,8 +93,9 @@ String info = "";
 void loop()
 {
   nowTime = millis();
-  if (nowTime - prevTime >= 10) {
-      
+  if (nowTime - prevTime >= SAMPLE_TIME)
+  {
+
     prevCountL = countL;
     // Copy volatile variables so they don't change while we compute
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
@@ -103,7 +104,7 @@ void loop()
       // countInterrB = vcountInterrB;
       countL = vcountL;
       countR = vcountR;
-  
+
       // if (countInterrA >= INT_COUNT)
       // {
       //   vcountInterrA = 0;
@@ -113,16 +114,15 @@ void loop()
       //   vcountInterrB = 0;
       // }
     }
-  
-  Serial.print(countL - prevCountL);
-  Serial.print("\t");
-  Serial.print(nowTime - prevTime);
-  Serial.print("\n");
-  prevTime = nowTime;
+
+    Serial.print(countL - prevCountL);
+    Serial.print("\t");
+    Serial.print(nowTime - prevTime);
+    Serial.print("\n");
+    prevTime = nowTime;
   }
   // Serial.print(",");
   // Serial.print(countR);
-
 }
 
 /***********************************************************
