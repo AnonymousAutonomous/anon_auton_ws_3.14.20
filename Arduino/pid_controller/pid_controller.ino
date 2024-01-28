@@ -6,6 +6,7 @@
 #include <std_msgs/String.h>
 #include <std_msgs/Int32.h>
 #include <eyes/Generic.h>
+#include <util/atomic.h>
 
 boolean DEBUG = false;
 
@@ -13,8 +14,6 @@ boolean DEBUG = false;
 unsigned long nowTime = 0;    // updated on every loop
 unsigned long startTimeA = 0; // start timing A interrupts
 unsigned long startTimeB = 0; // start timing B interrupts
-unsigned long countIntA = 0;  // count the A interrupts
-unsigned long countIntB = 0;  // count the B interrupts
 double periodA = 0;           // motor A period
 double periodB = 0;           // motor B period
 
@@ -44,8 +43,15 @@ double storeB = 0; // used for debug print
 
 unsigned long prevTime = 0; // updated on every loop
 
-volatile long countR = 0;
-volatile long countL = 0;
+volatile long vcountR = 0;
+volatile long vcountL = 0;
+volatile int vcountInterrA = 0; // count the A interrupts
+volatile int vcountInterrB = 0; // count the B interrupts
+
+long countR = 0;
+long countL = 0;
+int countInterrA = 0; // count the A interrupts
+int countInterrB = 0; // count the B interrupts
 
 boolean CONNECTED_TO_ROS = true;
 
@@ -59,25 +65,9 @@ std_msgs::Int32 int32_msg_L;
 
 void generic_callback(const eyes::Generic &generic_msg)
 {
-  char left_dir = FWD;
-  char right_dir = FWD;
+  char left_dir = generic_msg.left_forward ? FWD : BWD;
+  char right_dir = generic_msg.right_forward ? FWD : BWD;
 
-  if (generic_msg.left_forward)
-  {
-    left_dir = FWD;
-  }
-  else
-  {
-    left_dir = BWD;
-  }
-  if (generic_msg.right_forward)
-  {
-    right_dir = FWD;
-  }
-  else
-  {
-    right_dir = BWD;
-  }
   if (generic_msg.left_speed < 0.001)
   {
     left_dir = STOP;
@@ -294,24 +284,52 @@ void setup()
   initEncoders();
   initPWM();
 
-  if (DEBUG)
-  {
-    printForPID("MOTOR A:\n");
-    printPIDHeader();
-    printPID(KpA, KiA, KdA, setpointA, FEEDFWDA, a_adjust);
+  // if (DEBUG)
+  // {
+  //   printForPID("MOTOR A:\n");
+  //   printPIDHeader();
+  //   printPID(KpA, KiA, KdA, setpointA, FEEDFWDA, a_adjust);
 
-    printForPID("MOTOR B:\n");
-    printPIDHeader();
-    printPID(KpB, KiB, KdB, setpointB, FEEDFWDB, b_adjust);
-  }
+  //   printForPID("MOTOR B:\n");
+  //   printPIDHeader();
+  //   printPID(KpB, KiB, KdB, setpointB, FEEDFWDB, b_adjust);
+  // }
 }
 
 String info = "";
 void loop()
 {
+  // Copy volatile variables so they don't change while we compute
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+  {
+    countInterrA = vcountInterrA;
+    countInterrB = vcountInterrB;
+    countL = vcountL;
+    countR = vcountR;
+
+    if (countInterrA >= INT_COUNT)
+    {
+      vcountInterrA = 0;
+    }
+    if (countInterrB >= INT_COUNT)
+    {
+      vcountInterrB = 0;
+    }
+  }
+
   nowTime = millis();
-  motorA.Compute();
-  motorB.Compute();
+
+  if (countInterrA >= INT_COUNT)
+  {
+    inputA = (float)ENCODER_CONVERSION * (1.0 / (float)(nowTime - startTimeA));
+    startTimeA = nowTime;
+  }
+
+  if (countInterrB >= INT_COUNT)
+  {
+    inputB = (float)ENCODER_CONVERSION * (1.0 / (float)(nowTime - startTimeB));
+    startTimeB = nowTime;
+  }
 
   if (nowTime - startTimeA > 250)
   {
@@ -322,6 +340,9 @@ void loop()
   {
     inputB = 0;
   }
+
+  motorA.Compute();
+  motorB.Compute();
 
   moveA(max(0, min(255, (int)outputA + a_adjust)));
   moveB(max(0, min(255, (int)outputB + b_adjust)));
@@ -359,13 +380,13 @@ void loop()
 
     if (nowTime - prevTime >= 200)
     {
-    //   int32_msg_R.data = countR;
-    //   int32_msg_L.data = countL;
-    //   // pubR.publish(&int32_msg_R);
-    //   // pubL.publish(&int32_msg_L);
-       info = String(countL) + ' ' + String(countR);
-       nh.loginfo(info.c_str());
-       prevTime = nowTime;
+      //   int32_msg_R.data = countR;
+      //   int32_msg_L.data = countL;
+      //   // pubR.publish(&int32_msg_R);
+      //   // pubL.publish(&int32_msg_L);
+      info = String(countL) + ' ' + String(countR);
+      nh.loginfo(info.c_str());
+      prevTime = nowTime;
     }
 
     //
@@ -381,41 +402,29 @@ void loop()
 void isr_A()
 {
   // count sufficient interrupts to get accurate timing
-  countIntA++;
-  if (countIntA == INT_COUNT)
-  {
-    inputA = (float)ENCODER_CONVERSION * (1.0 / (float)(nowTime - startTimeA));
-    startTimeA = nowTime;
-    countIntA = 0;
-  }
+  vcountInterrA++;
 
   if (digitalRead(ENCA) == digitalRead(STBYA))
   {
-    countL++;
+    vcountL++;
   }
   else
   {
-    countL--;
+    vcountL--;
   }
 }
 
 void isr_B()
 {
   // count sufficient interrupts to get accurate timing
-  countIntB++;
-  if (countIntB == INT_COUNT)
-  {
-    inputB = (float)ENCODER_CONVERSION * (1.0 / (float)(nowTime - startTimeB));
-    startTimeB = nowTime;
-    countIntB = 0;
-  }
+  vcountInterrB++;
 
   if (digitalRead(ENCB) != digitalRead(STBYB))
   {
-    countR++;
+    vcountR++;
   }
   else
   {
-    countR--;
+    vcountR--;
   }
 }
