@@ -7,7 +7,7 @@
 #include <std_msgs/Int32.h>
 #include <eyes/Generic.h>
 
-boolean DEBUG = true;
+boolean DEBUG = false;
 
 // Motor timing
 unsigned long nowTime = 0;    // updated on every loop
@@ -54,8 +54,8 @@ ros::NodeHandle nh;
 // init to zero and update with each encoder tick
 std_msgs::Int32 int32_msg_R;
 std_msgs::Int32 int32_msg_L;
-ros::Publisher pubR("encoder_value_R", &int32_msg_R);
-ros::Publisher pubL("encoder_value_L", &int32_msg_L);
+// ros::Publisher pubR("encoder_value_R", &int32_msg_R);
+// ros::Publisher pubL("encoder_value_L", &int32_msg_L);
 
 void generic_callback(const eyes::Generic &generic_msg)
 {
@@ -99,8 +99,8 @@ ros::Subscriber<eyes::Generic> generic_sub("generic_feed", &generic_callback);
 void initROSSerial()
 {
   nh.initNode();
-  nh.advertise(pubR);
-  nh.advertise(pubL);
+  // nh.advertise(pubR);
+  // nh.advertise(pubL);
   nh.subscribe(generic_sub);
 };
 
@@ -219,7 +219,7 @@ void processData(const char *data)
   motorA.SetTunings(KpA, KiA, KdA);
   motorB.SetTunings(KpB, KiB, KdB);
 
-  printPID(KpA, KiA, KdA, setpointA, FEEDFWDA, a_adjust);
+  // printPID(KpA, KiA, KdA, setpointA, FEEDFWDA, a_adjust);
 }
 
 void parseNewSetpoints(String setpointsIn)
@@ -334,14 +334,14 @@ void loop()
     }
   }
 
-  if (DEBUG)
-  {
-    if (storeB != outputB)
-    {
-      storeB = outputB;
-      printPIDUpdate(inputA, outputA, a_adjust);
-    }
-  }
+  // if (DEBUG)
+  // {
+  //   if (storeB != outputB)
+  //   {
+  //     storeB = outputB;
+  //     printPIDUpdate(inputA, outputA, a_adjust);
+  //   }
+  // }
 
   //   int32_msg_R.data = int(setpointA * 100);
   //   int32_msg_L.data = int(setpointB * 100);
@@ -357,21 +357,21 @@ void loop()
     //   pubR.publish(&int32_msg_R);
     //   pubL.publish(&int32_msg_L);
 
-    if (nowTime - prevTime >= 200)
-    {
-      int32_msg_R.data = countR;
-      int32_msg_L.data = countL;
-      pubR.publish(&int32_msg_R);
-      pubL.publish(&int32_msg_L);
-      info = String(countL) + ' ' + String(countR);
-      nh.loginfo(info.c_str());
-      prevTime = nowTime;
-    }
+    // if (nowTime - prevTime >= 200)
+    // {
+    //   int32_msg_R.data = countR;
+    //   int32_msg_L.data = countL;
+    //   // pubR.publish(&int32_msg_R);
+    //   // pubL.publish(&int32_msg_L);
+    //   info = String(countL) + ' ' + String(countR);
+    //   nh.loginfo(info.c_str());
+    //   prevTime = nowTime;
+    // }
 
     //
     //   // TODO: check if this will cause issues
     nh.spinOnce();
-    delay(10);
+    // delay(10);
   }
 }
 
