@@ -135,6 +135,7 @@ void loop()
   moveA(outputA);
 
   motorA.Compute();
+  moveA(outputA);
   // Serial.print(",");
   // Serial.print(countR);
 }
