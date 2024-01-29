@@ -28,7 +28,7 @@ double setpointBAsTicksPerSampleTime = 0;
 
 double inputA = 0;  // input is encoder ticks / SAMPLE_TIME
 double outputA = 0; // output is PWM to motors
-int FEEDFWDA = 40;
+int FEEDFWDA = 60;
 int a_adjust = 0;
 
 double inputB = 0;  // input is encoder ticks / SAMPLE_TIME
@@ -36,7 +36,7 @@ double outputB = 0; // output is PWM to motors
 int FEEDFWDB = FEEDFWDA;
 int b_adjust = 0;
 
-double KpA = 10.0, KiA = 25.0, KdA = 0.0;
+double KpA = 1, KdA = 0.2, KiA = 0.00;
 double KpB = KpA, KiB = KiA, KdB = KdA;
 PID motorA(&inputA, &outputA, setpointAAsTicksPerSampleTime, KpA, KiA, KdA, DIRECT);
 PID motorB(&inputB, &outputB, setpointBAsTicksPerSampleTime, KpB, KiB, KdB, DIRECT);
@@ -198,6 +198,10 @@ void processData(const char *data)
   {
     KdA = KdB = strToFloat(String(data).substring(1));
   }
+  else if (changeVar == 'f')
+  {
+    FEEDFWDA = FEEDFWDB = a_adjust = b_adjust = String(data).substring(1).toInt();
+  }
   else if (changeVar == 'b')
   {
     standbyMotors(true);
@@ -287,7 +291,6 @@ void setup()
     Serial.print("\t");
     Serial.print("nowTime - prevTime");
     Serial.print("\n");
-
   }
 
   // Initialize pins and value ranges
@@ -303,8 +306,8 @@ void loop()
   // TODO: handle checking for very long time gap and ignore;
   if (nowTime - prevTime >= SAMPLE_TIME)
   {
-//    prevCountL = countL;
-//    prevCountR = countR;
+    //    prevCountL = countL;
+    //    prevCountR = countR;
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
     {
       // Reset each loop
@@ -320,22 +323,24 @@ void loop()
     inputA = max(0, diffL);
     inputB = max(0, diffR);
 
-    if (!CONNECTED_TO_ROS) {
+    if (!CONNECTED_TO_ROS)
+    {
       Serial.print(diffL);
-    Serial.print("\t");
-    Serial.print(setpointAAsTicksPerSampleTime);
-    Serial.print("\t");
-    Serial.print(inputA);
-    Serial.print("\t");
-    Serial.print(outputA);
-    Serial.print("\t");
-    Serial.print(nowTime - prevTime);
-    Serial.print("\n");
-    } else {
+      Serial.print("\t");
+      Serial.print(setpointAAsTicksPerSampleTime);
+      Serial.print("\t");
+      Serial.print(inputA);
+      Serial.print("\t");
+      Serial.print(outputA);
+      Serial.print("\t");
+      Serial.print(nowTime - prevTime);
+      Serial.print("\n");
+    }
+    else
+    {
       info = String(int(nowTime - prevTime)) + "\t" + String(int(setpointAAsTicksPerSampleTime)) + "\t" + String(int(diffL));
       nh.loginfo(info.c_str());
     }
-    
 
     prevTime = nowTime;
   }
