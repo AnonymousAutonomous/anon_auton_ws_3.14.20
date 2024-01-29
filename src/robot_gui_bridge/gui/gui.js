@@ -918,6 +918,7 @@ send_reset_all_chairs = function () {
 };
 
 reset = function (id) {
+  console.log("resetting", id);
   hub_dir_listener.publish(formatMsg(id, "reset"));
 };
 
