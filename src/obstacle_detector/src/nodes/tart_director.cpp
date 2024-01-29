@@ -22,14 +22,14 @@ bool listening = true;
 
 Tart new_director_standard(
         {
-                {3*M_PI/4, 5*M_PI/4, 1},
-                {M_PI/4, 3*M_PI/4, 1},
-                {5*M_PI/4, 7*M_PI/4, 1}
+                {2*M_PI/3, 4*M_PI/3, 1.1},
+                {M_PI/4, 2*M_PI/3, 1},
+                {4*M_PI/3, 7*M_PI/4, 1}
         },
 	{
-		{3*M_PI/4, 5*M_PI/4, 1},
-		{M_PI/4, 3*M_PI/4, 1},
-		{5*M_PI/4, 7*M_PI/4, 1}
+		{2*M_PI/3, 4*M_PI/3, 1.1},
+		{M_PI/4, 2*M_PI/3, 1},
+		{4*M_PI/3, 7*M_PI/4, 1}
 	},
         {
 		// {{{0,1},{}}, "CIRCLE FRONT, CIRCLE RIGHT"},
