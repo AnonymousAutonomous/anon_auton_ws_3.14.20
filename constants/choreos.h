@@ -90,7 +90,8 @@ static const std::vector<eyes::Generic> RREVERSE_C = {
 		second.duration = 5;
 		return second;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic third;
 		third.identifier = 'c';
 		third.left_forward = true;
@@ -139,11 +140,12 @@ static const std::vector<eyes::Generic> LREVERSE_C = {
 		second.duration = 5;
 		return second;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic third;
 		third.identifier = 'c';
-		third.left_forward = true;
-		third.right_forward = false;
+		third.left_forward = false;
+		third.right_forward = true;
 		third.left_speed = 2.5;
 		third.right_speed = 2.5;
 		third.timed = true;
