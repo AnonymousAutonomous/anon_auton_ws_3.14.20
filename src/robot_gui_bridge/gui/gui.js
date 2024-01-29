@@ -74,10 +74,10 @@ function generateStatuses(chairList) {
     console.log("generating statuses");
     const statusBlock = (id) => (`<div class="chair_monitor" id="${id}">
     <h2>Chair ${id}</h2>
-    <button class="reset_chair" onclick="reset(this.id)">
+    <button class="reset_chair" onclick="reset(${id})">
       🔄 RESTART
       </button>
-      <button class="shutdown_chair" onclick="shutdown(this.id)">
+      <button class="shutdown_chair" onclick="shutdown(${id})">
       🌙 SHUTDOWN
       </button>
     <div class="status o" id="${id}status">
@@ -92,31 +92,31 @@ function generateStatuses(chairList) {
     <br />
     <div class="chair_control">
       <div class="directions">
-        <button class="auto" id="${id}" onclick="toggle(this.id)">
+        <button class="auto" id="${id}" onclick="toggle(${id})">
           AUTO
         </button>
         <br />
-        <button id="${id}" onclick="ffwd(this.id)">⤊</button>
+        <button id="${id}" onclick="ffwd(${id})">⤊</button>
         <div>
-          <button id="${id}" onclick="fwdl(this.id)">⬉</button>
-          <button id="${id}" onclick="fwd(this.id)">↑</button>
-          <button id="${id}" onclick="fwdr(this.id)">⬈</button>
+          <button id="${id}" onclick="fwdl(${id})">⬉</button>
+          <button id="${id}" onclick="fwd(${id})">↑</button>
+          <button id="${id}" onclick="fwdr(${id})">⬈</button>
         </div>
         <div>
-          <button id="${id}" onclick="pivotl(this.id)">⟲</button>
-          <button id="${id}" onclick="stop(this.id)">🛑</button>
-          <button id="${id}" onclick="pivotr(this.id)">⟳</button>
+          <button id="${id}" onclick="pivotl(${id})">⟲</button>
+          <button id="${id}" onclick="stop(${id})">🛑</button>
+          <button id="${id}" onclick="pivotr(${id})">⟳</button>
         </div>
         <div>
-          <button id="${id}" onclick="bwdl(this.id)">⬋</button>
-          <button id="${id}" onclick="bwd(this.id)">↓</button>
-          <button id="${id}" onclick="bwdr(this.id)">⬊</button>
+          <button id="${id}" onclick="bwdl(${id})">⬋</button>
+          <button id="${id}" onclick="bwd(${id})">↓</button>
+          <button id="${id}" onclick="bwdr(${id})">⬊</button>
         </div>
-        <button id="${id}" onclick="fbwd(this.id)">⤋</button>
+        <button id="${id}" onclick="fbwd(${id})">⤋</button>
       </div>
       <br />
-      <!-- <button id="${id}" onclick="start(this.id)">START</button>
-  <button id="${id}" onclick="stop(this.id)" class="stop">STOP</button> -->
+      <!-- <button id="${id}" onclick="start(${id})">START</button>
+  <button id="${id}" onclick="stop(${id})" class="stop">STOP</button> -->
       <br />
       <form
         id="${id}custom_handwritten"
