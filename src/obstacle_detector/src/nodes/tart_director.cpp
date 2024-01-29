@@ -16,7 +16,7 @@ std::unordered_map<AutonomousCmd, std::string> commands;
 
 
 int stop_counter = 0;
-int stop_limit = 50;
+int stop_limit = 75;
 
 bool listening = true;
 
