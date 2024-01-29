@@ -430,6 +430,8 @@ void guiStatusUpdate(const ros::TimerEvent &event)
 		if (ros::Time::now() >= p.second.lastUpdatedTime + timeBeforeChairOffline)
 		{
 			p.second.chairstate = chair_state::offline;
+			p.second.camera_online = 'n';
+			p.second.lidar_online = 'n';
 		}
 	}
 	alertGui(offlineChairsToString());
