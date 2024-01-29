@@ -96,7 +96,7 @@ void setActiveChairs(std::vector<int> active_chair_nums)
 
 ros::Time startTime;
 ros::Duration waitDurationBeforeCheckingAgain(1.0); // 1.0 seconds
-ros::Duration timeBeforeChairOffline(2.0);			// 2.0 seconds
+ros::Duration timeBeforeChairOffline(5.0);			// seconds
 ros::Duration maxBroadcastTime(45.0);				// seconds
 int timesChecked = 0;
 int timesCheckedLimit = 10;
@@ -430,6 +430,8 @@ void guiStatusUpdate(const ros::TimerEvent &event)
 		if (ros::Time::now() >= p.second.lastUpdatedTime + timeBeforeChairOffline)
 		{
 			p.second.chairstate = chair_state::offline;
+			p.second.camera_online = 'n';
+			p.second.lidar_online = 'n';
 		}
 	}
 	alertGui(offlineChairsToString());

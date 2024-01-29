@@ -14,7 +14,7 @@
 #include <string>
 
 std::vector<std::string> topics_we_care_about{"/cv_camera/image_mono", "/raw_obstacles"};
-ros::Duration timeBeforeOfflineSec(5); // 5 seconds
+ros::Duration timeBeforeOfflineSec(10); // seconds
 
 std::unordered_map<std::string, ros::Time> topic_to_last_start_time = {};
 
