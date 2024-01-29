@@ -83,26 +83,26 @@ std::queue<eyes::Generic> choreo_queue;
 std::queue<eyes::Generic> custom_queue;
 std::queue<eyes::Generic> broadcast_queue;
 
-volatile int encoder_count_R = 0;
-volatile int encoder_count_L = 0;
+// volatile int encoder_count_R = 0;
+// volatile int encoder_count_L = 0;
 
 time_t initial_time;
 time_t final_time;
 
-int initial_encoder_value;
-int final_encoder_value;
+// int initial_encoder_value;
+// int final_encoder_value;
 
-void update_encoder_values_R(const std_msgs::Int32 &int32_msg_R)
-{
-	encoder_count_R = int32_msg_R.data;
-	// ROS_ERROR("RIGHT: %d", encoder_count_R);
-}
+// void update_encoder_values_R(const std_msgs::Int32 &int32_msg_R)
+// {
+// 	encoder_count_R = int32_msg_R.data;
+// 	// ROS_ERROR("RIGHT: %d", encoder_count_R);
+// }
 
-void update_encoder_values_L(const std_msgs::Int32 &int32_msg_L)
-{
-	encoder_count_L = int32_msg_L.data;
-	// ROS_ERROR("LEFT: %d", encoder_count_L);
-}
+// void update_encoder_values_L(const std_msgs::Int32 &int32_msg_L)
+// {
+// 	encoder_count_L = int32_msg_L.data;
+// 	// ROS_ERROR("LEFT: %d", encoder_count_L);
+// }
 
 void callback(const std_msgs::String &command)
 {
@@ -348,8 +348,8 @@ int main(int argc, char **argv)
 	ros::NodeHandle nh;
 
 	ros::Subscriber sub = nh.subscribe("driver_output", 1000, callback);
-	ros::Subscriber sub_R = nh.subscribe("encoder_value_R", 10, update_encoder_values_R);
-	ros::Subscriber sub_L = nh.subscribe("encoder_value_L", 10, update_encoder_values_L);
+	// ros::Subscriber sub_R = nh.subscribe("encoder_value_R", 10, update_encoder_values_R);
+	// ros::Subscriber sub_L = nh.subscribe("encoder_value_L", 10, update_encoder_values_L);
 
 	generic_pub = nh.advertise<eyes::Generic>("generic_feed", 1000);
 	eoc_pub = nh.advertise<std_msgs::Empty>("end_of_choreo", 1000);
@@ -505,26 +505,26 @@ int main(int argc, char **argv)
 				// if choreo stage uses encoder motors
 				if (choreo_queue.front().timed == false)
 				{
-					if (flag_D)
-					{
-						// clear flag_D and record initial_value
-						flag_D = false;
-						initial_encoder_value = encoder_count_R;
-						generic_pub.publish(choreo_queue.front());
-						// generic_pub.publish(choreo_queue.front());
-						ROS_ERROR("STARTING (ENCODER)");
-						ROS_ERROR("LEFT SPEED: %d", choreo_queue.front().left_speed);
-						ROS_ERROR("RIGHT SPEED: %d", choreo_queue.front().right_speed);
-						ROS_ERROR("DURATION: %d", choreo_queue.front().duration);
-					}
-					else
-					{
-						final_encoder_value = encoder_count_R;
-						int difference = abs(final_encoder_value - initial_encoder_value);
-						// ROS_ERROR("ENCODER DIF: %d", difference);
-						if (difference > choreo_queue.front().duration)
-							flag_D = true;
-					}
+					// if (flag_D)
+					// {
+					// 	// clear flag_D and record initial_value
+					// 	flag_D = false;
+					// 	// initial_encoder_value = encoder_count_R;
+					// 	generic_pub.publish(choreo_queue.front());
+					// 	// generic_pub.publish(choreo_queue.front());
+					// 	ROS_ERROR("STARTING (ENCODER)");
+					// 	ROS_ERROR("LEFT SPEED: %d", choreo_queue.front().left_speed);
+					// 	ROS_ERROR("RIGHT SPEED: %d", choreo_queue.front().right_speed);
+					// 	ROS_ERROR("DURATION: %d", choreo_queue.front().duration);
+					// }
+					// else
+					// {
+					// 	// final_encoder_value = encoder_count_R;
+					// 	// int difference = abs(final_encoder_value - initial_encoder_value);
+					// 	// ROS_ERROR("ENCODER DIF: %d", difference);
+					// 	if (difference > choreo_queue.front().duration)
+					// 		flag_D = true;
+					// }
 				}
 				// if choreo stage uses a timer
 				else
@@ -724,22 +724,22 @@ int main(int argc, char **argv)
 						// if broadcast stage uses encoder motors
 						if (broadcast_queue.front().timed == false)
 						{
-							if (flag_D)
-							{
-								// clear flag_D and record initial_value
-								flag_D = false;
-								initial_encoder_value = encoder_count_R;
-								generic_pub.publish(broadcast_queue.front());
-								// generic_pub.publish(broadcast_queue.front());
-							}
-							else
-							{
-								final_encoder_value = encoder_count_R;
-								int difference = abs(final_encoder_value - initial_encoder_value);
-								ROS_ERROR("ENCODER DIF: %d", difference);
-								if (difference > broadcast_queue.front().duration)
-									flag_D = true;
-							}
+							// if (flag_D)
+							// {
+							// 	// clear flag_D and record initial_value
+							// 	flag_D = false;
+							// 	// initial_encoder_value = encoder_count_R;
+							// 	generic_pub.publish(broadcast_queue.front());
+							// 	// generic_pub.publish(broadcast_queue.front());
+							// }
+							// else
+							// {
+							// 	final_encoder_value = encoder_count_R;
+							// 	int difference = abs(final_encoder_value - initial_encoder_value);
+							// 	ROS_ERROR("ENCODER DIF: %d", difference);
+							// 	if (difference > broadcast_queue.front().duration)
+							// 		flag_D = true;
+							// }
 						}
 						// if broadcast stage uses a timer
 						else

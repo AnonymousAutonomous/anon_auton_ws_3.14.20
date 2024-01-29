@@ -6,78 +6,72 @@
 #include <std_msgs/String.h>
 #include <std_msgs/Int32.h>
 #include <eyes/Generic.h>
-
-boolean DEBUG = true;
+#include <util/atomic.h>
 
 // Motor timing
 unsigned long nowTime = 0;    // updated on every loop
 unsigned long startTimeA = 0; // start timing A interrupts
 unsigned long startTimeB = 0; // start timing B interrupts
-unsigned long countIntA = 0;  // count the A interrupts
-unsigned long countIntB = 0;  // count the B interrupts
 double periodA = 0;           // motor A period
 double periodB = 0;           // motor B period
 
 // PID
-const unsigned long SAMPLE_TIME = 10; // time between PID updates
+const unsigned long SAMPLE_TIME = 25; // time between PID updates
 const unsigned long INT_COUNT = 100;  // 100 encoder ticks for accurate timing
 
 // !!!!!!!!!!!!! SETPOINTS MUST BE POSITIVE !!!!!!!!!!!!!!
-double setpointA = 3.0;       // setpoint is inches / second
+double setpointA = 0.0;       // setpoint is inches / second
 double setpointB = setpointA; // setpoint is inches / second
 
-double inputA = 0;  // input is inches / second
+double setpointAAsTicksPerSampleTime = 0;
+double setpointBAsTicksPerSampleTime = 0;
+
+double inputA = 0;  // input is encoder ticks / SAMPLE_TIME
 double outputA = 0; // output is PWM to motors
 int FEEDFWDA = 60;
 int a_adjust = 0;
 
-double inputB = 0;  // input is inches / second
+double inputB = 0;  // input is encoder ticks / SAMPLE_TIME
 double outputB = 0; // output is PWM to motors
 int FEEDFWDB = FEEDFWDA;
 int b_adjust = 0;
 
-double KpA = 10.0, KiA = 25.0, KdA = 0.0;
+double KpA = 1, KdA = 0.2, KiA = 0.00;
 double KpB = KpA, KiB = KiA, KdB = KdA;
-PID motorA(&inputA, &outputA, setpointA, KpA, KiA, KdA, DIRECT);
-PID motorB(&inputB, &outputB, setpointB, KpB, KiB, KdB, DIRECT);
+PID motorA(&inputA, &outputA, setpointAAsTicksPerSampleTime, KpA, KiA, KdA, DIRECT);
+PID motorB(&inputB, &outputB, setpointBAsTicksPerSampleTime, KpB, KiB, KdB, DIRECT);
 double storeB = 0; // used for debug print
 
 unsigned long prevTime = 0; // updated on every loop
 
-volatile long countR = 0;
-volatile long countL = 0;
+volatile long vcountR = 0;
+volatile long vcountL = 0;
+volatile int vcountInterrA = 0; // count the A interrupts
+volatile int vcountInterrB = 0; // count the B interrupts
 
-boolean CONNECTED_TO_ROS = true;
+long countL = 0;
+long prevCountL = 0;
+long diffL = 0;
+
+long countR = 0;
+long prevCountR = 0;
+long diffR = 0;
+
+boolean CONNECTED_TO_ROS = false;
 
 ros::NodeHandle nh;
 
 // init to zero and update with each encoder tick
 std_msgs::Int32 int32_msg_R;
 std_msgs::Int32 int32_msg_L;
-ros::Publisher pubR("encoder_value_R", &int32_msg_R);
-ros::Publisher pubL("encoder_value_L", &int32_msg_L);
+// ros::Publisher pubR("encoder_value_R", &int32_msg_R);
+// ros::Publisher pubL("encoder_value_L", &int32_msg_L);
 
 void generic_callback(const eyes::Generic &generic_msg)
 {
-  char left_dir = FWD;
-  char right_dir = FWD;
+  char left_dir = generic_msg.left_forward ? FWD : BWD;
+  char right_dir = generic_msg.right_forward ? FWD : BWD;
 
-  if (generic_msg.left_forward)
-  {
-    left_dir = FWD;
-  }
-  else
-  {
-    left_dir = BWD;
-  }
-  if (generic_msg.right_forward)
-  {
-    right_dir = FWD;
-  }
-  else
-  {
-    right_dir = BWD;
-  }
   if (generic_msg.left_speed < 0.001)
   {
     left_dir = STOP;
@@ -88,9 +82,6 @@ void generic_callback(const eyes::Generic &generic_msg)
   }
   setNewSetpointMotorA(generic_msg.left_speed, left_dir);
   setNewSetpointMotorB(generic_msg.right_speed, right_dir);
-  analogWrite(LEFT_MOTOR, generic_msg.left_speed);
-  analogWrite(RIGHT_MOTOR, generic_msg.right_speed);
-
   return;
 };
 
@@ -99,8 +90,6 @@ ros::Subscriber<eyes::Generic> generic_sub("generic_feed", &generic_callback);
 void initROSSerial()
 {
   nh.initNode();
-  nh.advertise(pubR);
-  nh.advertise(pubL);
   nh.subscribe(generic_sub);
 };
 
@@ -114,8 +103,7 @@ void initEncoders()
 
 void initPWM()
 {
-  startTimeA = millis();
-  startTimeB = millis();
+  startTimeA, startTimeB = millis();
   motorA.SetOutputLimits(MIN_PWM, MAX_PWM);
   motorB.SetOutputLimits(MIN_PWM, MAX_PWM);
   motorA.SetSampleTime(SAMPLE_TIME);
@@ -146,7 +134,8 @@ void setNewSetpointMotorA(float setpoint, char dir)
   if (!AreSame(signed_setpoint, setpointA))
   {
     setpointA = signed_setpoint;
-    motorA.SetSetpoint(setpoint);
+    setpointAAsTicksPerSampleTime = (setpoint * 4200.0 * SAMPLE_TIME) / (1000 * 13.25);
+    motorA.SetSetpoint(setpointAAsTicksPerSampleTime);
     setADir(dir);
   }
 }
@@ -166,7 +155,8 @@ void setNewSetpointMotorB(float setpoint, char dir)
   if (!AreSame(signed_setpoint, setpointB))
   {
     setpointB = signed_setpoint;
-    motorB.SetSetpoint(setpoint);
+    setpointBAsTicksPerSampleTime = (setpoint * 4200.0 * SAMPLE_TIME) / (1000 * 13.25);
+    motorB.SetSetpoint(setpointBAsTicksPerSampleTime);
     setBDir(dir);
   }
 }
@@ -208,6 +198,10 @@ void processData(const char *data)
   {
     KdA = KdB = strToFloat(String(data).substring(1));
   }
+  else if (changeVar == 'f')
+  {
+    FEEDFWDA = FEEDFWDB = a_adjust = b_adjust = String(data).substring(1).toInt();
+  }
   else if (changeVar == 'b')
   {
     standbyMotors(true);
@@ -219,7 +213,7 @@ void processData(const char *data)
   motorA.SetTunings(KpA, KiA, KdA);
   motorB.SetTunings(KpB, KiB, KdB);
 
-  printPID(KpA, KiA, KdA, setpointA, FEEDFWDA, a_adjust);
+  // printPID(KpA, KiA, KdA, setpointA, FEEDFWDA, a_adjust);
 }
 
 void parseNewSetpoints(String setpointsIn)
@@ -287,41 +281,73 @@ void setup()
   else
   {
     initPIDSerial();
+    Serial.print("diffL");
+    Serial.print("\t");
+    Serial.print("setpointAAsTicksPerSampleTime");
+    Serial.print("\t");
+    Serial.print("inputA");
+    Serial.print("\t");
+    Serial.print("outputA");
+    Serial.print("\t");
+    Serial.print("nowTime - prevTime");
+    Serial.print("\n");
   }
 
   // Initialize pins and value ranges
   initMotors();
   initEncoders();
   initPWM();
-
-  if (DEBUG)
-  {
-    printForPID("MOTOR A:\n");
-    printPIDHeader();
-    printPID(KpA, KiA, KdA, setpointA, FEEDFWDA, a_adjust);
-
-    printForPID("MOTOR B:\n");
-    printPIDHeader();
-    printPID(KpB, KiB, KdB, setpointB, FEEDFWDB, b_adjust);
-  }
 }
 
 String info = "";
 void loop()
 {
   nowTime = millis();
+  // TODO: handle checking for very long time gap and ignore;
+  if (nowTime - prevTime >= SAMPLE_TIME)
+  {
+    //    prevCountL = countL;
+    //    prevCountR = countR;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+    {
+      // Reset each loop
+      countL = vcountL;
+      countR = vcountR;
+      vcountL = 0;
+      vcountR = 0;
+    }
+
+    diffL = setpointA >= 0 ? countL : 0 - countL;
+    diffR = setpointB >= 0 ? countR : 0 - countR;
+
+    inputA = max(0, diffL);
+    inputB = max(0, diffR);
+
+    if (!CONNECTED_TO_ROS)
+    {
+      Serial.print(diffL);
+      Serial.print("\t");
+      Serial.print(setpointAAsTicksPerSampleTime);
+      Serial.print("\t");
+      Serial.print(inputA);
+      Serial.print("\t");
+      Serial.print(outputA);
+      Serial.print("\t");
+      Serial.print(nowTime - prevTime);
+      Serial.print("\n");
+    }
+    else
+    {
+      info = String(int(nowTime - prevTime)) + "\t" + String(int(setpointAAsTicksPerSampleTime)) + "\t" + String(int(diffL));
+      nh.loginfo(info.c_str());
+    }
+
+    prevTime = nowTime;
+  }
+  // Copy volatile variables so they don't change while we compute
+
   motorA.Compute();
   motorB.Compute();
-
-  if (nowTime - startTimeA > 250)
-  {
-    inputA = 0;
-  }
-
-  if (nowTime - startTimeB > 250)
-  {
-    inputB = 0;
-  }
 
   moveA(max(0, min(255, (int)outputA + a_adjust)));
   moveB(max(0, min(255, (int)outputB + b_adjust)));
@@ -334,44 +360,9 @@ void loop()
     }
   }
 
-  if (DEBUG)
-  {
-    if (storeB != outputB)
-    {
-      storeB = outputB;
-      printPIDUpdate(inputA, outputA, a_adjust);
-    }
-  }
-
-  //   int32_msg_R.data = int(setpointA * 100);
-  //   int32_msg_L.data = int(setpointB * 100);
-  //   pubR.publish(&int32_msg_R);
-  //   pubL.publish(&int32_msg_L);
-  //   nh.spinOnce();
-  //   delay(1000);
-
   if (CONNECTED_TO_ROS)
   {
-    //   int32_msg_R.data = int(setpointA * 100);
-    //   int32_msg_L.data = int(setpointB * 100);
-    //   pubR.publish(&int32_msg_R);
-    //   pubL.publish(&int32_msg_L);
-
-    if (nowTime - prevTime >= 200)
-    {
-      int32_msg_R.data = countR;
-      int32_msg_L.data = countL;
-      pubR.publish(&int32_msg_R);
-      pubL.publish(&int32_msg_L);
-      info = String(countL) + ' ' + String(countR);
-      nh.loginfo(info.c_str());
-      prevTime = nowTime;
-    }
-
-    //
-    //   // TODO: check if this will cause issues
     nh.spinOnce();
-    delay(10);
   }
 }
 
@@ -380,42 +371,24 @@ void loop()
  ***********************************************************/
 void isr_A()
 {
-  // count sufficient interrupts to get accurate timing
-  countIntA++;
-  if (countIntA == INT_COUNT)
-  {
-    inputA = (float)ENCODER_CONVERSION * (1.0 / (float)(nowTime - startTimeA));
-    startTimeA = nowTime;
-    countIntA = 0;
-  }
-
   if (digitalRead(ENCA) == digitalRead(STBYA))
   {
-    countL++;
+    vcountL++;
   }
   else
   {
-    countL--;
+    vcountL--;
   }
 }
 
 void isr_B()
 {
-  // count sufficient interrupts to get accurate timing
-  countIntB++;
-  if (countIntB == INT_COUNT)
-  {
-    inputB = (float)ENCODER_CONVERSION * (1.0 / (float)(nowTime - startTimeB));
-    startTimeB = nowTime;
-    countIntB = 0;
-  }
-
   if (digitalRead(ENCB) != digitalRead(STBYB))
   {
-    countR++;
+    vcountR++;
   }
   else
   {
-    countR--;
+    vcountR--;
   }
 }
