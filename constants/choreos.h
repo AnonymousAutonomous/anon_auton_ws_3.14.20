@@ -4,7 +4,8 @@
 #include <vector>
 
 static const std::vector<eyes::Generic> DANCE_C = {
-	[] {
+	[]
+	{
 		eyes::Generic first;
 		first.identifier = 'c';
 		first.left_forward = false;
@@ -15,7 +16,8 @@ static const std::vector<eyes::Generic> DANCE_C = {
 		first.duration = 10000;
 		return first;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic second;
 		second.identifier = 'c';
 		second.left_forward = false;
@@ -26,7 +28,8 @@ static const std::vector<eyes::Generic> DANCE_C = {
 		second.duration = 2;
 		return second;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic third;
 		third.identifier = 'c';
 		third.left_forward = false;
@@ -37,7 +40,8 @@ static const std::vector<eyes::Generic> DANCE_C = {
 		third.duration = 10000;
 		return third;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic fourth;
 		fourth.identifier = 'c';
 		fourth.left_forward = false;
@@ -48,7 +52,8 @@ static const std::vector<eyes::Generic> DANCE_C = {
 		fourth.duration = 2;
 		return fourth;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic eoc;
 		eoc.identifier = 'e';
 		eoc.left_forward = true;
@@ -58,11 +63,11 @@ static const std::vector<eyes::Generic> DANCE_C = {
 		eoc.timed = true;
 		eoc.duration = 0;
 		return eoc;
-	}()
-};
+	}()};
 
 static const std::vector<eyes::Generic> RREVERSE_C = {
-	[] {
+	[]
+	{
 		eyes::Generic first;
 		first.identifier = 'c';
 		first.left_forward = false;
@@ -70,10 +75,11 @@ static const std::vector<eyes::Generic> RREVERSE_C = {
 		first.left_speed = 1.5;
 		first.right_speed = 1.5;
 		first.timed = true;
-		first.duration = 3;
+		first.duration = 2;
 		return first;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic second;
 		second.identifier = 'c';
 		second.left_forward = true;
@@ -84,18 +90,8 @@ static const std::vector<eyes::Generic> RREVERSE_C = {
 		second.duration = 5;
 		return second;
 	}(),
-	[] {
-		eyes::Generic third;
-		third.identifier = 'c';
-		third.left_forward = true;
-		third.right_forward = false;
-		third.left_speed = 2.5;
-		third.right_speed = 2.5;
-		third.timed = true;
-		third.duration = 5;
-		return third;
-	}(),
-	[] {
+	[]
+	{
 		eyes::Generic eoc;
 		eoc.identifier = 'e';
 		eoc.left_forward = true;
@@ -105,11 +101,11 @@ static const std::vector<eyes::Generic> RREVERSE_C = {
 		eoc.timed = true;
 		eoc.duration = 0;
 		return eoc;
-	}()
-};
+	}()};
 
 static const std::vector<eyes::Generic> LREVERSE_C = {
-	[] {
+	[]
+	{
 		eyes::Generic first;
 		first.identifier = 'c';
 		first.left_forward = false;
@@ -117,10 +113,11 @@ static const std::vector<eyes::Generic> LREVERSE_C = {
 		first.left_speed = 1.5;
 		first.right_speed = 1.5;
 		first.timed = true;
-		first.duration = 3;
+		first.duration = 2;
 		return first;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic second;
 		second.identifier = 'c';
 		second.left_forward = false;
@@ -131,18 +128,8 @@ static const std::vector<eyes::Generic> LREVERSE_C = {
 		second.duration = 5;
 		return second;
 	}(),
-	[] {
-		eyes::Generic third;
-		third.identifier = 'c';
-		third.left_forward = false;
-		third.right_forward = true;
-		third.left_speed = 2.5;
-		third.right_speed = 2.5;
-		third.timed = true;
-		third.duration = 5;
-		return third;
-	}(),
-	[] {
+	[]
+	{
 		eyes::Generic eoc;
 		eoc.identifier = 'e';
 		eoc.left_forward = true;
@@ -152,11 +139,11 @@ static const std::vector<eyes::Generic> LREVERSE_C = {
 		eoc.timed = true;
 		eoc.duration = 0;
 		return eoc;
-	}()
-};
+	}()};
 
 static const std::vector<eyes::Generic> LCP_C = {
-	[] {
+	[]
+	{
 		eyes::Generic first;
 		first.identifier = 'c';
 		first.left_forward = false;
@@ -164,10 +151,11 @@ static const std::vector<eyes::Generic> LCP_C = {
 		first.left_speed = 1.5;
 		first.right_speed = 1.5;
 		first.timed = true;
-		first.duration = 3;
+		first.duration = 2;
 		return first;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic second;
 		second.identifier = 'c';
 		second.left_forward = false;
@@ -175,10 +163,11 @@ static const std::vector<eyes::Generic> LCP_C = {
 		second.left_speed = 2.5;
 		second.right_speed = 2.5;
 		second.timed = true;
-		second.duration = 5;
+		second.duration = 3;
 		return second;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic eoc;
 		eoc.identifier = 'e';
 		eoc.left_forward = true;
@@ -188,11 +177,11 @@ static const std::vector<eyes::Generic> LCP_C = {
 		eoc.timed = true;
 		eoc.duration = 0;
 		return eoc;
-	}()
-};
+	}()};
 
 static const std::vector<eyes::Generic> RCP_C = {
-	[] {
+	[]
+	{
 		eyes::Generic first;
 		first.identifier = 'c';
 		first.left_forward = false;
@@ -200,10 +189,11 @@ static const std::vector<eyes::Generic> RCP_C = {
 		first.left_speed = 1.5;
 		first.right_speed = 1.5;
 		first.timed = true;
-		first.duration = 3;
+		first.duration = 2;
 		return first;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic second;
 		second.identifier = 'c';
 		second.left_forward = true;
@@ -211,10 +201,11 @@ static const std::vector<eyes::Generic> RCP_C = {
 		second.left_speed = 2.5;
 		second.right_speed = 2.5;
 		second.timed = true;
-		second.duration = 5;
+		second.duration = 3;
 		return second;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic eoc;
 		eoc.identifier = 'e';
 		eoc.left_forward = true;
@@ -224,11 +215,11 @@ static const std::vector<eyes::Generic> RCP_C = {
 		eoc.timed = true;
 		eoc.duration = 0;
 		return eoc;
-	}()
-};
+	}()};
 
 static const std::vector<eyes::Generic> SPIN_C = {
-	[] {
+	[]
+	{
 		eyes::Generic first;
 		first.identifier = 'c';
 		first.left_forward = true;
@@ -239,7 +230,8 @@ static const std::vector<eyes::Generic> SPIN_C = {
 		first.duration = 5;
 		return first;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic second;
 		second.identifier = 'c';
 		second.left_forward = true;
@@ -250,7 +242,8 @@ static const std::vector<eyes::Generic> SPIN_C = {
 		second.duration = 5;
 		return second;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic eoc;
 		eoc.identifier = 'e';
 		eoc.left_forward = true;
@@ -260,11 +253,11 @@ static const std::vector<eyes::Generic> SPIN_C = {
 		eoc.timed = true;
 		eoc.duration = 0;
 		return eoc;
-	}()
-};
+	}()};
 
 static const std::vector<eyes::Generic> AUDIO_C = {
-	[] {
+	[]
+	{
 		eyes::Generic first;
 		first.identifier = 'p';
 		first.left_forward = true;
@@ -275,7 +268,8 @@ static const std::vector<eyes::Generic> AUDIO_C = {
 		first.duration = 0;
 		return first;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic second;
 		second.identifier = 'c';
 		second.left_forward = true;
@@ -286,7 +280,8 @@ static const std::vector<eyes::Generic> AUDIO_C = {
 		second.duration = 5;
 		return second;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic third;
 		third.identifier = 'k';
 		third.left_forward = true;
@@ -297,7 +292,8 @@ static const std::vector<eyes::Generic> AUDIO_C = {
 		third.duration = 0;
 		return third;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic fourth;
 		fourth.identifier = 'c';
 		fourth.left_forward = true;
@@ -308,7 +304,8 @@ static const std::vector<eyes::Generic> AUDIO_C = {
 		fourth.duration = 40000;
 		return fourth;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic fifth;
 		fifth.identifier = 't';
 		fifth.left_forward = true;
@@ -319,7 +316,8 @@ static const std::vector<eyes::Generic> AUDIO_C = {
 		fifth.duration = 0;
 		return fifth;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic sixth;
 		sixth.identifier = 'c';
 		sixth.left_forward = true;
@@ -330,7 +328,8 @@ static const std::vector<eyes::Generic> AUDIO_C = {
 		sixth.duration = 5;
 		return sixth;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic seventh;
 		seventh.identifier = 'c';
 		seventh.left_forward = false;
@@ -341,7 +340,8 @@ static const std::vector<eyes::Generic> AUDIO_C = {
 		seventh.duration = 40000;
 		return seventh;
 	}(),
-	[] {
+	[]
+	{
 		eyes::Generic eoc;
 		eoc.identifier = 'e';
 		eoc.left_forward = true;
@@ -351,5 +351,4 @@ static const std::vector<eyes::Generic> AUDIO_C = {
 		eoc.timed = true;
 		eoc.duration = 0;
 		return eoc;
-	}()
-};
+	}()};
