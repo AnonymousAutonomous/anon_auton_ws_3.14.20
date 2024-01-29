@@ -75,7 +75,7 @@ static const std::vector<eyes::Generic> RREVERSE_C = {
 		first.left_speed = 1.5;
 		first.right_speed = 1.5;
 		first.timed = true;
-		first.duration = 2;
+		first.duration = 3;
 		return first;
 	}(),
 	[]
@@ -89,6 +89,17 @@ static const std::vector<eyes::Generic> RREVERSE_C = {
 		second.timed = true;
 		second.duration = 5;
 		return second;
+	}(),
+	[] {
+		eyes::Generic third;
+		third.identifier = 'c';
+		third.left_forward = true;
+		third.right_forward = false;
+		third.left_speed = 2.5;
+		third.right_speed = 2.5;
+		third.timed = true;
+		third.duration = 5;
+		return third;
 	}(),
 	[]
 	{
@@ -113,7 +124,7 @@ static const std::vector<eyes::Generic> LREVERSE_C = {
 		first.left_speed = 1.5;
 		first.right_speed = 1.5;
 		first.timed = true;
-		first.duration = 2;
+		first.duration = 3;
 		return first;
 	}(),
 	[]
@@ -127,6 +138,17 @@ static const std::vector<eyes::Generic> LREVERSE_C = {
 		second.timed = true;
 		second.duration = 5;
 		return second;
+	}(),
+	[] {
+		eyes::Generic third;
+		third.identifier = 'c';
+		third.left_forward = true;
+		third.right_forward = false;
+		third.left_speed = 2.5;
+		third.right_speed = 2.5;
+		third.timed = true;
+		third.duration = 5;
+		return third;
 	}(),
 	[]
 	{
