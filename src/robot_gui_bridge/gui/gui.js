@@ -75,7 +75,10 @@ function generateStatuses(chairList) {
     const statusBlock = (id) => (`<div class="chair_monitor" id="${id}">
     <h2>Chair ${id}</h2>
     <button class="reset_chair" onclick="reset(this.id)">
-        RESTART
+      🔄 RESTART
+      </button>
+      <button class="shutdown_chair" onclick="shutdown(this.id)">
+      🌙 SHUTDOWN
       </button>
     <div class="status o" id="${id}status">
       OFFLINE<span class="dot"></span>
@@ -905,6 +908,10 @@ send_clear_broadcast = function () {
 send_shutdown_all_chairs = function () {
   hub_dir_listener.publish(formatMsg(0, "shutdown"));
 };
+
+shutdown = function(id) {
+  hub_dir_listener.publish(formatMsg(id, "shutdown"));
+}
 
 send_reset_all_chairs = function () {
   hub_dir_listener.publish(formatMsg(0, "reset"));
