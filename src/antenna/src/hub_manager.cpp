@@ -96,7 +96,7 @@ void setActiveChairs(std::vector<int> active_chair_nums)
 
 ros::Time startTime;
 ros::Duration waitDurationBeforeCheckingAgain(1.0); // 1.0 seconds
-ros::Duration timeBeforeChairOffline(2.0);			// 2.0 seconds
+ros::Duration timeBeforeChairOffline(5.0);			// seconds
 ros::Duration maxBroadcastTime(45.0);				// seconds
 int timesChecked = 0;
 int timesCheckedLimit = 10;
