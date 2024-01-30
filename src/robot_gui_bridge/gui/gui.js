@@ -18,7 +18,6 @@ var live_status = new Map();
 var honkAudio = new Audio('audio/431396__mariadrrs__car-horn.wav');
 
 
-
 // TODO -- remove
 // setActiveChairNums([2, 3, 4]);
 // Get the modal
@@ -451,6 +450,15 @@ function updateLidarOnlineStatus(key, status) {
 
 hub_to_gui_listener.subscribe(function (m) {
   // Update
+  if (m.data.length == 4 && m.data == "honk") {
+    honkAudio.play();
+  }
+  if (m.data.length == 10 && m.data == "honk_delay") {
+    // play honk after 15 seconds
+    setTimeout(function() {
+      honkAudio.play();
+    }, 5000);
+  }
   if (m.data.length == 18 && m.data[0] == "u") {
     const chair_num = m.data[1];
     const broadcast_status = m.data[2];

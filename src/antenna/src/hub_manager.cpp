@@ -97,7 +97,7 @@ void setActiveChairs(std::vector<int> active_chair_nums)
 ros::Time startTime;
 ros::Duration waitDurationBeforeCheckingAgain(1.0); // 1.0 seconds
 ros::Duration timeBeforeChairOffline(5.0);			// seconds
-ros::Duration maxBroadcastTime(45.0);				// seconds
+ros::Duration maxBroadcastTime(120.0);				// seconds
 int timesChecked = 0;
 int timesCheckedLimit = 10;
 
@@ -346,7 +346,7 @@ void clean_up_after_broadcast_done()
 	transmit_queue = std::queue<std_msgs::String>();
 	mode = state::outside;
 	std_msgs::String msg;
-	msg.data = "00Bfinish";
+	msg.data = "0stop"; // rather than 00Bfinish
 	hub_manager_pub.publish(msg);
 	ROS_ERROR("BROADCAST IS FINISHED");
 	if (all_chairs_are_done())
@@ -502,14 +502,42 @@ int main(int argc, char **argv)
 		{
 			if (a_chair_is_trapped())
 			{
-				ROS_ERROR("A chair is trapped!");
+				// Play sound
 				std_msgs::String msg;
-				msg.data = "00Bf2.5r2.5t5";
+				msg.data = "honk_delay";
+				hub_to_gui_pub.publish(msg);
+				ROS_ERROR("A chair is trapped!");
 				transmit_queue = std::queue<std_msgs::String>();
+				// Stop for 20 -- after 5 seconds, it will play audio
+				msg.data = "00Bf0.0f0.0t5";
 				transmit_queue.push(msg);
 				transmit_queue.push(msg);
 				transmit_queue.push(msg);
 				transmit_queue.push(msg);
+				// Spin for 30 in one direction
+				msg.data = "00Bf5.0r5.0t5";
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				// Stop for 5
+				msg.data = "00Bf0.0f0.0t5";
+				transmit_queue.push(msg);
+				// Spin for 30 in other direction
+				msg.data = "00Br5.0f5.0t5";
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				// Stop for 10 seconds
+				msg.data = "00Bf0.0f0.0t5";
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				// Done
 				msg.data = "00Bend";
 				transmit_queue.push(msg);
 			}
@@ -592,8 +620,6 @@ int main(int argc, char **argv)
 						break;
 					}
 				}
-				startTime = ros::Time::now();
-				mode = state::awaiting_status;
 			}
 
 			break;
@@ -605,6 +631,9 @@ int main(int argc, char **argv)
 			// transmit end of broadcast message
 			if (all_chairs_are_done() || ros::Time::now() >= startTime + maxBroadcastTime)
 			{
+				std_msgs::String msg;
+				msg.data = "honk";
+				hub_to_gui_pub.publish(msg);
 				ROS_ERROR("ALL CHAIRS ARE DONE");
 				clean_up_after_broadcast_done();
 			}
