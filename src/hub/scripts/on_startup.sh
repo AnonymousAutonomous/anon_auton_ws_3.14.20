@@ -5,6 +5,10 @@ source devel/setup.bash
 
 python2 ~/anon_auton_ws/src/config_manager/scripts/set_ports.py
 
+sudo amixer cset numid=1
+sudo apt-get install alsa-utils
+sudo modprobe snd_bcm2835
+
 killall -9 roscore
 killall -9 rosmaster
 

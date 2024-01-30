@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Exec=~/anon_auton_ws/src/hub/scripts/on_startup.sh
+Name=StartHub
+GenericName="Start Hub"
+Comment=Start the hub
+Encoding=UTF-8
+Terminal=true
+Type=Application
+Categories=Application;Network;
