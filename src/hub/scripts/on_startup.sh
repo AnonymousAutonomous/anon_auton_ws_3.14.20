@@ -42,3 +42,14 @@ else
 fi
 
 firefox --kiosk file:///home/anonymous0/anon_auton_ws/src/robot_gui_bridge/gui/gui.html
+
+# Shutdown
+rosnode kill -a &
+sleep 5
+
+rosnode list | while read -r nodeid ; do
+    kill $(ps aux | grep $nodeid | grep -v grep | awk '{print $2}')
+done
+
+killall -9 roscore
+killall -9 rosmaster
