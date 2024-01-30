@@ -15,6 +15,7 @@
   </head>
 
   <body>
+    <div class="fullscreen">
     <h1>Anonymous Autonomous</h1>
     <div class="floating_top_right">
       <span id="battery_countdown"></span>
@@ -45,6 +46,12 @@
       <div class="modal-content">
         <h3>Please switch batteries!</h3>
         <button onclick="closeBatteryModal()" class="green">Done</button>
+      </div>
+    </div>
+    <div id="connectionModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <h3>Starting up<span class="loading"></span></h3>
       </div>
     </div>
     <audio id="audio_beep" src="audio/258193__kodack__beep-beep.wav"></audio>
@@ -294,5 +301,6 @@
         </form>
       </div>
     </div>
+  </div>
   </body>
 </html>

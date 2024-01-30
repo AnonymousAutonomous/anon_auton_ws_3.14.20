@@ -282,6 +282,7 @@ const initialCmdsJson = {
 
 ros.on("connection", function () {
   document.getElementById("status").innerHTML = "Connected";
+  document.getElementById("connectionModal").style.display = "none";
 });
 
 ros.on("error", function (error) {

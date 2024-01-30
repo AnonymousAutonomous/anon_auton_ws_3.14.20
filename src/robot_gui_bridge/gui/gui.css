@@ -320,6 +320,29 @@ textarea {
     background-color: lime;
 }
 
+#connectionModal {
+    display: block;
+}
+
+h3 span:before {
+    animation: dots 2s linear infinite;
+    content: '';
+  }
+
+  @keyframes dots {
+    0%, 20% {
+      content: '.';
+    }
+    40% {
+      content: '..';
+    }
+    60% {
+      content: '...';
+    }
+    90%, 100% {
+      content: '';
+    }
+}
 /* Must be last */
 .debug {
     display: none;
