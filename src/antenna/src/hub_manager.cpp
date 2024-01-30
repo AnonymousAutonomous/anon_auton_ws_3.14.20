@@ -507,7 +507,6 @@ int main(int argc, char **argv)
 				msg.data = "honk";
 				hub_to_gui_pub.publish(msg);
 				ROS_ERROR("A chair is trapped!");
-				std_msgs::String msg;
 				transmit_queue = std::queue<std_msgs::String>();
 				// Stop for 15
 				msg.data = "00Bf0.0f0.0t5";
