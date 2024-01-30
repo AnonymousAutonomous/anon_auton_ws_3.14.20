@@ -448,7 +448,7 @@ hub_to_gui_listener.subscribe(function (m) {
     // play honk after 15 seconds
     setTimeout(function() {
       honkAudio.play();
-    }, 15000);
+    }, 5000);
   }
   if (m.data.length == 18 && m.data[0] == "u") {
     const chair_num = m.data[1];
