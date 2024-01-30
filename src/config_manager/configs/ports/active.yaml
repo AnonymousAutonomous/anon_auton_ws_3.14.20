@@ -1,2 +1,2 @@
-antenna_port: '/dev/ttyUSB1'
+antenna_port: '/dev/ttyUSB0'
 chair_num: '0'

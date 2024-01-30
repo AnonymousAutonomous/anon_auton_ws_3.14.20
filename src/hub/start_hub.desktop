@@ -1,8 +1,9 @@
+#!/usr/bin/env xdg-open
 [Desktop Entry]
 Version=1.0
-Exec=~/anon_auton_ws/src/hub/scripts/on_startup.sh
+Exec=/home/anonymous0/anon_auton_ws/src/hub/scripts/on_startup.sh
 Name=StartHub
-GenericName="Start Hub"
+GenericName=Start Hub
 Comment=Start the hub
 Encoding=UTF-8
 Terminal=true
