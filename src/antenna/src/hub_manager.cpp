@@ -508,8 +508,9 @@ int main(int argc, char **argv)
 				hub_to_gui_pub.publish(msg);
 				ROS_ERROR("A chair is trapped!");
 				transmit_queue = std::queue<std_msgs::String>();
-				// Stop for 15
+				// Stop for 20 -- after 5 seconds, it will play audio
 				msg.data = "00Bf0.0f0.0t5";
+				transmit_queue.push(msg);
 				transmit_queue.push(msg);
 				transmit_queue.push(msg);
 				transmit_queue.push(msg);
