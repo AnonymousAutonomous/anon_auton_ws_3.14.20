@@ -3,14 +3,20 @@
 cd ~/anon_auton_ws
 source devel/setup.bash
 
-python2 ~/anon_auton_ws/src/config_manager/scripts/set_ports.py
+amixer cset numid=1
+modprobe snd_bcm2835
 
-sudo amixer cset numid=1
-sudo apt-get install alsa-utils
-sudo modprobe snd_bcm2835
+rosnode kill -a &
+sleep 5
+
+rosnode list | while read -r nodeid ; do
+    kill $(ps aux | grep $nodeid | grep -v grep | awk '{print $2}')
+done
 
 killall -9 roscore
 killall -9 rosmaster
+
+python2 ~/anon_auton_ws/src/config_manager/scripts/set_ports.py
 
 # Clear out port we will be using
 kill $(lsof -t -i:9090)
