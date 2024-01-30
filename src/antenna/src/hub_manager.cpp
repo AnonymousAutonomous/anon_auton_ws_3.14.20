@@ -346,7 +346,7 @@ void clean_up_after_broadcast_done()
 	transmit_queue = std::queue<std_msgs::String>();
 	mode = state::outside;
 	std_msgs::String msg;
-	msg.data = "00Bfinish";
+	msg.data = "0stop"; // rather than 00Bfinish
 	hub_manager_pub.publish(msg);
 	ROS_ERROR("BROADCAST IS FINISHED");
 	if (all_chairs_are_done())
@@ -611,24 +611,15 @@ int main(int argc, char **argv)
 				while (!transmit_queue.empty())
 				{
 					bool break_out = transmit_queue.front().data == "00Bend";
+					hub_manager_pub.publish(transmit_queue.front());
+					transmit_queue.pop();
 					if (break_out)
 					{
 						startTime = ros::Time::now();
 						mode = state::awaiting_status;
-
-						std_msgs::String msg;
-						msg.data = "0stop";
-						hub_manager_pub.publish(msg);
 						break;
 					}
-					else
-					{
-						hub_manager_pub.publish(transmit_queue.front());
-						transmit_queue.pop();
-					}
 				}
-				startTime = ros::Time::now();
-				mode = state::awaiting_status;
 			}
 
 			break;
