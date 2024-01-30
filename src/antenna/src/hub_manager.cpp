@@ -97,7 +97,7 @@ void setActiveChairs(std::vector<int> active_chair_nums)
 ros::Time startTime;
 ros::Duration waitDurationBeforeCheckingAgain(1.0); // 1.0 seconds
 ros::Duration timeBeforeChairOffline(5.0);			// seconds
-ros::Duration maxBroadcastTime(45.0);				// seconds
+ros::Duration maxBroadcastTime(100.0);				// seconds
 int timesChecked = 0;
 int timesCheckedLimit = 10;
 
@@ -504,12 +504,36 @@ int main(int argc, char **argv)
 			{
 				ROS_ERROR("A chair is trapped!");
 				std_msgs::String msg;
-				msg.data = "00Bf2.5r2.5t5";
 				transmit_queue = std::queue<std_msgs::String>();
+				// Stop for 15
+				msg.data = "00Bf0.0f0.0t5";
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				// Spin for 30 in one direction
+				msg.data = "00Bf5.0r5.0t5";
 				transmit_queue.push(msg);
 				transmit_queue.push(msg);
 				transmit_queue.push(msg);
 				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				// Stop for 5
+				msg.data = "00Bf0.0f0.0t5";
+				transmit_queue.push(msg);
+				// Spin for 30 in other direction
+				msg.data = "00Br5.0f5.0t5";
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				// Stop for 10 seconds
+				msg.data = "00Bf0.0f0.0t5";
+				transmit_queue.push(msg);
+				transmit_queue.push(msg);
+				// Done
 				msg.data = "00Bend";
 				transmit_queue.push(msg);
 			}
