@@ -346,7 +346,7 @@ void clean_up_after_broadcast_done()
 	transmit_queue = std::queue<std_msgs::String>();
 	mode = state::outside;
 	std_msgs::String msg;
-	msg.data = "0stop"; // rather than 00Bfinish
+	msg.data = "00Bfinish"; // rather than 00Bfinish
 	hub_manager_pub.publish(msg);
 	ROS_ERROR("BROADCAST IS FINISHED");
 	if (all_chairs_are_done())
@@ -365,6 +365,9 @@ void clean_up_after_broadcast_done()
 	{
 		ROS_ERROR("CLEAR - ALL CHAIRS ARE NOT READY");
 	}
+	std_msgs::String msg;
+	msg.data = "0stop"; // rather than 00Bfinish
+	hub_manager_pub.publish(msg);
 }
 
 void broadcast_callback(const std_msgs::String &msg)
