@@ -635,6 +635,8 @@ int main(int argc, char **argv)
 				std_msgs::String msg;
 				msg.data = "honk";
 				hub_to_gui_pub.publish(msg);
+				msg.data = "0stop";
+				hub_manager_pub.publish(msg);
 				ROS_ERROR("ALL CHAIRS ARE DONE");
 				clean_up_after_broadcast_done();
 			}
