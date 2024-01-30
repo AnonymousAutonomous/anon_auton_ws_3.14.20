@@ -1,3 +1,30 @@
+html {
+    font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+}
+
+button {
+    font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+}
+
+h1 {
+    font-size: 1.5em; 
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.5em; 
+}
+
+.floating_top_right {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    border: 1px solid gray;
+    padding: 5px;
+    text-align: right;
+}
+
 .statuses {
     display: flex;
     flex-direction: row;
@@ -6,7 +33,7 @@
 
 .chair_monitor {
     flex: 1;
-    background-color: cyan;
+    background-color: lightgray;
     text-align: center;
     border: 1px black solid;
     border-radius: 3px;
@@ -173,7 +200,7 @@ label {
 }
 
 #toLiveScreen {
-    background-color: cyan;
+    /* background-color: cyan; */
 }
 
 #toConfigScreen {
@@ -280,4 +307,44 @@ textarea {
 .column {
     display: flex;
     flex-direction: column;
+}
+
+.buttons {
+    margin: 10px;
+}
+
+.white {
+    background-color: whitesmoke;
+}
+
+.green {
+    background-color: lime;
+}
+
+#connectionModal {
+    display: block;
+}
+
+h3 span:before {
+    animation: dots 2s linear infinite;
+    content: '';
+  }
+
+  @keyframes dots {
+    0%, 20% {
+      content: '.';
+    }
+    40% {
+      content: '..';
+    }
+    60% {
+      content: '...';
+    }
+    90%, 100% {
+      content: '';
+    }
+}
+/* Must be last */
+.debug {
+    display: block;
 }

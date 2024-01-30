@@ -11,7 +11,8 @@ var active_chair_nums = new ROSLIB.Param({
   name: "active_chair_nums",
 });
 
-var chairs = [];
+var chairs = [2, 3, 4];
+
 var live_status = new Map();
 
 var honkAudio = new Audio('audio/431396__mariadrrs__car-horn.wav');
@@ -76,27 +77,34 @@ function generateStatuses(chairList) {
     console.log("generating statuses");
     const statusBlock = (id) => (`<div class="chair_monitor" id="${id}">
     <h2>Chair ${id}</h2>
-    <button class="reset_chair" onclick="reset(${id})">
-      🔄 RESTART
-      </button>
-      <button class="shutdown_chair" onclick="shutdown(${id})">
-      🌙 SHUTDOWN
-      </button>
-    <div class="status o" id="${id}status">
-      OFFLINE<span class="dot"></span>
-    </div>
+    <div class="buttons">
+    <button class="stop" id="${id}" onclick="stop(${id})">
+    STOP
+  </button>
+  <button class="auto" id="${id}" onclick="toggle(${id})">
+  GO
+  </button>
+  </div>
     <div class="status o" id="${id}_camera_status">OFFLINE</div>
     <div class="status o" id="${id}_lidar_status">OFFLINE</div>
-    <div class="status o" id="${id}_broadcast_status">OFFLINE</div>
+    </br>
+    <div class="status o" id="${id}status">
+      OFFLINE
+    </div>
+        <div class="status o debug" id="${id}_broadcast_status">OFFLINE</div>
     <div class="status o" id="${id}_stuck_status">OFFLINE</div>
     <div class="status o" id="${id}_trapped_status">OFFLINE</div>
-    <div id="${id}_flags"></div>
-    <br />
-    <div class="chair_control">
+    <div id="${id}_flags" class="debug"></div>
+    <div class="buttons">
+    <button class="reset_chair white" onclick="reset(${id})">
+    🔄 RESTART
+    </button>
+    <button class="shutdown_chair white" onclick="shutdown(${id})">
+    🌙 SHUTDOWN
+    </button>
+    </div>
+    <div class="chair_control debug">
       <div class="directions">
-        <button class="auto" id="${id}" onclick="toggle(${id})">
-          AUTO
-        </button>
         <br />
         <button id="${id}" onclick="ffwd(${id})">⤊</button>
         <div>
@@ -158,16 +166,16 @@ active_chair_nums.get(function (value) {
 console.log(live_status);
 
 var test_broadcast = [
-  "00Bf2.0f2.0t5",
-  "00BAp",
   "00Bf0.0f0.0t5",
   "00Bf0.0f0.0t5",
-  "00BAk",
-  "00Br2.0r2.0t5",
-  "00Br2.0r2.0t5",
-  "00BAt",
+  "00Bf5.0r5.0t5",
+  "00Bf5.0r5.0t5",
+  "00Bf5.0r5.0t5",
+  "00Bf5.0r5.0t5",
+  "00Bf5.0r5.0t5",
+  "00Bf5.0r5.0t5",
   "00Bf0.0f0.0t5",
-  "00Bf0.0f0.0t5",
+  "00Bf0.0f0.0t2",
   "00Bend",
 ];
 
@@ -276,6 +284,7 @@ const initialCmdsJson = {
 
 ros.on("connection", function () {
   document.getElementById("status").innerHTML = "Connected";
+  document.getElementById("connectionModal").style.display = "none";
 });
 
 ros.on("error", function (error) {
@@ -899,6 +908,7 @@ pivotr = function (id) {
 
 send_test_broadcast = function () {
   console.log("SENDING TEST CHOREO");
+  honkAudio.play();
   test_broadcast.forEach((msg) => {
     var dir = new ROSLIB.Message({
       data: msg,
@@ -1238,7 +1248,46 @@ function playBeep() {
 
 function sendSpeedToChair() {
   const audio = document.getElementById("audio_beep");
+}
 
+
+var batteryDurationMs = 1000 * 60 * 60 * 2; // 2 hours
+var batteryEndTime = new Date().getTime() + batteryDurationMs;
+
+// Update the count down every 1 second
+var batteryIntervalId
+var batteryAudio = new Audio('audio/582986__oysterqueen__low-battery.mp3');
+
+function closeBatteryModal() {
+  batteryEndTime = new Date().getTime() + batteryDurationMs;
+  document.getElementById("batteryModal").style.display = "none";
+
+  batteryAudio.loop = false;
+
+  batteryIntervalId = setInterval(function() {
+    // Get today's date and time
+    var now = new Date().getTime();
+  
+    // Find the distance between now and the count down date
+    var distance = batteryEndTime - now;
+  
+    // Time calculations for days, hours, minutes and seconds
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  
+    // Display the result in the element with id="demo"
+    document.getElementById("battery_countdown").innerHTML = hours + "h "
+    + minutes + "m " + seconds + "s<br />until battery swap";
+  
+    // If the count down is finished, write some text
+    if (distance < 0) {
+      clearInterval(batteryIntervalId);
+      document.getElementById("battery_countdown").innerHTML = "SWITCH BATTERIES";
+      document.getElementById("batteryModal").style.display = "block";
+      batteryAudio.loop = true;
+      batteryAudio.play();  }
+  }, 1000);
 }
 
 window.onload = function () {
@@ -1306,5 +1355,7 @@ window.onload = function () {
   });
 
   // playLowBatt();
-  playBeep();
+  // playBeep();
+  setActiveChairNums(chairs);
+  closeBatteryModal();
 };
