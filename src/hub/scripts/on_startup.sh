@@ -24,13 +24,11 @@ until rostopic list; do sleep 1; done
 
 rosparam load ~/anon_auton_ws/src/config_manager/configs/hub/active.yaml
 
-firefox file:///home/anonymous0/anon_auton_ws/src/robot_gui_bridge/gui/gui.html &
-
 if grep -iq "^antenna_port" ~/anon_auton_ws/src/config_manager/configs/ports/active.yaml; then
 	echo "----------------- ANTENNA FOUND -----------------"
 	notify-send "Antenna is connected."
 	roslaunch --wait src/launch_manager/launch/components/antenna_hub.launch &
-	roslaunch --wait src/robot_gui_bridge/launch/websocket.launch
+	roslaunch --wait src/robot_gui_bridge/launch/websocket.launch &
 else
 	notify-send -u critical -t 0 "!!! PLEASE CONNECT THE ANTENNA !!!"
 	until grep -iq "^antenna_port" ~/anon_auton_ws/src/config_manager/configs/ports/active.yaml;
@@ -40,5 +38,7 @@ else
 	done
 	notify-send "Antenna is connected."
 	roslaunch --wait src/launch_manager/launch/components/antenna_hub.launch &
-	roslaunch --wait src/robot_gui_bridge/launch/websocket.launch
+	roslaunch --wait src/robot_gui_bridge/launch/websocket.launch &
 fi
+
+firefox file:///home/anonymous0/anon_auton_ws/src/robot_gui_bridge/gui/gui.html
