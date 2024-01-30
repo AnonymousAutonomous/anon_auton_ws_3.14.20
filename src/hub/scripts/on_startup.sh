@@ -6,9 +6,6 @@ source devel/setup.bash
 amixer cset numid=1
 modprobe snd_bcm2835
 
-rosnode kill -a &
-sleep 5
-
 rosnode list | while read -r nodeid ; do
     kill $(ps aux | grep $nodeid | grep -v grep | awk '{print $2}')
 done
