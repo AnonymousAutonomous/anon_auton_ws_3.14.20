@@ -24,6 +24,8 @@ until rostopic list; do sleep 1; done
 
 rosparam load ~/anon_auton_ws/src/config_manager/configs/hub/active.yaml
 
+firefox file:///home/anonymous0/anon_auton_ws/src/robot_gui_bridge/gui/gui.html &
+
 if grep -iq "^antenna_port" ~/anon_auton_ws/src/config_manager/configs/ports/active.yaml; then
 	echo "----------------- ANTENNA FOUND -----------------"
 	notify-send "Antenna is connected."
