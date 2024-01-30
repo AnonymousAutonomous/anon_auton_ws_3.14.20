@@ -16,12 +16,13 @@ h2 {
 }
 
 .floating_top_right {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     margin: 10px;
     border: 1px solid gray;
     padding: 5px;
+    text-align: right;
 }
 
 .statuses {

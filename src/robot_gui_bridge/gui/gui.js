@@ -1265,7 +1265,7 @@ function closeBatteryModal() {
   
     // Display the result in the element with id="demo"
     document.getElementById("battery_countdown").innerHTML = hours + "h "
-    + minutes + "m " + seconds + "s until battery swap";
+    + minutes + "m " + seconds + "s<br />until battery swap";
   
     // If the count down is finished, write some text
     if (distance < 0) {
