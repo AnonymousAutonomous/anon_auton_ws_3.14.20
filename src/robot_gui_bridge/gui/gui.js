@@ -444,6 +444,12 @@ hub_to_gui_listener.subscribe(function (m) {
   if (m.data.length == 4 && m.data == "honk") {
     honkAudio.play();
   }
+  if (m.data.length == 10 && m.data == "honk_delay") {
+    // play honk after 15 seconds
+    setTimeout(function() {
+      honkAudio.play();
+    }, 15000);
+  }
   if (m.data.length == 18 && m.data[0] == "u") {
     const chair_num = m.data[1];
     const broadcast_status = m.data[2];

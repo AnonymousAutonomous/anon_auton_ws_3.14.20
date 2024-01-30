@@ -504,7 +504,7 @@ int main(int argc, char **argv)
 			{
 				// Play sound
 				std_msgs::String msg;
-				msg.data = "honk";
+				msg.data = "honk_delay";
 				hub_to_gui_pub.publish(msg);
 				ROS_ERROR("A chair is trapped!");
 				transmit_queue = std::queue<std_msgs::String>();
