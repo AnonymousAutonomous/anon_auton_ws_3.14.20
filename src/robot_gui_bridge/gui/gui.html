@@ -44,30 +44,31 @@
       <!-- Modal content -->
       <div class="modal-content">
         <h3>Please switch batteries!</h3>
-        <button onclick="closeBatteryModal()">Done</button>
+        <button onclick="closeBatteryModal()" class="green">Done</button>
       </div>
     </div>
     <audio id="audio_beep" src="audio/258193__kodack__beep-beep.wav"></audio>
     <p>Connection status: <span id="status">NOT CONNECTED</span></p>
-    <p>Last chair status received: <span id="msg"></span></p>
+    <p class="debug">Last chair status received: <span id="msg"></span></p>
     <p id="active_chairs_p">
       <span id="num_chairs">0 chairs</span> active:
       <span id="active_chair_list"></span>
-      <button id="editActiveChairsBtn">Edit</button>
+      <button id="editActiveChairsBtn" class="white">Edit</button>
     </p>
     <div class="screen" id="live" style="display: none">
-      <button onclick="stop('0')" class="stop">STOP ALL</button>
-      <button onclick="toggle('0')" class="auto">AUTO ALL</button>
+      <div id="top_buttons">
+      <button onclick="stop('0')" class="stop">ALL STOP</button>
+      <button onclick="toggle('0')" class="auto">ALL GO</button>
       <button class="test_broadcast debug" onclick="send_test_broadcast()">
         TEST BROADCAST
       </button>
       <button class="clear_broadcast debug" onclick="send_clear_broadcast()">
         CLEAR BROADCAST
       </button>
-      <button class="shutdown_chairs" onclick="send_shutdown_all_chairs()">
+      <button class="shutdown_chairs white" onclick="send_shutdown_all_chairs()">
         🌙 SHUTDOWN ALL
       </button>
-      <button class="reset_chair" onclick="send_reset_all_chairs()">
+      <button class="reset_chair white" onclick="send_reset_all_chairs()">
         🔄 RESTART ALL
       </button>
       <div class="statuses" id="chairStatuses">

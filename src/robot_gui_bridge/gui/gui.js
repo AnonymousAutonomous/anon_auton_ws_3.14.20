@@ -75,29 +75,32 @@ function generateStatuses(chairList) {
     console.log("generating statuses");
     const statusBlock = (id) => (`<div class="chair_monitor" id="${id}">
     <h2>Chair ${id}</h2>
-    <button class="reset_chair" onclick="reset(${id})">
-      🔄 RESTART
-      </button>
-      <button class="shutdown_chair" onclick="shutdown(${id})">
-      🌙 SHUTDOWN
-      </button>
-    <div class="status o" id="${id}status">
-      OFFLINE<span class="dot"></span>
-    </div>
+    <div class="buttons">
+    <button class="stop" id="${id}" onclick="stop(${id})">
+    STOP
+  </button>
+  <button class="auto" id="${id}" onclick="toggle(${id})">
+  GO
+  </button>
+  </div>
     <div class="status o" id="${id}_camera_status">OFFLINE</div>
     <div class="status o" id="${id}_lidar_status">OFFLINE</div>
-    <div class="status o" id="${id}_broadcast_status">OFFLINE</div>
+    </br>
+    <div class="status o" id="${id}status">
+      OFFLINE
+    </div>
+        <div class="status o debug" id="${id}_broadcast_status">OFFLINE</div>
     <div class="status o" id="${id}_stuck_status">OFFLINE</div>
     <div class="status o" id="${id}_trapped_status">OFFLINE</div>
     <div id="${id}_flags" class="debug"></div>
-    <br />
-    <button class="auto" id="${id}" onclick="toggle(${id})">
-    AUTO
-  </button>
-  <button class="stop" id="${id}" onclick="stop(${id})">
-  STOP
-</button>
-<br />
+    <div class="buttons">
+    <button class="reset_chair white" onclick="reset(${id})">
+    🔄 RESTART
+    </button>
+    <button class="shutdown_chair white" onclick="shutdown(${id})">
+    🌙 SHUTDOWN
+    </button>
+    </div>
     <div class="chair_control debug">
       <div class="directions">
         <br />

@@ -8,6 +8,7 @@ button {
 
 h1 {
     font-size: 1.5em; 
+    text-align: center;
 }
 
 h2 {
@@ -307,6 +308,19 @@ textarea {
     flex-direction: column;
 }
 
+.buttons {
+    margin: 10px;
+}
+
+.white {
+    background-color: whitesmoke;
+}
+
+.green {
+    background-color: lime;
+}
+
+/* Must be last */
 .debug {
     display: none;
 }
