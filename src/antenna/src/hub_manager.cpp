@@ -502,8 +502,10 @@ int main(int argc, char **argv)
 		{
 			if (a_chair_is_trapped())
 			{
-				// Play sound async
-				PlaySound("src/antenna/src/431396__mariadrrs__car-horn.wav", GetModuleHandle(NULL), SND_FILENAME | SND_ASYNC);
+				// Play sound
+				std_msgs::String msg;
+				msg.data = "honk";
+				hub_to_gui_pub.publish(msg);
 				ROS_ERROR("A chair is trapped!");
 				std_msgs::String msg;
 				transmit_queue = std::queue<std_msgs::String>();
@@ -631,7 +633,9 @@ int main(int argc, char **argv)
 			// transmit end of broadcast message
 			if (all_chairs_are_done() || ros::Time::now() >= startTime + maxBroadcastTime)
 			{
-				PlaySound("src/antenna/src/431396__mariadrrs__car-horn.wav", GetModuleHandle(NULL), SND_FILENAME | SND_ASYNC);
+				std_msgs::String msg;
+				msg.data = "honk";
+				hub_to_gui_pub.publish(msg);
 				ROS_ERROR("ALL CHAIRS ARE DONE");
 				clean_up_after_broadcast_done();
 			}
