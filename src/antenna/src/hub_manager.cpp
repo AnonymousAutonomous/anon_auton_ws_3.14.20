@@ -365,7 +365,6 @@ void clean_up_after_broadcast_done()
 	{
 		ROS_ERROR("CLEAR - ALL CHAIRS ARE NOT READY");
 	}
-	std_msgs::String msg;
 	msg.data = "0stop"; // rather than 00Bfinish
 	hub_manager_pub.publish(msg);
 }

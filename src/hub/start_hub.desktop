@@ -1,0 +1,11 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Exec=/home/anonymous0/anon_auton_ws/src/hub/scripts/on_startup.sh
+Name=StartHub
+GenericName=Start Hub
+Comment=Start the hub
+Encoding=UTF-8
+Terminal=true
+Type=Application
+Categories=Application;Network;
