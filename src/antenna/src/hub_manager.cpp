@@ -536,8 +536,8 @@ int main(int argc, char **argv)
 				msg.data = "00Bf0.0f0.0t5";
 				transmit_queue.push(msg);
 				transmit_queue.push(msg);
-				// Done
-				msg.data = "00Bend";
+				// Done -- end in handwritten mode
+				msg.data = "0stop";
 				transmit_queue.push(msg);
 			}
 			if (!transmit_queue.empty())
@@ -635,8 +635,6 @@ int main(int argc, char **argv)
 				std_msgs::String msg;
 				msg.data = "honk";
 				hub_to_gui_pub.publish(msg);
-				msg.data = "0stop";
-				hub_manager_pub.publish(msg);
 				ROS_ERROR("ALL CHAIRS ARE DONE");
 				clean_up_after_broadcast_done();
 			}
