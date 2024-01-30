@@ -167,16 +167,16 @@ active_chair_nums.get(function (value) {
 console.log(live_status);
 
 var test_broadcast = [
-  "00Bf2.0f2.0t5",
-  "00BAp",
   "00Bf0.0f0.0t5",
   "00Bf0.0f0.0t5",
-  "00BAk",
-  "00Br2.0r2.0t5",
-  "00Br2.0r2.0t5",
-  "00BAt",
+  "00Bf5.0r5.0t5",
+  "00Bf5.0r5.0t5",
+  "00Bf5.0r5.0t5",
+  "00Bf5.0r5.0t5",
+  "00Bf5.0r5.0t5",
+  "00Bf5.0r5.0t5",
   "00Bf0.0f0.0t5",
-  "00Bf0.0f0.0t5",
+  "00Bf0.0f0.0t2",
   "00Bend",
 ];
 
