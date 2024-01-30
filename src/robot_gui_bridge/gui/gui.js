@@ -15,6 +15,9 @@ var chairs = [2, 3, 4];
 
 var live_status = new Map();
 
+var honkAudio = new Audio('audio/431396__mariadrrs__car-horn.wav');
+
+
 
 // TODO -- remove
 // setActiveChairNums([2, 3, 4]);
@@ -897,6 +900,7 @@ pivotr = function (id) {
 
 send_test_broadcast = function () {
   console.log("SENDING TEST CHOREO");
+  honkAudio.play();
   test_broadcast.forEach((msg) => {
     var dir = new ROSLIB.Message({
       data: msg,
@@ -1237,6 +1241,7 @@ function playBeep() {
 function sendSpeedToChair() {
   const audio = document.getElementById("audio_beep");
 }
+
 
 var batteryDurationMs = 1000 * 60 * 60 * 2; // 2 hours
 var batteryEndTime = new Date().getTime() + batteryDurationMs;
