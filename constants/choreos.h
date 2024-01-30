@@ -170,12 +170,12 @@ static const std::vector<eyes::Generic> LCP_C = {
 	{
 		eyes::Generic first;
 		first.identifier = 'c';
-		first.left_forward = false;
-		first.right_forward = false;
-		first.left_speed = 1.5;
-		first.right_speed = 1.5;
+		first.left_forward = true;
+		first.right_forward = true;
+		first.left_speed = 0.0;
+		first.right_speed = 0.0;
 		first.timed = true;
-		first.duration = 3;
+		first.duration = 0.75;
 		return first;
 	}(),
 	[]
@@ -183,12 +183,24 @@ static const std::vector<eyes::Generic> LCP_C = {
 		eyes::Generic second;
 		second.identifier = 'c';
 		second.left_forward = false;
-		second.right_forward = true;
-		second.left_speed = 2.5;
-		second.right_speed = 2.5;
+		second.right_forward = false;
+		second.left_speed = 1.5;
+		second.right_speed = 1.5;
 		second.timed = true;
 		second.duration = 2;
 		return second;
+	}(),
+	[]
+	{
+		eyes::Generic third;
+		third.identifier = 'c';
+		third.left_forward = false;
+		third.right_forward = true;
+		third.left_speed = 1.7;
+		third.right_speed = 1.7;
+		third.timed = true;
+		third.duration = 1.5;
+		return third;
 	}(),
 	[]
 	{
@@ -208,25 +220,37 @@ static const std::vector<eyes::Generic> RCP_C = {
 	{
 		eyes::Generic first;
 		first.identifier = 'c';
-		first.left_forward = false;
-		first.right_forward = false;
-		first.left_speed = 1.5;
-		first.right_speed = 1.5;
+		first.left_forward = true;
+		first.right_forward = true;
+		first.left_speed = 0.0;
+		first.right_speed = 0.0;
 		first.timed = true;
-		first.duration = 3;
+		first.duration = 0.75;
 		return first;
 	}(),
 	[]
 	{
 		eyes::Generic second;
 		second.identifier = 'c';
-		second.left_forward = true;
+		second.left_forward = false;
 		second.right_forward = false;
-		second.left_speed = 2.5;
-		second.right_speed = 2.5;
+		second.left_speed = 1.5;
+		second.right_speed = 1.5;
 		second.timed = true;
 		second.duration = 2;
 		return second;
+	}(),
+	[]
+	{
+		eyes::Generic third;
+		third.identifier = 'c';
+		third.left_forward = true;
+		third.right_forward = false;
+		third.left_speed = 1.7;
+		third.right_speed = 1.7;
+		third.timed = true;
+		third.duration = 1.5;
+		return third;
 	}(),
 	[]
 	{
