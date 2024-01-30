@@ -194,6 +194,7 @@ void callback(const std_msgs::String &command)
 				choreo_queue.push(RREVERSE_C[1]);
 				choreo_queue.push(RREVERSE_C[2]);
 				choreo_queue.push(RREVERSE_C[3]);
+				choreo_queue.push(RREVERSE_C[4]);
 			}
 			else
 			{
@@ -201,6 +202,7 @@ void callback(const std_msgs::String &command)
 				choreo_queue.push(LREVERSE_C[1]);
 				choreo_queue.push(LREVERSE_C[2]);
 				choreo_queue.push(LREVERSE_C[3]);
+				choreo_queue.push(LREVERSE_C[4]);
 			}
 			break;
 		}

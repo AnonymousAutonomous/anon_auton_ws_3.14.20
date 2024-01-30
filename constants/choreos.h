@@ -104,6 +104,18 @@ static const std::vector<eyes::Generic> RREVERSE_C = {
 	}(),
 	[]
 	{
+		eyes::Generic fourth;
+		fourth.identifier = 'c';
+		fourth.left_forward = true;
+		fourth.right_forward = false;
+		fourth.left_speed = 2.5;
+		fourth.right_speed = 2.5;
+		fourth.timed = true;
+		fourth.duration = 5;
+		return fourth;
+	}(),
+	[]
+	{
 		eyes::Generic eoc;
 		eoc.identifier = 'e';
 		eoc.left_forward = true;
@@ -151,6 +163,18 @@ static const std::vector<eyes::Generic> LREVERSE_C = {
 		third.timed = true;
 		third.duration = 5;
 		return third;
+	}(),
+	[]
+	{
+		eyes::Generic fourth;
+		fourth.identifier = 'c';
+		fourth.left_forward = false;
+		fourth.right_forward = true;
+		fourth.left_speed = 2.5;
+		fourth.right_speed = 2.5;
+		fourth.timed = true;
+		fourth.duration = 5;
+		return fourth;
 	}(),
 	[]
 	{
