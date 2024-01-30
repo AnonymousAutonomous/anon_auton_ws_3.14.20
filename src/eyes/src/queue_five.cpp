@@ -194,6 +194,7 @@ void callback(const std_msgs::String &command)
 				choreo_queue.push(RREVERSE_C[1]);
 				choreo_queue.push(RREVERSE_C[2]);
 				choreo_queue.push(RREVERSE_C[3]);
+				choreo_queue.push(RREVERSE_C[4]);
 			}
 			else
 			{
@@ -201,6 +202,7 @@ void callback(const std_msgs::String &command)
 				choreo_queue.push(LREVERSE_C[1]);
 				choreo_queue.push(LREVERSE_C[2]);
 				choreo_queue.push(LREVERSE_C[3]);
+				choreo_queue.push(LREVERSE_C[4]);
 			}
 			break;
 		}
@@ -216,6 +218,7 @@ void callback(const std_msgs::String &command)
 			choreo_queue.push(LCP_C[0]);
 			choreo_queue.push(LCP_C[1]);
 			choreo_queue.push(LCP_C[2]);
+			choreo_queue.push(LCP_C[3]);
 			favor_right = false;
 			break;
 		}
@@ -224,6 +227,7 @@ void callback(const std_msgs::String &command)
 			choreo_queue.push(RCP_C[0]);
 			choreo_queue.push(RCP_C[1]);
 			choreo_queue.push(RCP_C[2]);
+			choreo_queue.push(RCP_C[3]);
 			favor_right = true;
 			break;
 		}
