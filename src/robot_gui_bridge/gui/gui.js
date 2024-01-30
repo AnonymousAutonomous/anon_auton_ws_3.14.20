@@ -11,7 +11,8 @@ var active_chair_nums = new ROSLIB.Param({
   name: "active_chair_nums",
 });
 
-var chairs = [];
+var chairs = [2, 3, 4];
+
 var live_status = new Map();
 
 
@@ -88,13 +89,17 @@ function generateStatuses(chairList) {
     <div class="status o" id="${id}_broadcast_status">OFFLINE</div>
     <div class="status o" id="${id}_stuck_status">OFFLINE</div>
     <div class="status o" id="${id}_trapped_status">OFFLINE</div>
-    <div id="${id}_flags"></div>
+    <div id="${id}_flags" class="debug"></div>
     <br />
-    <div class="chair_control">
+    <button class="auto" id="${id}" onclick="toggle(${id})">
+    AUTO
+  </button>
+  <button class="stop" id="${id}" onclick="stop(${id})">
+  STOP
+</button>
+<br />
+    <div class="chair_control debug">
       <div class="directions">
-        <button class="auto" id="${id}" onclick="toggle(${id})">
-          AUTO
-        </button>
         <br />
         <button id="${id}" onclick="ffwd(${id})">⤊</button>
         <div>
@@ -1227,7 +1232,45 @@ function playBeep() {
 
 function sendSpeedToChair() {
   const audio = document.getElementById("audio_beep");
+}
 
+var batteryDurationMs = 1000 * 60 * 60 * 2; // 2 hours
+var batteryEndTime = new Date().getTime() + batteryDurationMs;
+
+// Update the count down every 1 second
+var batteryIntervalId
+var batteryAudio = new Audio('audio/582986__oysterqueen__low-battery.mp3');
+
+function closeBatteryModal() {
+  batteryEndTime = new Date().getTime() + batteryDurationMs;
+  document.getElementById("batteryModal").style.display = "none";
+
+  batteryAudio.loop = false;
+
+  batteryIntervalId = setInterval(function() {
+    // Get today's date and time
+    var now = new Date().getTime();
+  
+    // Find the distance between now and the count down date
+    var distance = batteryEndTime - now;
+  
+    // Time calculations for days, hours, minutes and seconds
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  
+    // Display the result in the element with id="demo"
+    document.getElementById("battery_countdown").innerHTML = hours + "h "
+    + minutes + "m " + seconds + "s until battery swap";
+  
+    // If the count down is finished, write some text
+    if (distance < 0) {
+      clearInterval(batteryIntervalId);
+      document.getElementById("battery_countdown").innerHTML = "SWITCH BATTERIES";
+      document.getElementById("batteryModal").style.display = "block";
+      batteryAudio.loop = true;
+      batteryAudio.play();  }
+  }, 1000);
 }
 
 window.onload = function () {
@@ -1295,5 +1338,7 @@ window.onload = function () {
   });
 
   // playLowBatt();
-  playBeep();
+  // playBeep();
+  setActiveChairNums(chairs);
+  closeBatteryModal();
 };

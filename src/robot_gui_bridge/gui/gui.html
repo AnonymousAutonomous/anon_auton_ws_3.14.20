@@ -16,6 +16,9 @@
 
   <body>
     <h1>Anonymous Autonomous</h1>
+    <div class="floating_top_right">
+      <span id="battery_countdown"></span>
+    </div>
     <div id="myModal" class="modal">
       <!-- Modal content -->
       <div class="modal-content">
@@ -37,14 +40,17 @@
         </form>
       </div>
     </div>
-    <audio
-      id="audio_lowbatt"
-      src="audio/582986__oysterqueen__low-battery.mp3"
-    ></audio>
+    <div id="batteryModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <h3>Please switch batteries!</h3>
+        <button onclick="closeBatteryModal()">Done</button>
+      </div>
+    </div>
     <audio id="audio_beep" src="audio/258193__kodack__beep-beep.wav"></audio>
     <p>Connection status: <span id="status">NOT CONNECTED</span></p>
     <p>Last chair status received: <span id="msg"></span></p>
-    <p>
+    <p id="active_chairs_p">
       <span id="num_chairs">0 chairs</span> active:
       <span id="active_chair_list"></span>
       <button id="editActiveChairsBtn">Edit</button>
@@ -52,10 +58,10 @@
     <div class="screen" id="live" style="display: none">
       <button onclick="stop('0')" class="stop">STOP ALL</button>
       <button onclick="toggle('0')" class="auto">AUTO ALL</button>
-      <button class="test_broadcast" onclick="send_test_broadcast()">
+      <button class="test_broadcast debug" onclick="send_test_broadcast()">
         TEST BROADCAST
       </button>
-      <button class="clear_broadcast" onclick="send_clear_broadcast()">
+      <button class="clear_broadcast debug" onclick="send_clear_broadcast()">
         CLEAR BROADCAST
       </button>
       <button class="shutdown_chairs" onclick="send_shutdown_all_chairs()">
@@ -65,242 +71,17 @@
         🔄 RESTART ALL
       </button>
       <div class="statuses" id="chairStatuses">
-        <!--
-        <div class="chair_monitor" id="1">
-          <h2>Chair 1</h2>
-          <div class="status o" id="1status">
-            OFFLINE<span class="dot"></span>
-          </div>
-          <div class="status o" id="1_broadcast_status">OFFLINE</div>
-          <div class="status o" id="1_stuck_status">OFFLINE</div>
-          <div class="status o" id="1_trapped_status">OFFLINE</div>
-          <div id="1_flags"></div>
-          <br />
-          <div class="chair_control">
-            <div class="directions">
-              <button class="auto" id="1" onclick="toggle(this.id)">
-                AUTO
-              </button>
-              <br />
-              <button id="1" onclick="ffwd(this.id)">⤊</button>
-              <div>
-                <button id="1" onclick="fwdl(this.id)">⬉</button>
-                <button id="1" onclick="fwd(this.id)">↑</button>
-                <button id="1" onclick="fwdr(this.id)">⬈</button>
-              </div>
-              <div>
-                <button id="1" onclick="pivotl(this.id)">⟲</button>
-                <button id="1" onclick="stop(this.id)">🛑</button>
-                <button id="1" onclick="pivotr(this.id)">⟳</button>
-              </div>
-              <div>
-                <button id="1" onclick="bwdl(this.id)">⬋</button>
-                <button id="1" onclick="bwd(this.id)">↓</button>
-                <button id="1" onclick="bwdr(this.id)">⬊</button>
-              </div>
-              <button id="1" onclick="fbwd(this.id)">⤋</button>
-            </div>
-            <br />
--->
-        <!-- <button id="1" onclick="start(this.id)">START</button>
-        <button id="1" onclick="stop(this.id)" class="stop">STOP</button> -->
-        <!-- 
-           <br />
-            <form
-              id="1custom_handwritten"
-              class="handwritten_form"
-              onsubmit="return submitForm(event);"
-            >
-              <label for="custom_handwritten">Custom: </label>
-              <input
-                type="text"
-                id="custom_handwritten"
-                name="custom_handwritten"
-                size="10"
-              />
-              <button type="submit" class="submit_button">Send</button>
-            </form>
-          </div>
-        </div>
--->
-        <div class="chair_monitor" id="2">
-          <h2>Chair 2</h2>
-          <div class="status o" id="2status">
-            OFFLINE<span class="dot"></span>
-          </div>
-          <div class="status o" id="2_broadcast_status">OFFLINE</div>
-          <div class="status o" id="2_stuck_status">OFFLINE</div>
-          <div class="status o" id="2_trapped_status">OFFLINE</div>
-          <div id="2_flags"></div>
-          <br />
-          <div class="chair_control">
-            <div class="directions">
-              <button class="auto" id="2" onclick="toggle(this.id)">
-                AUTO
-              </button>
-              <br />
-              <button id="2" onclick="ffwd(this.id)">⤊</button>
-              <div>
-                <button id="2" onclick="fwdl(this.id)">⬉</button>
-                <button id="2" onclick="fwd(this.id)">↑</button>
-                <button id="2" onclick="fwdr(this.id)">⬈</button>
-              </div>
-              <div>
-                <button id="2" onclick="pivotl(this.id)">⟲</button>
-                <button id="2" onclick="stop(this.id)">🛑</button>
-                <button id="2" onclick="pivotr(this.id)">⟳</button>
-              </div>
-              <div>
-                <button id="2" onclick="bwdl(this.id)">⬋</button>
-                <button id="2" onclick="bwd(this.id)">↓</button>
-                <button id="2" onclick="bwdr(this.id)">⬊</button>
-              </div>
-              <button id="2" onclick="fbwd(this.id)">⤋</button>
-            </div>
-            <br />
-            <!-- <button id="2" onclick="start(this.id)">START</button>
-        <button id="2" onclick="stop(this.id)" class="stop">STOP</button> -->
-            <br />
-            <form
-              id="2custom_handwritten"
-              class="handwritten_form"
-              onsubmit="return submitForm(event);"
-            >
-              <label for="custom_handwritten">Custom: </label>
-              <input
-                type="text"
-                id="custom_handwritten"
-                name="custom_handwritten"
-                size="10"
-              />
-              <button type="submit" class="submit_button">Send</button>
-            </form>
-          </div>
-        </div>
-        <div class="chair_monitor" id="3">
-          <h2>Chair 3</h2>
-          <div class="status o" id="3status">
-            OFFLINE<span class="dot"></span>
-          </div>
-          <div class="status o" id="3_broadcast_status">OFFLINE</div>
-          <div class="status o" id="3_stuck_status">OFFLINE</div>
-          <div class="status o" id="3_trapped_status">OFFLINE</div>
-          <div id="3_flags"></div>
-          <br />
-          <div class="chair_control">
-            <div class="directions">
-              <button class="auto" id="3" onclick="toggle(this.id)">
-                AUTO
-              </button>
-              <br />
-              <button id="3" onclick="ffwd(this.id)">⤊</button>
-              <div>
-                <button id="3" onclick="fwdl(this.id)">⬉</button>
-                <button id="3" onclick="fwd(this.id)">↑</button>
-                <button id="3" onclick="fwdr(this.id)">⬈</button>
-              </div>
-              <div>
-                <button id="3" onclick="pivotl(this.id)">⟲</button>
-                <button id="3" onclick="stop(this.id)">🛑</button>
-                <button id="3" onclick="pivotr(this.id)">⟳</button>
-              </div>
-              <div>
-                <button id="3" onclick="bwdl(this.id)">⬋</button>
-                <button id="3" onclick="bwd(this.id)">↓</button>
-                <button id="3" onclick="bwdr(this.id)">⬊</button>
-              </div>
-              <button id="3" onclick="fbwd(this.id)">⤋</button>
-            </div>
-            <br />
-            <!-- <button id="3" onclick="start(this.id)">START</button>
-        <button id="3" onclick="stop(this.id)" class="stop">STOP</button> -->
-            <br />
-            <form
-              id="3custom_handwritten"
-              class="handwritten_form"
-              onsubmit="return submitForm(event);"
-            >
-              <label for="custom_handwritten">Custom: </label>
-              <input
-                type="text"
-                id="custom_handwritten"
-                name="custom_handwritten"
-                size="10"
-              />
-              <button type="submit" class="submit_button">Send</button>
-            </form>
-          </div>
-        </div>
-        <div class="chair_monitor" id="4">
-          <h2>Chair 4</h2>
-          <div class="status o" id="4status">
-            OFFLINE<span class="dot"></span>
-          </div>
-          <div class="status o" id="4_broadcast_status">OFFLINE</div>
-          <div class="status o" id="4_stuck_status">OFFLINE</div>
-          <div class="status o" id="4_trapped_status">OFFLINE</div>
-          <div id="4_flags"></div>
-          <br />
-          <div class="chair_control">
-            <div class="directions">
-              <button class="auto" id="4" onclick="toggle(this.id)">
-                AUTO
-              </button>
-              <br />
-              <button id="4" onclick="ffwd(this.id)">⤊</button>
-              <div>
-                <button id="4" onclick="fwdl(this.id)">⬉</button>
-                <button id="4" onclick="fwd(this.id)">↑</button>
-                <button id="4" onclick="fwdr(this.id)">⬈</button>
-              </div>
-              <div>
-                <button id="4" onclick="pivotl(this.id)">⟲</button>
-                <button id="4" onclick="stop(this.id)">🛑</button>
-                <button id="4" onclick="pivotr(this.id)">⟳</button>
-              </div>
-              <div>
-                <button id="4" onclick="bwdl(this.id)">⬋</button>
-                <button id="4" onclick="bwd(this.id)">↓</button>
-                <button id="4" onclick="bwdr(this.id)">⬊</button>
-              </div>
-              <button id="4" onclick="fbwd(this.id)">⤋</button>
-            </div>
-            <br />
-            <!-- <button id="4" onclick="start(this.id)">START</button>
-        <button id="4" onclick="stop(this.id)" class="stop">STOP</button> -->
-            <br />
-            <form
-              id="4custom_handwritten"
-              class="handwritten_form"
-              onsubmit="return submitForm(event);"
-            >
-              <label for="custom_handwritten">Custom: </label>
-              <input
-                type="text"
-                id="custom_handwritten"
-                name="custom_handwritten"
-                size="10"
-              />
-              <button type="submit" class="submit_button">Send</button>
-            </form>
-          </div>
-        </div>
-        <!-- <div class="chair_monitor backup" id="backup">
-      <h2>Chair 4 (backup)</h2>
-      <div class="status offline">
-        OFFLINE
-      </div>
-    </div> -->
+        <!-- Set from gui.js -->
       </div>
       <button
         onclick="switchscreen('config')"
-        class="switchscreen"
+        class="switchscreen debug"
         id="toConfigScreen"
       >
         switch to configuration mode
       </button>
     </div>
-    <div class="screen" id="config">
+    <div class="screen debug" id="config">
       <!-- style="display:none"> -->
       <div id="cameraConfig">
         <h3>Camera</h3>
@@ -401,14 +182,18 @@
         switch to live mode
       </button>
     </div>
-    <div class="sidebyside">
-      <div id="jsoneditor" style="width: 400px; height: 400px"></div>
-      <div id="cmd_config_form">
+    <div class="sidebyside debug">
+      <div
+        id="jsoneditor"
+        class="debug"
+        style="width: 400px; height: 400px"
+      ></div>
+      <div id="cmd_config_form" class="debug">
         <form
-          class="sidebyside"
+          class="sidebyside debug"
           onsubmit="return saveCmd(event, this.submitted);"
         >
-          <div>
+          <div class="debug">
             <div>
               <input
                 type="radio"
