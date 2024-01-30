@@ -536,8 +536,8 @@ int main(int argc, char **argv)
 				msg.data = "00Bf0.0f0.0t5";
 				transmit_queue.push(msg);
 				transmit_queue.push(msg);
-				// Done -- end in handwritten mode
-				msg.data = "0stop";
+				// Done
+				msg.data = "00Bend";
 				transmit_queue.push(msg);
 			}
 			if (!transmit_queue.empty())
@@ -610,13 +610,20 @@ int main(int argc, char **argv)
 				while (!transmit_queue.empty())
 				{
 					bool break_out = transmit_queue.front().data == "00Bend";
-					hub_manager_pub.publish(transmit_queue.front());
-					transmit_queue.pop();
 					if (break_out)
 					{
 						startTime = ros::Time::now();
 						mode = state::awaiting_status;
+
+						std_msgs::String msg;
+						msg.data = "0stop";
+						hub_manager_pub.publish(msg);
 						break;
+					}
+					else
+					{
+						hub_manager_pub.publish(transmit_queue.front());
+						transmit_queue.pop();
 					}
 				}
 				startTime = ros::Time::now();
