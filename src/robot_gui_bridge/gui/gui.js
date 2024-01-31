@@ -11,7 +11,7 @@ var active_chair_nums = new ROSLIB.Param({
   name: "active_chair_nums",
 });
 
-var chairs = [2, 3, 4];
+var chairs = [];
 
 var live_status = new Map();
 
@@ -63,14 +63,15 @@ function setActiveChairNums(chairList) {
     chairs = chairList.map((v) => String(v));
     chairs.map((chair) => live_status.set(chair, null));
 
-  chairs.forEach((chair) => document.getElementById("activate" + chair).checked = true);
+    var msg = new ROSLIB.Message({data: chairList.map(c => c.toString()).join('')});
+    reload_active_chairs_pub.publish(msg);
+
+    chairs.forEach((chair) => document.getElementById("activate" + chair).checked = true);
 
   document.getElementById("num_chairs").innerHTML =
     String(chairs.length) + " chair" + (chairs.length != 1 ? "s" : "");
   document.getElementById("active_chair_list").innerHTML = chairs.toString();
     generateStatuses(chairList);
-    var msg = new ROSLIB.Message({data: chairList.map(c => c.toString()).join('')});
-    reload_active_chairs_pub.publish(msg);
 }
 
 function generateStatuses(chairList) {
@@ -160,7 +161,7 @@ var editor;
 active_chair_nums.get(function (value) {
     // Tell other nodes to reload the param
     console.error("Got new active chair nums", value);
-  setActiveChairNums(value);
+    setActiveChairNums(value);
 });
 // var chairs = ["1", "2", "3", "4"];
 console.log(live_status);
@@ -1356,6 +1357,6 @@ window.onload = function () {
 
   // playLowBatt();
   // playBeep();
-  setActiveChairNums(chairs);
+  // setActiveChairNums(chairs);
   closeBatteryModal();
 };
