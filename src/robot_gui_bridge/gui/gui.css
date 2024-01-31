@@ -322,7 +322,7 @@ textarea {
 }
 
 #connectionModal {
-    display: block;
+    display: none;
 }
 
 h3 span:before {
@@ -346,5 +346,5 @@ h3 span:before {
 }
 /* Must be last */
 .debug {
-    display: none;
+    display: block;
 }

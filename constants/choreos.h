@@ -223,7 +223,7 @@ static const std::vector<eyes::Generic> LCP_C = {
 		third.left_speed = 2.0;
 		third.right_speed = 2.0;
 		third.timed = true;
-		third.duration = 1.5;
+		third.duration = 3;
 		return third;
 	}(),
 	[]
@@ -273,7 +273,7 @@ static const std::vector<eyes::Generic> RCP_C = {
 		third.left_speed = 2.0;
 		third.right_speed = 2.0;
 		third.timed = true;
-		third.duration = 1.5;
+		third.duration = 3;
 		return third;
 	}(),
 	[]
