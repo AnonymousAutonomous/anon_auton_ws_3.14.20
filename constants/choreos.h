@@ -220,8 +220,8 @@ static const std::vector<eyes::Generic> LCP_C = {
 		third.identifier = 'c';
 		third.left_forward = false;
 		third.right_forward = true;
-		third.left_speed = 1.7;
-		third.right_speed = 1.7;
+		third.left_speed = 2.0;
+		third.right_speed = 2.0;
 		third.timed = true;
 		third.duration = 1.5;
 		return third;
@@ -270,8 +270,8 @@ static const std::vector<eyes::Generic> RCP_C = {
 		third.identifier = 'c';
 		third.left_forward = true;
 		third.right_forward = false;
-		third.left_speed = 1.7;
-		third.right_speed = 1.7;
+		third.left_speed = 2.0;
+		third.right_speed = 2.0;
 		third.timed = true;
 		third.duration = 1.5;
 		return third;

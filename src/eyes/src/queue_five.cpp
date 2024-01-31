@@ -27,7 +27,7 @@ ros::Publisher clear_stuck_or_trapped;
 ros::Time startTime;
 ros::Duration heartbeatDuration(0.1);
 
-bool favor_right = true;
+// bool favor_right = true;
 
 enum class state : char
 {
@@ -169,41 +169,42 @@ void callback(const std_msgs::String &command)
 		}
 		case 'D':
 		{
-			if (favor_right)
-			{
-				choreo_queue.push(RREVERSE_C[0]);
-				choreo_queue.push(RREVERSE_C[1]);
-				choreo_queue.push(RREVERSE_C[2]);
-				choreo_queue.push(RREVERSE_C[3]);
-			}
-			else
-			{
-				choreo_queue.push(LREVERSE_C[0]);
-				choreo_queue.push(LREVERSE_C[1]);
-				choreo_queue.push(LREVERSE_C[2]);
-				choreo_queue.push(LREVERSE_C[3]);
-			}
+			// if (favor_right)
+			// {
+			choreo_queue.push(RREVERSE_C[0]);
+			choreo_queue.push(RREVERSE_C[1]);
+			choreo_queue.push(RREVERSE_C[2]);
+			choreo_queue.push(RREVERSE_C[3]);
+			choreo_queue.push(RREVERSE_C[4]);
+			// }
+			// else
+			// {
+			// 	choreo_queue.push(LREVERSE_C[0]);
+			// 	choreo_queue.push(LREVERSE_C[1]);
+			// 	choreo_queue.push(LREVERSE_C[2]);
+			// 	choreo_queue.push(LREVERSE_C[3]);
+			// }
 
 			break;
 		}
 		case 'E':
 		{
-			if (favor_right)
-			{
-				choreo_queue.push(RREVERSE_C[0]);
-				choreo_queue.push(RREVERSE_C[1]);
-				choreo_queue.push(RREVERSE_C[2]);
-				choreo_queue.push(RREVERSE_C[3]);
-				choreo_queue.push(RREVERSE_C[4]);
-			}
-			else
-			{
-				choreo_queue.push(LREVERSE_C[0]);
-				choreo_queue.push(LREVERSE_C[1]);
-				choreo_queue.push(LREVERSE_C[2]);
-				choreo_queue.push(LREVERSE_C[3]);
-				choreo_queue.push(LREVERSE_C[4]);
-			}
+			// if (favor_right)
+			// {
+			// 	choreo_queue.push(RREVERSE_C[0]);
+			// 	choreo_queue.push(RREVERSE_C[1]);
+			// 	choreo_queue.push(RREVERSE_C[2]);
+			// 	choreo_queue.push(RREVERSE_C[3]);
+			// 	choreo_queue.push(RREVERSE_C[4]);
+			// }
+			// else
+			// {
+			choreo_queue.push(LREVERSE_C[0]);
+			choreo_queue.push(LREVERSE_C[1]);
+			choreo_queue.push(LREVERSE_C[2]);
+			choreo_queue.push(LREVERSE_C[3]);
+			choreo_queue.push(LREVERSE_C[4]);
+			// }
 			break;
 		}
 		case 'H':
@@ -219,7 +220,7 @@ void callback(const std_msgs::String &command)
 			choreo_queue.push(LCP_C[1]);
 			choreo_queue.push(LCP_C[2]);
 			choreo_queue.push(LCP_C[3]);
-			favor_right = false;
+			// favor_right = false;
 			break;
 		}
 		case 'J':
@@ -228,7 +229,7 @@ void callback(const std_msgs::String &command)
 			choreo_queue.push(RCP_C[1]);
 			choreo_queue.push(RCP_C[2]);
 			choreo_queue.push(RCP_C[3]);
-			favor_right = true;
+			// favor_right = true;
 			break;
 		}
 		case 'K':
