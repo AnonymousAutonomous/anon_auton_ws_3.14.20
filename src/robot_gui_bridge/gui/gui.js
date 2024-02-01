@@ -16,7 +16,7 @@ var chairs = [2, 3, 4];
 var live_status = new Map();
 
 var honkAudio = new Audio('audio/431396__mariadrrs__car-horn.wav');
-
+honkAudio.play();
 
 // TODO -- remove
 // setActiveChairNums([2, 3, 4]);
