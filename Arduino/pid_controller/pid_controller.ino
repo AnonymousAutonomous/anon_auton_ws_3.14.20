@@ -6,15 +6,15 @@
 #include <std_msgs/String.h>
 #include <std_msgs/Int32.h>
 #include <eyes/Generic.h>
+#include <util/atomic.h>
 
-boolean DEBUG = true;
+boolean CONNECTED_TO_ROS = true;
+boolean DEBUG = false;
 
 // Motor timing
 unsigned long nowTime = 0;    // updated on every loop
 unsigned long startTimeA = 0; // start timing A interrupts
 unsigned long startTimeB = 0; // start timing B interrupts
-unsigned long countIntA = 0;  // count the A interrupts
-unsigned long countIntB = 0;  // count the B interrupts
 double periodA = 0;           // motor A period
 double periodB = 0;           // motor B period
 
@@ -44,40 +44,30 @@ double storeB = 0; // used for debug print
 
 unsigned long prevTime = 0; // updated on every loop
 
-volatile long countR = 0;
-volatile long countL = 0;
+volatile long vcountR = 0;
+volatile long vcountL = 0;
+volatile int vcountInterrA = 0; // count the A interrupts
+volatile int vcountInterrB = 0; // count the B interrupts
 
-boolean CONNECTED_TO_ROS = true;
+long countR = 0;
+long countL = 0;
+int countInterrA = 0; // count the A interrupts
+int countInterrB = 0; // count the B interrupts
+
 
 ros::NodeHandle nh;
 
 // init to zero and update with each encoder tick
 std_msgs::Int32 int32_msg_R;
 std_msgs::Int32 int32_msg_L;
-ros::Publisher pubR("encoder_value_R", &int32_msg_R);
-ros::Publisher pubL("encoder_value_L", &int32_msg_L);
+// ros::Publisher pubR("encoder_value_R", &int32_msg_R);
+// ros::Publisher pubL("encoder_value_L", &int32_msg_L);
 
 void generic_callback(const eyes::Generic &generic_msg)
 {
-  char left_dir = FWD;
-  char right_dir = FWD;
+  char left_dir = generic_msg.left_forward ? FWD : BWD;
+  char right_dir = generic_msg.right_forward ? FWD : BWD;
 
-  if (generic_msg.left_forward)
-  {
-    left_dir = FWD;
-  }
-  else
-  {
-    left_dir = BWD;
-  }
-  if (generic_msg.right_forward)
-  {
-    right_dir = FWD;
-  }
-  else
-  {
-    right_dir = BWD;
-  }
   if (generic_msg.left_speed < 0.001)
   {
     left_dir = STOP;
@@ -99,8 +89,8 @@ ros::Subscriber<eyes::Generic> generic_sub("generic_feed", &generic_callback);
 void initROSSerial()
 {
   nh.initNode();
-  nh.advertise(pubR);
-  nh.advertise(pubL);
+  // nh.advertise(pubR);
+  // nh.advertise(pubL);
   nh.subscribe(generic_sub);
 };
 
@@ -219,7 +209,7 @@ void processData(const char *data)
   motorA.SetTunings(KpA, KiA, KdA);
   motorB.SetTunings(KpB, KiB, KdB);
 
-  printPID(KpA, KiA, KdA, setpointA, FEEDFWDA, a_adjust);
+  // printPID(KpA, KiA, KdA, setpointA, FEEDFWDA, a_adjust);
 }
 
 void parseNewSetpoints(String setpointsIn)
@@ -294,24 +284,54 @@ void setup()
   initEncoders();
   initPWM();
 
-  if (DEBUG)
-  {
-    printForPID("MOTOR A:\n");
-    printPIDHeader();
-    printPID(KpA, KiA, KdA, setpointA, FEEDFWDA, a_adjust);
+  // if (DEBUG)
+  // {
+  //   printForPID("MOTOR A:\n");
+  //   printPIDHeader();
+  //   printPID(KpA, KiA, KdA, setpointA, FEEDFWDA, a_adjust);
 
-    printForPID("MOTOR B:\n");
-    printPIDHeader();
-    printPID(KpB, KiB, KdB, setpointB, FEEDFWDB, b_adjust);
-  }
+  //   printForPID("MOTOR B:\n");
+  //   printPIDHeader();
+  //   printPID(KpB, KiB, KdB, setpointB, FEEDFWDB, b_adjust);
+  // }
 }
 
 String info = "";
 void loop()
 {
+  // Copy volatile variables so they don't change while we compute
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+  {
+    countInterrA = vcountInterrA;
+    countInterrB = vcountInterrB;
+    countL = vcountL;
+    countR = vcountR;
+
+    if (countInterrA >= INT_COUNT)
+    {
+      vcountInterrA = 0;
+//      vcountL = 0;
+    }
+    if (countInterrB >= INT_COUNT)
+    {
+      vcountInterrB = 0;
+//      vcountR = 0;
+    }
+  }
+
   nowTime = millis();
-  motorA.Compute();
-  motorB.Compute();
+
+  if (countInterrA >= INT_COUNT)
+  {
+    inputA = (float)ENCODER_CONVERSION * (1.0 / (float)(nowTime - startTimeA));
+    startTimeA = nowTime;
+  }
+
+  if (countInterrB >= INT_COUNT)
+  {
+    inputB = (float)ENCODER_CONVERSION * (1.0 / (float)(nowTime - startTimeB));
+    startTimeB = nowTime;
+  }
 
   if (nowTime - startTimeA > 250)
   {
@@ -322,6 +342,9 @@ void loop()
   {
     inputB = 0;
   }
+
+  motorA.Compute();
+  motorB.Compute();
 
   moveA(max(0, min(255, (int)outputA + a_adjust)));
   moveB(max(0, min(255, (int)outputB + b_adjust)));
@@ -334,14 +357,14 @@ void loop()
     }
   }
 
-  if (DEBUG)
-  {
-    if (storeB != outputB)
-    {
-      storeB = outputB;
-      printPIDUpdate(inputA, outputA, a_adjust);
-    }
-  }
+  // if (DEBUG)
+  // {
+  //   if (storeB != outputB)
+  //   {
+  //     storeB = outputB;
+  //     printPIDUpdate(inputA, outputA, a_adjust);
+  //   }
+  // }
 
   //   int32_msg_R.data = int(setpointA * 100);
   //   int32_msg_L.data = int(setpointB * 100);
@@ -357,21 +380,21 @@ void loop()
     //   pubR.publish(&int32_msg_R);
     //   pubL.publish(&int32_msg_L);
 
-    if (nowTime - prevTime >= 200)
-    {
-      int32_msg_R.data = countR;
-      int32_msg_L.data = countL;
-      pubR.publish(&int32_msg_R);
-      pubL.publish(&int32_msg_L);
-      info = String(countL) + ' ' + String(countR);
-      nh.loginfo(info.c_str());
-      prevTime = nowTime;
-    }
+//    if (nowTime - prevTime >= 200)
+//    {
+      //   int32_msg_R.data = countR;
+      //   int32_msg_L.data = countL;
+      //   // pubR.publish(&int32_msg_R);
+      //   // pubL.publish(&int32_msg_L);
+//      info = String(countL) + ' ' + String(countR);
+//      nh.loginfo(info.c_str());
+//      prevTime = nowTime;
+//    }
 
     //
     //   // TODO: check if this will cause issues
     nh.spinOnce();
-    delay(10);
+    // delay(10);
   }
 }
 
@@ -381,41 +404,29 @@ void loop()
 void isr_A()
 {
   // count sufficient interrupts to get accurate timing
-  countIntA++;
-  if (countIntA == INT_COUNT)
-  {
-    inputA = (float)ENCODER_CONVERSION * (1.0 / (float)(nowTime - startTimeA));
-    startTimeA = nowTime;
-    countIntA = 0;
-  }
+  vcountInterrA++;
 
   if (digitalRead(ENCA) == digitalRead(STBYA))
   {
-    countL++;
+    vcountL++;
   }
   else
   {
-    countL--;
+    vcountL--;
   }
 }
 
 void isr_B()
 {
   // count sufficient interrupts to get accurate timing
-  countIntB++;
-  if (countIntB == INT_COUNT)
-  {
-    inputB = (float)ENCODER_CONVERSION * (1.0 / (float)(nowTime - startTimeB));
-    startTimeB = nowTime;
-    countIntB = 0;
-  }
+  vcountInterrB++;
 
   if (digitalRead(ENCB) != digitalRead(STBYB))
   {
-    countR++;
+    vcountR++;
   }
   else
   {
-    countR--;
+    vcountR--;
   }
 }
