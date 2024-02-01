@@ -41,7 +41,7 @@ else
 	roslaunch --wait src/robot_gui_bridge/launch/websocket.launch &
 fi
 
-firefox file:///home/anonymous0/anon_auton_ws/src/robot_gui_bridge/gui/gui.html
+firefox -foreground file:///home/anonymous0/anon_auton_ws/src/robot_gui_bridge/gui/gui.html
 
 # Shutdown
 rosnode kill -a &

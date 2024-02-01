@@ -297,6 +297,7 @@ void camera_callback(const std_msgs::String &commands)
 {
 	if (commands.data == auto_commands[PIVOTR] ||
 		commands.data == auto_commands[RCP] ||
+		commands.data == auto_commands[RREVERSE] ||
 		commands.data == auto_commands[VEERR] ||
 		commands.data == auto_commands[FPIVOTR])
 	{
@@ -304,6 +305,7 @@ void camera_callback(const std_msgs::String &commands)
 	}
 	else if (commands.data == auto_commands[PIVOTL] ||
 			 commands.data == auto_commands[LCP] ||
+			 commands.data == auto_commands[LREVERSE] ||
 			 commands.data == auto_commands[VEERL] ||
 			 commands.data == auto_commands[FPIVOTL])
 	{

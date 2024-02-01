@@ -6,7 +6,7 @@
       "imageWidth": 640,
       "imageHeight": 480,
       "brightnessThreshold": 175,
-      "sidePercentThreshold": 0.40,
+      "sidePercentThreshold": 0.30,
       "topPercentThreshold": 0.20,
       "numMiddlePixels": 100800,
       "test": 500,
