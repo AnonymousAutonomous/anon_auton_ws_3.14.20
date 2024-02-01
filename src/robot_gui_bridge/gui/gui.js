@@ -16,7 +16,7 @@ var chairs = [2, 3, 4];
 var live_status = new Map();
 
 var honkAudio = new Audio('audio/431396__mariadrrs__car-horn.wav');
-honkAudio.play()
+
 
 // TODO -- remove
 // setActiveChairNums([2, 3, 4]);
@@ -1291,7 +1291,7 @@ function closeBatteryModal() {
 }
 
 window.onload = function () {
-  switchscreen("config");
+  switchscreen("live");
 
   const canvas = document.getElementById("canvas");
   canvas.width = 640;
@@ -1323,9 +1323,9 @@ window.onload = function () {
 
   var background = new Image();
   background.crossOrigin = "Anonymous";
-  background.src = "./images/trapped_frame0001.jpg";
+  background.src = "./images/frame0000.jpg";
 
-  toDataURL("./images/trapped_frame0001.jpg", function (dataUrl) {
+  toDataURL("./images/frame0000.jpg", function (dataUrl) {
     console.log("RESULT:", dataUrl);
   });
 
