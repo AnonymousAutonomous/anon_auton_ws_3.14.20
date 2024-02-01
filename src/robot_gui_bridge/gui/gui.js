@@ -326,7 +326,7 @@ getTextForStatus = function (status) {
   } else if (status == "h") {
     return "HEARTBEAT";
   } else if (status == "H") {
-    return "HANDWRITTEN";
+    return "STOPPED";
   } else if (status == "A") {
     return "AUTONOMOUS";
   } else if (status == "B") {
