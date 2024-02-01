@@ -97,7 +97,7 @@ function generateStatuses(chairList) {
     <div class="status o" id="${id}_trapped_status">OFFLINE</div>
     <div id="${id}_flags" class="debug"></div>
     <div class="buttons">
-    <button class="reset_chair white" onclick="reset(${id})">
+    <button class="reset_chair white debug" onclick="reset(${id})">
     🔄 RESTART
     </button>
     <button class="shutdown_chair white" onclick="shutdown(${id})">
