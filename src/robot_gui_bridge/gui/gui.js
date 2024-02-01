@@ -365,9 +365,8 @@ getTextForStatus = function (status) {
 function updateChairStatus(element, status) {
   if (element) {
     element.innerHTML = getTextForStatus(status);
-    var original_classes = element.classList;
     element.classList.remove(...element.classList);
-    element.classList.add("status", status, original_classes.includes("debug") ? "debug" : "");
+    element.classList.add("status", status);
   }
 }
 
@@ -410,7 +409,7 @@ function updateBroadcastStatus(key, status) {
   if (element) {
     element.innerHTML = getTextForStatus(status);
     element.classList.remove(...element.classList);
-    element.classList.add("status", status);
+    element.classList.add("status", status, original_classes.includes("debug") ? "debug" : "");
   }
 }
 
