@@ -8,6 +8,7 @@
 #include <eyes/Generic.h>
 #include <util/atomic.h>
 
+boolean CONNECTED_TO_ROS = true;
 boolean DEBUG = false;
 
 // Motor timing
@@ -53,7 +54,6 @@ long countL = 0;
 int countInterrA = 0; // count the A interrupts
 int countInterrB = 0; // count the B interrupts
 
-boolean CONNECTED_TO_ROS = true;
 
 ros::NodeHandle nh;
 
