@@ -408,9 +408,9 @@ function updateBroadcastStatus(key, status) {
   let element = document.getElementById(key + "_broadcast_status");
   if (element) {
     element.innerHTML = getTextForStatus(status);
-    original_classes = element.classList;
+    original_classes = [...element.classList];
     element.classList.remove(...element.classList);
-    element.classList.add("status", status, original_classes.contains("debug") ? "debug" : "");
+    element.classList.add("status", status, original_classes.includes("debug") ? "debug" : "");
   }
 }
 
