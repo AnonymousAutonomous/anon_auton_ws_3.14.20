@@ -116,7 +116,7 @@ int main(int argc, char **argv)
 	{
 		for (std::string &cmd : cmds_to_count_in)
 		{
-			cmds_to_count_for_trapped.insert(AUTOCMD_STRING_TO_ENUM[cmd]);
+			cmds_to_count_for_trapped.insert(AUTOCMD_STRING_TO_ENUM[*cmd]);
 		}
 	}
 	else
