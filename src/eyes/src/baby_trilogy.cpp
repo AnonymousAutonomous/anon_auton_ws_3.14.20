@@ -48,7 +48,7 @@ bool please_clear_queue = false;
 std::map<std::string, std::string> auto_commands_in;
 std::unordered_map<AutonomousCmd, std::string> auto_commands;
 
-std::set<AutonomousCmd> cmds_to_count_for_trapped;
+std::set<std::string> cmds_to_count_for_trapped;
 std::vector<std::string> cmds_to_count_in;
 
 void clear_queues_callback(const std_msgs::Empty empty_msg)
@@ -116,7 +116,7 @@ int main(int argc, char **argv)
 	{
 		for (std::string cmd : cmds_to_count_in)
 		{
-			cmds_to_count_for_trapped.insert(AUTOCMD_STRING_TO_ENUM[cmd]);
+			cmds_to_count_for_trapped.insert(auto_commands[AUTOCMD_STRING_TO_ENUM[cmd]]);
 		}
 	}
 	else
