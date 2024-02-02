@@ -52,7 +52,6 @@
       <!-- Modal content -->
       <div class="modal-content">
         <h3>Hub is starting up<span class="loading"></span></h3>
-        <p>Refresh the page</p>
       </div>
     </div>
     <audio id="audio_beep" src="audio/258193__kodack__beep-beep.wav"></audio>
@@ -76,7 +75,7 @@
       <button class="shutdown_chairs white" onclick="send_shutdown_all_chairs()">
         🌙 SHUTDOWN ALL
       </button>
-      <button class="reset_chair white" onclick="send_reset_all_chairs()">
+      <button class="reset_chair white debug" onclick="send_reset_all_chairs()">
         🔄 RESTART ALL
       </button>
       <div class="statuses" id="chairStatuses">

@@ -11,7 +11,7 @@ var active_chair_nums = new ROSLIB.Param({
   name: "active_chair_nums",
 });
 
-var chairs = [2, 3, 4];
+var chairs = [];
 
 var live_status = new Map();
 
@@ -63,14 +63,15 @@ function setActiveChairNums(chairList) {
     chairs = chairList.map((v) => String(v));
     chairs.map((chair) => live_status.set(chair, null));
 
-  chairs.forEach((chair) => document.getElementById("activate" + chair).checked = true);
+    var msg = new ROSLIB.Message({data: chairList.map(c => c.toString()).join('')});
+    reload_active_chairs_pub.publish(msg);
+
+    chairs.forEach((chair) => document.getElementById("activate" + chair).checked = true);
 
   document.getElementById("num_chairs").innerHTML =
     String(chairs.length) + " chair" + (chairs.length != 1 ? "s" : "");
   document.getElementById("active_chair_list").innerHTML = chairs.toString();
     generateStatuses(chairList);
-    var msg = new ROSLIB.Message({data: chairList.map(c => c.toString()).join('')});
-    reload_active_chairs_pub.publish(msg);
 }
 
 function generateStatuses(chairList) {
@@ -96,7 +97,7 @@ function generateStatuses(chairList) {
     <div class="status o" id="${id}_trapped_status">OFFLINE</div>
     <div id="${id}_flags" class="debug"></div>
     <div class="buttons">
-    <button class="reset_chair white" onclick="reset(${id})">
+    <button class="reset_chair white debug" onclick="reset(${id})">
     🔄 RESTART
     </button>
     <button class="shutdown_chair white" onclick="shutdown(${id})">
@@ -160,7 +161,7 @@ var editor;
 active_chair_nums.get(function (value) {
     // Tell other nodes to reload the param
     console.error("Got new active chair nums", value);
-  setActiveChairNums(value);
+    setActiveChairNums(value);
 });
 // var chairs = ["1", "2", "3", "4"];
 console.log(live_status);
@@ -325,7 +326,7 @@ getTextForStatus = function (status) {
   } else if (status == "h") {
     return "HEARTBEAT";
   } else if (status == "H") {
-    return "HANDWRITTEN";
+    return "STOPPED";
   } else if (status == "A") {
     return "AUTONOMOUS";
   } else if (status == "B") {
@@ -407,8 +408,9 @@ function updateBroadcastStatus(key, status) {
   let element = document.getElementById(key + "_broadcast_status");
   if (element) {
     element.innerHTML = getTextForStatus(status);
+    original_classes = [...element.classList];
     element.classList.remove(...element.classList);
-    element.classList.add("status", status);
+    element.classList.add("status", status, original_classes.includes("debug") ? "debug" : "");
   }
 }
 
@@ -1356,6 +1358,6 @@ window.onload = function () {
 
   // playLowBatt();
   // playBeep();
-  setActiveChairNums(chairs);
+  // setActiveChairNums(chairs);
   closeBatteryModal();
 };
