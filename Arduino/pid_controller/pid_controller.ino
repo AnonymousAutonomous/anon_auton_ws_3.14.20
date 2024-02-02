@@ -54,7 +54,6 @@ long countL = 0;
 int countInterrA = 0; // count the A interrupts
 int countInterrB = 0; // count the B interrupts
 
-
 ros::NodeHandle nh;
 
 // init to zero and update with each encoder tick
@@ -310,12 +309,12 @@ void loop()
     if (countInterrA >= INT_COUNT)
     {
       vcountInterrA = 0;
-//      vcountL = 0;
+      //      vcountL = 0;
     }
     if (countInterrB >= INT_COUNT)
     {
       vcountInterrB = 0;
-//      vcountR = 0;
+      //      vcountR = 0;
     }
   }
 
@@ -380,16 +379,16 @@ void loop()
     //   pubR.publish(&int32_msg_R);
     //   pubL.publish(&int32_msg_L);
 
-//    if (nowTime - prevTime >= 200)
-//    {
-      //   int32_msg_R.data = countR;
-      //   int32_msg_L.data = countL;
-      //   // pubR.publish(&int32_msg_R);
-      //   // pubL.publish(&int32_msg_L);
-//      info = String(countL) + ' ' + String(countR);
-//      nh.loginfo(info.c_str());
-//      prevTime = nowTime;
-//    }
+    //    if (nowTime - prevTime >= 200)
+    //    {
+    //   int32_msg_R.data = countR;
+    //   int32_msg_L.data = countL;
+    //   // pubR.publish(&int32_msg_R);
+    //   // pubL.publish(&int32_msg_L);
+    //      info = String(countL) + ' ' + String(countR);
+    //      nh.loginfo(info.c_str());
+    //      prevTime = nowTime;
+    //    }
 
     //
     //   // TODO: check if this will cause issues
