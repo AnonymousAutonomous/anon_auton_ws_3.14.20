@@ -92,7 +92,7 @@ function generateStatuses(chairList) {
       OFFLINE
     </div>
         <div class="status o debug" id="${id}_broadcast_status">OFFLINE</div>
-    <div class="status o" id="${id}_stuck_status">OFFLINE</div>
+    <div class="status o debug" id="${id}_stuck_status">OFFLINE</div>
     <div class="status o" id="${id}_trapped_status">OFFLINE</div>
     <div id="${id}_flags" class="debug"></div>
     <div class="buttons">
