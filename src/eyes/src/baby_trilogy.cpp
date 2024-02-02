@@ -333,7 +333,7 @@ void camera_callback(const std_msgs::String &commands)
 	}
 
 	// If choreo, then count towards trapped
-	if (cmds_to_count_for_trapped.contains(commands.data))
+	if (cmds_to_count_for_trapped.count(commands.data))
 	{
 		camera_trapped_pq.push_back(ros::WallTime::now());
 	}
