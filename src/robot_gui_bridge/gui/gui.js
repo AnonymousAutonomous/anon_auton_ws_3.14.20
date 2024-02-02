@@ -450,6 +450,10 @@ function updateLidarOnlineStatus(key, status) {
 
 hub_to_gui_listener.subscribe(function (m) {
   // Update
+  if (m.data.length == 2) {
+    // Keep alive message, just ignore
+    return;
+  }
   if (m.data.length == 4 && m.data == "honk") {
     honkAudio.play();
   }

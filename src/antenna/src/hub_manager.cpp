@@ -424,6 +424,14 @@ void alertGui(std::string custom_msg)
 	hub_to_gui_pub.publish(msg);
 }
 
+void sendKeepAlive()
+{
+	// Keep the subscriber / publisher connection fresh so that the GUI doesn't disconnect
+	std_msgs::String msg;
+	msg.data = "ka";
+	hub_to_gui_pub.publish(msg);
+}
+
 void guiStatusUpdate(const ros::TimerEvent &event)
 {
 
@@ -436,6 +444,7 @@ void guiStatusUpdate(const ros::TimerEvent &event)
 			p.second.lidar_online = 'n';
 		}
 	}
+	sendKeepAlive();
 	alertGui(offlineChairsToString());
 	for (const auto &p : chair_status_map)
 	{
@@ -492,6 +501,7 @@ int main(int argc, char **argv)
 	mode = state::outside;
 	while (ros::ok())
 	{
+
 		if (pleaseClear)
 		{
 			ROS_ERROR("CLEARING");
