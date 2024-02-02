@@ -1,1 +1,1 @@
-{ "active_chair_nums": [2, 3, 4], "unregister_timeout": 99999999 }
+{ "/hub/active_chair_nums": [2, 3, 4], "/hub/unregister_timeout": 99999999 }

@@ -4,7 +4,7 @@ var ros = new ROSLIB.Ros({
 
 var active_chair_nums = new ROSLIB.Param({
   ros: ros,
-  name: "active_chair_nums",
+  name: "/hub/active_chair_nums",
 });
 
 var chairs = [];

@@ -324,7 +324,7 @@ void receive_callback(const std_msgs::String &msg)
 
 void reload_active_chairs_callback(const std_msgs::String &msg)
 {
-	n_ptr->getParam("active_chair_nums", active_chair_nums);
+	n_ptr->getParam("/hub/active_chair_nums", active_chair_nums);
 
 	std::vector<int> actives;
 	for (char c : msg.data)
@@ -480,7 +480,7 @@ int main(int argc, char **argv)
 	n_ptr = &nh;
 
 	// initialize chair map
-	nh.getParam("active_chair_nums", active_chair_nums);
+	nh.getParam("/hub/active_chair_nums", active_chair_nums);
 	setActiveChairs(active_chair_nums);
 
 	// initialize spinner
