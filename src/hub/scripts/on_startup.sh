@@ -45,6 +45,9 @@ until rostopic list | grep hub_to_gui; do sleep 1; done
 
 firefox -foreground -ssb file:///home/anonymous0/anon_auton_ws/src/robot_gui_bridge/gui/gui.html
 
+# Save updated active_chair_nums
+rosparam dump ~/anon_auton_ws/src/config_manager/configs/hub/active.yaml /active_chair_nums /unregister_timeout
+
 # Shutdown
 rosnode kill -a &
 sleep 5
