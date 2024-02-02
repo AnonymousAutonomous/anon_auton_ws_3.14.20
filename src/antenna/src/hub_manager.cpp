@@ -545,10 +545,6 @@ int main(int argc, char **argv)
 				transmit_queue.push(msg);
 				transmit_queue.push(msg);
 				transmit_queue.push(msg);
-				// Stop for 10 seconds
-				msg.data = "00Bf0.0f0.0t5";
-				transmit_queue.push(msg);
-				transmit_queue.push(msg);
 				// Done
 				msg.data = "00Bend";
 				transmit_queue.push(msg);
