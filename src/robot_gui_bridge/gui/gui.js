@@ -7,10 +7,6 @@ var active_chair_nums = new ROSLIB.Param({
   name: "active_chair_nums",
 });
 
-ros.getParams(function(params) {
-  console.log(params);
-});
-
 var chairs = [];
 
 var live_status = new Map();
@@ -162,6 +158,7 @@ active_chair_nums.get(function (value) {
     // Tell other nodes to reload the param
     console.error("Got new active chair nums", value);
   setActiveChairNums(value);
+  document.getElementById("connectionModal").style.display = "none";
 });
 // var chairs = ["1", "2", "3", "4"];
 console.log(live_status);
@@ -285,7 +282,6 @@ const initialCmdsJson = {
 
 ros.on("connection", function () {
   document.getElementById("status").innerHTML = "Connected";
-  document.getElementById("connectionModal").style.display = "none";
 });
 
 ros.on("error", function (error) {
