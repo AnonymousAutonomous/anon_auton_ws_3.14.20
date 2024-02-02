@@ -48,6 +48,9 @@ bool please_clear_queue = false;
 std::map<std::string, std::string> auto_commands_in;
 std::unordered_map<AutonomousCmd, std::string> auto_commands;
 
+std::set<AutonomousCmd> cmds_to_count_for_trapped;
+std::vector<std::string> cmds_to_count_in;
+
 void clear_queues_callback(const std_msgs::Empty empty_msg)
 {
 	please_clear_queue = true;
@@ -106,6 +109,19 @@ int main(int argc, char **argv)
 	else
 	{
 		ROS_INFO("You must load camera_trapped_duration_in_sec before using baby trilogy.");
+		return 1;
+	}
+
+	if (nh.getParam("/camera_cmds_to_count", cmds_to_count_in))
+	{
+		for (std::string &cmd : cmds_to_count_in)
+		{
+			cmds_to_count_for_trapped.insert(AUTOCMD_STRING_TO_ENUM[cmd]);
+		}
+	}
+	else
+	{
+		ROS_INFO("You must tell baby_trilogy what counts towards being trapped.");
 		return 1;
 	}
 
@@ -317,7 +333,7 @@ void camera_callback(const std_msgs::String &commands)
 	}
 
 	// If choreo, then count towards trapped
-	if (commands.data[1] == 'C')
+	if (cmds_to_count_for_trapped.contains(commands.data))
 	{
 		camera_trapped_pq.push_back(ros::WallTime::now());
 	}
