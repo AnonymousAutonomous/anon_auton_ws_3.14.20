@@ -43,7 +43,7 @@ fi
 
 until rostopic list | grep hub_to_gui; do sleep 1; done
 
-firefox -foreground file:///home/anonymous0/anon_auton_ws/src/robot_gui_bridge/gui/gui.html
+firefox -foreground -ssb file:///home/anonymous0/anon_auton_ws/src/robot_gui_bridge/gui/gui.html
 
 # Shutdown
 rosnode kill -a &
