@@ -350,6 +350,10 @@ h3 span:before {
     flex-direction: column;
     align-items: center;
 }
+
+button {
+    border: 1px solid #888;
+}
 /* Must be last */
 .debug {
     display: none;
