@@ -2,16 +2,16 @@ var ros = new ROSLIB.Ros({
   url: "ws://localhost:9090",
 });
 
-ros.getParams(function(params) {
-  console.log(params);
-});
-
 var active_chair_nums = new ROSLIB.Param({
   ros: ros,
   name: "active_chair_nums",
 });
 
-var chairs = [2, 3, 4];
+ros.getParams(function(params) {
+  console.log(params);
+});
+
+var chairs = [];
 
 var live_status = new Map();
 
