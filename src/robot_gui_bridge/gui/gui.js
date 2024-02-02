@@ -1254,6 +1254,7 @@ function sendSpeedToChair() {
 
 
 var batteryDurationMs = 1000 * 60 * 60 * 2; // 2 hours
+var batteryDurationMs = 1000 * 10; // 10 secs
 var batteryEndTime = new Date().getTime() + batteryDurationMs;
 
 // Update the count down every 1 second
