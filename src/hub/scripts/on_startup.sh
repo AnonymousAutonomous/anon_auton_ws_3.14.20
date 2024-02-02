@@ -55,3 +55,5 @@ done
 
 killall -9 roscore
 killall -9 rosmaster
+
+# Set up firefox using this: https://superuser.com/questions/1568072/hide-navigation-bar-in-firefox
