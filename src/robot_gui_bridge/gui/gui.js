@@ -63,14 +63,15 @@ function setActiveChairNums(chairList) {
     chairs = chairList.map((v) => String(v));
     chairs.map((chair) => live_status.set(chair, null));
 
-  chairs.forEach((chair) => document.getElementById("activate" + chair).checked = true);
+    var msg = new ROSLIB.Message({data: chairList.map(c => c.toString()).join('')});
+    reload_active_chairs_pub.publish(msg);
+
+    chairs.forEach((chair) => document.getElementById("activate" + chair).checked = true);
 
   document.getElementById("num_chairs").innerHTML =
     String(chairs.length) + " chair" + (chairs.length != 1 ? "s" : "");
   document.getElementById("active_chair_list").innerHTML = chairs.toString();
     generateStatuses(chairList);
-    var msg = new ROSLIB.Message({data: chairList.map(c => c.toString()).join('')});
-    reload_active_chairs_pub.publish(msg);
 }
 
 function generateStatuses(chairList) {
