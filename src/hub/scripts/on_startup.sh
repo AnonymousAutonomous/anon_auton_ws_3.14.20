@@ -23,6 +23,7 @@ roscore &
 until rostopic list; do sleep 1; done
 
 rosparam load ~/anon_auton_ws/src/config_manager/configs/hub/active.yaml
+rosparam set unregister_timeout 99999999
 
 if grep -iq "^antenna_port" ~/anon_auton_ws/src/config_manager/configs/ports/active.yaml; then
 	echo "----------------- ANTENNA FOUND -----------------"
@@ -41,7 +42,12 @@ else
 	roslaunch --wait src/robot_gui_bridge/launch/websocket.launch &
 fi
 
-firefox -foreground file:///home/anonymous0/anon_auton_ws/src/robot_gui_bridge/gui/gui.html
+until rostopic list | grep hub_to_gui; do sleep 1; done
+
+firefox -foreground -ssb file:///home/anonymous0/anon_auton_ws/src/robot_gui_bridge/gui/gui.html
+
+# Save updated active_chair_nums
+rosparam dump ~/anon_auton_ws/src/config_manager/configs/hub/active.yaml /hub
 
 # Shutdown
 rosnode kill -a &
@@ -53,3 +59,5 @@ done
 
 killall -9 roscore
 killall -9 rosmaster
+
+# Set up firefox using this: https://superuser.com/questions/1568072/hide-navigation-bar-in-firefox

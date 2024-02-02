@@ -324,7 +324,7 @@ void receive_callback(const std_msgs::String &msg)
 
 void reload_active_chairs_callback(const std_msgs::String &msg)
 {
-	n_ptr->getParam("active_chair_nums", active_chair_nums);
+	n_ptr->getParam("/hub/active_chair_nums", active_chair_nums);
 
 	std::vector<int> actives;
 	for (char c : msg.data)
@@ -424,6 +424,14 @@ void alertGui(std::string custom_msg)
 	hub_to_gui_pub.publish(msg);
 }
 
+void sendKeepAlive()
+{
+	// Keep the subscriber / publisher connection fresh so that the GUI doesn't disconnect
+	std_msgs::String msg;
+	msg.data = "ka";
+	hub_to_gui_pub.publish(msg);
+}
+
 void guiStatusUpdate(const ros::TimerEvent &event)
 {
 
@@ -436,6 +444,7 @@ void guiStatusUpdate(const ros::TimerEvent &event)
 			p.second.lidar_online = 'n';
 		}
 	}
+	sendKeepAlive();
 	alertGui(offlineChairsToString());
 	for (const auto &p : chair_status_map)
 	{
@@ -471,7 +480,7 @@ int main(int argc, char **argv)
 	n_ptr = &nh;
 
 	// initialize chair map
-	nh.getParam("active_chair_nums", active_chair_nums);
+	nh.getParam("/hub/active_chair_nums", active_chair_nums);
 	setActiveChairs(active_chair_nums);
 
 	// initialize spinner
@@ -492,6 +501,7 @@ int main(int argc, char **argv)
 	mode = state::outside;
 	while (ros::ok())
 	{
+
 		if (pleaseClear)
 		{
 			ROS_ERROR("CLEARING");
@@ -533,10 +543,6 @@ int main(int argc, char **argv)
 				transmit_queue.push(msg);
 				transmit_queue.push(msg);
 				transmit_queue.push(msg);
-				transmit_queue.push(msg);
-				transmit_queue.push(msg);
-				// Stop for 10 seconds
-				msg.data = "00Bf0.0f0.0t5";
 				transmit_queue.push(msg);
 				transmit_queue.push(msg);
 				// Done

@@ -2,16 +2,12 @@ var ros = new ROSLIB.Ros({
   url: "ws://localhost:9090",
 });
 
-ros.getParams(function(params) {
-  console.log(params);
-});
-
 var active_chair_nums = new ROSLIB.Param({
   ros: ros,
-  name: "active_chair_nums",
+  name: "/hub/active_chair_nums",
 });
 
-var chairs = [2, 3, 4];
+var chairs = [];
 
 var live_status = new Map();
 
@@ -53,7 +49,7 @@ function handleSetActiveChairs(e) {
     const newActiveChairs = Object.keys(formProps).map(id => parseInt(id));
     
     // Set chair list. Handle rest of updates in the getter for this param, after we know the param is updated.
-    active_chair_nums.set(newActiveChairs, setActiveChairNums(newActiveChairs));
+    active_chair_nums.set(newActiveChairs, () => {console.log("new chair nums"); setActiveChairNums(newActiveChairs)});
 
     modal.style.display = "none";
 }
@@ -63,14 +59,15 @@ function setActiveChairNums(chairList) {
     chairs = chairList.map((v) => String(v));
     chairs.map((chair) => live_status.set(chair, null));
 
-  chairs.forEach((chair) => document.getElementById("activate" + chair).checked = true);
+    var msg = new ROSLIB.Message({data: chairList.map(c => c.toString()).join('')});
+    reload_active_chairs_pub.publish(msg);
+
+    chairs.forEach((chair) => document.getElementById("activate" + chair).checked = true);
 
   document.getElementById("num_chairs").innerHTML =
     String(chairs.length) + " chair" + (chairs.length != 1 ? "s" : "");
   document.getElementById("active_chair_list").innerHTML = chairs.toString();
     generateStatuses(chairList);
-    var msg = new ROSLIB.Message({data: chairList.map(c => c.toString()).join('')});
-    reload_active_chairs_pub.publish(msg);
 }
 
 function generateStatuses(chairList) {
@@ -92,7 +89,7 @@ function generateStatuses(chairList) {
       OFFLINE
     </div>
         <div class="status o debug" id="${id}_broadcast_status">OFFLINE</div>
-    <div class="status o" id="${id}_stuck_status">OFFLINE</div>
+    <div class="status o debug" id="${id}_stuck_status">OFFLINE</div>
     <div class="status o" id="${id}_trapped_status">OFFLINE</div>
     <div id="${id}_flags" class="debug"></div>
     <div class="buttons">
@@ -161,6 +158,7 @@ active_chair_nums.get(function (value) {
     // Tell other nodes to reload the param
     console.error("Got new active chair nums", value);
   setActiveChairNums(value);
+  document.getElementById("connectionModal").style.display = "none";
 });
 // var chairs = ["1", "2", "3", "4"];
 console.log(live_status);
@@ -284,7 +282,6 @@ const initialCmdsJson = {
 
 ros.on("connection", function () {
   document.getElementById("status").innerHTML = "Connected";
-  document.getElementById("connectionModal").style.display = "none";
 });
 
 ros.on("error", function (error) {
@@ -325,7 +322,7 @@ getTextForStatus = function (status) {
   } else if (status == "h") {
     return "HEARTBEAT";
   } else if (status == "H") {
-    return "HANDWRITTEN";
+    return "STOPPED";
   } else if (status == "A") {
     return "AUTONOMOUS";
   } else if (status == "B") {
@@ -407,8 +404,9 @@ function updateBroadcastStatus(key, status) {
   let element = document.getElementById(key + "_broadcast_status");
   if (element) {
     element.innerHTML = getTextForStatus(status);
+    original_classes = [...element.classList];
     element.classList.remove(...element.classList);
-    element.classList.add("status", status);
+    element.classList.add("status", status, original_classes.includes("debug") ? "debug" : "");
   }
 }
 
@@ -450,6 +448,10 @@ function updateLidarOnlineStatus(key, status) {
 
 hub_to_gui_listener.subscribe(function (m) {
   // Update
+  if (m.data.length == 2) {
+    // Keep alive message, just ignore
+    return;
+  }
   if (m.data.length == 4 && m.data == "honk") {
     honkAudio.play();
   }
@@ -1356,6 +1358,6 @@ window.onload = function () {
 
   // playLowBatt();
   // playBeep();
-  setActiveChairNums(chairs);
+  // setActiveChairNums(chairs);
   closeBatteryModal();
 };

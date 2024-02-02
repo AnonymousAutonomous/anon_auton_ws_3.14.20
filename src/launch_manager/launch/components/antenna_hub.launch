@@ -1,7 +1,7 @@
 <launch>
   <rosparam command="load" file="$(find config_manager)/configs/ports/active.yaml"/>
   <rosparam command="load" file="$(find config_manager)/configs/live/active.yaml"/>
-  <rosparam command="load" file="$(find config_manager)/configs/hub/active.yaml"/>
+  <rosparam command="load" file="$(find config_manager)/configs/hub/active.yaml" ns="/hub"/>
 
   <node name="hub_receiver" pkg="antenna" type="hub_receiver.py"/>
   <node name="hub_transmitter" pkg="antenna" type="hub_transmitter.py"/>

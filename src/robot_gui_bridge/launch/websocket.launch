@@ -1,3 +1,4 @@
 <launch>
+<rosparam command="load" file="$(find config_manager)/configs/hub/active.yaml" ns="/hub" />
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
 </launch>
