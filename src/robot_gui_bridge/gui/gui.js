@@ -325,7 +325,7 @@ getTextForStatus = function (status) {
   } else if (status == "h") {
     return "HEARTBEAT";
   } else if (status == "H") {
-    return "HANDWRITTEN";
+    return "STOPPED";
   } else if (status == "A") {
     return "AUTONOMOUS";
   } else if (status == "B") {
@@ -407,8 +407,9 @@ function updateBroadcastStatus(key, status) {
   let element = document.getElementById(key + "_broadcast_status");
   if (element) {
     element.innerHTML = getTextForStatus(status);
+    original_classes = [...element.classList];
     element.classList.remove(...element.classList);
-    element.classList.add("status", status);
+    element.classList.add("status", status, original_classes.includes("debug") ? "debug" : "");
   }
 }
 
@@ -1360,6 +1361,6 @@ window.onload = function () {
 
   // playLowBatt();
   // playBeep();
-  setActiveChairNums(chairs);
+  // setActiveChairNums(chairs);
   closeBatteryModal();
 };
