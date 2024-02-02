@@ -49,7 +49,7 @@ function handleSetActiveChairs(e) {
     const newActiveChairs = Object.keys(formProps).map(id => parseInt(id));
     
     // Set chair list. Handle rest of updates in the getter for this param, after we know the param is updated.
-    active_chair_nums.set(newActiveChairs, setActiveChairNums(newActiveChairs));
+    active_chair_nums.set(newActiveChairs, () => {console.log("new chair nums"); setActiveChairNums(newActiveChairs)});
 
     modal.style.display = "none";
 }
@@ -1254,6 +1254,7 @@ function sendSpeedToChair() {
 
 
 var batteryDurationMs = 1000 * 60 * 60 * 2; // 2 hours
+var batteryDurationMs = 1000 * 10; // 10 secs
 var batteryEndTime = new Date().getTime() + batteryDurationMs;
 
 // Update the count down every 1 second
