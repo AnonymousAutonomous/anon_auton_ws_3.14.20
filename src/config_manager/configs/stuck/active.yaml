@@ -2,6 +2,6 @@
   "lidar_stuck_max_choreos": 99,
   "lidar_stuck_duration_in_sec": 10,
   "camera_cmds_to_count": ["RCP", "LCP", "PIVOTR", "PIVOTL", "FPIVOTR", "FPIVOTL"],
-  "camera_trapped_max_choreos": 2200,
-  "camera_trapped_duration_in_sec": 480,
+  "camera_trapped_max_choreos": 9999999,
+  "camera_trapped_duration_in_sec": 10,
 }
