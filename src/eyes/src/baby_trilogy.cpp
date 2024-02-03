@@ -15,7 +15,6 @@
 
 ros::Publisher driver_pub;
 ros::Publisher to_chair_manager_pub;
-ros::Publisher baby_trilogy_debug;
 
 void camera_callback(const std_msgs::String &commands);
 void lidar_callback(const std_msgs::String &commands);
@@ -133,7 +132,6 @@ int main(int argc, char **argv)
 	ros::Subscriber clear_queues = nh.subscribe("clear_stuck_trapped", 1000, clear_queues_callback);
 	driver_pub = nh.advertise<std_msgs::String>("driver_output", 1000);
 	to_chair_manager_pub = nh.advertise<std_msgs::Char>("stuck_or_trapped_alert", 1000);
-	baby_trilogy_debug = nh.advertise<std_msgs::String>("baby_trilogy_debug", 1000);
 
 	// while (ros::ok) {
 	// 	updateStuckStatus();
@@ -343,7 +341,7 @@ void camera_callback(const std_msgs::String &commands)
 		counts_map[commands.data] = counts_map[commands.data]++;
 		ROS_INFO("%s\t%i", commands.data, counts_map[commands.data]);
 	}
-	std_msgs::String msg;
+	std_msgs::Char msg;
 	msg.data = "RCP\t";
 	msg.data += std::to_string(counts_map[auto_commands[RCP]]);
 	msg.data += "\tLCP\t";
@@ -353,7 +351,7 @@ void camera_callback(const std_msgs::String &commands)
 	msg.data += "\tPIVOTL\t";
 	msg.data += std::to_string(counts_map[auto_commands[PIVOTL]]);
 
-	baby_trilogy_debug.publish(msg);
+	to_chair_manager_pub.publish(msg);
 	command_pair.first = commands;
 	command_compare();
 }
