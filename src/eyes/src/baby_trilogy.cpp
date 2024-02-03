@@ -339,10 +339,10 @@ void camera_callback(const std_msgs::String &commands)
 
 		// If choreo, count for that amount of frames (14 hz * duration)
 		// Should only be LCP and RCP, which have duration = 0.75 + 2 + 3 seconds = 5.75 seconds
-		// 14 * 5.75 = 80
+		// 15 * 5.75 = 86.25
 		if (commands.data[1] == 'C')
 		{
-			for (int i = 0; i < 80; i++)
+			for (int i = 0; i < 86; i++)
 			{
 				camera_trapped_pq.push_back(ros::WallTime::now());
 			}
