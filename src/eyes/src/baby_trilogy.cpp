@@ -50,6 +50,7 @@ std::unordered_map<AutonomousCmd, std::string> auto_commands;
 
 std::set<std::string> cmds_to_count_for_trapped;
 std::vector<std::string> cmds_to_count_in;
+std::map<std::string, int> counts_map;
 
 void clear_queues_callback(const std_msgs::Empty empty_msg)
 {
@@ -117,6 +118,7 @@ int main(int argc, char **argv)
 		for (std::string cmd : cmds_to_count_in)
 		{
 			cmds_to_count_for_trapped.insert(auto_commands[AUTOCMD_STRING_TO_ENUM[cmd]]);
+			counts_map[auto_commands[AUTOCMD_STRING_TO_ENUM[cmd]]] = 0;
 		}
 	}
 	else
@@ -336,7 +338,9 @@ void camera_callback(const std_msgs::String &commands)
 	if (cmds_to_count_for_trapped.count(commands.data))
 	{
 		camera_trapped_pq.push_back(ros::WallTime::now());
+		counts_map[commands.data] = counts_map[commands.data]++;
 	}
+	ROS_INFO()
 	command_pair.first = commands;
 	command_compare();
 }
