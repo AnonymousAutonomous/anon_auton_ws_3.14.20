@@ -339,15 +339,8 @@ void camera_callback(const std_msgs::String &commands)
 	{
 		camera_trapped_pq.push_back(ros::WallTime::now());
 		counts_map[commands.data] = counts_map[commands.data]++;
-		ROS_INFO("%s\t%i", commands.data, counts_map[commands.data]);
 	}
-	std_msgs::Char msg;
-	msg.data = "RCP\t" + std::to_string(counts_map[AUTOCMD_STRING_TO_ENUM["RCP"]]);
-	msg.data += "\tLCP\t" + std::to_string(counts_map[AUTOCMD_STRING_TO_ENUM["LCP"]]);
-	msg.data += "\tPIVOTR\t" + std::to_string(counts_map[AUTOCMD_STRING_TO_ENUM["PIVOTR"]]);
-	msg.data += "\tPIVOTL\t" + std::to_string(counts_map[AUTOCMD_STRING_TO_ENUM["PIVOTL"]]);
-
-	to_chair_manager_pub.publish(msg);
+	ROS_INFO()
 	command_pair.first = commands;
 	command_compare();
 }
