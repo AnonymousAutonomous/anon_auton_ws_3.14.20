@@ -1,8 +1,7 @@
 #!/usr/bin/env python2
 import os
 import subprocess
-
-CHAIR_NUM = 0
+import yaml
 
 # Find all USB devices
 df = subprocess.check_output(
@@ -50,10 +49,16 @@ if not os.path.exists(outfolder):
     os.makedirs(outfolder)
 
 # Find chair number
-# chair_num = subprocess.check_output(
-#     "whoami | cat $1 | tr -d '\n' | tail -c 1", shell=True)
+chair_num_file = os.path.join(script_dir, '../', 'configs', 'ports', 'chair_num.yaml')
 
-devices["chair_num"] = str(CHAIR_NUM)
+if os.path.exists(chair_num_file):
+    chair_num_yaml = yaml.safe_load(chair_num_file)
+    chair_num = str(chair_num_yaml["chair_num"])
+else:
+    # Fall back on username
+    chair_num = subprocess.check_output(
+    "whoami | cat $1 | tr -d '\n' | tail -c 1", shell=True)
+
 
 with open(outyaml, 'w+') as f:
     for dev, path in devices.items():
