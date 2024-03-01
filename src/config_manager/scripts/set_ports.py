@@ -60,6 +60,7 @@ else:
     # Fall back on username
     chair_num = subprocess.check_output("whoami | cat $1 | tr -d '\n' | tail -c 1", shell=True)
 
+devices["chair_num"] = chair_num
 
 with open(outyaml, 'w+') as f:
     for dev, path in devices.items():
