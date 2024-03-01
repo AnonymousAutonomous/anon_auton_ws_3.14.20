@@ -2,6 +2,8 @@
 import os
 import subprocess
 
+CHAIR_NUM = 0
+
 # Find all USB devices
 df = subprocess.check_output(
     "find /sys/bus/usb/devices/usb*/ -name dev", shell=True)
@@ -48,9 +50,10 @@ if not os.path.exists(outfolder):
     os.makedirs(outfolder)
 
 # Find chair number
-chair_num = subprocess.check_output(
-    "whoami | cat $1 | tr -d '\n' | tail -c 1", shell=True)
-devices["chair_num"] = chair_num
+# chair_num = subprocess.check_output(
+#     "whoami | cat $1 | tr -d '\n' | tail -c 1", shell=True)
+
+devices["chair_num"] = str(CHAIR_NUM)
 
 with open(outyaml, 'w+') as f:
     for dev, path in devices.items():
