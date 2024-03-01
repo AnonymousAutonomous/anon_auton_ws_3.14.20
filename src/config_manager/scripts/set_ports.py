@@ -53,11 +53,11 @@ chair_num_file = os.path.join(script_dir, '../', 'configs', 'ports', 'chair_num.
 
 if os.path.exists(chair_num_file):
     chair_num_yaml = yaml.safe_load(chair_num_file)
+    print(chair_num_yaml)
     chair_num = str(chair_num_yaml["chair_num"])
 else:
     # Fall back on username
-    chair_num = subprocess.check_output(
-    "whoami | cat $1 | tr -d '\n' | tail -c 1", shell=True)
+    chair_num = subprocess.check_output("whoami | cat $1 | tr -d '\n' | tail -c 1", shell=True)
 
 
 with open(outyaml, 'w+') as f:
