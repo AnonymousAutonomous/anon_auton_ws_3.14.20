@@ -54,7 +54,7 @@ chair_num_file = os.path.join(script_dir, '../', 'configs', 'ports', 'chair_num.
 if os.path.exists(chair_num_file):
     with open(chair_num_file) as f:
         chair_num_yaml = yaml.safe_load(f)
-    print(chair_num_yaml)
+
     chair_num = str(chair_num_yaml["chair_num"])
 else:
     # Fall back on username
